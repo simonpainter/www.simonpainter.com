@@ -1,41 +1,15 @@
-# Website
+## How we got here
+Welcome to my page focused on networking and cloud infrastructure, 
+with some other stuff that I wanted to keep. 
+After migrating from an old Wordpress blog platform to Docusaurus and S3, 
+I've preserved some of my most useful technical articles while continuing 
+to share new insights about networking, cloud architecture, and 
+infrastructure automation.
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
-
-### Installation
-
-```
-$ yarn
-```
-
-### Local Development
-
-```
-$ yarn start
-```
-
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
-
-### Build
-
-```
-$ yarn build
-```
-
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
-
-### Deployment
-
-Using SSH:
-
-```
-$ USE_SSH=true yarn deploy
-```
-
-Not using SSH:
-
-```
-$ GIT_USER=<Your GitHub username> yarn deploy
-```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+## Repositories
+* [Using pcaps to measure ttfb](https://github.com/simonpainter/capture_latency)
+> I wanted to test the latency impact of several different FQDN filter methods so I came up with this to measure time to first usable byte (ttfb) which measures the TCP and SSL handshake times through L7 firewalls.
+* [MoodBadger](https://github.com/simonpainter/MoodBadger)
+> I saw the Badger2040 e-paper board and created this for my son to help him communciate his feelings as he's about as good at that as I am. 
+* [Chatbot](https://github.com/simonpainter/chatbot)
+> This emerged out of a friendly bit of banter with my neighbour via LinkedIn. 
