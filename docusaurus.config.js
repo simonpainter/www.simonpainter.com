@@ -7,11 +7,11 @@ const config = {
   tagline: 'Somewhere to keep things',
   favicon: 'img/favicon.ico',
 
-  url: 'http://www.simonpainter.com.s3-website.eu-west-2.amazonaws.com',
+  url: 'http://www.simonpainter.com',
   baseUrl: '/',
 
   organizationName: 'simonpainter',
-  projectName: 'docusaurus',
+  projectName: 'my-website',
 
   // Change this to 'warn' temporarily to help debug
   onBrokenLinks: 'warn',
