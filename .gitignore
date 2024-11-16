@@ -1,0 +1,5 @@
+node_modules
+.docusaurus
+build
+sync.sh
+DS_Store
