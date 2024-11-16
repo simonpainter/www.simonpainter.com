@@ -61,7 +61,7 @@ const config = {
         style: 'dark',
         links: [
           {
-            title: 'Links',
+            title: 'About me',
             items: [
               {
                 label: 'Github',
@@ -72,7 +72,21 @@ const config = {
                 href: 'https://www.linkedin.com/in/sipainter/',
               },
             ],
+          },
+          {
+            title: 'Activities',
+            items: [
+              {
+                label: 'Refried Bean',
+                href: 'https://www.refriedbean.uk',
+              },
+              {
+                label: 'Connectivity Matters',
+                href: 'https://www.connectivitymatters.uk',
+              },
+            ],
           }
+
         ],
         copyright: `Copyright © ${new Date().getFullYear()} Simon Painter`,
       },
