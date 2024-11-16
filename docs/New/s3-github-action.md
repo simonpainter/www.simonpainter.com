@@ -1,7 +1,6 @@
 ---
 
 title: How to set up Github Actions to publish to S3 website
-sidebar_position: 1
 ---
 ## The problem
 
