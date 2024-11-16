@@ -5,8 +5,6 @@ sidebar_position: 1
 slug: /
 ---
 
-# Somewhere to keep things
-
 ## How we got here
 Welcome to my page focused on networking and cloud infrastructure, 
 with some other stuff that I wanted to keep. 

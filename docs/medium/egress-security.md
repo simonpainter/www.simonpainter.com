@@ -1,5 +1,7 @@
+---
 
-# Egress Security
+title: "Egress Security from Cloud"
+---
 
 The Case for Application-Level Controls
 

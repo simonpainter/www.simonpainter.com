@@ -1,5 +1,7 @@
+---
 
-# Azure Virtual WAN: The Promise vs. Reality
+title: "Azure Virtual WAN: The Promise vs. Reality"
+---
 
 Is it as great as Microsoft says or as bad as the customers say?
 

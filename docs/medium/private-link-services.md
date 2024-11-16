@@ -1,5 +1,7 @@
+---
 
-# Azure Private Link Services: Enabling Secure and Flexible Network Architectures
+title: "Azure Private Link Services: Enabling Secure and Flexible Network Architectures"
+---
 
 The glue you never knew you needed.
 

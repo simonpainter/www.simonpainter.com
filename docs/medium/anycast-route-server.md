@@ -1,5 +1,8 @@
+---
 
-# Beyond DNS: Implementing Anycast in Azure with Route Server and NVAs
+title: "Beyond DNS: Implementing Anycast in Azure with Route Server and NVAs"
+
+---
 
 What to do about global site load balancing.
 

@@ -1,5 +1,9 @@
+---
 
-# The Power of Intentional Alerting: Lessons from Personal Tech and Enterprise IT
+title: "The Power of Intentional Alerting"
+---
+Lessons from Personal Tech and Enterprise IT
+
 
 Notifications and alerts are ubiquitous in our always-on, hyper-connected world. But as I’ve learnt from personal experience and my work in enterprise IT, more alerts don’t necessarily mean better outcomes. In fact, over-alerting can be downright counterproductive.
 

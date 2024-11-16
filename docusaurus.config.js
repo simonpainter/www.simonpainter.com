@@ -61,11 +61,15 @@ const config = {
         style: 'dark',
         links: [
           {
-            title: 'Community',
+            title: 'Links',
             items: [
               {
-                label: 'Placeholder',
-                href: 'https://www.google.com',
+                label: 'Github',
+                href: 'https://github.com/simonpainter',
+              },
+              {
+                label: 'LinkedIn',
+                href: 'https://www.linkedin.com/in/sipainter/',
               },
             ],
           }

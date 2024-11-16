@@ -1,4 +1,8 @@
-# Python Route Summarisation
+---
+
+title: "Python Route Summarisation"
+---
+
 
 There used to be a great little website for route summarisation and it did it far more intelligently than Cisco kit does it. It looks like the site has dropped off the internet which is a shame but there is a handy python library called netaddr with has the same capabilities.
 

@@ -1,5 +1,6 @@
-
-# From Network Blame to Platform Teams
+---
+title: "From Network Blame to Platform Teams"
+---
 
 Rethinking Infrastructure Support
 

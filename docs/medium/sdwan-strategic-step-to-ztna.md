@@ -1,5 +1,8 @@
+---
 
-# SD-WAN: A Strategic Step Toward Zero Trust
+title: "SD-WAN: A Strategic Step Toward Zero Trust"
+
+---
 
 The Business Case Challenge
 
