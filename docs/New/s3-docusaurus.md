@@ -3,23 +3,9 @@
 title: Uploading my Docusaurus site
 ---
 
-I haven't got around to setting up a github action to sync my site to S3 whenever I push an update so I used a fairly simple shell script to do the job of building and syncing to S3. I have used the rather simple [s3cmd](https://s3tools.org/s3cmd) which is easy to install on most things. 
+I've now extended the github action for those who want to create their sites in Docusaurus and then have the commited and pushed changes automagically get built and synced to their S3 bucket. Static S3 sites are a great way to host static sites and Docusaurus is a great tool for rendering sites out of simple markdown content. 
 
-
-```
-#!/bin/bash
-set -e  # Exit on any error
-
-echo "Starting Build"
-npm run build
-echo "Build Complete"
-
-echo "Starting Sync"
-s3cmd sync build/* s3://www.simonpainter.com/
-echo "Sync Complete"
-```
-
-I expect the github action would look something like this, and it seems to work.
+As with the [static S3 action](s3-github-action.md) you will need to set up (or reuse) the IAM user with the correct policy. If you are reusing the policy on another bucket remember to add it in the resources section. You'll also need to populate the secrets in the repository if you are doing it in a new github repository. 
 
 ```
 name: Build and Deploy to S3
