@@ -19,7 +19,7 @@ s3cmd sync build/* s3://www.simonpainter.com/
 echo "Sync Complete"
 ```
 
-I expect the github action would look something like this, but I haven't tried yet.
+I expect the github action would look something like this, and it seems to work.
 
 ```
 name: Build and Deploy to S3
