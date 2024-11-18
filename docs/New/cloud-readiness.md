@@ -327,60 +327,6 @@ Evaluate the sophistication of identity management systems and processes. Examin
 
 Assess the effectiveness of security monitoring and incident response in cloud environments. Look for proactive threat detection, automated response capabilities, and integration of security tools across hybrid environments. Evaluate the maturity of incident response procedures and their cloud-specific elements.
 
-## Security and Compliance Preparedness
-
-### Description
-
-Security and Compliance Preparedness evaluates an organisation's readiness to secure and govern cloud environments effectively. This metric assesses the maturity of security controls, compliance frameworks, and risk management processes specifically in the context of cloud operations. It examines not just the existence of security measures, but their effectiveness and integration into the broader cloud operating model. Cloud migration often presents an ideal opportunity to modernise security architecture, moving from traditional perimeter-based controls toward a zero trust model that better suits modern application delivery.
-
-### Key Areas of Assessment
-
-Zero Trust Architecture Adoption examines how well organisations are transitioning from traditional perimeter-based security to a zero trust model. This fundamental shift treats every network as potentially hostile, requiring explicit verification of every access request regardless of source. Mature organisations implement comprehensive identity-aware access controls, microsegmentation, and end-to-end encryption between users and applications. This includes evaluating the sophistication of endpoint management, identity-based access controls, and application-level security measures.
-
-Identity and Access Management becomes the foundation of cloud security, replacing traditional network boundaries as the primary security perimeter. This encompasses not just user identity but also device identity, application identity, and service identity. Mature organisations implement continuous validation of identity and trust, moving beyond simple authentication to continuous authorisation based on dynamic risk assessment.
-
-Security Architecture and Controls focuses on implementing security at the application and data layer rather than the network perimeter. This includes evaluation of microsegmentation strategies, end-to-end encryption implementation, and API security. Mature organisations treat every application as internet-facing, implementing appropriate controls regardless of network location.
-
-Compliance Framework Integration focuses on how effectively organisations maintain regulatory compliance in cloud environments. This includes understanding which compliance frameworks apply, how they map to cloud services, and how compliance is maintained through automated controls and continuous monitoring. Mature organisations automate compliance checks and maintain continuous compliance rather than treating it as a periodic audit exercise.
-
-Network Architecture Transformation assesses how effectively the organisation is moving from traditional network-centric security to identity-centric security. This includes examining the reduction of reliance on VPNs and network segregation in favor of identity-aware access proxies and application-level controls. Mature organisations implement sophisticated software-defined perimeters that adapt based on risk context.
-
-Security Operations and Incident Response evaluates the capability to detect, respond to, and recover from security incidents in cloud environments. This includes the sophistication of security monitoring, threat detection, and incident response procedures. Mature organisations maintain integrated security operations across hybrid environments with automated response capabilities.
-
-### Maturity Level Characteristics
-
-At Level 1 (Initial/Ad Hoc), security remains firmly perimeter-focused with heavy reliance on network controls. Security measures are basic and often reactive. VPNs are the primary method of remote access, and there's limited understanding of zero trust principles. Endpoint management is basic, and application security depends primarily on network location. Compliance is treated as a checkbox exercise, and risk assessment is informal or non-existent.
-
-At Level 2 (Repeatable but Intuitive), organisations begin exploring zero trust concepts but still rely heavily on traditional security models. Some identity-aware access controls exist but aren't comprehensive. Basic security controls are in place but may not be cloud-optimised. Organisations understand their compliance requirements but struggle to maintain continuous compliance. Endpoint management follows basic principles but isn't integrated with access decisions.
-
-Level 3 (Defined Process) organisations have begun implementing zero trust architecture components. Identity-based access control is systematic, and there's growing recognition of the need to secure application-to-application communication. Security frameworks are documented and adapted for cloud environments. Compliance requirements are well understood and mapped to controls. Endpoint management is more sophisticated, with health checks influencing access decisions. Traditional perimeter controls are being systematically replaced with identity-aware alternatives.
-
-Level 4 (Managed and Measurable) organisations demonstrate sophisticated implementation of zero trust principles. Most applications are accessed through identity-aware proxies rather than VPNs. Security is embedded in infrastructure code with automated testing and validation. Compliance monitoring is largely automated, with continuous verification of controls. Microsegmentation is widely implemented, and end-to-end encryption is standard. Security policies adapt dynamically based on risk context.
-
-Level 5 (Optimised) represents organisations with mature, fully implemented zero trust architectures. All access requires explicit verification regardless of source. Application access is fully identity-aware with continuous validation of trust. Security controls are fully automated and integrated into development and deployment pipelines. Compliance is continuous and automated, with real-time visibility into compliance status. Network location has minimal impact on security posture, with consistent controls applied regardless of connection point.
-
-### Assessment Approach
-
-#### Zero Trust Implementation Assessment
-
-Evaluate the organisation's progress in implementing zero trust architecture principles. Look for evidence of identity-aware application access replacing VPN-based access, implementation of microsegmentation and software-defined perimeters, and integration of endpoint health and compliance into access decisions. Assess the sophistication of continuous authorisation mechanisms and reduction in reliance on network location for security decisions.
-
-#### Control Implementation Assessment
-
-Examine the implementation of security controls in cloud environments. Look for evidence of security automation, integration with infrastructure as code, and effectiveness of controls in protecting cloud resources. Evaluate whether controls are appropriate for cloud environments rather than simply lifted from traditional infrastructure.
-
-#### Compliance Validation
-
-Review how effectively the organisation maintains compliance in cloud environments. Look for automated compliance checking, continuous monitoring of compliance status, and integration of compliance requirements into standard operating procedures. Assess the organisation's ability to demonstrate compliance through automated reporting and documentation.
-
-#### Identity Infrastructure Review
-
-Evaluate the sophistication of identity management systems and processes. Examine how access is managed across cloud services, including privileged access management, authentication methods, and identity governance. Look for automation in identity lifecycle management and integration with HR systems.
-
-#### Security Operations Capability
-
-Assess the effectiveness of security monitoring and incident response in cloud environments. Look for proactive threat detection, automated response capabilities, and integration of security tools across hybrid environments. Evaluate the maturity of incident response procedures and their cloud-specific elements.
-
 
 ## Business Case and Strategy Alignment
 
