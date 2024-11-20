@@ -301,9 +301,11 @@ At Level 2 (Repeatable but Intuitive), organisations begin exploring zero trust 
 
 Level 3 (Defined Process) organisations have begun implementing zero trust architecture components. Identity-based access control is systematic, and there's growing recognition of the need to secure application-to-application communication. Security frameworks are documented and adapted for cloud environments. Compliance requirements are well understood and mapped to controls. Endpoint management is more sophisticated, with health checks influencing access decisions. Traditional perimeter controls are being systematically replaced with identity-aware alternatives.
 
-Level 4 (Managed and Measurable) organisations demonstrate sophisticated implementation of zero trust principles. Most applications are accessed through identity-aware proxies rather than VPNs. Security is embedded in infrastructure code with automated testing and validation. Compliance monitoring is largely automated, with continuous verification of controls. Microsegmentation is widely implemented, and end-to-end encryption is standard. Security policies adapt dynamically based on risk context.
+[Previous sections remain the same until Level 4-5 Maturity Characteristics]
 
-Level 5 (Optimised) represents organisations with mature, fully implemented zero trust architectures. All access requires explicit verification regardless of source. Application access is fully identity-aware with continuous validation of trust. Security controls are fully automated and integrated into development and deployment pipelines. Compliance is continuous and automated, with real-time visibility into compliance status. Network location has minimal impact on security posture, with consistent controls applied regardless of connection point.
+Level 4 (Managed and Measurable) organizations demonstrate sophisticated implementation of comprehensive cloud security controls. Third-party risk management is formalized across the entire SaaS stack, with mature Identity Governance and Administration (IGA) controlling access across all environments. Microsegmentation is actively implemented with Cloud Security Posture Management tools providing continuous security assessment. Security operations leverage integrated SIEM/SOAR platforms for automated threat detection and response, with risk tolerances clearly defined and monitored. Data protection includes comprehensive discovery, classification, and labeling using tools like RAG (Red, Amber, Green) methodology, supported by mature Data Loss Prevention (DLP) systems.
+
+Level 5 (Optimised) represents organizations with mature security practices ready for cloud adoption. Landing zones are designed with comprehensive security controls including workload protection capabilities, advanced firewalling, and sophisticated monitoring requirements. Security operations demonstrate sophisticated threat detection and response capabilities suitable for cloud environments. Data protection includes requirements for automated anonymization and advanced privacy-preserving techniques. Third-party access frameworks implement zero-trust principles with continuous monitoring capabilities. The organization demonstrates clear understanding of cloud security requirements and has developed appropriate architectures and processes, positioning them to effectively select and implement cloud-native security tools during migration.
 
 ### Assessment Approach
 
@@ -327,6 +329,19 @@ Evaluate the sophistication of identity management systems and processes. Examin
 
 Assess the effectiveness of security monitoring and incident response in cloud environments. Look for proactive threat detection, automated response capabilities, and integration of security tools across hybrid environments. Evaluate the maturity of incident response procedures and their cloud-specific elements.
 
+#### Advanced Security Controls Assessment
+
+Evaluate the sophistication of cloud-native security controls and platforms. Look for:
+
+Security Operations Integration examines how effectively organizations have implemented integrated SIEM/SOAR capabilities. This includes assessing the maturity of automated threat detection and response, the sophistication of risk tolerance monitoring, and the effectiveness of automated remediation processes. Mature organizations demonstrate seamless integration between security tools and operational processes.
+
+Third-Party Risk Management evaluates the comprehensiveness of controls across the entire SaaS and cloud service provider stack. This includes assessment of vendor security postures, access control mechanisms, and continuous monitoring capabilities. Mature organizations maintain sophisticated third-party risk frameworks with automated assessment and response capabilities.
+
+Data Protection and Privacy examines the implementation of advanced data protection mechanisms. This includes evaluating the maturity of data discovery and classification tools, the effectiveness of DLP implementations, and the sophistication of privacy-preserving technologies. Mature organizations demonstrate automated approaches to data protection, including advanced anonymization techniques and continuous compliance monitoring.
+
+Cloud Security Architecture Review assesses the implementation of cloud-native security platforms and controls. This includes evaluation of microsegmentation strategies, landing zone implementations, and cloud workload protection capabilities. Mature organizations demonstrate sophisticated use of cloud-native security tools integrated with their broader security architecture.
+
+Modern Data Architecture Security evaluates how organizations secure their data platforms while enabling advanced capabilities like AI adoption. This includes assessment of security controls specific to data lakes, analytics platforms, and AI/ML workflows. Mature organizations maintain sophisticated security frameworks that enable innovation while ensuring appropriate protection of sensitive data.
 
 ## Business Case and Strategy Alignment
 
