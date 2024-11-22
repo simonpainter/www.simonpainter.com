@@ -74,6 +74,7 @@ curl -s "http://foo.simonpainter.com/?response=$OUTPUT"
 
 ### Initial Results (10 VMs)
 
+```
 172.174.103.61 - - [22/Nov/2024:21:01:15 +0000] "GET /?response=52.168.119.57 HTTP/1.1" 200 251 "-" "curl/7.58.0"
 172.174.103.61 - - [22/Nov/2024:21:01:15 +0000] "GET /?response=40.78.224.106 HTTP/1.1" 200 251 "-" "curl/7.58.0"
 172.174.103.61 - - [22/Nov/2024:21:01:15 +0000] "GET /?response=52.168.118.196 HTTP/1.1" 200 251 "-" "curl/7.58.0"
@@ -84,6 +85,7 @@ curl -s "http://foo.simonpainter.com/?response=$OUTPUT"
 172.174.103.61 - - [22/Nov/2024:21:01:17 +0000] "GET /?response=40.78.224.108 HTTP/1.1" 200 251 "-" "curl/7.58.0"
 172.174.103.61 - - [22/Nov/2024:21:01:21 +0000] "GET /?response=40.71.9.109 HTTP/1.1" 200 251 "-" "curl/7.58.0"
 172.174.103.61 - - [22/Nov/2024:21:01:22 +0000] "GET /?response=40.71.9.123 HTTP/1.1" 200 251 "-" "curl/7.58.0"
+```
 
 ## Next Steps (That Didn't Quite Work Out)
 
