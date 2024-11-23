@@ -3,7 +3,21 @@
 title: What is with the secret IP on Azure VMs?
 ---
 
+
 ## The Mystery Begins
+
+>Note: A few people on Reddit and LinkedIn pointed me towards these pages:
+>
+>[Azure Updates](https://azure.microsoft.com/en-us/updates?id=default-outbound-access-for-vms-in-azure-will-be-retired-transition-to-a-new-method-of-internet-access)
+>
+>[Default Outbound Access](https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/default-outbound-access)
+>
+>While I appreciate the input, those are not secrets and are well known concepts and relate to the public IP used for
+>outbound internet access in the absence of a PIP. I thought I had explained well enough in the first part below that
+>this relates to another IP which is *not* used for internet access and is used for connecting to the Azure DNS service
+>(and maybe some other things). In the second example below I show that a VM without a PIP has one public IP address for
+>outbound Internet access (which seems to be an implicit NAT gateway) and another which is used for DNS lookups to the
+>Azure DNS.
 
 The reason I fell down the rabbit hole with regard to [finding my public ip](finding-my-ip.md) was because of a section in an old Azure networking book my friend was reading which said:
 
@@ -163,6 +177,8 @@ If anyone knows more about:
 
 - How the AzPIP system works under the hood
 - Whether these IPs are truly per-VM or shared at the host level
+- It's also possible they are part of a SNAT pool, which would also be a valid explanation for the overlap. Why there would be SNAT between a VM and the Azure DNS is another question altogether. 
 - The relationship between these IPs and Azure's internal routing
+- I have another working theory and that it is just the egress for the Azure DNS. If the Azure DNS is forwarding DNS lookups then it's entirely possible the Google DNS servers are seeing that as the client IP rather than the actual client. That makes the original book source a massive misunderstanding. 
 
 Please get in touch! And if anyone has the ability to test this at a larger scale (say, with that originally planned 1000 VMs), I'd love to hear about your results.
