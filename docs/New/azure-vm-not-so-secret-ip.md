@@ -161,20 +161,20 @@ I still had some open questions so I thought I would go out to the internet to s
 >[Default Outbound Access](https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/default-outbound-access)
 >
 >While I appreciate the input, those links mention default outbound internet which is well known and clearly not what
->this was about. I even had an angry redditor question why I was bothering to investigate it, they clearly don't 
+>this was about. I even had an angry redditor question why I was bothering to investigate it; they clearly don't
 >understand the network engineer mindset.
 
 ## My working theories on Friday night
 
 - The duplicate IP in my testing suggested these are not VM level assignments. This means they could be host level.
 - It's also possible they are part of a SNAT pool, which would also be a valid explanation for the overlap. Why there would be SNAT between a VM and the Azure DNS is another question altogether.
-- How was Google DNS getting the client IP anyway if it was going via Google DNS.
+- How was Google DNS getting the client IP anyway if it was going via Azure DNS.
 
 ## A bit of inspiration
 
 When I was out walking my dog on Saturday I managed to nail down the thing that had nagging at the itchy part of the back of my brain. A little while ago I wrote a [python implimentation of a DNS server](https://github.com/simonpainter/pyDNS) for a bit of a laugh so I have a fairly good understanding of the anatomy of a DNS query. There is nowhere in a DNS query for the client IP other than in the usual UDP header and if the query was forwarded on from one DNS server to the other there was no way for the end DNS server to know the IP of the original source client.
 
-So I did a bit of testing on some other boxes sending the query via a bunch of different DNS services and doing my own recursive lookups on a hastily spun up BIND box and that seems to satisfy Occam's Razor sufficiently. The whole page of the book is basically utter garbage and the entire concept of AzPIPs is nonsense! 
+So I did a bit of testing on some other boxes sending the query via a bunch of different DNS services and doing my own recursive lookups on a hastily spun up BIND box and that seems to satisfy Occam's Razor sufficiently. The whole page of the book is basically utter garbage and the entire concept of AzPIPs is nonsense!
 
 ## What's actually happening
 
