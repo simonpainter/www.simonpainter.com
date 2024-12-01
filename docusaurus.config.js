@@ -3,7 +3,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Articles',
+  title: 'Simon Painter',
   tagline: 'Somewhere to keep things',
   favicon: 'img/favicon.ico',
 
