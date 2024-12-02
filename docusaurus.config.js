@@ -7,7 +7,7 @@ const config = {
   tagline: 'Somewhere to keep things',
   favicon: 'img/favicon.ico',
 
-  url: 'http://www.simonpainter.com',
+  url: 'https://www.simonpainter.com',
   baseUrl: '/',
 
   organizationName: 'simonpainter',
