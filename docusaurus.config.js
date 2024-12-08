@@ -29,7 +29,7 @@ const config = {
       ({
         docs: {
           routeBasePath: '/',
-          editUrl: 'https://github.com/simonpainter/my-website/blob/main/docs/',
+          editUrl: 'https://github.com/simonpainter/my-website/blob/main/',
           sidebarPath: require.resolve('./sidebars.js')
         },
         blog: false,
