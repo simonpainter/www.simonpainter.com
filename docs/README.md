@@ -3,6 +3,8 @@
 title: Introduction
 sidebar_position: 1
 slug: /
+custom_edit_url: https://github.com/simonpainter/my-website/blob/main/docs/README.md
+
 ---
 
 ## How we got here
