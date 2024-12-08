@@ -13,6 +13,8 @@ const config = {
   organizationName: 'simonpainter',
   projectName: 'my-website',
 
+
+  editUrl: 'https://github.com/simonpainter/my-website/blob/main/docs/',
   // Change this to 'warn' temporarily to help debug
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
