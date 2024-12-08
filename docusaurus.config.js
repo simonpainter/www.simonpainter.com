@@ -13,8 +13,6 @@ const config = {
   organizationName: 'simonpainter',
   projectName: 'my-website',
 
-
-  editUrl: 'https://github.com/simonpainter/my-website/blob/main/docs/',
   // Change this to 'warn' temporarily to help debug
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
@@ -31,6 +29,7 @@ const config = {
       ({
         docs: {
           routeBasePath: '/',
+          editUrl: 'https://github.com/simonpainter/my-website/blob/main/docs/',
           sidebarPath: require.resolve('./sidebars.js')
         },
         blog: false,
