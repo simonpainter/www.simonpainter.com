@@ -22,7 +22,7 @@ This technical hierarchy also creates a precarious situation for the organisatio
 
 Perhaps most insidiously, this pattern tends to self-reinforce. As team members become more dependent on the technical leader's guidance, their own technical decision-making skills atrophy. The gap between the guru and the team widens, making it increasingly difficult to distribute technical leadership more evenly in the future. The organisation becomes trapped in a cycle where every technical decision, no matter how small, must be blessed by the authority at the top.
 
-### The lack of influnece
+### The lack of influence
 
 This situation becomes particularly problematic when we examine why technical experts typically move into management roles. Often, it's because management is seen as the only path to greater influence and higher compensation within an organisation. This creates a troubling paradox: organisations effectively remove their most skilled practitioners from hands-on technical work, placing them in roles that might not align with their strengths or interests. Meanwhile, the technical team loses valuable expertise and the organisation reinforces the notion that management is the only way up the career ladder.
 
