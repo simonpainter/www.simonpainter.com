@@ -16,7 +16,7 @@ Here's how to set it up:
 ### Step 1 - IAM
 First, you'll need an AWS IAM user with permissions to write to your S3 bucket. Create one with this policy (replace 'your-bucket-name' with your actual bucket name):
 
-```
+```json
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -49,7 +49,7 @@ S3_BUCKET (your bucket name)
 ### Step 3 - The Action
 Now for the fun part. Create a new file in your repository at .github/workflows/s3-sync.yml:
 
-```
+```javascript
 
 name: Sync to S3
 

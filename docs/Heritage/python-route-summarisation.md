@@ -8,7 +8,7 @@ There used to be a great little website for route summarisation and it did it fa
 
 I have written a little wrapper for it which will regex the prefixes out of a ‘show ip bgp’ and then list the summary routes. You pass the output of ‘show ip bgp’ as a text file, it’s the only argument the script expects.
 
-```
+```py
 from netaddr import IPNetwork, cidr_merge
 import re, sys
 try:

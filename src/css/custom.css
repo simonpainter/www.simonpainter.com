@@ -1,32 +1,105 @@
 /* Import Inter font */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
-/* Color scheme */
+/* Light mode theme - Pink/Red scheme */
 :root {
-    --ifm-color-primary: #dc2626;          /* red-600 */
-    --ifm-color-primary-dark: #b91c1c;     /* red-700 */
-    --ifm-color-primary-darker: #991b1b;   /* red-800 */
-    --ifm-color-primary-darkest: #7f1d1d;  /* red-900 */
-    --ifm-color-primary-light: #ef4444;    /* red-500 */
-    --ifm-color-primary-lighter: #f87171;  /* red-400 */
-    --ifm-color-primary-lightest: #fca5a5; /* red-300 */
+ /* Background colors */
+ --ifm-background-color: #fdf2f2;
+ --ifm-background-surface-color: #ffffff;
+ --ifm-color-emphasis-100: #fee2e2;
+ --ifm-navbar-background-color: #ffffff;
+ --ifm-footer-background-color: #fee2e2;
+ 
+ /* Content colors */
+ --ifm-color-content: #1e293b;
+ --ifm-color-content-secondary: #475569;
+ 
+ /* Interactive elements */
+ --ifm-breadcrumb-color-active: #dc2626;
+ --ifm-link-color: #b91c1c;
+ --ifm-menu-color-active: #dc2626;
+ 
+ /* Code and borders */
+ --ifm-code-background: #fef2f2;
+ --ifm-toc-border-color: #fee2e2;
+ --docusaurus-highlighted-code-line-bg: #fef2f2;
 }
 
+/* Dark mode theme - Black with green accents */
 [data-theme='dark'] {
-    --ifm-color-primary: #ef4444;          /* red-500 */
-    --ifm-color-primary-dark: #dc2626;     /* red-600 */
-    --ifm-color-primary-darker: #b91c1c;   /* red-700 */
-    --ifm-color-primary-darkest: #991b1b;  /* red-800 */
-    --ifm-color-primary-light: #f87171;    /* red-400 */
-    --ifm-color-primary-lighter: #fca5a5;  /* red-300 */
-    --ifm-color-primary-lightest: #fee2e2; /* red-100 */
+ /* Core colors */
+ --ifm-navbar-background-color: #000000;
+ --ifm-background-color: #000000;
+ --ifm-color-content: #ffffff;
+ --ifm-color-content-secondary: #cccccc;
+ 
+ /* Interactive elements */
+ --ifm-link-color: #00ff00;
+ --ifm-menu-color-active: #00ff00;
+ --ifm-breadcrumb-color-active: #00ff00;
+ --ifm-table-of-contents-link-color: #ffffff;
+ 
+ /* Code blocks */
+ --ifm-code-background: #000000;
+ --docusaurus-highlighted-code-line-bg: #162018;
+ --prism-background-color: #000000;
+ --prism-color: #00ff00;
+ 
+ /* Borders & accents */
+ --ifm-toc-border-color: #333333;
 }
 
-
-/* Blockquotes */
+/* Shared styles */
 .markdown blockquote {
-    border-left: 3px solid var(--ifm-color-primary);
-    background-color: var(--ifm-color-emphasis-100);
-    margin: 1rem 0;
-    padding: 0.75rem 1rem;
+ border-left: 3px solid #ff9999;
+}
+
+.navbar-sidebar__brand img,
+.navbar__brand img {
+ filter: invert(0%);
+}
+
+.table-of-contents__link {
+ color: #dc2626;
+}
+
+.table-of-contents__link:hover {
+ color: #dc2626;
+}
+
+/* Dark mode overrides */
+[data-theme='dark'] .markdown blockquote {
+ border-left: 3px solid #00ff00;
+}
+
+[data-theme='dark'] .navbar-sidebar__brand img,
+[data-theme='dark'] .navbar__brand img {
+ filter: invert(100%);
+}
+
+[data-theme='dark'] .table-of-contents__link {
+ color: #ffffff;
+}
+
+[data-theme='dark'] .table-of-contents__link:hover,
+[data-theme='dark'] .table-of-contents__link--active {
+ color: #00ff00;
+}
+
+/* Code syntax overrides for dark mode */
+[data-theme='dark'] code {
+ background-color: #000000 !important;
+ color: #00ff00 !important;
+}
+
+[data-theme='dark'] .token {
+ color: #00ff00 !important;
+ text-shadow: none !important;
+}
+
+[data-theme='dark'] pre[class*="language-"],
+[data-theme='dark'] code[class*="language-"] {
+ background: #000000 !important;
+ color: #00ff00 !important;
+ text-shadow: none !important;
 }

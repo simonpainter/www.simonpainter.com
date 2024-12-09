@@ -7,7 +7,7 @@ I've now extended the github action for those who want to create their sites in 
 
 As with the [static S3 action](s3-github-action.md) you will need to set up (or reuse) the IAM user with the correct policy. If you are reusing the policy on another bucket remember to add it in the resources section. You'll also need to populate the secrets in the repository if you are doing it in a new github repository. 
 
-```
+```javascript
 name: Build and Deploy to S3
 
 on:

@@ -24,7 +24,7 @@ Using dig to look up the text record from o-o.myaddr.google.com returns the IP o
 
 With a VM that has a single NIC and a [PIP](https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/public-ip-addresses) assigned, you get two different IPs:
 
-```
+```bash
 simon@vm1:~$ dig TXT o-o.myaddr.l.google.com +short
 "51.140.144.96"
 simon@vm1:~$ dig TXT o-o.myaddr.l.google.com @ns1.google.com +short
@@ -51,7 +51,7 @@ simon@vm2:~$ dig TXT o-o.myaddr.l.google.com +short
 
 Just to be thorough, tried another VM without a PIP:
 
-```
+```bash
 simon@vm3:~$ dig TXT o-o.myaddr.l.google.com @ns1.google.com +short
 "172.167.198.97"
 simon@vm3:~$ dig TXT o-o.myaddr.l.google.com +short
@@ -76,7 +76,7 @@ The idea, silly though it was, involves spinning up as many VM instances as I co
 
 ### Initial Results (10 VMs)
 
-```
+```log
 172.174.103.61 - - [22/Nov/2024:21:01:15 +0000] "GET /?response=52.168.119.57 HTTP/1.1" 200 251 "-" "curl/7.58.0"
 172.174.103.61 - - [22/Nov/2024:21:01:15 +0000] "GET /?response=40.78.224.106 HTTP/1.1" 200 251 "-" "curl/7.58.0"
 172.174.103.61 - - [22/Nov/2024:21:01:15 +0000] "GET /?response=52.168.118.196 HTTP/1.1" 200 251 "-" "curl/7.58.0"
@@ -97,7 +97,7 @@ I decided to scale up to 1000 VMs to get a better sample size. This was, predict
 
 ### Test Results (50 VMs)
 
-```
+```log
 52.191.254.129 - - [22/Nov/2024:21:46:48 +0000] "GET /?response=40.79.152.121 HTTP/1.1" 200 251 "-" "curl/7.58.0"
 52.191.254.129 - - [22/Nov/2024:21:46:48 +0000] "GET /?response=20.42.77.3 HTTP/1.1" 200 251 "-" "curl/7.58.0"
 52.191.254.129 - - [22/Nov/2024:21:46:51 +0000] "GET /?response=40.71.8.89 HTTP/1.1" 200 251 "-" "curl/7.58.0"
