@@ -1,9 +1,10 @@
 ---
 
 title: "Azure Virtual WAN: The Promise vs. Reality"
+
 ---
 
-Is it as great as Microsoft says or as bad as the customers say?
+## Is it as great as Microsoft says or as bad as the customers say?
 
 When Microsoft unveiled Azure Virtual WAN, it was heralded as a revolutionary solution for simplifying complex networking scenarios in the cloud. The vision was compelling: a comprehensive service that would streamline branch connectivity to Azure, enable seamless hub-and-spoke architectures, provide automated routing with simplified security, and offer easy integration with SD-WAN appliances. For organisations grappling with the intricacies of cloud networking, this sounded like a panacea and I know plenty who fell for it. However, as many have discovered, the reality of implementing and managing Virtual WAN has proven far more challenging than initially anticipated.
 
