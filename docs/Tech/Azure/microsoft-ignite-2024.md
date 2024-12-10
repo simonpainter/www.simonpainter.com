@@ -37,4 +37,4 @@ I am quite interested to see how this works and will be firing it up in my lab l
 
 ## But
 
-Still nothing for private cross region failover unless you opt for the [anycast](../Medium/anycast-route-server.md) option. That solution relies on an NVA which will benefit from the [Accelerated Connections](https://learn.microsoft.com/en-us/azure/networking/nva-accelerated-connections) feature which is now in limited GA.
+Still nothing for private cross region failover unless you opt for the [anycast](../Anycast/anycast-route-server.md) option. That solution relies on an NVA which will benefit from the [Accelerated Connections](https://learn.microsoft.com/en-us/azure/networking/nva-accelerated-connections) feature which is now in limited GA.

@@ -5,7 +5,7 @@ title: The secret IP that turned out to be DNS forwarding.
 
 ## The Mystery Begins
 
-The reason I fell down the rabbit hole with regard to [finding my public ip](finding-my-ip.md) was because of a section in an old Azure networking book my friend was reading which said:
+The reason I fell down the rabbit hole with regard to [finding my public ip](../finding-my-ip.md) was because of a section in an old Azure networking book my friend was reading which said:
 
 >To allow Azure internal communication between resources in Virtual Networks and Azure services, Azure assigns public IP
 >addresses to VMs, which identifies them internally. Let's call these public IP addresses AzPIP (this is an unofficial

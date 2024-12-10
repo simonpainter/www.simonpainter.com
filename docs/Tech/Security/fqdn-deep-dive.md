@@ -1,9 +1,8 @@
 ---
 
 title: "FQDN Filtering"
+
 ---
-
-
 
 Not all FQDN filters are built the same.
 
