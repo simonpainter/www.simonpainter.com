@@ -82,6 +82,8 @@ While this behavior is technically documented, it's buried in the FAQ and could 
 
 This could be particularly problematic in SD-WAN deployments. Imagine having 1,000 prefixes from various sites – a single site's route update could temporarily disconnect all sites from Azure.
 
+The option still exists to scale out to multiple NVAs because the prefix limit is per peer and not per route server; the documentation is a bit vague but I have tested this to confirm. The maximum number of peers (the number of NVAs) for a single route server is 8, so realistically you can work with 4000 prefixes per route server.
+
 ## The Takeaway
 
 For my deployments where reliability is crucial, I'm setting a hard limit at 500 prefixes. Sometimes, the safest path isn't pushing the documented limits to their maximum, but understanding the nuances and building in a comfortable buffer.
