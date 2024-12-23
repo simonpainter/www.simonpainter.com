@@ -1,30 +1,6 @@
 /* Import Inter font */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
-/* Light mode theme - Pink/Red scheme */
-:root {
- /* Background colors */
- --ifm-background-color: #fdf2f2;
- --ifm-background-surface-color: #ffffff;
- --ifm-color-emphasis-100: #fee2e2;
- --ifm-navbar-background-color: #ffffff;
- --ifm-footer-background-color: #fee2e2;
- 
- /* Content colors */
- --ifm-color-content: #1e293b;
- --ifm-color-content-secondary: #475569;
- 
- /* Interactive elements */
- --ifm-breadcrumb-color-active: #dc2626;
- --ifm-link-color: #b91c1c;
- --ifm-menu-color-active: #dc2626;
- 
- /* Code and borders */
- --ifm-code-background: #fef2f2;
- --ifm-toc-border-color: #fee2e2;
- --docusaurus-highlighted-code-line-bg: #fef2f2;
-}
-
 /* Dark mode theme - Black with green accents */
 [data-theme='dark'] {
  /* Core colors */
@@ -47,24 +23,6 @@
  
  /* Borders & accents */
  --ifm-toc-border-color: #333333;
-}
-
-/* Shared styles */
-.markdown blockquote {
- border-left: 3px solid #ff9999;
-}
-
-.navbar-sidebar__brand img,
-.navbar__brand img {
- filter: invert(0%);
-}
-
-.table-of-contents__link {
- color: #dc2626;
-}
-
-.table-of-contents__link:hover {
- color: #dc2626;
 }
 
 /* Dark mode overrides */
