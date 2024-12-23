@@ -20,9 +20,7 @@ Think of it like planning a journey where you need absolute certainty about the 
 
 This fundamental characteristic: looking backwards at actual costs rather than forward at estimates, makes Dijkstra's algorithm particularly suitable for routing protocols where accuracy is paramount. However, it's also why OSPF requires more computational resources than protocols using simpler path-finding methods, a consideration that becomes increasingly important as networks scale.
 
-## Why This Matters for Your Network
-
-## Why This Matters for Your Network: Understanding OSPF's Scaling Limitations
+## Why This Matters for Your Network: OSPF's Scaling Limitations
 
 Understanding the computational complexity of Dijkstra's algorithm reveals why OSPF networks face inherent scaling challenges. Let's examine the mathematics behind these limitations—something rarely discussed in networking documentation yet crucial to network design.
 
