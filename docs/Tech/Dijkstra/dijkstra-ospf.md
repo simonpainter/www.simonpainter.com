@@ -34,8 +34,6 @@ The impact becomes particularly acute in modern data centre environments. Consid
 
 This computational reality explains why the traditional guidance of limiting areas to 50-100 routers isn't just conservative network design—it's a mathematical necessity. When you divide a 200-router network into four areas of 50 routers each, you're not just reducing the routing table size; you're reducing each router's computational burden from 40,000 operations to 2,500 operations per calculation—a 16-fold improvement in processing efficiency.
 
-## The Reason for OSPF Areas
-
 ## The Real Reason for OSPF Areas: A Deep Dive into Computational Boundaries
 
 OSPF areas are often presented primarily as a tool for route summarisation and LSA flood control. Whilst these benefits are valuable, they're actually secondary outcomes of a design necessity driven by the computational overhead of Dijkstra's algorithm. Let's explore why.
@@ -47,6 +45,7 @@ Within each area, routers now only need to perform Dijkstra calculations for the
 This becomes particularly evident during network events. Consider a link failure scenario:
 
 In a single-area design, all 200 routers must:
+
 - Process the LSA announcing the failure
 - Rerun Dijkstra's algorithm across the entire topology
 - Update their routing tables accordingly
@@ -54,6 +53,7 @@ In a single-area design, all 200 routers must:
 - Total computational cost: 8 million operations across the network
 
 In a four-area design:
+
 - Only routers within the affected area perform full Dijkstra calculations
 - 50 routers perform 2,500 operations each
 - Other areas simply process summary LSA updates
