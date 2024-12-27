@@ -22,7 +22,7 @@ This fundamental characteristic: looking backwards at actual costs rather than f
 
 ## Why This Matters for Your Network: OSPF's Scaling Limitations
 
-Understanding the computational complexity of Dijkstra's algorithm reveals why OSPF networks face inherent scaling challenges. Let's examine the mathematics behind these limitations—something rarely discussed in networking documentation yet crucial to network design.
+Understanding the computational complexity of Dijkstra's algorithm reveals why OSPF networks face inherent scaling challenges. Let's examine the mathematics behind these limitations—something rarely discussed in networking documentation yet crucial to network design. OSPF areas are often presented primarily as a tool for route summarisation and LSA flood control. Whilst these benefits are valuable, they're actually secondary outcomes of a design necessity driven by the computational overhead of Dijkstra's algorithm. Let's explore why.
 
 In a single OSPF area, Dijkstra's algorithm has a computational complexity of O(V²), where V represents the number of vertices (routers) in the network. This means that when you double the number of routers in your area, you quadruple the computational work required for each route calculation. However, the real impact is even more significant because the number of edges (links) also influences the complexity.
 
@@ -33,14 +33,6 @@ This scaling challenge becomes even more pronounced when we consider convergence
 The impact becomes particularly acute in modern data centre environments. Consider a pod with 200 leaf and spine devices all in a single OSPF area. During a maintenance window where multiple links are being shut down and brought up, each router would need to perform these extensive calculations repeatedly. Even with modern hardware, this creates a real risk of CPU exhaustion and delayed convergence.
 
 This computational reality explains why the traditional guidance of limiting areas to 50-100 routers isn't just conservative network design—it's a mathematical necessity. When you divide a 200-router network into four areas of 50 routers each, you're not just reducing the routing table size; you're reducing each router's computational burden from 40,000 operations to 2,500 operations per calculation—a 16-fold improvement in processing efficiency.
-
-## The Real Reason for OSPF Areas: A Deep Dive into Computational Boundaries
-
-OSPF areas are often presented primarily as a tool for route summarisation and LSA flood control. Whilst these benefits are valuable, they're actually secondary outcomes of a design necessity driven by the computational overhead of Dijkstra's algorithm. Let's explore why.
-
-In a single-area OSPF network with 200 routers, each router maintains a complete topology database and must recalculate routes using Dijkstra's algorithm whenever the network state changes. With a computational complexity of O(V²), each router performs around 40,000 computational operations per recalculation. Now, consider what happens when you divide this same network into four areas of 50 routers each.
-
-Within each area, routers now only need to perform Dijkstra calculations for their local topology—around 2,500 operations instead of 40,000. Inter-area routing is handled through summary LSAs, which don't require the same intensive path calculations. This dramatic reduction in computational overhead is the primary reason for implementing areas.
 
 This becomes particularly evident during network events. Consider a link failure scenario:
 
@@ -139,15 +131,6 @@ The networking landscape has transformed dramatically since OSPF's introduction.
 Modern enterprise networks increasingly segment into distinct domains. The WAN, once OSPF's domain, now typically runs BGP, whether that's for MPLS services, SD-WAN overlay networks, or direct cloud connectivity. This architectural shift has effectively contained OSPF to campus and data centre environments—but these environments themselves have evolved significantly.
 
 Today's data centre networks present unique challenges for OSPF deployment. Where a traditional campus network might have hundreds of devices spread across a building or campus, a modern data centre pod can easily contain that many devices in a single rack row. Leaf-spine architectures, with their dense interconnections and high port counts, create exactly the kind of computational complexity that Dijkstra's algorithm struggles with.
-
-Consider a modest-sized data centre pod:
-
-- 48 leaf switches
-- 4 spine switches
-- Each leaf connected to every spine
-- Potential for hundreds of host-facing ports
-
-This creates a topology density that would have been unthinkable in traditional campus networks. Even with modern hardware's improved processing power, the O(V²) complexity of Dijkstra's algorithm remains a fundamental constraint. This explains the increasing adoption of BGP in data centre networks, particularly in larger deployments where the predictability of BGP's path selection process becomes more valuable than OSPF's optimal path guarantees.
 
 ### The Future of OSPF
 
