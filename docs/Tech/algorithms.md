@@ -65,7 +65,7 @@ def dfs_maze(maze, start, end):
     return None  # No path found
 ```
 
-# Greedy Best-First Search (GBFS)
+## Greedy Best-First Search (GBFS)
 
 Greedy Best-First Search is like having a compass that points towards your destination. It uses a heuristic (an educated guess) to decide which path looks most promising. In our maze example, if you could see the exit through the walls, GBFS would prefer paths that seem to lead straight towards it.
 
