@@ -8,7 +8,7 @@ What to do about global site load balancing.
 
 ### Introduction: The Evolution of Global Load Balancing
 
-Global failover between regional data centres has traditionally been tackled using DNS-based global site load balancer solutions like the trusty F5 GTM. As organisations have migrated to cloud networks, this method has been largely replicated with capabilities like AWS Route 53 and Azure Traffic Manager. These DNS-based solutions offer the ability to direct traffic to the best regional instance of an application.
+Global failover between regional data centres has traditionally been tackled using DNS-based global site load balancer solutions like the trusty F5 GTM. As organisations have migrated to cloud networks, this method has been largely replicated with capabilities like [AWS Route 53](../cross-region-r53.md) and Azure Traffic Manager. These DNS-based solutions offer the ability to direct traffic to the best regional instance of an application.
 
 DNS-based global load balancers solve cross-region failover problems by offering health checks and the ability to perform IP geolocation-based routing to specific instances. The latter gives us the ability to offer regionalisation of an application, which can provide market-targeted versions of a site, language tailoring, and also address data sovereignty concerns.
 
@@ -18,6 +18,7 @@ There are several ways to fill this gap, including:
 
 1. Deploy a traditional GTM solution, either on-premises or as a Network Virtual Appliance (NVA), and integrate it into the hybrid cloud.
 2. Implement an anycast routing solution.
+3. Think the [unthinkable](../cross-region-r53.md).
 
 This article focuses on the second approach: implementing anycast in Azure using Network Virtual Appliances (NVAs) and Azure Route Server. This method provides a robust solution for routing traffic efficiently across multiple regions, particularly for private network scenarios where DNS-based solutions fall short.
 
@@ -25,7 +26,7 @@ This article focuses on the second approach: implementing anycast in Azure using
 
 Before diving into the implementation details, it’s crucial to understand why anycast is necessary and how it complements Azure’s existing offerings.
 
-**The Gap in Azure’s Global Load Balancing Solutions**
+### The Gap in Azure’s Global Load Balancing Solutions
 
 Azure provides several tools for distributing traffic globally, such as Azure Traffic Manager and Azure Front Door. However, these solutions have limitations:
 
@@ -33,7 +34,7 @@ Azure provides several tools for distributing traffic globally, such as Azure Tr
 2. DNS-Based Routing: They rely on DNS for routing, which can be slow to propagate changes and doesn’t work well with long-lived connections.
 3. Protocol Limitations: Some solutions are optimised for HTTP/HTTPS traffic, leaving gaps for other protocols.
 
-**Enter Anycast: Filling the Void**
+### Enter Anycast: Filling the Void
 
 Anycast addresses these limitations by offering:
 
@@ -44,14 +45,14 @@ Anycast addresses these limitations by offering:
 
 ### Technical Implementation of Anycast with Azure Route Server
 
-**Key Components**
+### Key Components
 
 1. Azure Route Server: Acts as a bridge between NVAs and Azure’s networking infrastructure.
 2. Network Virtual Appliance (NVA): Advertise the anycast IP address and handle traffic.
 3. ExpressRoute: Enables hybrid connectivity between Azure and on-premises networks.
 4. Virtual Network Gateways: Facilitate communication between Azure and on-premises networks.
 
-**Topology Overview**
+### Topology Overview
 
 The implementation typically involves:
 
@@ -60,7 +61,7 @@ The implementation typically involves:
 3. Azure Route Server propagating these routes to on-premises networks via ExpressRoute or VPN Gateway.
 4. On-premises infrastructure resolving the application’s DNS name to the anycast IP.
 
-**Detailed Configuration Steps**
+### Detailed Configuration Steps
 
 1. Set up Azure Route Server:
  — Deploy Azure Route Server in a dedicated subnet (`RouteServerSubnet`) in each region’s hub virtual network.
@@ -87,7 +88,7 @@ The implementation typically involves:
  — On-premises routers receive the anycast route from multiple Azure regions.
  — They typically use equal-cost multi-path (ECMP) routing to distribute traffic across available paths.
 
-**Health Checks and Failover**
+### Health Checks and Failover
 
 - Implement health checks in the NVAs to monitor the application’s availability.
 - Configure NVAs to stop advertising the anycast route if the application becomes unhealthy in their region.
@@ -111,7 +112,7 @@ Traffic Flow and NAT Considerations
 
 To illustrate the practical benefits of anycast routing, let’s explore a real-world scenario where it was used to solve a complex networking challenge.
 
-**The Challenge: Global Internet Egress with Regional Constraints**
+### The Challenge: Global Internet Egress with Regional Constraints
 
 In a large multinational retail organisation, there was a need to provide regional failover to the closest proxy server for internet egress. This scenario presented several unique challenges:
 
@@ -123,7 +124,7 @@ In a large multinational retail organisation, there was a need to provide region
 
 4. Global Failover: The solution needed to provide seamless failover to alternative egress points if the primary regional egress became unavailable.
 
-**The Solution: Anycast with F5 LTM and Conditional Route Injection**
+### The Solution: Anycast with F5 LTM and Conditional Route Injection
 
 To address these challenges, an anycast solution was implemented using F5 Local Traffic Manager (LTM) appliances with conditional route injection. This approach is conceptually similar to the Azure anycast solution using Route Server and NVAs. Here’s how it worked:
 
@@ -137,7 +138,7 @@ To address these challenges, an anycast solution was implemented using F5 Local 
 
 5. Health Checks: Regular health checks on the proxy services ensured that unhealthy instances would not attract traffic.
 
-**Benefits of the Anycast Approach**
+### Benefits of the Anycast Approach
 
 This solution provided several key benefits:
 
@@ -151,7 +152,7 @@ This solution provided several key benefits:
 
 5. Seamless for End Users: Users, including travellers, didn’t need to reconfigure their devices when moving between regions.
 
-**Parallels with Azure Anycast Implementation**
+### Parallels with Azure Anycast Implementation
 
 This real-world example closely mirrors the anycast implementation possible in Azure using Route Server and NVAs:
 
@@ -162,17 +163,17 @@ This real-world example closely mirrors the anycast implementation possible in A
 
 ### Advanced Configurations
 
-**Influencing Path Selection**
+### Influencing Path Selection
 
 - Modify BGP advertisements from NVAs to prefer certain regions.
 - Use techniques like AS Path prepending to establish deterministic paths from on-premises to Azure workloads.
 
-**Multi-Region Design**
+### Multi-Region Design
 
 - Deploy applications across Availability Zones within each region for higher availability.
 - Use consistent NVA and Route Server configurations across regions for seamless failover.
 
-**Limitations and Considerations**
+### Limitations and Considerations
 
 1. ExpressRoute Limitations:
  — ExpressRoute branch-to-branch connectivity is not supported.
