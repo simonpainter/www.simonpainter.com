@@ -32,11 +32,66 @@ The challenge of closest-instance routing presents a more complex puzzle. While 
 
 AWS takes the query's originating region as the location identifier for geoproximity routing. We can leverage this by creating regional DNS records and assigning them to geoproximity routing with specified AWS regions for each record.
 
-The integration between Azure and AWS is where things get interesting. By configuring Azure DNS to conditionally forward to Route 53, we create a seamless connection between the two cloud providers. You can see this in action in a [lab I created which allows you to resolve private Route53 zones from Azure](https://github.com/simonpainter/cross-csp-r53). AWS treats queries from inbound resolvers in a specific region (say, eu-west-2) as originating from that region. This means that when Azure UK South forwards its queries to AWS eu-west-2, it receives geographically appropriate responses.
+The integration between Azure and AWS is where things get interesting, particularly in the DNS resolver configuration. Let's look at how we can actually [set this up in a lab environment](https://github.com/simonpainter/cross-csp-r53).
+
+### Setting Up Azure DNS Resolution
+
+In Azure, we start by creating a Private DNS Resolver in our virtual network. This requires two special subnet delegations: one for the inbound endpoint and another for the outbound endpoint. The inbound endpoint isn't strictly necessary for our AWS integration, but it's good practice to set it up for a complete DNS architecture.
+The crucial component is the outbound endpoint, which handles the forwarding of DNS queries to AWS. We create this in its dedicated subnet, and then establish a DNS forwarding ruleset. The ruleset acts as a container for our forwarding rules and needs to be linked to our virtual network.
+The magic happens in the forwarding rule itself. We configure it to capture all queries for our domain (internal.example.com in this case) and forward them to the AWS Route 53 inbound resolver endpoints. Here's where attention to detail matters - the domain name needs that trailing dot (internal.example.com.), and we need to allow both TCP and UDP on port 53.
+
+### Setting Up AWS Route 53
+
+On the AWS side, we create a private hosted zone for internal.example.com and associate it with our VPC. The key component is the Route 53 Resolver inbound endpoint, which we configure with an IP addresse in the private subnet. This is the IP addresse that Azure's outbound resolver will forward queries to.
+The Flow in Action
+When it all comes together, the DNS resolution flow works like this:
+
+1) Azure VM queries systemd-resolved (127.0.0.53)
+2) Query reaches Azure DNS Resolver
+3) Azure Outbound Endpoint forwards query for internal.example.com
+4) AWS Route53 Resolver Inbound receives query
+5) Route53 private hosted zone resolves record
+6) Response returns to Route53 Resolver Inbound
+7) Response returns to Azure Outbound Endpoint
+8) Response returns through Azure DNS Resolver to VM
+
+```text
+Azure                                      AWS
+┌──────────────────────────────┐          ┌──────────────────────────────┐
+│                              │          │                              │
+│  ┌──────────┐   Step 1       │          │                ┌──────────┐  │
+│  │   VM     ├───────────┐    │          │                │   VM     │  │
+│  └──────────┘           │    │          │                └────┬─────┘  │
+│  172.16.1.0/24          \/   │          │                     │        │
+│                    ┌─────────┐          │                     │        │
+│                    │  Azure  │          │                     │        │
+│               ┌────┤  DNS    │          │                     │        │
+│   Step 2      │    │Resolver │          │                     │        │
+│               \/   └─────────┘          │                     │        │
+│         ┌──────────┐                    │                     │        │
+│         │ Outbound │     Step 3         │     Step 4          │        │
+│         │ Endpoint ├────────────────────┼──────────┐          │        │
+│         └──────────┘                    │          \/         │        │
+│         172.16.3.0/24                   │    ┌───────────┐    │        │
+│                /\                       │    │  Route53  │    │        │
+│                │                        │    │  Resolver │    │        │
+│                │                        │    │  Inbound  │    │        │
+│                │                        │    └─────┬─────┘    │        │
+│                │                        │          │          │        │
+│                │                        │          \/         │        │
+│                │                        │    ┌───────────┐    │        │
+│                │        Steps 6-8       │    │  Private  │    │        │
+│                └────────────────────────┼────┤  Route53  │    │        │
+│                                         │    │   Zone    ├────┘        │
+└──────────────────────────────┘          │    └───────────┘             │
+                                          └──────────────────────────────┘
+```
+
+The beauty of this setup is that AWS treats the query as originating from the region where its Route 53 Resolver inbound endpoint is located. This means that when Azure UK South forwards its queries to AWS eu-west-2, it receives geographically appropriate responses, making our closest-instance routing possible.
 
 ## The Reality of Implementation
 
-For on-premises networks, the solution becomes more nuanced. The implementation requires regional DNS conditional forwarders, with each region's clients needing to forward their queries to the appropriate regional resolver. This adds a layer of complexity that might make the solution less practical for some organisations.
+For on-premises networks, the solution becomes more nuanced. The implementation requires regional DNS conditional forwarders, with each region's clients needing to forward their queries to the appropriate regional AWS resolver. This adds a layer of complexity that might make the solution less practical for some organisations.
 
 The integration process itself reveals both the possibilities and limitations of cross-cloud solutions. While the technical implementation is surprisingly straightforward, it requires careful planning and consideration of the operational implications.
 
