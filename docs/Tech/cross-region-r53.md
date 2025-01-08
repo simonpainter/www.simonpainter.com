@@ -18,15 +18,15 @@ When working with Azure cloud networking, certain limitations become apparent, p
 
 The challenge then becomes finding a way to achieve these requirements using only cloud-native constructs. Using Azure alone, we face significant constraints. Cross-region failover requires exposing health checks to the internet, and closest-instance routing isn't feasible with Azure's native tooling for private networks. This is where AWS Route 53 enters the picture, offering more mature capabilities in these areas.
 
-## Solution 1: Cross-Region Failover
+## Requirement 1: Cross-Region Failover
 
-Route 53 provides health checking capabilities for private zones, though with some important caveats. The standard health checks, which we typically use for internet-accessible services, won't work within a VPC. However, we can implement a clever workaround using AWS Lambda.
+Route 53 provides health checking capabilities for private zones, though with some important caveats. The standard health checks, which we typically use for internet-accessible services, won't work within a VPC. However, we can implement a reasonable workaround using AWS Lambda.
 
-The solution begins with creating a Lambda function that performs health checks against private Azure resources. Using the Python requests library for example, it validates service availability of an http(s) endpoint and outputs the status to CloudWatch. These CloudWatch metrics then serve as the basis for monitoring the Lambda health check results and triggering Route 53 failover actions when needed.
+The solution begins with creating a Lambda function that performs health checks against private Azure resources. Using the [Python requests library](https://pypi.org/project/requests/) for example, it validates service availability of an http(s) endpoint and outputs the status to CloudWatch. These CloudWatch metrics then serve as the basis for monitoring the Lambda health check results and triggering Route 53 failover actions when needed.
 
-This approach works beautifully for any private resource, whether it's in AWS, Azure, or even on-premises. When an Azure instance fails the Lambda health check, Route 53 automatically removes it from rotation and serves the next healthy instance in the chain, providing seamless failover capabilities.
+This approach works beautifully for any private resource, whether it's in AWS, Azure, or even on-premises. When an Azure instance fails the Lambda health check, Route 53 automatically removes it from rotation and serves the next healthy instance in the chain, providing seamless failover capabilities. The lambda has to be triggered but that can be done with Cloudwatch events which can be thought of as functionally equivalent to a cron job.
 
-## Solution 2: Closest-Instance Routing
+## Requirement 2: Closest-Instance Routing
 
 The challenge of closest-instance routing presents a more complex puzzle. While Anycast traditionally solves this using the [routing protocol's](dijkstra-ospf.md) [network path selection](longest-prefix-matching.md), DNS-based solutions typically rely on geolocation databases - something that's problematic with private IP addresses.
 
