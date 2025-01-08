@@ -101,6 +101,4 @@ Throughout this exploration, we've discovered that this solution is technically 
 
 However, the question isn't just whether we can implement this solution, but whether we should. While it's an fascinating technical exercise that demonstrates the possibilities of cross-cloud integration, the complexity and potential maintenance overhead make it less suitable for critical production workloads.
 
-Perhaps the most valuable insight from this exercise isn't the solution itself, but the reminder that sometimes the best answer to a platform's limitations might lie in complementary services from other providers - even if we ultimately decide not to use them. It challenges us to think beyond single-cloud solutions while remaining pragmatic about what we actually implement in production.
-
-The cloud native world isn't always about finding the purest solution within a single provider's ecosystem. Sometimes it's about understanding when to reach across the aisle - and when to step back and accept the limitations we face.
+Perhaps the most valuable insight from this exercise isn't the solution itself, but the reminder that sometimes the best answer to a platform's limitations might lie in complementary services from other providers - even if we ultimately decide not to use them. It challenges us to think beyond single-cloud solutions while remaining pragmatic about what we actually implement in production. 
