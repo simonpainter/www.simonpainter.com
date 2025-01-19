@@ -70,6 +70,10 @@ The first problem to solve in order to make this work is how we ensure that both
 
 The relationship between clock signals and baud rate is intimate - one computer must generate a clock signal that matches the baud rate so both computers can sample their incoming data stream at the optimal points between signal transitions.
 
+### We can send numbers, what about letters?
+
+**Placeholder** ASCII and Unicode
+
 ### That's two computers, how about n?
 
 Connecting two computers with a serial connection is great but what about if you want to introduce a third node? The simplest answer is to use a full mesh topology where each computer node has a direct serial connection to the both of the other computer nodes.
@@ -307,6 +311,226 @@ Solution: Gratuitous ARP
 
 Both DHCP and ARP are examples of how networking protocols solve complex management problems through automation and discovery rather than manual configuration. They're critical pieces that make modern networks scalable and self-managing.
 
-## Route finding
+## Finding the route
 
-Once a packet has got to the router the router will then compare it to the route table. The biggest difference between the route table and the MAC table is that the route table has the path to whole networks as a single entry without having to list every single host. The network address that we discussed earlier, [with the CIDR prefix length](longest-prefix-matching.md), is used to locate the right path out of all the available paths. So long as each router along the path knows the way to the network that has the host in it they can pass the packet, wrapping it in a fresh frame for each hop, until it reaches the destination network's router and ARP allows it to send it directly to the host computer's MAC address. 
+Once a packet has got to the router the router will then compare it to the route table. The biggest difference between the route table and the MAC table is that the route table has the path to whole networks as a single entry without having to list every single host. The network address that we discussed earlier, [with the CIDR prefix length](longest-prefix-matching.md), is used to locate the right path out of all the available paths. So long as each router along the path knows the way to the network that has the host in it they can pass the packet, wrapping it in a fresh frame for each hop, until it reaches the destination network's router and ARP allows it to send it directly to the host computer's MAC address.
+
+### Static routing
+
+We can easily build up routing tables that span a large network by taking each hop. Take the example below where an organisation has networked computers in cities across the world connected by underground or undersea cables.
+
+```text
++-----------+                                +-----------+
+|  Chicago  |------------\                   | Edinburgh |
++-----------+             \                  +-----------+
+                           \                      |
++---------------+        +----------+        +--------+      +-------+
+| San Francisco |--------| New York |--------| London |------| Tokyo |
++---------------+        +----------+        +--------+      +-------+
+```
+
+We can simplify the diagram and remove the geography and give each router a name.
+
+```text
+
+     CH     ED
+      |     |
+SF----NY----LN----TK
+```
+
+The routing table for each site's router would be as follows:
+
+```text
+San Francisco (SF):
+CH-->NY
+NY-->NY    (direct)
+ED-->NY    (via NY to LN to ED)
+LN-->NY
+TK-->NY    (via NY to LN to TK)
+
+Chicago (CH):
+SF-->NY
+NY-->NY    (direct)
+ED-->NY    (via NY to LN to ED)
+LN-->NY
+TK-->NY    (via NY to LN to TK)
+
+New York (NY):
+SF-->SF    (direct)
+CH-->CH    (direct)
+ED-->LN
+LN-->LN    (direct)
+TK-->LN
+
+London (LN):
+SF-->NY
+CH-->NY
+NY-->NY    (direct)
+ED-->ED    (direct)
+TK-->TK    (direct)
+
+Edinburgh (ED):
+SF-->LN
+CH-->LN
+NY-->LN
+LN-->LN    (direct)
+TK-->LN
+
+Tokyo (TK):
+SF-->LN
+CH-->LN
+NY-->LN
+ED-->LN
+LN-->LN    (direct)
+```
+
+If you trace the path of a packet from Chicago to Tokyo you can see at each step the router knows where to send the packet but it doesn't know the whole route. You can simplify things even further with stub networks like Edinburgh, Chicago and Tokyo because all traffic from them goes to the same next hop
+
+```text
+San Francisco (SF):
+CH-->NY
+NY-->NY    (direct)
+ED-->NY    (via NY to LN to ED)
+LN-->NY
+TK-->NY    (via NY to LN to TK)
+
+Chicago (CH):
+All traffic (default route) -->NY
+
+New York (NY):
+SF-->SF    (direct)
+CH-->CH    (direct)
+ED-->LN
+LN-->LN    (direct)
+TK-->LN
+
+London (LN):
+SF-->NY
+CH-->NY
+NY-->NY    (direct)
+ED-->ED    (direct)
+TK-->TK    (direct)
+
+Edinburgh (ED):
+All traffic (default route) -->LN
+
+
+Tokyo (TK):
+All traffic (default route) -->LN
+
+```
+
+This is great until we want to make changes, or perhaps changes are forced upon us by unexpected failures. Let's say we add in an undersea cable crossing the pacific to connect Tokyo and San Francisco. Many such cables exist and we might want to use it for communciations between those two sites. We probably don't want to use it for communications between London and New York though because that cable is shorter.
+
+```text
+   CH     ED
+    |     |
++--SF----NY----LN----TK--+
+|                        |
++-pacific-undersea-cable-+
+```
+
+We can update the routing table for the two sites:
+
+```text
+San Francisco (SF):
+CH-->NY
+NY-->NY    (direct)
+ED-->NY    (via NY to LN to ED)
+LN-->NY
+TK-->SF    (direct via pacfic cable)
+
+Tokyo (TK):
+SF-->SF    (direct via pacfic cable)
+CH-->LN
+NY-->LN
+ED-->LN
+LN-->LN    (direct)
+```
+
+Everything else can remain the same because all other sites will use the existing routes until disaster strikes and the cable between London and New York gets damaged. We can connect to each router and update the routing table to reflect the change, sending all traffic via SF and TK rather than via NY and LN. Traffic between NY and LN goes the long way round but everything works again. In practice though this just isn't going to work. Statically assigned routing is a huge overhead because as sites increase the number of routing table entries increases exponentially.
+
+> Think back to the full mesh network topology at the start - every node needed a path to every other node so the number
+> of paths was n(n-1)/2 - the same calculation works here if you don't do anything clever with route summarisation.
+
+### Dynamic routing
+
+Building up a routing table dynamically relies on routers talking to each other. This is done using routing protocols which are essentially ways for routers to exchange information about the networks they know about and in many cases the distance or cost of getting there over that path. One of the most popular protocols, OSPF (Open Shortest Path First), uses a route finding algorith called [Dijkstra's Algorithm](dijkstra-ospf.md) which is the same algorithm used by some sat nav units to calculate the best route to somewhere taking into account distance, road congestion, and speed limits.
+
+> A better solution for Sat Navs is likely to be [the A* search algorithm](algorithms.md#a-a-star-search) which takes
+> into account heuristics to indicate roughly what direction the target is from the start point. If you are in London
+> trying to find a route to Edinburgh you are probably going to be wasting your time looking at routes that start off
+> going south. OSPF has no such heuristic to influence path selection so relies on cost alone.
+
+Now we have got to the point where we can get data from one part of the world to the other across our IP network. We still need to figure out a bit more about what to send to make it useful but we don't operate the only network. The Internet is, by definition, a collection of networks that have joined together to form a larger network. Inter is a prefix that means between, whereas intra means within. An intranet is within your own network and internet means between separate networks. So how do we connect our networks and exchange routing information with other networks in a safe way? We want to have something on the border of our network that allows us to carefully exchange information about the networks we know about within our autonomous system and the networks they can see within their autonomous system. We might also want to exchange information about other autonomous systems that we are connected to that others can reach through us. The protocol for exchanging this information at the border of our network is Border Gateway Protocol, or BGP.
+
+### Peering with other networks
+
+> **Placeholder** BGP
+
+## What to transport
+
+We can now get a packet from our source, anywhere in the world, to our destination, also anywhere in the world. We are sending that data in discrete packets and to avoid congestion on the network we probably want to keep those packets small so we don't clog up a link and stop other packets flowing over it for too long. That's good for sending a single packet but what about if we want a longer connection with data flowing back and forth? What if we want to actually get a response or an acknowledgement that the packet was received? Here we need to look at the protocols within IP and what they can do for us.
+
+> The protocols you are most likely to already have heard of are TCP, UDP and perhaps ICMP. ICMP is what is used in the
+> ping command which is a rather troublesome way to troubleshoot network connectivity.
+
+### UDP (User Datagram Protocol)
+
+UDP is the lightweight way to send data with minimal overhead when perfect reliability isn't required. It is typically described as 'send and forget' because there is no assumption that the receiver gets the packet and no session is created for responses. Responses can be sent but those are received on their own merit as standalong messages and not in the context of a wider conversation. An analogy of UDP could be SMS text messaging where each message is independent of each other.
+
+### TCP (Transmission Control Protocol)
+
+TCP is the more involved cousin. Expanding on the text message analogy for UDP, a TCP session would be a phone call where there is a ring and answer style handshake to establish the session, a two way conversation and then a clear termination of the session.
+
+## The phone book
+
+> By now we have used analogies including the postal service, text messaging and phone calls so it was only a matter of
+> time before we brought the phone book into it. It may not be as common to people now but we used to have big books in
+> our houses with all the phone numbers of all the houses in our local area. For anyone under 30 this might seem bonkers.
+
+We've looked at IP addresses. They're just a 32 bit number expressed in a dotted decimal notation for humans to read. So when you want to contact me at 74.125.133.27 you can do so now right? People don't want to have to remember 32 bit numbers so we need a more friendly name for computer systems around the world and we need to make it able to scale; the best way to make things scale is often to distribute them rather than store them centrally.
+
+DNS, or the domain name system, introduces a heirarchical naming system which can be distributed such that individual records can be delegated down the organisations and individuals to manage using a system of distributed authority. If you take my website address, `www.simonpainter.com`, it has three clear parts: the host name www, which is the convention for hosts that make up the world wide web, the domain `simonpainter.com` which has a top level of `com` and a second level of `simonpainter`.
+
+> I want to stop and talk about the dot in the domain name, or more interestingly the fact that it doesn't exist in the
+> actual DNS query. The space between each portion of the domain name is filled with a byte containing the length of the
+> next portion.
+>
+> You would express `www.google.com` as **03** 77 77 77 **06** 67 6f 6f 67 6c 65 **03** 63 6f 6d where 03, 06 and 03 are
+> the lengths of the www, google, and com respectively. Even without an ASCII table you can work out what the rest
+> of the numbers are.
+
+When I want to look up how to get to `www.simonpainter.com` I start by querying my local DNS server. It's another one of those options that can be configured manually or with [DHCP](#the-address-configuration-problem) so I know my DNS server's IP address (or more likely I know more than one). I send a UDP packet asking for it to resolve `www.simonpainter.com` to an IP address. My local DNS server probably doesn't know the answer because it's not the authority for that domain so it does one of two different things: it could forward all queries to a different DNS server, perhaps a central one managed by my internet service provider, or it could try recursively looking it up itself. If it forwards it to the ISP DNS server it's likely the ISP DNS server would do a recursive lookup. In the event that someone else had already recently requested that lookup from the ISP it may be able to respond with a cached answer rather than have to look it up again.
+In order to do a recursive lookup the first place to start is the DNS root servers. They are globally distributed computers which all hold the same root zone that is the starting point for a lookup. DNS servers just have to know where to find the root servers so [all recursive DNS servers will hold a list of the root servers and their IP addresses](https://www.internic.net/domain/named.root). The root servers will know the name servers that hold information for anything ending .com and will respond with that information. The record from the [root zone](https://www.internic.net/domain/root.zone) will look like this for `.com`.
+
+```text
+com.            172800    IN    NS    a.gtld-servers.net.
+com.            172800    IN    NS    b.gtld-servers.net.
+com.            172800    IN    NS    c.gtld-servers.net.
+com.            172800    IN    NS    d.gtld-servers.net.
+com.            172800    IN    NS    e.gtld-servers.net.
+com.            172800    IN    NS    f.gtld-servers.net.
+com.            172800    IN    NS    g.gtld-servers.net.
+com.            172800    IN    NS    h.gtld-servers.net.
+com.            172800    IN    NS    i.gtld-servers.net.
+com.            172800    IN    NS    j.gtld-servers.net.
+com.            172800    IN    NS    k.gtld-servers.net.
+com.            172800    IN    NS    l.gtld-servers.net.
+com.            172800    IN    NS    m.gtld-servers.net.
+```
+
+From one of those name servers for `.com` the DNS server will find out the name servers for `simonpainter.com` and that will be where they can get an authorative answer for `www.simonpainter.com`.
+
+> This only covers DNS A records (host records) and NS records (name server records) but there are several other record
+> types which serve different purposes. A records resolve IPv4 and AAAA records are used for IPv6, this is because IPv6
+> addresses wouldn't fit in the space allocated for IPv4 addresses in A records. The name AAAA comes from it being 4
+> times the size of an A record.
+
+## A moment to talk about security
+
+So far we've just been sending plain ASCII, or Unicode, text. When we establish communications between computers we now want to ensure there is some degree of encryption.
+
+**Placeholder** TLS
+
+## And finally the application
