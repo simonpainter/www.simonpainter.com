@@ -534,3 +534,49 @@ So far we've just been sending plain ASCII, or Unicode, text. When we establish 
 **Placeholder** TLS
 
 ## And finally the application
+
+We know how to resolve a name to an IP address anywhere in the world, we know how to route traffic to it across many different networks and we understand right the way down to the pulses of light or electricity through a cable how we get data across networks. Once it arrives at a computer we know that if the destination MAC address is right the frame will be received and the packet inside inspected. We know that it might be a UDP packet or it might be part of a TCP session but whatever it is there will be an application waiting there listening for that data. But what if there are more than one networked applications running on that computer? How do we ensure that data for an application is passed from the network interface to the correct application?
+
+> A socket is the construct that serves as the endpoint for a networked application to send and receive data. In the
+> context of IP a socket address is the triad of transport protocol, IP address, and port number. This recognises that
+> systems may have more than one IP address and more than one interface. An example of a socket for a web server might
+> be tcp/80 on address 192.168.0.50.  Wildcards are sometimes used in configuration where an application is bound to any
+> IP address associated with a system. Note that TCP and UDP would listen on different sockets however some
+> applications, such as DNS, use both and would therefore have sockets for both.
+
+Applications have commonly associated ports and the TCP or UDP header will have the application port within it. When the packet is received the port number, along with the protocol and the IP address, are used to pass the payload of the packet to the correct application. Those applications then parse the data according to their own application protocols. There are a number of common TCP and UDP port numbers that are by convention associated with common applications however you can configure most applications to listen on any port and so long as the sender knows to use the non standard port then everything will still work.
+
+```text
+Some of the well-known ports (1-1023):
+Port    Proto   Service         Purpose
+20      TCP     FTP-data       File transfer data channel
+21      TCP     FTP-control    File transfer control channel
+22      TCP     SSH            Secure remote access and file transfer
+23      TCP     Telnet         Legacy remote terminal (unencrypted)
+25      TCP     SMTP           Email submission
+53      TCP/UDP DNS            Name resolution
+67      UDP     DHCP-Server    Network configuration (server side)
+68      UDP     DHCP-Client    Network configuration (client side)
+69      UDP     TFTP           Trivial file transfer (network boot)
+80      TCP     HTTP           Web traffic
+123     UDP     NTP            Time synchronization
+443     TCP     HTTPS          Secure web traffic
+445     TCP     SMB            File/printer sharing
+514     UDP     Syslog         System logging
+```
+
+### Sir Tim and the World Wide Web
+
+## People don't need to study preposterous acronyms
+
+Now you have reached the end of this you also know a bit more about the OSI model and what people mean when they talk about 'layer 2' or 'layer 3' networks. Networking is conceptually organised into discrete layers which have standardised interfaces between them. Those layers have irritatingly unintitive names:
+
+- Layer 1 - **P**hysical
+- Layer 2 - **D**atalink
+- Layer 3 - **N**etwork
+- Layer 4 - **T**ransport
+- Layer 5 - **S**ession
+- Layer 6 - **P**resentation
+- Layer 7 - **A**pplication
+
+There are lots of ways to remember the order, PDNTSPA: 'Please Do Not Throw Sausage Pizza Away' is one particularly bad example. What is important is to understand that the bits where we discussed [the cable and underlying physical network connections](#lets-start-with-the-cable) were all about layer 1, the [hub](#thats-two-computers-how-about-n) and [switch topology](#switching-to-something-cleverer) and [data frames between MAC addresses](#addressing-the-problem) were all at layer 2. [Routing](#finding-the-router) and [routing protocols](#finding-the-route) were layer 3 while layer 4 is made up of the transport protocols like [TCP](#tcp-transmission-control-protocol) and [UDP](#udp-user-datagram-protocol). Internet Protocol blurs the model a bit at the top because layers 5, 6 and 7 are all associated with [application traffic](#and-finally-the-application) but we now know quite a lot about that too. You should now be able to visualise the path of date from when you put this web page address into your browser and the page loaded up for you to read. I hope you've enjoyed the process.
