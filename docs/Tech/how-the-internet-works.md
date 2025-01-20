@@ -152,7 +152,7 @@ As networks grow there will be an increase in the liklihood of collisions and th
 
 ## Switching to something cleverer
 
-Instead of simple hubs which are just electrical repeaters, we need a device that can look at the destination MAC address, compare it to a table in memory and then send that data out of the correct interface where the destination computer node is connected. In order to do this we have more problems to solve. First of all we need to work out how to populate that table which stores MAC addresses and the ports they are associated with. The easiest way to do this is to look at the source MAC address of frames and associate them with the interfaces they are received on. If we get a frame with a destination MAC addres we don't know about then we can flood it to all interfaces and see which one the computer responds from. As this switching device is going to be a bit cleverer we will need to give it a processor and some memory, taking it from dumb electrical repeater that a hub was into a processing computer in its own right. With memory it can hold frames in a buffer while it looks in its MAC table to work out where to send them. It can also use that buffer in cases where the interfaces get congested.
+Instead of simple hubs which are just electrical repeaters, we need a device that can look at the destination MAC address, compare it to a table in memory and then send that data out of the correct interface where the destination computer node is connected. In order to do this we have more problems to solve. First of all we need to work out how to populate that table which stores MAC addresses and the ports they are associated with. The easiest way to do this is to look at the source MAC address of frames and associate them with the interfaces they are received on. If we get a frame with a destination MAC address we don't know about then we can flood it to all interfaces and see which one the computer responds from. As this switching device is going to be a bit cleverer we will need to give it a processor and some memory, taking it from dumb electrical repeater that a hub was into a processing computer in its own right. With memory it can hold frames in a buffer while it looks in its MAC table to work out where to send them. It can also use that buffer in cases where the interfaces get congested.
 
 ### Congestion
 
@@ -194,17 +194,17 @@ Now with your new addressing scheme we need one more piece of information - wher
 In an example where our local host has an address of 10.0.0.1 and is on network 10.0.0.0/24 the network portion is 10.0.0.0 and the host portion is 1. The computer works that out using a subnet mask which comprises of 24 ones (from the 24 in the network address CIDR notation) and 8 zeros to make it up to a total of 32 bits. A 24 bit subnet mask is 11111111.11111111.11111111.00000000 or 255.255.255.0
 If we use a logical AND on the subnet mask and the local host address 10.0.0.1 we get get the bits that appear in both
 
-11111111.11111111.11111111.00000000
-AND
+11111111.11111111.11111111.00000000 AND
 00001010.00000000.00000000.00000001
+    ^ ^
 gives
 00001010.00000000.00000000.00000000
 
 Now we do a logical AND with the subnet mask and the destination address 10.1.0.1 00001010.00000001.00000000.00000001
 
-11111111.11111111.11111111.00000000
-AND
+11111111.11111111.11111111.00000000 AND
 00001010.00000001.00000000.00000001
+    ^ ^         ^
 gives
 00001010.00000001.00000000.00000000
 
@@ -466,7 +466,93 @@ Now we have got to the point where we can get data from one part of the world to
 
 ### Peering with other networks
 
-> **Placeholder** BGP
+When networks grow beyond a single organisation, or autonomous system, we find we need to share routing information whilst maintaining control and independence. Each autonomous system needs to:
+
+- Control what routes they advertise to others
+- Choose which routes to accept from others
+- Make policy decisions about traffic flow
+- Maintain stability when other networks have problems
+
+```text
+Internet Service Provider A        Internet Service Provider B
++-------------------------+       +-------------------------+
+|     AS Number 65001     |       |     AS Number 65002     |
+|                         |       |                         |
+|  +--------+            +--------+            +--------+  |
+|  |        |            | Border |            |        |  |
+|  | Router |------------| Router |------------| Router |  |
+|  |        |            |        |            |        |  |
+|  +--------+            +--------+            +--------+  |
+|                         |       |                         |
++-------------------------+       +-------------------------+
+```
+
+Each autonomous sytem for internet peering is assigned a unique number, the Autonomous System Number (ASN). BGP uses this to track the path a route has taken through different networks to ensure that there are no loops. It also uses the list of ASNs that a route has been through to get a crude estimate of the distance to the destination using the path length; in most cases a route that passes through the fewer networks is considered better than one that passes through more networks.
+Unlike internal routing protocols, BGP is not designed to focus on finding the shortest path, it is designed to solve a different set of probles:
+
+1. Policy Enforcement:
+
+```text
+AS 65001's Policy:
+- Advertise only our customer networks
+- Accept only customer routes from AS 65002
+- Prefer paid links over free peering
+
+AS 65002's Policy:
+- Advertise all routes to paying customers
+- Accept all routes from AS 65001
+- Filter out private networks
+```
+
+2. Route Aggregation:
+
+```text
+Instead of advertising:
+  192.168.1.0/24
+  192.168.2.0/24
+  192.168.3.0/24
+  192.168.4.0/24
+
+BGP can summarise as:
+  192.168.0.0/22
+```
+
+> BGP's genius is that it doesn't just share routes - it shares the path to reach those routes. This path
+> information (called the AS_PATH) lets networks make informed decisions about which routes to trust and use.
+> It's like not just knowing there's a road to a destination, but knowing exactly which countries you'll pass
+> through to get there.
+
+BGP routers establish TCP sessions (on port 179) with their peers and exchange routes through UPDATE messages:
+
+```text
+Router A                Router B
+   |                      |
+   |---Open------------->|    "Hello, I'm AS 65001"
+   |<--Open--------------| "Hello, I'm AS 65002"
+   |                      |
+   |---Update----------->|    "I can reach 192.168.0.0/22"
+   |<--Update------------| "I can reach 10.0.0.0/8"
+   |                      |
+   |---Keepalive-------->|    "Still here!"
+   |<--Keepalive---------| "Still here too!"
+```
+
+The real complexity of BGP comes from its attributes - ways to influence path selection:
+
+```text
+BGP Path Selection (in order):
+1. Highest LOCAL_PREF
+2. Shortest AS_PATH
+3. Lowest ORIGIN type
+4. Lowest MED
+5. External over internal BGP
+6. Lowest IGP metric to next hop
+7. Lowest router ID (tie breaker)
+```
+
+> BGP's deliberate slowness in converging is actually a feature, not a bug. When a route disappears and
+> reappears frequently (called route flapping), BGP implements route dampening to maintain stability.
+> This prevents unstable routes from causing cascading problems across the internet.
 
 ## What to transport
 
