@@ -37,7 +37,7 @@ AWS provides the following Managed Domain Lists, in the Regions where they are a
 
 AWS Managed Domain Lists cannot be downloaded or browsed. To protect intellectual property, you can't view or edit the individual domain specifications within the AWS Managed Domain Lists. This restriction also helps to prevent malicious users from designing threats that specifically circumvent published lists.
 
-Advanced option also uses heuristics to match DNS tunnelling and Domain Generation Algorithms. Signatures for DNS based threats. Separate pricing.
+Advanced option also uses heuristics to match DNS tunnelling and Domain Generation Algorithms. The advanced option also has signature based matching for specific DNS based threats over and above what is provided in the managed lists. Advanced has separate pricing though.
 
 The **AWSManagedAggregateThreatList** includes threat intelligence with [Recorded Future](https://www.recordedfuture.com) and all lists are updated hourly as new threats emerge and are identified.
 
