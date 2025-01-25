@@ -59,7 +59,7 @@ The tradeoff between serial and parallel communications is a perfect example of 
 
 ### Serial clocks
 
-The first problem to solve in order to make this work is how we ensure that both computers know when a one and a zero start and finish, serial connections rely on both computers knowing the rate at data is flowing.  In a simple system both computers can be configured to know the rate of transfer, say 9600 bits per second and they sample the data received at that rate and will typically be fine. For faster and more accurate transfer another wire with a clock signal is needed. The clock signal acts like a metronome, providing the timing reference that keeps both sender and receiver synchronised. This synchronisation ensures that bits are sampled at the correct moments to accurately interpret the data.
+The next problem to solve in order to make serial communcations this work is how we ensure that both computers know when a one and a zero start and finish, serial connections rely on both computers knowing the rate at data is flowing.  In a simple system both computers can be configured to know the rate of transfer, say 9600 bits per second and they sample the data received at that rate and will typically be fine. For faster and more accurate transfer another wire with a clock signal is needed. The clock signal acts like a metronome, providing the timing reference that keeps both sender and receiver synchronised. This synchronisation ensures that bits are sampled at the correct moments to accurately interpret the data.
 
 > The baud rate, measured in *symbols per second*, represents how many signal changes can occur on the communication
 > channel in one second. While baud rate was historically equivalent to bits per second in early systems where each
@@ -77,7 +77,7 @@ When connecting two computers we established that they communicate in ones and z
 > ASCII's use of 7 bits rather than 8 reflects its 1960s origins, when the 8th bit was reserved for parity - a simple
 > error detection scheme. The parity bit would be set to make the total number of 1s either odd or even, allowing
 > detection of single-bit transmission errors. When 8-bit bytes became standard, various "extended ASCII" encodings
-> emerged using the extra bit to add 128 more characters, though these extensions weren't standardized.
+> emerged using the extra bit to add 128 more characters, though these extensions weren't standardised.
 
 ```text
 Example byte with even parity:
@@ -238,9 +238,9 @@ N2---H---N3
 In order to understand when the data for each destination starts and finishes it's useful to organise it, or frame it, in a discrete block with a start and a finish. Data frames have headers with the source and destination addresses and a marker at the end to show that the data payload has finished. The addresses are, like everything in networks, just numbers, but large numbers with trillions of possiblities which ensures they are unique.
 
 > A MAC address (short for medium access control address or media access control address) is a unique identifier
-> assigned to a network interface. It is a 48-bit address space which contains potentially 248 (over 281 trillion)
+> assigned to a network interface. It is a 48-bit address space which contains potentially over 281 trillion
 > possible MAC addresses. Blocks of addressing were historically allocated to network interface vendors to locally
-> hardcode onto network interfaces; due to the sheer quantity of available addresses it's statistically unlikely that
+> hardcode onto network interfaces; due to the sheer quantity of available addresses it's statistically impossible that
 > two devices on a network could ever have the same MAC addresss.
 
 Now that we have our data organised into frames, our computer nodes connected to a hub and each one uniquely addressed we can start to scale out. We can connect hubs to hubs if we like because the data sent by one hub will be repeated to other hubs. One thing we can't do though is form loops of hubs because they are not clever enough to realise if a data frame is in an endless loop as it is repeated by each hub in the loop and then endlessly repeated to every computer node on the network. This is just one of the many ways we can get to some serious congestion in our hub and spoke network.
