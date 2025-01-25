@@ -72,7 +72,108 @@ The relationship between clock signals and baud rate is intimate - one computer 
 
 ### We can send numbers, what about letters?
 
-**Placeholder** ASCII and Unicode
+When connecting two computers we established that they communicate in ones and zeros, but humans prefer to work with text. ASCII (American Standard Code for Information Interchange) solves this by using 7 bits to represent 128 different characters. Each character maps to a specific binary number - for example, the letter 'A' is represented as binary 1000001 (decimal 65).
+
+> ASCII's use of 7 bits rather than 8 reflects its 1960s origins, when the 8th bit was reserved for parity - a simple
+> error detection scheme. The parity bit would be set to make the total number of 1s either odd or even, allowing
+> detection of single-bit transmission errors. When 8-bit bytes became standard, various "extended ASCII" encodings
+> emerged using the extra bit to add 128 more characters, though these extensions weren't standardized.
+
+```text
+Example byte with even parity:
+Letter 'A' = 1000001  (three 1s)
+Parity bit = 1        (to make total 1s even)
+Final byte  = 11000001
+```
+
+This ASCII standard was very much designed around English text, with the available 128 characters covering the Latin alphabet (both upper and lower case), numbers, punctuation marks, and control characters like carriage return and line feed. While this worked well for English-speaking countries, it proved problematic for languages with different alphabets or character sets.
+
+### Enter Unicode
+
+As computing spread globally, ASCII's limitations became apparent. Unicode was developed to handle text from all of the world's writing systems. While ASCII uses 7 bits, Unicode can use multiple bytes to represent characters, allowing it to handle millions of different characters rather than just 128.
+
+```text
+Character encoding comparison:
+ASCII:    'A' = 1000001                    (7 bits)
+UTF-8:    'A' = 01000001                   (8 bits)
+UTF-8:    '世' = 11100100 10111000 10000000 (24 bits)
+```
+
+> For backwards compatibility, Unicode was cleverly designed so that the first 128 characters match ASCII exactly.
+> This means that plain English text looks identical in both ASCII and UTF-8 (the most common Unicode encoding),
+> which helped smooth the transition. This is why protocols like HTTP headers still use ASCII - they can be processed
+> by both old and new systems without any confusion.
+
+The transition from ASCII to Unicode is still ongoing. While modern applications and websites typically use Unicode, many networking protocols and legacy systems continue to use ASCII, particularly in areas where backwards compatibility is crucial or where the character set is limited to simple English text.
+
+## Control characters
+
+The first 32 ASCII values (0-31) are control characters designed for controlling teletype and early computer terminals:
+
+```text
+00 NUL - Null character, used as a string terminator
+01 SOH - Start of Heading, marking message header
+02 STX - Start of Text, marking message body start
+03 ETX - End of Text, marking message body end
+04 EOT - End of Transmission
+05 ENQ - Enquiry, request for response
+06 ACK - Acknowledge, positive response
+07 BEL - Bell, triggers audible alert
+08 BS  - Backspace, move cursor back
+09 TAB - Horizontal Tab
+0A LF  - Line Feed, move down one line
+0B VT  - Vertical Tab
+0C FF  - Form Feed, advance to next page
+0D CR  - Carriage Return, move cursor to line start
+0E SO  - Shift Out, switch to alternate character set
+0F SI  - Shift In, return to standard character set
+10-13 DC1-DC4 - Device Control (DC1/XON and DC3/XOFF for flow control)
+14 NAK - Negative Acknowledge
+15 SYN - Synchronous Idle
+16 ETB - End of Transmission Block
+17-1F - Various block/record/unit separators and escape codes
+```
+
+Many are still used today - notably TAB, LF, CR for text formatting and XON/XOFF for flow control in serial communications.
+
+The full ASCII table is useful when disecting captures of low level protocols.
+
+```text
+Dec Hex ASCII   Dec Hex ASCII   Dec Hex ASCII   Dec Hex ASCII
+--- --- -----   --- --- -----   --- --- -----   --- --- -----
+000 00  NUL     032 20  SPACE   064 40  @       096 60  `
+001 01  SOH     033 21  !       065 41  A       097 61  a
+002 02  STX     034 22  "       066 42  B       098 62  b
+003 03  ETX     035 23  #       067 43  C       099 63  c
+004 04  EOT     036 24  $       068 44  D       100 64  d
+005 05  ENQ     037 25  %       069 45  E       101 65  e
+006 06  ACK     038 26  &       070 46  F       102 66  f
+007 07  BEL     039 27  '       071 47  G       103 67  g
+008 08  BS      040 28  (       072 48  H       104 68  h
+009 09  TAB     041 29  )       073 49  I       105 69  i
+010 0A  LF      042 2A  *       074 4A  J       106 6A  j
+011 0B  VT      043 2B  +       075 4B  K       107 6B  k
+012 0C  FF      044 2C  ,       076 4C  L       108 6C  l
+013 0D  CR      045 2D  -       077 4D  M       109 6D  m
+014 0E  SO      046 2E  .       078 4E  N       110 6E  n
+015 0F  SI      047 2F  /       079 4F  O       111 6F  o
+016 10  DLE     048 30  0       080 50  P       112 70  p
+017 11  DC1     049 31  1       081 51  Q       113 71  q
+018 12  DC2     050 32  2       082 52  R       114 72  r
+019 13  DC3     051 33  3       083 53  S       115 73  s
+020 14  DC4     052 34  4       084 54  T       116 74  t
+021 15  NAK     053 35  5       085 55  U       117 75  u
+022 16  SYN     054 36  6       086 56  V       118 76  v
+023 17  ETB     055 37  7       087 57  W       119 77  w
+024 18  CAN     056 38  8       088 58  X       120 78  x
+025 19  EM      057 39  9       089 59  Y       121 79  y
+026 1A  SUB     058 3A  :       090 5A  Z       122 7A  z
+027 1B  ESC     059 3B  ;       091 5B  [       123 7B  {
+028 1C  FS      060 3C  <       092 5C  \       124 7C  |
+029 1D  GS      061 3D  =       093 5D  ]       125 7D  }
+030 1E  RS      062 3E  >       094 5E  ^       126 7E  ~
+031 1F  US      063 3F  ?       095 5F  _       127 7F  DEL
+```
 
 ### That's two computers, how about n?
 
@@ -187,6 +288,17 @@ Our IP addresses can be grouped into networks by splitting the binary into a net
 > the network address to show which parts are the network address and which parts are the host address.
 
 In a simple network where we have a CIDR of 10.0.0.0/24 we can look at the first 24 bits (conveniently the first three octets) as the network portion and the last 8 bits (the last octet) as the host portion. This means that the first 24 bits will stay the same and we can address our devices with the remaining 8 bits. With 8 bits we have a decimal number range of 0 to 255 inclusive but really we want to reserve the first and the last addresses, 0 and 255 for special purposes. We keep the 0 as the network address so we don't use that for a host and we keep the last as the broadcast address - that means anything sent to that address gets sent to every host on the network segment. That leaves us 254 other addresses (10.0.0.1 - 10.0.0.254) to allocate to our hosts. When you deal with different sized CIDR ranges it gets a bit more complicated because the number if bits doesn't always line up with the octets but the principle still applies.
+
+> While IPv4 addresses use dotted decimal notation, both MAC addresses and IPv6 addresses are typically represented in
+> hexadecimal. This difference stems from their distinct purposes and historical contexts. Decimal notation works well
+> for IPv4 because each octet only ranges from 0-255 - numbers that humans can readily understand. MAC addresses (48 bits)
+> and IPv6 addresses (128 bits) use hexadecimal because it provides a more compact and manageable representation for
+> larger numbers. For example, each 16-bit block in an IPv6 address can represent values up to 65535, which would be
+> unwieldy in decimal but is easily represented as four hexadecimal digits.
+> Hexadecimal is particularly efficient for representing byte-oriented data because each byte (8 bits) maps perfectly to
+> two hexadecimal digits. Each group of 4 bits (called a nibble or a nybble) converts to a single hex digit 0-F. This makes it easy
+> to read and manipulate binary data, which is why packet captures and network debugging tools typically display their
+> output in hexadecimal format.
 
 Now with your new addressing scheme we need one more piece of information - where to send stuff that isn't on our local segment. Routers will have a routing table but for the end host computer they just need a default gateway address on their network segment to send things to if they aren't in their own network. Back in the postman analogy if you hand a letter to the postman that is addressed to someone on his round he'll probably just deliver it but if it's not then he will take it to your local sorting office, your default gateway to the postal routing system.
 
@@ -582,10 +694,26 @@ DNS, or the domain name system, introduces a heirarchical naming system which ca
 > I want to stop and talk about the dot in the domain name, or more interestingly the fact that it doesn't exist in the
 > actual DNS query. The space between each portion of the domain name is filled with a byte containing the length of the
 > next portion.
->
+
+```text
+
+Common packet capture output:
+0000   00 11 22 33 44 55 66 77   01 02 03 04 05 06 07 08
+0010   03 77 77 77 06 67 6F 6F   67 6C 65 03 63 6F 6D 00
+
+Converting the DNS query above:
+03          Length (3)
+77 77 77    'www'       
+06          Length (6)
+67 6F 6F    'goo'
+67 6C 65    'gle'
+03          Length (3)
+63 6F 6D    'com'
+00          End marker
+```
+
 > You would express `www.google.com` as **03** 77 77 77 **06** 67 6f 6f 67 6c 65 **03** 63 6f 6d where 03, 06 and 03 are
-> the lengths of the www, google, and com respectively. Even without an ASCII table you can work out what the rest
-> of the numbers are.
+> the lengths of the www, google, and com respectively.
 
 When I want to look up how to get to `www.simonpainter.com` I start by querying my local DNS server. It's another one of those options that can be configured manually or with [DHCP](#the-address-configuration-problem) so I know my DNS server's IP address (or more likely I know more than one). I send a UDP packet asking for it to resolve `www.simonpainter.com` to an IP address. My local DNS server probably doesn't know the answer because it's not the authority for that domain so it does one of two different things: it could forward all queries to a different DNS server, perhaps a central one managed by my internet service provider, or it could try recursively looking it up itself. If it forwards it to the ISP DNS server it's likely the ISP DNS server would do a recursive lookup. In the event that someone else had already recently requested that lookup from the ISP it may be able to respond with a cached answer rather than have to look it up again.
 In order to do a recursive lookup the first place to start is the DNS root servers. They are globally distributed computers which all hold the same root zone that is the starting point for a lookup. DNS servers just have to know where to find the root servers so [all recursive DNS servers will hold a list of the root servers and their IP addresses](https://www.internic.net/domain/named.root). The root servers will know the name servers that hold information for anything ending .com and will respond with that information. The record from the [root zone](https://www.internic.net/domain/root.zone) will look like this for `.com`.
@@ -617,7 +745,48 @@ From one of those name servers for `.com` the DNS server will find out the name 
 
 So far we've just been sending plain ASCII, or Unicode, text. When we establish communications between computers we now want to ensure there is some degree of encryption.
 
-**Placeholder** TLS
+Transport Layer Security (TLS) evolved from Secure Sockets Layer (SSL), which Netscape developed in 1994. SSL went through versions 1.0 (never released), 2.0, and 3.0, but security flaws led to the development of TLS 1.0 in 1999. TLS provides encryption, authentication, and integrity for data transmitted between clients and servers, using a combination of asymmetric encryption for key exchange and symmetric encryption for data transfer.
+
+> The adult entertainment industry, facing challenges with online payment processing in the mid-1990s, played a
+> crucial role in advancing secure online transactions. Traditional payment processors were hesitant to handle adult
+> content transactions, leading adult websites to develop and fund their own payment solutions. This investment helped
+> establish the infrastructure for secure online payments, pushing forward the adoption of SSL/TLS encryption for
+> e-commerce. The same technologies later became standard across all industries for protecting sensitive data during
+> online transactions.
+
+### Public Key Cryptography
+
+Public key cryptography solves a fundamental problem: how do you share a secret key with someone when anyone could be listening? The solution uses pairs of mathematically linked keys - one public that can be freely shared, and one private that must be kept secret. Data encrypted with the public key can only be decrypted with the private key, and vice versa.
+
+```text
+Example:
+1. Alice generates key pair: public key Pa, private key Sa
+2. Alice shares Pa publicly, keeps Sa secret
+3. Bob wants to send message M to Alice:
+   - Encrypts M with Pa: C = encrypt(M, Pa)
+   - Sends C to Alice
+4. Only Alice can decrypt C using Sa:
+   - M = decrypt(C, Sa)
+```
+
+> The mathematics behind public key cryptography relies on problems that are easy to do in one direction but
+> computationally infeasible to reverse, like multiplying two large prime numbers versus factoring their product.
+> This asymmetry provides the security foundation for modern encryption.
+
+### How TLS Works
+
+TLS operates through a handshake process that establishes a secure connection. First, the client and server agree on which version of TLS and which encryption algorithms they'll use. The server presents its digital certificate, which contains its public key. Using this public key, the client and server securely exchange a session key, which they then use for symmetric encryption of the actual data transfer.
+
+```text
+TLS Handshake Process:
+1. Client Hello: Supported TLS versions and cipher suites
+2. Server Hello: Chosen version and cipher suite
+3. Server Certificate: Public key and identity verification
+4. Key Exchange: Generate shared session key
+5. Handshake Complete: Begin encrypted communication
+```
+
+The beauty of this system is that it combines the security of asymmetric encryption for the initial handshake with the speed of symmetric encryption for the ongoing data transfer. Each new session gets a unique session key, ensuring that even if one session is compromised, others remain secure.
 
 ## And finally the application
 
