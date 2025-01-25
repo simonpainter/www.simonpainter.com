@@ -300,6 +300,32 @@ In a simple network where we have a CIDR of 10.0.0.0/24 we can look at the first
 > to read and manipulate binary data, which is why packet captures and network debugging tools typically display their
 > output in hexadecimal format.
 
+When IP packets travel across networks, they carry their addressing information in a structured header. This header prefixes the actual data being sent and contains everything a router needs to know to get the packet to its destination. Let's look inside an IP packet to see how these addresses are actually used:
+
+```text
+ 0                   1                   2                   3   
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|Version|  IHL  |Type of Service|          Total Length           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|         Identification        |Flags|      Fragment Offset      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|  Time to Live |    Protocol   |         Header Checksum        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                       Source Address                            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                    Destination Address                          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                    Options                    |    Padding      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+```
+
+The source and destination addresses each take up 32 bits - exactly the size of our IP addresses. But the header contains much more than just addresses. It includes a Time to Live field that prevents packets from circulating forever if there's a routing loop, a Protocol field that tells us what kind of data follows (like TCP or UDP), and fields for handling large messages that need to be split across multiple packets (the Identification, Flags, and Fragment Offset fields).
+
+The Version field tells us which version of IP we're using - 4 for IPv4 in this case. IHL (Internet Header Length) tells us how long the header itself is, as it can vary if optional fields are included. The Type of Service field (now usually called Differentiated Services) lets us mark packets that need special handling, like those carrying voice calls that need to arrive quickly.
+
+Each router along the packet's journey will examine this header, use the destination address to decide where to send the packet next, decrease the Time to Live value by one, and update the checksum. If the Time to Live reaches zero, the router discards the packet and sends an error message back to the source address - this prevents packets from circulating endlessly when something goes wrong.
+
 Now with your new addressing scheme we need one more piece of information - where to send stuff that isn't on our local segment. Routers will have a routing table but for the end host computer they just need a default gateway address on their network segment to send things to if they aren't in their own network. Back in the postman analogy if you hand a letter to the postman that is addressed to someone on his round he'll probably just deliver it but if it's not then he will take it to your local sorting office, your default gateway to the postal routing system.
 
 ```text
@@ -586,23 +612,25 @@ When networks grow beyond a single organisation, or autonomous system, we find w
 - Maintain stability when other networks have problems
 
 ```text
-Internet Service Provider A        Internet Service Provider B
-+-------------------------+       +-------------------------+
-|     AS Number 65001     |       |     AS Number 65002     |
-|                         |       |                         |
-|  +--------+            +--------+            +--------+  |
-|  |        |            | Border |            |        |  |
-|  | Router |------------| Router |------------| Router |  |
-|  |        |            |        |            |        |  |
-|  +--------+            +--------+            +--------+  |
-|                         |       |                         |
-+-------------------------+       +-------------------------+
+Internet Service Provider A                     Internet Service Provider B
++-------------------------+                    +-------------------------+
+|     AS Number 65001     |                    |     AS Number 65002     |
+|                         |                    |                         |
+|  +--------+            +--------+       +--------+          +--------+ |
+|  |        |            | Border |       | Border |          |        | |
+|  | Router |------------| Router |-------| Router |----------| Router | |
+|  |        |            |    A   |       |    B   |          |        | |
+|  +--------+            +--------+       +--------+          +--------+ |
+|                         |                    |                         |
++-------------------------+                    +-------------------------+
 ```
 
 Each autonomous sytem for internet peering is assigned a unique number, the Autonomous System Number (ASN). BGP uses this to track the path a route has taken through different networks to ensure that there are no loops. It also uses the list of ASNs that a route has been through to get a crude estimate of the distance to the destination using the path length; in most cases a route that passes through the fewer networks is considered better than one that passes through more networks.
-Unlike internal routing protocols, BGP is not designed to focus on finding the shortest path, it is designed to solve a different set of probles:
+Unlike internal routing protocols, BGP is not designed to focus on finding the shortest path, it is designed to solve a different set of problems:
 
-1. Policy Enforcement:
+### Policy Enforcement
+
+BGP allows network owners to apply policies to routing decisions at their perimeter to control what routes they allow into their network. Note that BGP controls the routing information, the control plane, and not the data plane itself. Firewalls and other security technologies provide that layer of protection. As part of the agreement to peer with another network it is common for organisations to share their [routing policy](https://www.rfc-editor.org/rfc/rfc2622) so that both peers know what to expect.
 
 ```text
 AS 65001's Policy:
@@ -616,7 +644,9 @@ AS 65002's Policy:
 - Filter out private networks
 ```
 
-2. Route Aggregation:
+### Route Aggregation
+
+Where networks are made up of contiguous smaller subnets it may be possible to summarise those networks into a larger network and just advertise the route to that. This reduces the overall complexity of the routing table. 
 
 ```text
 Instead of advertising:
@@ -628,6 +658,8 @@ Instead of advertising:
 BGP can summarise as:
   192.168.0.0/22
 ```
+
+### Path Selection
 
 > BGP's genius is that it doesn't just share routes - it shares the path to reach those routes. This path
 > information (called the AS_PATH) lets networks make informed decisions about which routes to trust and use.
@@ -649,7 +681,7 @@ Router A                Router B
    |<--Keepalive---------| "Still here too!"
 ```
 
-The real complexity of BGP comes from its attributes - ways to influence path selection:
+BGP does not direcly allow a network admin to make routing choices within another ASN but it does allow them to provide information which can influence that decision. Routing decisions within an ASN are entirely controlled by the network admins of that ASN and how they choose to use the routing information provided to them.
 
 ```text
 BGP Path Selection (in order):
@@ -675,11 +707,89 @@ We can now get a packet from our source, anywhere in the world, to our destinati
 
 ### UDP (User Datagram Protocol)
 
-UDP is the lightweight way to send data with minimal overhead when perfect reliability isn't required. It is typically described as 'send and forget' because there is no assumption that the receiver gets the packet and no session is created for responses. Responses can be sent but those are received on their own merit as standalong messages and not in the context of a wider conversation. An analogy of UDP could be SMS text messaging where each message is independent of each other.
+Once we can route packets across networks, we need a way to get information from one application to another. The User Datagram Protocol (UDP) provides one of the simplest solutions to this problem. Think of UDP like sending a postcard - you write your message, address it, and send it on its way. Once it's posted, you have no way of knowing if it arrived, and you won't get any confirmation of delivery. This might seem like a limitation, but in many cases, it's exactly what we need.
 
-### TCP (Transmission Control Protocol)
+The word "datagram" in UDP's name gives us a clue about how it works - it's about sending independent messages (datagrams) that each carry their own addressing information. Each message stands alone, like a self-contained postcard, rather than being part of a larger conversation.
 
-TCP is the more involved cousin. Expanding on the text message analogy for UDP, a TCP session would be a phone call where there is a ring and answer style handshake to establish the session, a two way conversation and then a clear termination of the session.
+Looking inside a UDP message reveals a remarkably simple structure. The header contains just four essential pieces of information:
+
+```text
+ 0      7 8     15 16    23 24    31 
++--------+--------+--------+--------+
+|     Source      |   Destination   |
+|      Port       |      Port       |
++--------+--------+--------+--------+
+|      Length     |    Checksum     |
++--------+--------+--------+--------+
+|                                   |
+|              data                 |
+|                                   |
++-----------------------------------+
+```
+
+The source and destination ports tell us which applications should handle the message at each end. The length field tells us how big the entire package is, and a checksum provides basic error detection. That's all there is to it - UDP adds just enough information to get a packet of data from one application to another.
+
+This simplicity makes UDP perfect for applications where timeliness matters more than perfect reliability. Consider a voice chat application: if a packet containing a fraction of a second of audio gets lost, it's better to skip that tiny bit of sound than to wait for it to be sent again. By the time the lost audio would arrive, the conversation would have moved on, and the delayed sound would be more disruptive than the brief silence from the lost packet.
+
+Online gaming often uses UDP for similar reasons. When a game is sending constant updates about player positions, losing an occasional update isn't catastrophic - the game can make educated guesses about where things should be until the next update arrives. The important thing is keeping the game moving without introducing delays.
+
+DNS, the internet's phone book that we discussed earlier, also uses UDP for its queries. When you want to look up a website's IP address, adding complex reliability mechanisms would just slow things down. A simple query and response is much more efficient, and if something goes wrong, the application can simply try again.
+
+The lack of connection state in UDP also makes it ideal for services that need to handle huge numbers of clients. A DNS server doesn't need to maintain information about every client that might ask it a question - it just answers queries as they arrive. This stateless nature allows UDP servers to be much more scalable than more complex approaches.
+
+UDP's simplicity extends to error handling as well. While it does include a checksum to detect corrupted packets, it doesn't do anything about them - corrupted packets are simply discarded. There's no mechanism to send packets again if they're lost, no system to confirm receipt, no guarantee that packets will arrive in the same order they were sent. If an application needs any of these features, it must implement them itself.
+
+The "fire and forget" nature of UDP can sometimes lead to interesting challenges. Without built-in flow control, it's possible for a fast sender to overwhelm a slow receiver, causing packets to be dropped. Applications might need to implement their own mechanisms to avoid overwhelming network links. These considerations make UDP programming more challenging in some ways, despite its simpler protocol.
+
+This might seem like UDP is pushing complexity up to the application layer, and in a sense, it is. But this is actually one of UDP's strengths - it allows applications to implement exactly the level of reliability they need, no more and no less. A video streaming application might choose to resend certain critical packets but not others, based on their importance to the video quality.
+
+Not every application can work with UDP's simple "best effort" delivery model. Many applications nee
+
+### TCP (Transmission Control Protocol) 
+
+TCP is the workhorse of the internet, providing reliable, ordered delivery of data between applications. While UDP simply sends packets and hopes for the best, TCP creates a sophisticated conversation between sender and receiver. Think of it like the difference between dropping a letter in a postbox and having an important conversation over the phone - with TCP, both sides actively participate in ensuring the message gets through.
+
+The magic begins with what we call the three-way handshake. Imagine you're making a phone call: first you dial (sending a SYN flag), the other person picks up and says "hello" (sending back a SYN-ACK), and you respond with your own "hello" (sending an ACK). This seemingly simple exchange actually establishes something quite sophisticated - both computers agree on sequence numbers they'll use to keep track of the conversation, much like you might number pages in a long letter to ensure they stay in order.
+
+Let's peek inside a TCP header to understand how this works. Every TCP segment (that's what we call the individual pieces of a TCP stream) carries a wealth of information in its header:
+
+```text
+ 0                   1                   2                   3   
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|          Source Port          |       Destination Port        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                        Sequence Number                          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                    Acknowledgment Number                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|  Data |           |U|A|P|R|S|F|                               |
+| Offset| Reserved  |R|C|S|S|Y|I|            Window             |
+|       |           |G|K|H|T|N|N|                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|           Checksum            |         Urgent Pointer         |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                    Options                    |    Padding      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                             data                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+```
+
+The sequence and acknowledgment numbers are particularly clever. The sequence number identifies each byte in the stream of data being sent, while the acknowledgment number tells the other side which byte is expected next. This system allows TCP to handle lost, duplicated, or out-of-order packets gracefully.
+
+When data starts flowing, TCP doesn't just send everything at once. Instead, it uses a sophisticated flow control mechanism called the sliding window. The "Window" field in the header tells the sender how much data the receiver is willing to accept. This window slides forward as data is acknowledged, preventing any one side from overwhelming the other with too much data too quickly.
+
+The flag bits in the TCP header each serve specific purposes. SYN (synchronise) and FIN (finish) manage connection establishment and teardown. ACK (acknowledge) confirms received data. PSH (push) suggests the receiver should pass this data to the application immediately rather than buffering it. URG (urgent) marks priority data, though it's rarely used today. RST (reset) abruptly terminates connections when something goes wrong.
+
+TCP also includes a built-in capability to handle network congestion. If packets start getting lost (which we can detect through missing acknowledgments), TCP assumes the network is congested and slows down its transmission rate. It then gradually speeds up again as packets successfully get through. This self-regulating behaviour helps prevent network collapse under heavy load.
+
+The connection teardown is as carefully managed as the setup. When one side is finished sending data, it sends a FIN flag. The other side acknowledges this and may continue sending its own data. When it too is finished, it sends its own FIN, which gets acknowledged. This four-way handshake ensures both sides have finished their conversation before the connection is fully closed - like saying "goodbye" and waiting for the other person to say "goodbye" too before hanging up the phone.
+
+All these mechanisms work together to provide what we call TCP's reliability guarantees: data arrives in order, without gaps, exactly once. This reliability comes at the cost of some overhead - those acknowledgments and window advertisements take up bandwidth, and waiting for acknowledgments adds latency. But for many applications, from web browsing to email to file transfer, this is a worthwhile trade-off for the assurance that all data will arrive correctly.
+
+The sophistication of TCP becomes particularly apparent when things go wrong. If a packet is lost, TCP automatically retransmits it. If packets arrive out of order, TCP holds them until the gaps can be filled in. If the network becomes congested, TCP adjusts its sending rate to help alleviate the problem. All of this happens without the applications having to worry about it - they just see a reliable stream of data.
+
+What makes TCP truly remarkable is how it provides this reliability over an unreliable network. The Internet Protocol (IP) makes no guarantees about packet delivery - packets can be lost, duplicated, or arrive out of order. TCP builds reliable communication on top of this uncertainty, much like building a dependable postal service using couriers who might occasionally lose packages or deliver them in the wrong order. The fact that this works so well is a testament to the elegant design of the protocol.
 
 ## The phone book
 
