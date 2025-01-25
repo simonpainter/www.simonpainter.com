@@ -80,7 +80,7 @@ In AWS's implementation with Gateway Load Balancer, GENEVE carries important inf
 
 The need for GENEVE adds some complexity if you aren't using an off the shelf NVA that has built in support for GLWB and implicitly GENEVE.
 
-### Suraicata
+### Suricata
 
  [There are labs available](https://catalog.workshops.aws/gwlb-networking/en-US/50-opensource-suricata) which show how to do it using [Suricata](https://aws.amazon.com/blogs/networking-and-content-delivery/building-an-open-source-ids-ips-service-for-gateway-load-balancer/). Suricata natively understands GENEVE so can strip the GENEVE header (or ignore it) and inspect the contents before (if Suricata agrees to pass it) sending it back to the GWLB with the GENEVE header and the otherwise unchanged inside packet.
 
