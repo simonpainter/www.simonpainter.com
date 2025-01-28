@@ -32,7 +32,7 @@ It is fairly common to have complex application ecosystems within an organisatio
 
 ## Finding your AZ map
 
-As the sharding is done on a subscription by subscription basis you need to query each subscription using the `/locations` API endpoint below. Note that you would of course need to replace {SubscriptionId} with the subscription you are querying. The command below extracts the UK South information as an example.
+As the sharding is done on a subscription by subscription basis you need to query each subscription using the `/locations` API endpoint below. Note that you would of course need to replace `{SubscriptionId}` with the subscription you are querying. The command below extracts the UK South information as an example.
 
 ```powershell
 simon [ ~ ]$ az rest 
