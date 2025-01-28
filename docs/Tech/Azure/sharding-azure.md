@@ -28,7 +28,7 @@ In financial services, particularly high-frequency trading, microseconds matter.
 
 ### Multi subscription microservices
 
-It is fairly common to have complex application ecosystems within an organisation that are segregated into separate subscriptions for organisational reasons, yet which require low latency communication. If the services are not entirely decoupled and have active/passive pairs that span subscriptions then having all the primary instances, regardless of subscription, in the same failure domain and all the secondary instances in another will prevent a situation where a failure affects components of both the primary and secondary systems.
+It is fairly common to have complex application ecosystems within an organisation that are segregated into separate subscriptions for organisational reasons, yet which require low latency communication.
 
 ## Finding your AZ map
 
