@@ -13,3 +13,10 @@ infrastructure automation.
 > I saw the Badger2040 e-paper board and created this for my son to help him communciate his feelings as he's about as good at that as I am. 
 * [Chatbot](https://github.com/simonpainter/chatbot)
 > This emerged out of a friendly bit of banter with my neighbour via LinkedIn. 
+
+```mermaid
+flowchart LR
+    A[Start] --> B{Decision}
+    B -->|Yes| C[OK]
+    B -->|No| D[Cancel]
+```
