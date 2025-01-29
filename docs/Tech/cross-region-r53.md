@@ -55,36 +55,37 @@ When it all comes together, the DNS resolution flow works like this:
 7) Response returns to Azure Outbound Endpoint
 8) Response returns through Azure DNS Resolver to VM
 
-```text
-Azure                                      AWS
-┌──────────────────────────────┐          ┌──────────────────────────────┐
-│                              │          │                              │
-│  ┌──────────┐                │          │                ┌──────────┐  │
-│  │   VM     ├───────────┐    │          │                │   VM     │  │
-│  └──────────┘           │    │          │                └────┬─────┘  │
-│  172.16.1.0/24          \/   │          │                     │        │
-│                    ┌─────────┐          │                     │        │
-│           Step 2   │  Azure  │          │                     │        │
-│               ┌────┤  DNS    │          │                     │        │
-│               │    │Resolver │          │                     │        │
-│               \/   └─────────┘          │                     │        │
-│         ┌──────────┐                    │                     │        │
-│         │ Outbound │     Step 3         │     Step 4          │        │
-│         │ Endpoint ├────────────────────┼──────────┐          │        │
-│         └──────────┘                    │          \/         │        │
-│         172.16.3.0/24                   │    ┌───────────┐    │        │
-│                /\                       │    │  Route53  │    │        │
-│                │                        │    │  Resolver │    │        │
-│                │                        │    │  Inbound  │    │        │
-│                │                        │    └─────┬─────┘    │        │
-│                │                        │          │          │        │
-│                │                        │ Step 5   \/         │        │
-│                │                        │    ┌───────────┐    │        │
-│                │        Steps 6-8       │    │  Private  │    │        │
-│                └────────────────────────┼────┤  Route53  │    │        │
-│                                         │    │   Zone    ├────┘        │
-└──────────────────────────────┘          │    └───────────┘             │
-                                          └──────────────────────────────┘
+```mermaid
+flowchart LR
+    subgraph Azure[Azure 172.16.1.0/24]
+        VM1[VM]
+        DNS[Azure DNS Resolver]
+        Endpoint[Outbound Endpoint\n172.16.3.0/24]
+        
+        VM1 -->|Step 2| DNS
+        DNS -->|"Step 3\n"| Endpoint
+    end
+
+    subgraph AWS[AWS]
+        VM2[VM]
+        R53Resolver[Route53 Resolver\nInbound]
+        R53Private[Private Route53\nZone]
+        
+        R53Resolver -->|Step 5| R53Private
+        R53Private --> VM2
+    end
+
+    %% Cross-cloud connections
+    Endpoint -->|Step 4| R53Resolver
+    R53Private -->|Steps 6-8| DNS
+
+    classDef azure fill:#e6f3ff,stroke:#2d6ca2,stroke-width:2px
+    classDef aws fill:#fdf8e6,stroke:#eb9b4a,stroke-width:2px
+    classDef component fill:#ffffff,stroke:#666666,stroke-width:1px
+    
+    class Azure azure
+    class AWS aws
+    class VM1,DNS,Endpoint,VM2,R53Resolver,R53Private component
 ```
 
 The beauty of this setup is that AWS treats the query as originating from the region where its Route 53 Resolver inbound endpoint is located. This means that when Azure UK South forwards its queries to AWS eu-west-2, it receives geographically appropriate responses, making our closest-instance routing possible.
