@@ -1,6 +1,8 @@
 // @ts-check
 import {themes as prismThemes} from 'prism-react-renderer';
 
+
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Simon Painter',
@@ -22,6 +24,11 @@ const config = {
     locales: ['en'],
   },
 
+  markdown: {
+    mermaid: true,
+  },
+  themes: ['@docusaurus/theme-mermaid'],
+  
   presets: [
     [
       'classic',
@@ -97,5 +104,7 @@ const config = {
       },
     }),
 };
+
+
 
 export default config;
