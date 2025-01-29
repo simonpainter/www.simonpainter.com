@@ -14,33 +14,40 @@ To answer that we have to go back and look at what VNet peering is. Actually we 
 
 When you peer two VNets you gain the ability to route between all subnets in those VNets; this is out of the box functionality we have all learned to take for granted. Below is a basic lab with two VNets, each with three subnets.
 
-```text
-Azure 
-+-------------------------------------------------------------------+
-|                                                                   |
-|  +------------------------+       +-------------------------+     |
-|  |        VNet1           |       |         VNet2           |     |
-|  |     (10.1.0.0/16)      |       |      (10.2.0.0/16)      |     |
-|  |                        |       |                         |     |
-|  |  +------------------+  |       |  +------------------+   |     |
-|  |  |    Subnet1       |  |       |  |    Subnet1       |   |     |
-|  |  |  (10.1.1.0/24)   |  |       |  |  (10.2.1.0/24)   |   |     |
-|  |  |     [VM1]        |  |       |  |                  |   |     |
-|  |  +------------------+  |       |  +------------------+   |     |
-|  |                        |       |                         |     |
-|  |  +------------------+  |       |  +------------------+   |     |
-|  |  |    Subnet2       |  |       |  |    Subnet2       |   |     |
-|  |  |  (10.1.2.0/24)   |  |       |  |  (10.2.2.0/24)   |   |     |
-|  |  +------------------+  |       |  +------------------+   |     |
-|  |                        |       |                         |     |
-|  |  +------------------+  |       |  +------------------+   |     |
-|  |  |    Subnet3       |  |       |  |    Subnet3       |   |     |
-|  |  |  (10.1.3.0/24)   |  |       |  |  (10.2.3.0/24)   |   |     |
-|  |  +------------------+  |       |  +------------------+   |     |
-|  |                        |       |                         |     |
-|  +------------------------+       +-------------------------+     |
-|                                                                   |
-+-------------------------------------------------------------------+
+```mermaid
+flowchart TB
+    subgraph Azure
+        subgraph VNet1[VNet1 10.1.0.0/16]
+            direction TB
+            subgraph Subnet1_1[Subnet1 10.1.1.0/24]
+                VM1[VM1]
+            end
+            subgraph Subnet1_2[Subnet2 10.1.2.0/24]
+                direction TB
+            end
+            subgraph Subnet1_3[Subnet3 10.1.3.0/24]
+                direction TB
+            end
+        end
+        
+        subgraph VNet2[VNet2 10.2.0.0/16]
+            direction TB
+            subgraph Subnet2_1[Subnet1 10.2.1.0/24]
+                direction TB
+            end
+            subgraph Subnet2_2[Subnet2 10.2.2.0/24]
+                direction TB
+            end
+            subgraph Subnet2_3[Subnet3 10.2.3.0/24]
+                direction TB
+            end
+        end
+    end
+
+    classDef vnet fill:#e6f3ff,stroke:#2d6ca2,stroke-width:2px
+    classDef subnet fill:#f8fbff,stroke:#4a90e2,stroke-width:1px
+    class VNet1,VNet2 vnet
+    class Subnet1_1,Subnet1_2,Subnet1_3,Subnet2_1,Subnet2_2,Subnet2_3 subnet
 ```
 
 If we put a VM in one of the subnets in VNet 1 and look at the effective routes on the NIC we get something like this:
@@ -65,3 +72,5 @@ Default   Active   10.2.1.0/26       VNetPeering
 Default   Active   10.2.2.0/26       VNetPeering
 Default   Active   10.2.3.0/26       VNetPeering
 ```
+
+This is fine for most scenarios but in some case we might want to be selective about which routes we receive. 
