@@ -16,7 +16,7 @@ When you peer a pair of VNets you gain the ability to route between them. The ro
 
 ## It's time for a lab
 
-When you peer two VNets you gain the ability to route between all subnets in those VNets; this is out of the box functionality we have all learned to take for granted. You can [download a lab template](subnet-peeering-lab1.tf) which creates the VNets and subnets in the diagram below if you want to follow along.
+When you peer two VNets you gain the ability to route between all subnets in those VNets; this is out of the box functionality we have all learned to take for granted. You can [download a lab template](https://github.com/simonpainter/subnet-peering/tree/main/lab1) which creates the VNets and subnets in the diagram below if you want to follow along.
 
 ```mermaid
 graph TB
@@ -284,7 +284,7 @@ Default   Active   0.0.0.0/0         Internet
 
 I thought I would check to see if I could use overlapping CIDRs. I was successful in using the first lab template, establishing peering for subnet1 to subnet1 and then adding a secondary CIDR on both VNets for 192.168.0.0/24. I was able to see the local one and not the remote one. This would be good for expanding out VNets with non routable address space if you needed to scale out lots of infrastrcuture that didn't need to be directly reachable from your corporate network - for those that operate at scale it's a good way of preserving the finite address space in RFC1918 addressing.
 
-I built out a [second lab for download](subnet-peering-lab-2.tf) with two VNets that have overlapping address space and the same three subnets. I thought I would try peering subnet1 in VNet1 to subnet2 in VNet2.
+I built out a [second lab for download](https://github.com/simonpainter/subnet-peering/tree/main/lab2) with two VNets that have overlapping address space and the same three subnets. I thought I would try peering subnet1 in VNet1 to subnet2 in VNet2.
 
 ```mermaid
 graph TB
