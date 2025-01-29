@@ -57,7 +57,6 @@ The rather verbose response for the above would look something like this. As you
     "name":"uksouth",
     "regionalDisplayName":"(Europe) UK South",
     "type":"Region"}]
-simon [ ~ ]$ 
 ```
 
 But what if you don't have access to that information? How do you make sure that you are as close to a resource in Azure as possible without knowing what physical AZ they are in? A novel approach I heard about from someone in the gaming industry is to spin up many hundreds of VMs across all AZs and then test the latency to the target. Keeping the instances that have the lowest latency and destroying those that do not ensures that you are getting the best performance not only ensuring you are in the same physical AZ but where microseconds count also ensuring best placement within that AZ.
