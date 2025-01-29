@@ -63,7 +63,7 @@ flowchart LR
         Endpoint[Outbound Endpoint\n172.16.3.0/24]
         
         VM1 -->|Step 2| DNS
-        DNS -->|"Step 3\n"| Endpoint
+        DNS -->|"Step 3"| Endpoint
     end
 
     subgraph AWS[AWS]

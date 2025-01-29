@@ -14,7 +14,7 @@ The reason I fell down the rabbit hole with regard to [finding my public ip](../
 
 [Page Source](img/azure-networking.jpg)
 
-This led to a bit of Friday night investigation as we wanted to know what this IP was and what it was for and also why it appeared to be different from the one used for the default outbound internet access. I mention default internet outbound internet access because that was the first thing we checked, comparing the result from the test mentioned in the book with what happens if you do one of the other tests for [finding your public ip](finding-my-ip.md) like `curl ident.me` and others. 
+This led to a bit of Friday night investigation as we wanted to know what this IP was and what it was for and also why it appeared to be different from the one used for the default outbound internet access. I mention default internet outbound internet access because that was the first thing we checked, comparing the result from the test mentioned in the book with what happens if you do one of the other tests for [finding your public ip](../finding-my-ip.md) like `curl ident.me` and others. 
 
 ## Initial Investigation
 
