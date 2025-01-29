@@ -30,9 +30,9 @@ In financial services, particularly high-frequency trading, microseconds matter.
 
 It is fairly common to have complex application ecosystems within an organisation that are segregated into separate subscriptions for organisational reasons, yet which require low latency communication.
 
-## Finding your AZ map
+## Building your own AZ map in a subscription
 
-As the sharding is done on a subscription by subscription basis you need to query each subscription using the `/locations` API endpoint below. Note that you would of course need to replace `{SubscriptionId}` with the subscription you are querying. The command below extracts the UK South information as an example.
+As the sharding is done on a subscription by subscription basis you need to query each subscription using the `/locations` API endpoint as below. Note that you would of course need to replace `{SubscriptionId}` with the subscription you are querying. The command below extracts the UK South information as an example.
 
 ```powershell
 simon [ ~ ]$ az rest 
@@ -41,7 +41,7 @@ simon [ ~ ]$ az rest
             --query 'value' |jq -c '[ .[] | select( .name == "uksouth")]'
 ```
 
-The rather verbose response for the above would look something like this. As you can see in this subscription what looks like AZ 1 is actually mapped to the physical uksouth-az2. Provided you have access to this information for both subscriptions you can plan your deployments to place services in the same physical AZ where required.
+The rather verbose response for the above would look something like this. 
 
 ```json
 [{"availabilityZoneMappings":
@@ -59,4 +59,6 @@ The rather verbose response for the above would look something like this. As you
     "type":"Region"}]
 ```
 
-But what if you don't have access to that information? How do you make sure that you are as close to a resource in Azure as possible without knowing what physical AZ they are in? A novel approach I heard about from someone in the gaming industry is to spin up many hundreds of VMs across all AZs and then test the latency to the target. Keeping the instances that have the lowest latency and destroying those that do not ensures that you are getting the best performance not only ensuring you are in the same physical AZ but where microseconds count also ensuring best placement within that AZ.
+As you can see in this subscription what looks like AZ 1 is actually mapped to the physical uksouth-az2. Provided you have access to this information for both subscriptions you can plan your deployments to place services in the same physical AZ where required.
+
+But what if you don't have access to that information? How do you make sure that you are as close to a resource in Azure as possible without knowing what physical AZ they are in? A novel approach I heard about from someone in the gaming industry is to spin up many hundreds of VMs across all AZs and then test the latency to the target. Keeping the instances that have the lowest latency to the target service, and destroying those that do not, ensures that you are getting the best performance.
