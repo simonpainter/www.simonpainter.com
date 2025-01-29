@@ -7,6 +7,48 @@ I had a conversation today about sharding in Azure. It's a fairly well known thi
 ## What is AZ Sharding?
 
 Azure Availability Zones are physically separate datacenters within a region, each with independent power, cooling, and networking infrastructure. However, the mapping between logical AZ numbers (1, 2, 3) and physical datacenters isn't static - it's sharded across subscriptions. This means that AZ1 in one subscription might map to a different physical datacenter than AZ1 in another subscription.
+
+```mermaid
+graph TB
+    subgraph "Subscription A"
+        A1[AZ1]
+        A2[AZ2]
+        A3[AZ3]
+    end
+
+    subgraph "Subscription B"
+        B1[AZ1]
+        B2[AZ2]
+        B3[AZ3]
+    end
+
+    subgraph "UK South Physical AZs"
+        P1[uksouth-az1]
+        P2[uksouth-az2]
+        P3[uksouth-az3]
+    end
+
+    %% Mapping for Subscription A
+    A1 -->|maps to| P2
+    A2 -->|maps to| P3
+    A3 -->|maps to| P1
+
+    %% Mapping for Subscription B
+    B1 -->|maps to| P3
+    B2 -->|maps to| P1
+    B3 -->|maps to| P2
+
+    %% Styling
+    classDef subscription fill:#e1f5fe,stroke:#01579b
+    classDef physical fill:#fff3e0,stroke:#e65100
+    
+    class A1,A2,A3,B1,B2,B3 subscription
+    class P1,P2,P3 physical
+
+    %% Layout hints
+    direction TB
+```
+
 The primary reasons for AZ sharding include:
 
 - Load Distribution: By randomising AZ assignments across subscriptions, Azure prevents customers from consistently choosing "AZ1" as their primary zone, which would lead to uneven resource distribution.
