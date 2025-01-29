@@ -27,10 +27,3 @@ I saw the Badger2040 e-paper board and created this for my son to help him commu
 ### [Chatbot](https://github.com/simonpainter/chatbot)
 
 This emerged out of a friendly bit of banter with my neighbour via LinkedIn.
-
-```mermaid
-flowchart LR
-    A[Start] --> B{Decision}
-    B -->|Yes| C[OK]
-    B -->|No| D[Cancel]
-```
