@@ -29,14 +29,14 @@ graph TB
     end
 
     %% Mapping for Subscription A
-    A1 -->|maps to| P2
-    A2 -->|maps to| P3
-    A3 -->|maps to| P1
+    A1 --> P2
+    A2 --> P3
+    A3 --> P1
 
     %% Mapping for Subscription B
-    B1 -->|maps to| P3
-    B2 -->|maps to| P1
-    B3 -->|maps to| P2
+    B1 --> P3
+    B2 --> P1
+    B3 --> P2
 
     %% Styling
     classDef subscription fill:#e1f5fe,stroke:#01579b
