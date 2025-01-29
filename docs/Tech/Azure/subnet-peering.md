@@ -331,8 +331,6 @@ az network vnet peering create -n "vnet2-to-vnet1" -g vnet-demo-rg -o none\
         --remote-subnet-names subnet2 --local-subnet-names subnet1
 ```
 
-Here's a prose summary in the style of the article:
-
 ## Conclusion
 
 After exploring this feature in depth, it becomes clear that "Subnet Peering" isn't quite what the name suggests. What we're really looking at is VNet peering with some BGP-like capabilities bolted on. The `--peer-complete-vnet false` parameter functions much like disabling route summarisation, preventing the advertisement of the entire VNet CIDR and instead allowing individual subnet routes to be advertised. Meanwhile, the `--local-subnet-names` and `--remote-subnet-names` parameters serve as prefix list equivalents, giving us fine-grained control over which subnet routes are allowed through the peering.
