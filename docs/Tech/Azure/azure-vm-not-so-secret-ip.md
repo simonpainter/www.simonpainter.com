@@ -178,7 +178,23 @@ So I did a bit of testing on some other boxes sending the query via a bunch of d
 
 ## What's actually happening
 
-![DNS Diagram](img/dns-flow.png)
+```mermaid
+graph LR
+    VM1[VM1]
+    AzureDNS[Azure DNS]
+    GoogleDNS[Google DNS]
+    NAT[NAT]
+
+    VM1 -->|1| AzureDNS
+    AzureDNS -->|2| GoogleDNS
+    VM1 -->|3| NAT
+    NAT -->|4| GoogleDNS
+
+    style VM1 fill:#4B8BBE
+    style AzureDNS fill:#0089D6
+    style GoogleDNS fill:#4285F4
+    style NAT fill:#00BCF2
+```
 
 When you use `dig TXT o-o.myaddr.l.google.com +short` the VM sends the request goes to the Azure DNS server, this then forwards the request to Google's DNS server. 
 
