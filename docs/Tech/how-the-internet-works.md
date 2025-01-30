@@ -179,29 +179,23 @@ Dec Hex ASCII   Dec Hex ASCII   Dec Hex ASCII   Dec Hex ASCII
 
 Connecting two computers with a serial connection is great but what about if you want to introduce a third node? The simplest answer is to use a full mesh topology where each computer node has a direct serial connection to the both of the other computer nodes.
 
-```text
-+--------+     +--------+
-| Node A |-----| Node B |
-+--------+     +--------+
-    |             |
-    |         +--------+
-    +---------| Node C |
-              +--------+
+```mermaid
+graph LR
+    A[Node A] --- B[Node B]
+    B --- C[Node C]
+    A --- C
 ```
 
 This really doesn't scale well though. You need one serial link to connect two nodes, three serial links to connect three nodes but for four you need six serial links. When you get to five computer nodes in full mesh you need ten serial links.
 
-```text
-+--------+      +--------+
-| Node A |------| Node B |
-+--------+      +--------+
-     |     \  /       |
-     |      \/        |
-     |      /\        |
-     |     /  \       |
-+--------+      +--------+
-| Node C |------| Node D |
-+--------+      +--------+
+```mermaid
+graph TB
+    A[Node A] --- B[Node B]
+    C[Node C] --- D[Node D]
+    A --- C
+    B --- D
+    A --- D
+    B --- C
 ```
 
 > The formula for the number of connections between **n** computer nodes is n(n-1)/2 and the important thing to recognise
@@ -213,24 +207,30 @@ This really doesn't scale well though. You need one serial link to connect two n
 
 Now we have decided that point to point links in a full mesh are a bad idea we need to start connecting more than one device on the same shared wire. In order to do that we need to solve another problem first, and that's making sure that each device gets the right data and that's the start of addressing. If we have a shared wire with all the computers connected, perhaps with some sort of T shaped splitter, we can transmit from any computer node and it will be received by all of the other computer nodes. If we prefix each chunk of data with a destination address and each computer knows its own address then it can ignore data that is not meant for it. This probably sounds bonkers in the current climate of cybersecurity but we used to be a lot more trusting.
 
-```text
-Bus Topology
-  ---T----T----T---
-     |    |    |
-     N1   N2   N3
-```
+```mermaid
+%%{init: {'gitGraph': { 'showCommitLabel':true,'mainBranchName': 'Bus Topology'}} }%%
+gitGraph
+    commit id: "Node 1"
+    commit id: "Node 2"
+    commit id: "Node 3"
 
+
+
+  ```
+  
 Topologies like the single wire (bus topology) above are problematic. A break in the cable at any point will split your network into two separate networks which can't talk to each other. A ring topology will address this to some extent because a single break just turns a ring topology into a bus topology.
 
 Having a star or a *hub and spoke* topology means that any single link failing results in a problem for that spoke only and not any of the others. The hub is a simple electrical repeater device which receives a signal from one computer node and repeats it to the other connected computer nodes. Each computer node receives every signal and if the destination address matches its own then it processes the data and if if doesn't then the data is ignored.
 
-```text
-Star Topology
-     N1
-     |
-N2---H---N3
-     |
-     N4
+```mermaid
+graph TD
+    title[Star Topology]
+    N1[1] --- H[H]
+    N2[2] --- H
+    N3[3] --- H
+    N4[4] --- H
+    
+    style title fill:none,stroke:none
 ```
 
 ### Frames and MAC addresses
@@ -302,22 +302,25 @@ In a simple network where we have a CIDR of 10.0.0.0/24 we can look at the first
 
 When IP packets travel across networks, they carry their addressing information in a structured header. This header prefixes the actual data being sent and contains everything a router needs to know to get the packet to its destination. Let's look inside an IP packet to see how these addresses are actually used:
 
-```text
- 0                   1                   2                   3   
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|Version|  IHL  |Type of Service|          Total Length           |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|         Identification        |Flags|      Fragment Offset      |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|  Time to Live |    Protocol   |         Header Checksum        |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                       Source Address                            |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                    Destination Address                          |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                    Options                    |    Padding      |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+```mermaid
+---
+title: "IP Header"
+---
+packet-beta
+  0-3: "Version"
+  4-7: "IHL"
+  8-15: "Type of Service"
+  16-31: "Total Length"
+  32-47: "Identification"
+  48-50: "Flags"
+  51-63: "Fragment Offset"
+  64-71: "Time to Live"
+  72-79: "Protocol"
+  80-95: "Header Checksum"
+  96-127: "Source Address"
+  128-159: "Destination Address"
+  160-183: "Options"
+  184-191: "Padding"
 ```
 
 The source and destination addresses each take up 32 bits - exactly the size of our IP addresses. But the header contains much more than just addresses. It includes a Time to Live field that prevents packets from circulating forever if there's a routing loop, a Protocol field that tells us what kind of data follows (like TCP or UDP), and fields for handling large messages that need to be split across multiple packets (the Identification, Flags, and Fragment Offset fields).
@@ -457,23 +460,25 @@ Once a packet has got to the router the router will then compare it to the route
 
 We can easily build up routing tables that span a large network by taking each hop. Take the example below where an organisation has networked computers in cities across the world connected by underground or undersea cables.
 
-```text
-+-----------+                                +-----------+
-|  Chicago  |------------\                   | Edinburgh |
-+-----------+             \                  +-----------+
-                           \                      |
-+---------------+        +----------+        +--------+      +-------+
-| San Francisco |--------| New York |--------| London |------| Tokyo |
-+---------------+        +----------+        +--------+      +-------+
+```mermaid
+graph LR
+    NY <---> LON[London]
+    CHI[Chicago] <---> NY
+    LON <---> EDI[Edinburgh]
+    LON <---> TOK[Tokyo]
+    SF[San Francisco]<---> NY[New York]
+
 ```
 
 We can simplify the diagram and remove the geography and give each router a name.
 
-```text
-
-     CH     ED
-      |     |
-SF----NY----LN----TK
+```mermaid
+graph LR
+    LN <---> ED
+    CH<---> NY
+    NY <---> LN
+    LN <---> TK
+    SF<---> NY
 ```
 
 The routing table for each site's router would be as follows:
@@ -568,6 +573,16 @@ This is great until we want to make changes, or perhaps changes are forced upon 
 +-pacific-undersea-cable-+
 ```
 
+```mermaid
+graph LR
+    LN <---> ED
+     CH<---> NY
+    NY <---> LN
+    LN <---> TK
+      SF<---> NY
+    SF <--Undersea--> TK
+```
+
 We can update the routing table for the two sites:
 
 ```text
@@ -611,18 +626,28 @@ When networks grow beyond a single organisation, or autonomous system, we find w
 - Make policy decisions about traffic flow
 - Maintain stability when other networks have problems
 
-```text
-Internet Service Provider A                     Internet Service Provider B
-+-------------------------+                    +-------------------------+
-|     AS Number 65001     |                    |     AS Number 65002     |
-|                         |                    |                         |
-|  +--------+            +--------+       +--------+          +--------+ |
-|  |        |            | Border |       | Border |          |        | |
-|  | Router |------------| Router |-------| Router |----------| Router | |
-|  |        |            |    A   |       |    B   |          |        | |
-|  +--------+            +--------+       +--------+          +--------+ |
-|                         |                    |                         |
-+-------------------------+                    +-------------------------+
+```mermaid
+graph LR
+    Title1["Internet Service Provider A<br/>AS Number 65001"] --> ISP_A
+    Title2["Internet Service Provider B<br/>AS Number 65002"] --> ISP_B
+    
+    subgraph ISP_A[" "]
+        R1[Router] <---> BRA[Border Router A]
+    end
+    
+    subgraph ISP_B[" "]
+        BRB[Border Route B] <---> R2[Router]
+    end
+    
+    BRA <==Peering==> BRB
+    
+    classDef provider fill:none,stroke:#333,stroke-width:1px
+    class ISP_A,ISP_B provider
+    style Title1 fill:none,stroke:none
+    style Title2 fill:none,stroke:none
+    linkStyle 0 stroke:none
+    linkStyle 1 stroke:none
+
 ```
 
 Each autonomous sytem for internet peering is assigned a unique number, the Autonomous System Number (ASN). BGP uses this to track the path a route has taken through different networks to ensure that there are no loops. It also uses the list of ASNs that a route has been through to get a crude estimate of the distance to the destination using the path length; in most cases a route that passes through the fewer networks is considered better than one that passes through more networks.
@@ -713,18 +738,14 @@ The word "datagram" in UDP's name gives us a clue about how it works - it's abou
 
 Looking inside a UDP message reveals a remarkably simple structure. The header contains just four essential pieces of information:
 
-```text
- 0      7 8     15 16    23 24    31 
-+--------+--------+--------+--------+
-|     Source      |   Destination   |
-|      Port       |      Port       |
-+--------+--------+--------+--------+
-|      Length     |    Checksum     |
-+--------+--------+--------+--------+
-|                                   |
-|              data                 |
-|                                   |
-+-----------------------------------+
+```mermaid
+packet-beta
+title UDP Packet
+0-15: "Source Port"
+16-31: "Destination Port"
+32-47: "Length"
+48-63: "Checksum"
+64-95: "Data (variable length)"
 ```
 
 The source and destination ports tell us which applications should handle the message at each end. The length field tells us how big the entire package is, and a checksum provides basic error detection. That's all there is to it - UDP adds just enough information to get a packet of data from one application to another.
@@ -753,26 +774,29 @@ The magic begins with what we call the three-way handshake. Imagine you're makin
 
 Let's peek inside a TCP header to understand how this works. Every TCP segment (that's what we call the individual pieces of a TCP stream) carries a wealth of information in its header:
 
-```text
- 0                   1                   2                   3   
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|          Source Port          |       Destination Port        |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                        Sequence Number                          |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                    Acknowledgment Number                        |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|  Data |           |U|A|P|R|S|F|                               |
-| Offset| Reserved  |R|C|S|S|Y|I|            Window             |
-|       |           |G|K|H|T|N|N|                               |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|           Checksum            |         Urgent Pointer         |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                    Options                    |    Padding      |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                             data                               |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+```mermaid
+---
+title: "TCP Packet"
+---
+packet-beta
+0-15: "Source Port"
+16-31: "Destination Port"
+32-63: "Sequence Number"
+64-95: "Acknowledgment Number"
+96-99: "Data Offset"
+100-105: "Reserved"
+106: "URG"
+107: "ACK"
+108: "PSH"
+109: "RST"
+110: "SYN"
+111: "FIN"
+112-127: "Window"
+128-143: "Checksum"
+144-159: "Urgent Pointer"
+160-191: "(Options and Padding)"
+192-255: "Data (variable length)"
+
 ```
 
 The sequence and acknowledgment numbers are particularly clever. The sequence number identifies each byte in the stream of data being sent, while the acknowledgment number tells the other side which byte is expected next. This system allows TCP to handle lost, duplicated, or out-of-order packets gracefully.
