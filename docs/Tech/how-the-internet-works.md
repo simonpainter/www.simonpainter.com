@@ -565,14 +565,6 @@ All traffic (default route) -->LN
 
 This is great until we want to make changes, or perhaps changes are forced upon us by unexpected failures. Let's say we add in an undersea cable crossing the pacific to connect Tokyo and San Francisco. Many such cables exist and we might want to use it for communciations between those two sites. We probably don't want to use it for communications between London and New York though because that cable is shorter.
 
-```text
-   CH     ED
-    |     |
-+--SF----NY----LN----TK--+
-|                        |
-+-pacific-undersea-cable-+
-```
-
 ```mermaid
 graph LR
     LN <---> ED
