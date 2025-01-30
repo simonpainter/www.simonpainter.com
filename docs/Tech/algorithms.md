@@ -8,7 +8,7 @@ Breadth-First Search explores a maze like ripples spreading out from a stone dro
 Imagine a simple maze where you're trying to find the exit. BFS would first check all paths that are one step away from your starting position, then all paths two steps away, and so on. It keeps track of where it has been to avoid going in circles.
 The key strength of BFS is that it guarantees finding the shortest possible path to the exit, making it excellent for scenarios where the shortest route is crucial. However, it requires significant memory as it needs to store all possible paths it discovers. In our maze example, BFS would find the shortest path to the exit, but it would explore many unnecessary areas if the exit happens to be far from the start.
 
-```
+```python
 def bfs_maze(maze, start, end):
     # Queue to store paths we need to explore
     # Each queue entry stores current position and path taken
@@ -33,7 +33,6 @@ def bfs_maze(maze, start, end):
     return None  # No path found
 ```
 
-
 ## Depth-First Search (DFS)
 
 Depth-First Search behaves like an explorer who always goes as far as possible down each path before backtracking. It uses a stack data structure, meaning it processes the most recently discovered path first (last-in, first-out).
@@ -41,7 +40,7 @@ Using our maze example, DFS would pick one direction and keep going until it eit
 DFS uses minimal memory compared to BFS as it only needs to remember the current path it's exploring. However, it doesn't guarantee finding the shortest path - it will find a path to the exit, but it might not be the most efficient one. In our maze, DFS might find a long, winding path to the exit even if there's a much shorter route available.
 I'll add comparisons to Dijkstra's algorithm, focusing on practical differences and use cases.
 
-```
+```python
 def dfs_maze(maze, start, end):
     # Stack to store paths we need to explore
     # Each stack entry stores current position and path taken
@@ -73,7 +72,7 @@ GBFS uses a priority queue, where paths that appear more promising (according to
 
 Unlike Dijkstra's algorithm, which methodically calculates the shortest path to every point it visits, GBFS makes quick decisions based solely on estimated distance to the goal. This makes GBFS typically faster than Dijkstra's algorithm, but at the cost of not guaranteeing the shortest path. In our maze, GBFS might get stuck following a path that looks promising but actually leads to a long detour around walls that aren't visible from the start.
 
-```
+```python
 def gbfs_maze(maze, start, end):
     # Priority queue ordered by estimated distance to goal
     # Each entry stores: (estimated_distance, current_pos, path)
@@ -114,7 +113,7 @@ While Dijkstra's algorithm methodically explores in all directions until it find
 
 This makes A* particularly efficient when you have good information about your destination's location and can make accurate estimates of remaining distances. However, if your heuristic estimates are poor or unavailable, A* effectively becomes Dijkstra's algorithm, making Dijkstra's algorithm the better choice for scenarios where you can't reliably estimate distances to the goal.
 
-```
+```python
 def astar_maze(maze, start, end):
     # Priority queue ordered by f_score (g_score + heuristic)
     # Each entry stores: (f_score, current_pos, path)
@@ -157,7 +156,7 @@ Dijkstra's algorithm is ideal for situations where you either don't have reliabl
 
 The key difference between Dijkstra's algorithm and A* is that Dijkstra's algorithm doesn't use any heuristic information about the goal's location. This makes it more widely applicable but potentially slower than A* in scenarios where good heuristics are available. The difference from GBFS is that Dijkstra's algorithm guarantees finding the shortest path, while GBFS trades this guarantee for potentially faster initial solution finding.
 
-```
+```python
 def dijkstra_maze(maze, start, end):
     # Priority queue ordered by distance from start
     # Each entry stores: (distance, current_pos, path)
