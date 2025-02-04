@@ -54,6 +54,8 @@ Each [ExpressRoute Circuit](#expressroute-circuit) is made up of two links, thes
 
 ### ExpressRoute Peering
 
+Each [ExpressRoute Circuit](#expressroute-circuit) consists of a pair of [links](#expressroute-link) and each of these can have distinct peerings. A peering is required for each link and a single circuit can support both [Azure private peerings](#peering-type-azure-private-peering) and [Microsoft peerings](#peering-type-microsoft-peering).
+
 #### Peering type: Azure private peering
 
 Azure compute services, such as virtual machines (IaaS) and cloud services (PaaS), deployed within a virtual network can be connected through the private peering domain. This domain is considered a trusted extension of your core network into Microsoft Azure.
@@ -123,6 +125,8 @@ Key points:
 > **4 connections per scale unit: 1 unit=4, 2 units=8, 10 units=16
 
 ### ExpressRoute Metro
+
+ExpressRoute Metro is a variation of an ExpressRoute Circuit where the separate [ExpressRoute Links](#expressroute-link) are provisioned in different physical peering locations within a metro area. This give additional geographic redundancy for those who do not require two separate resillient [ExpressRoute Circuits](#expressroute-circuit) in two separate locations.
 
 ```mermaid
 
