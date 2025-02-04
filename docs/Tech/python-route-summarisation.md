@@ -12,26 +12,26 @@ I have written a little wrapper for it which will regex the prefixes out of a �
 from netaddr import IPNetwork, cidr_merge
 import re, sys
 try:
-	filename = sys.argv[1] 
+    filename = sys.argv[1] 
 except:
-	print("Please specify a file name for input")
-	sys.exit()
+    print("Please specify a file name for input")
+    sys.exit()
 
 with open (filename, "r") as file:
-	table = file.read().replace('\n', '')
+    table = file.read().replace('\n', '')
 prefixes = re.findall("(?:\d{1,3}\.){3}\d{1,3}\/\d+", table)
 prefix_list = []
 for each in prefixes:
-	prefix_list.append(IPNetwork(each))
+    prefix_list.append(IPNetwork(each))
 summary_list = cidr_merge(prefix_list)
 print('Number of prefixes ', len(prefix_list))
 print('Number in summary ', len(summary_list))
 print('Summary list:')
 for each in summary_list:
-	print(each.cidr)
+    print(each.cidr)
 
 ```
 
-https://gist.github.com/simonpainter/4c1771f6c6580164c0f46f0fb5368617
+[Gist](https://gist.github.com/simonpainter/4c1771f6c6580164c0f46f0fb5368617)
 
 You’ll need to install netaddr – the easiest way is probably ‘pip install netaddr’

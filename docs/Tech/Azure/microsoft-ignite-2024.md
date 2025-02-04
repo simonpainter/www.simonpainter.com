@@ -11,7 +11,7 @@ I predicted quite a bit of this a while back in [a Medium paper](https://medium.
 
 ## Network Security Perimeter
 
-We all love [privatelink](../Medium/private-link-services.md) right? It's a great way to secure access into your PaaS services from your vNets, and with privatelink services you can extend that protection to services you run yourself. Where there has been a gap previously is in securing communications from one PaaS to another and this has been addressed with [Network Security Perimeter](https://learn.microsoft.com/en-us/azure/private-link/network-security-perimeter-concepts). This is best thought of as an NSG around your PaaS instances, but specifically *your* instances. It includes FQDN filtering for outbound internet access which is a particularly nice touch and will be useful as more PaaS services are onboarded.
+We all love [privatelink](private-link-services.md) right? It's a great way to secure access into your PaaS services from your vNets, and with privatelink services you can extend that protection to services you run yourself. Where there has been a gap previously is in securing communications from one PaaS to another and this has been addressed with [Network Security Perimeter](https://learn.microsoft.com/en-us/azure/private-link/network-security-perimeter-concepts). This is best thought of as an NSG around your PaaS instances, but specifically *your* instances. It includes FQDN filtering for outbound internet access which is a particularly nice touch and will be useful as more PaaS services are onboarded.
 
 Services onboarded in November 2024
 

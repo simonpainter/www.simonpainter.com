@@ -14,7 +14,7 @@ The reason I fell down the rabbit hole with regard to [finding my public ip](../
 
 [Page Source](img/azure-networking.jpg)
 
-This led to a bit of Friday night investigation as we wanted to know what this IP was and what it was for and also why it appeared to be different from the one used for the default outbound internet access. I mention default internet outbound internet access because that was the first thing we checked, comparing the result from the test mentioned in the book with what happens if you do one of the other tests for [finding your public ip](finding-my-ip.md) like `curl ident.me` and others. 
+This led to a bit of Friday night investigation as we wanted to know what this IP was and what it was for and also why it appeared to be different from the one used for the default outbound internet access. I mention default internet outbound internet access because that was the first thing we checked, comparing the result from the test mentioned in the book with what happens if you do one of the other tests for [finding your public ip](../finding-my-ip.md) like `curl ident.me` and others. 
 
 ## Initial Investigation
 
@@ -178,7 +178,23 @@ So I did a bit of testing on some other boxes sending the query via a bunch of d
 
 ## What's actually happening
 
-![DNS Diagram](img/dns-flow.png)
+```mermaid
+graph LR
+    VM1[VM1]
+    AzureDNS[Azure DNS]
+    GoogleDNS[Google DNS]
+    NAT[NAT]
+
+    VM1 -->|1| AzureDNS
+    AzureDNS -->|2| GoogleDNS
+    VM1 -->|3| NAT
+    NAT -->|4| GoogleDNS
+
+    style VM1 fill:#4B8BBE
+    style AzureDNS fill:#0089D6
+    style GoogleDNS fill:#4285F4
+    style NAT fill:#00BCF2
+```
 
 When you use `dig TXT o-o.myaddr.l.google.com +short` the VM sends the request goes to the Azure DNS server, this then forwards the request to Google's DNS server. 
 

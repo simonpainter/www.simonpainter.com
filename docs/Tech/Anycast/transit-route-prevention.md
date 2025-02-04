@@ -4,7 +4,7 @@ title: Transit route prevention with Azure Route Server
 
 ---
 
-I wrote an article about a rather neat solution for global application delivery in Azure via [anycast](../Medium/anycast-route-server.md) however there are some limitations which exist to prevent transit routing in Azure.
+I wrote an article about a rather neat solution for global application delivery in Azure via [anycast](anycast-route-server.md) however there are some limitations which exist to prevent transit routing in Azure.
 
 ### The behaviour
 
