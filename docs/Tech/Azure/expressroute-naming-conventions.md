@@ -38,11 +38,26 @@ flowchart TD
 
 ExpressRoute Directs are paired inside a single peering location except when they used in [ExpressRoute Metro](#expressroute-metro); in that case the separate [ExpressRoute Direct Links](#expressroute-direct-link) are supplied in two separate peering locations but still function as a pair.
 
+#### Vlan tagging
+
 ExpressRoute Direct supports both QinQ and Dot1Q VLAN tagging.
+Here's the documentation:
 
-- QinQ VLAN Tagging allows for isolated routing domains on a per ExpressRoute circuit basis. Azure dynamically gives an S-Tag at circuit creation that can't be changed. Each peering on the circuit (Private and Microsoft) uses a unique C-Tag as the VLAN. The C-Tag isn't required to be unique across circuits on the ExpressRoute Direct ports.
-- Dot1Q VLAN Tagging allows for a single tagged VLAN on a per ExpressRoute Direct port pair basis. A C-Tag used on a peering must be unique across all circuits and peerings on the ExpressRoute Direct port pair.
+```text
+QinQ VLAN Tagging allows for isolated routing domains on a per 
+ExpressRoute circuit basis. Azure dynamically gives an S-Tag at 
+circuit creation that can't be changed. Each peering on the circuit 
+(Private and Microsoft) uses a unique C-Tag as the VLAN. The C-Tag 
+isn't required to be unique across circuits on the ExpressRoute 
+Direct ports.
 
+Dot1Q VLAN Tagging allows for a single tagged VLAN on a per 
+ExpressRoute Direct port pair basis. A C-Tag used on a peering must 
+be unique across all circuits and peerings on the ExpressRoute Direct 
+port pair.
+```
+
+To simplify the choice you either have to maintain unique vlan tags for all [peerings](#expressroute-peering) in all [circuits](#expressroute-circuit) using e an ExpressRoute Direct resource with Dot1Q, or you alternatively choose 802.1QinQ where a separate outer tag is allocated for each [ExpressRoute Circuit](#expressroute-circuit) over the ExpressRoute Direct and that means you only need to have the vlan tags for each [peerings](#expressroute-peering) unique within that [circuit](#expressroute-circuit).
 
 ### ExpressRoute Direct Link
 
@@ -141,8 +156,7 @@ Connectivity to Microsoft online services (Microsoft 365, Azure PaaS services, a
 
 #### VLAN Configuration
 
-- Valid VLAN ID required
-- Must be unique within the [ExpressRoute Circuit](#expressroute-circuit)
+- Valid VLAN ID required - unique within [circuit](#expressroute-circuit) or unique across [ExpressRoute Direct](#expressroute-direct-erd) resource depending on if [dot1Q or dot1QinQ](#vlan-tagging) used on underlying [ExpressRoute Direct](#expressroute-direct-erd) resource
 - Same VLAN ID used for both primary and secondary [ExpressRoute Link](#expressroute-link)
 
 #### BGP Configuration for Private Azure Peerings
