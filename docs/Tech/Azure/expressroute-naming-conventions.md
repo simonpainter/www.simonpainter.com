@@ -1,6 +1,8 @@
 ---
-title: I dislike the way ExpressRoute constructs are named
+title: ExpressRoute construct naming
 ---
+
+## Make it make sense
 
 I will always be a network engineer and that means that some words have very specific meanings that have taken root in my soul. The terminology within ExpressRoute has bothered me for ages and when speaking to a few people I found that I am not the only one who finds it unintuitive. To me a circuit is a single link but to Microsoft a circuit is the pair of links and the associated peerings!
 
@@ -36,13 +38,19 @@ flowchart TD
 
 ExpressRoute Directs are paired inside a single peering location except when they used in [ExpressRoute Metro](#expressroute-metro); in that case the separate [ExpressRoute Direct Links](#expressroute-direct-link) are supplied in two separate peering locations but still function as a pair.
 
+ExpressRoute Direct supports both QinQ and Dot1Q VLAN tagging.
+
+- QinQ VLAN Tagging allows for isolated routing domains on a per ExpressRoute circuit basis. Azure dynamically gives an S-Tag at circuit creation that can't be changed. Each peering on the circuit (Private and Microsoft) uses a unique C-Tag as the VLAN. The C-Tag isn't required to be unique across circuits on the ExpressRoute Direct ports.
+- Dot1Q VLAN Tagging allows for a single tagged VLAN on a per ExpressRoute Direct port pair basis. A C-Tag used on a peering must be unique across all circuits and peerings on the ExpressRoute Direct port pair.
+
+
 ### ExpressRoute Direct Link
 
-Nominally a single port on the MSEE or a single fibre pair cross connect. These cannot be bought separately and are typically supplied in the same peering link, except where used for [ExpressRoute Metro](#expressroute-metro).
+Nominally a single port on the MSEE or a single fibre pair cross connect to that port. These cannot be bought separately and are supplied as pairs in the same peering location, or in a metro pair in two separate locations for [ExpressRoute Metro](#expressroute-metro).
 
 ### ExpressRoute Direct Circuit
 
-Exactly the same as an [ExpressRoute Circuit](#expressroute-circuit) however instead of being provided over a telco partner's infrastructure it's provisioned over an [ExpressRoute Direct](#expressroute-direct-erd) resource. A single ExpressRoute Direct resource can have multiple ExpressRoute Direct Circuits associated with it using 802.1q (vlan tagging) or 801.1ad (Q-in-Q tagging) to logically separate the layer 2 traffic.
+Exactly the same as an [ExpressRoute Circuit](#expressroute-circuit) however instead of being provided over a telco partner's infrastructure it's provisioned over an [ExpressRoute Direct](#expressroute-direct-erd) resource. A single ExpressRoute Direct resource can have multiple ExpressRoute Direct Circuits associated with it.
 
 ### ExpressRoute Circuit
 
@@ -55,6 +63,61 @@ Each [ExpressRoute Circuit](#expressroute-circuit) is made up of two links, thes
 ### ExpressRoute Peering
 
 Each [ExpressRoute Circuit](#expressroute-circuit) consists of a pair of [links](#expressroute-link) and each of these can have distinct peerings. A peering is required for each link and a single circuit can support both [Azure private peerings](#peering-type-azure-private-peering) and [Microsoft peerings](#peering-type-microsoft-peering).
+
+```mermaid
+flowchart LR
+    subgraph Customer[Customer Network]
+        CR1[Customer Router 1]
+        CR2[Customer Router 2]
+    end
+
+    subgraph Circuit[ExpressRoute Circuit]
+        subgraph PL[Primary Link]
+            PP1[Private Peering]
+            MP1[Microsoft Peering]
+            
+        end
+        subgraph SL[Secondary Link]
+            PP2[Private Peering]
+            MP2[Microsoft Peering]
+        end
+    end
+
+    subgraph Microsoft[Microsoft Network]
+        MSEE1[MSEE 1]
+        MSEE2[MSEE 2]
+        Azure[Azure Services]
+        M365[Microsoft 365]
+    end
+
+    CR1 <--> PP1
+    CR1 <--> MP1
+    CR2 <--> PP2
+    CR2 <--> MP2
+    
+    PP1 <--> MSEE1
+    MP1 <--> MSEE1
+    PP2 <--> MSEE2
+    MP2 <--> MSEE2
+    
+    MSEE1 <---> Azure
+    MSEE1 <---> M365
+    MSEE2 <---> Azure
+    MSEE2 <---> M365
+
+    style Circuit fill:#e1f5fe,stroke:#0288d1
+    style PP1 fill:#e8f5e9,stroke:#2e7d32
+    style MP1 fill:#fff3e0,stroke:#ef6c00    
+    style PP2 fill:#e8f5e9,stroke:#2e7d32
+    style MP2 fill:#fff3e0,stroke:#ef6c00
+    style Customer fill:#f5f5f5,stroke:#333
+    style Microsoft fill:#f5f5f5,stroke:#333
+
+    linkStyle 0,2,10 stroke:#2e7d32,stroke-width:2px
+    linkStyle 1,3,11 stroke:#ef6c00,stroke-width:2px
+    linkStyle 4,6,8 stroke:#2e7d32,stroke-width:2px
+    linkStyle 5,7,9 stroke:#ef6c00,stroke-width:2px
+```
 
 #### Peering type: Azure private peering
 
@@ -122,7 +185,8 @@ Key points:
 | ErGwScale (Preview)  | Yes* | 4-16** |
 
 > *FastPath requires minimum 10 scale units
-> **4 connections per scale unit: 1 unit=4, 2 units=8, 10 units=16
+> ** Up to 4 connections with 1 scale unit (2Gbps), up to 8 with at least 2 scale units (4Gbps) and up to 16 connections with
+> at least 10 scale units. 
 
 ### ExpressRoute Metro
 
@@ -150,3 +214,6 @@ flowchart TD
     style MSEE_B fill:#e1f5fe,stroke:#0288d1,stroke-width:2px
 
 ```
+
+> ExpressRoute Metro can be selected when ordering an [ExpressRoute Direct](#expressroute-direct-erd) and the metro pair
+> appears like any single peering location on the list of available locations.
