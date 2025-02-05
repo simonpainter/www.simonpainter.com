@@ -4,7 +4,7 @@ title: ExpressRoute construct naming
 
 ## Make it make sense
 
-I will always be a network engineer and that means that some words have very specific meanings that have taken root in my soul. The terminology within ExpressRoute has bothered me for ages and when speaking to a few people I found that I am not the only one who finds it unintuitive. To me a circuit is a single link but to Microsoft a circuit is the pair of links and the associated peerings!
+I will always be a network engineer and that means that some words have very specific meanings that have taken root in my soul. The terminology within ExpressRoute has bothered me for ages and when speaking to a few people I found that I am not the only one who finds it unintuitive. To me a circuit is a single link but to Microsoft a circuit is the pair of links and the associated peerings! Two thumbs up to that, Microsoft, or rather in your own language 'one expressroute thumb'.
 
 Here's a run down of what's what, starting with the wires.
 
@@ -65,7 +65,7 @@ Nominally a single port on the MSEE or a single fibre pair cross connect to that
 
 ### ExpressRoute Direct Circuit
 
-Exactly the same as an [ExpressRoute Circuit](#expressroute-circuit) however instead of being provided over a telco partner's infrastructure it's provisioned over an [ExpressRoute Direct](#expressroute-direct-erd-port-pair) resource. A single ExpressRoute Direct resource can have multiple ExpressRoute Direct Circuits associated with it.
+Exactly the same as an [ExpressRoute Circuit](#expressroute-circuit) however instead of being provided over a telco partner's infrastructure it's provisioned over an [ExpressRoute Direct](#expressroute-direct-erd-port-pair) resource. A single [ExpressRoute Direct port pair](#expressroute-direct-erd-port-pair) resource can have multiple ExpressRoute Direct Circuits associated with it.
 
 ### ExpressRoute Circuit
 
@@ -73,7 +73,7 @@ These are the logical constructs which encompasses two [ExpressRoute Links](#exp
 
 ### ExpressRoute Link
 
-Each [ExpressRoute Circuit](#expressroute-circuit) is made up of two links, these are the layer 2 connections between customer (or telco) managed equipment and the MSEE.
+Each [ExpressRoute Circuit](#expressroute-circuit) is made up of two links, these are the logical connections between customer (or telco) managed equipment and the MSEE.
 
 ### ExpressRoute Peering
 
@@ -231,3 +231,17 @@ flowchart TD
 
 > ExpressRoute Metro can be selected when ordering an [ExpressRoute Direct](#expressroute-direct-erd-port-pair) and the metro pair
 > appears like any single peering location on the list of available locations.
+
+### Summary
+
+```mermaid
+
+erDiagram
+    "ExpressRoute Direct Port" ||--o{ "ExpressRoute Direct Port Pair" : "2 ports make"
+    "ExpressRoute Direct Port Pair" ||--o{ "ExpressRoute Circuit" : "supports multiple"
+    "ExpressRoute Circuit" ||--|{ "ExpressRoute Link" : "has 2"
+    "ExpressRoute Link" ||--|{ "ExpressRoute Peering" : "has at least 1"
+    "ExpressRoute Circuit" ||--o{ "ExpressRoute Connection" : "can have many"
+    "ExpressRoute Gateway" ||--o{ "ExpressRoute Connection" : "can have many"
+
+```
