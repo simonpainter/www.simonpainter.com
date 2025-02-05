@@ -200,7 +200,7 @@ Key points:
 
 > *FastPath requires minimum 10 scale units
 > ** Up to 4 connections with 1 scale unit (2Gbps), up to 8 with at least 2 scale units (4Gbps) and up to 16 connections with
-> at least 10 scale units. 
+> at least 10 scale units.
 
 ### ExpressRoute Metro
 
