@@ -6,7 +6,7 @@ title: ExpressRoute construct naming
 
 I will always be a network engineer and that means that some words have very specific meanings that have taken root in my soul. The terminology within ExpressRoute has bothered me for ages and when speaking to a few people I found that I am not the only one who finds it unintuitive. To me a circuit is a single link but to Microsoft a circuit is the pair of links and the associated peerings!
 
-Here's a run down of what's what, starting with the wires and working up.
+Here's a run down of what's what, starting with the wires.
 
 ### ExpressRoute Direct (ERD) port pair
 
@@ -69,7 +69,7 @@ Exactly the same as an [ExpressRoute Circuit](#expressroute-circuit) however ins
 
 ### ExpressRoute Circuit
 
-These are the logical constructs which encompasses two [ExpressRoute Links](#expressroute-link).
+These are the logical constructs which encompasses two [ExpressRoute Links](#expressroute-link). A circuit can be associated with more than one [ExpressRoute Connection](#expressroute-connection) to an [ExpressRoute Gateway](#expressroute-gateway)
 
 ### ExpressRoute Link
 
