@@ -58,7 +58,7 @@ These are the logical constructs which encompasses two [ExpressRoute Links](#exp
 
 ### ExpressRoute Link
 
-Each [ExpressRoute Circuit](#expressroute-circuit) is made up of two links, these are the vlan tagged layer 2 connections between customer (or telco) managed equipment and the MSEE. T
+Each [ExpressRoute Circuit](#expressroute-circuit) is made up of two links, these are the layer 2 connections between customer (or telco) managed equipment and the MSEE.
 
 ### ExpressRoute Peering
 
