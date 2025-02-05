@@ -8,7 +8,7 @@ I will always be a network engineer and that means that some words have very spe
 
 Here's a run down of what's what, starting with the wires and working up.
 
-### ExpressRoute Direct (ERD)
+### ExpressRoute Direct (ERD) port pair
 
 Pair of physical ports in a peering location in the Microsoft Enterprise Edge (MSEE) and enable the physical fibre cross connects at layer 1 to the customer router. Prior to ERD being available as a product these would typically exist only in the form of a cross connect to service providers who offered ExpressRoute connectivity services, but are now offered direct to customers who have the requirement and the necessary supporting infrastructure.
 Microsoft documents refer to these as ExpressRoute Direct *resources* to either add or remove confusion with [ExpressRoute Direct Circuits](#expressroute-direct-circuit).
@@ -21,8 +21,8 @@ flowchart TD
         MSEE_A[MSEE A]
         MSEE_B[MSEE B]
         
-        CR1 <--->|"Cross Connect ExpressRoute Direct Link"| MSEE_A
-        CR2 <--->|"Cross Connect ExpressRoute Direct Link"| MSEE_B
+        CR1 <--->|"Cross Connect ExpressRoute Direct Port"| MSEE_A
+        CR2 <--->|"Cross Connect ExpressRoute Direct Port"| MSEE_B
     end
 
     style PL fill:#f5f5f5,stroke:#333,stroke-width:2px
@@ -36,7 +36,7 @@ flowchart TD
 > ExpressRoute Direct resources are provided as a pair of ports in separate MSEE devices to ensure that maintenance outages or
 > failures on a single MSEE do not cause loss of service. It is not possible to buy them with a single link.
 
-ExpressRoute Directs are paired inside a single peering location except when they used in [ExpressRoute Metro](#expressroute-metro); in that case the separate [ExpressRoute Direct Links](#expressroute-direct-link) are supplied in two separate peering locations but still function as a pair.
+ExpressRoute Directs are paired inside a single peering location except when they used in [ExpressRoute Metro](#expressroute-metro); in that case the separate [ExpressRoute Direct Ports](#expressroute-direct-port) are supplied in two separate peering locations but still function as a pair.
 
 #### Vlan tagging
 
@@ -57,15 +57,15 @@ be unique across all circuits and peerings on the ExpressRoute Direct
 port pair.
 ```
 
-To simplify the choice you either have to maintain unique vlan tags for all [peerings](#expressroute-peering) in all [circuits](#expressroute-circuit) using e an ExpressRoute Direct resource with Dot1Q, or you alternatively choose 802.1QinQ where a separate outer tag is allocated for each [ExpressRoute Circuit](#expressroute-circuit) over the ExpressRoute Direct and that means you only need to have the vlan tags for each [peerings](#expressroute-peering) unique within that [circuit](#expressroute-circuit).
+To simplify the choice you either have to maintain unique vlan tags for all [peerings](#expressroute-peering) in all [circuits](#expressroute-circuit) using an [ExpressRoute Direct](#expressroute-direct-erd-port-pair) resource with Dot1Q, or you alternatively choose 802.1QinQ where a separate outer tag is allocated for each [ExpressRoute Circuit](#expressroute-circuit) over the ExpressRoute Direct and that means you only need to have the vlan tags for each [peerings](#expressroute-peering) unique within that [circuit](#expressroute-circuit).
 
-### ExpressRoute Direct Link
+### ExpressRoute Direct Port
 
 Nominally a single port on the MSEE or a single fibre pair cross connect to that port. These cannot be bought separately and are supplied as pairs in the same peering location, or in a metro pair in two separate locations for [ExpressRoute Metro](#expressroute-metro).
 
 ### ExpressRoute Direct Circuit
 
-Exactly the same as an [ExpressRoute Circuit](#expressroute-circuit) however instead of being provided over a telco partner's infrastructure it's provisioned over an [ExpressRoute Direct](#expressroute-direct-erd) resource. A single ExpressRoute Direct resource can have multiple ExpressRoute Direct Circuits associated with it.
+Exactly the same as an [ExpressRoute Circuit](#expressroute-circuit) however instead of being provided over a telco partner's infrastructure it's provisioned over an [ExpressRoute Direct](#expressroute-direct-erd-port-pair) resource. A single ExpressRoute Direct resource can have multiple ExpressRoute Direct Circuits associated with it.
 
 ### ExpressRoute Circuit
 
@@ -156,7 +156,7 @@ Connectivity to Microsoft online services (Microsoft 365, Azure PaaS services, a
 
 #### VLAN Configuration
 
-- Valid VLAN ID required - unique within [circuit](#expressroute-circuit) or unique across [ExpressRoute Direct](#expressroute-direct-erd) resource depending on if [dot1Q or dot1QinQ](#vlan-tagging) used on underlying [ExpressRoute Direct](#expressroute-direct-erd) resource
+- Valid VLAN ID required - unique within [circuit](#expressroute-circuit) or unique across [ExpressRoute Direct](#expressroute-direct-erd-port-pair) resource depending on if [dot1Q or dot1QinQ](#vlan-tagging) used on underlying [ExpressRoute Direct](#expressroute-direct-erd-port-pair) resource
 - Same VLAN ID used for both primary and secondary [ExpressRoute Link](#expressroute-link)
 
 #### BGP Configuration for Private Azure Peerings
@@ -229,5 +229,5 @@ flowchart TD
 
 ```
 
-> ExpressRoute Metro can be selected when ordering an [ExpressRoute Direct](#expressroute-direct-erd) and the metro pair
+> ExpressRoute Metro can be selected when ordering an [ExpressRoute Direct](#expressroute-direct-erd-port-pair) and the metro pair
 > appears like any single peering location on the list of available locations.
