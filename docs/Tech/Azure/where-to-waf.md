@@ -180,4 +180,47 @@ Again for many that's enough. If your customers are likely to be geographically 
 
 ### Customers everywhere
 
-Sometimes you just want to get your assets a bit closer to your customers. The folks in the ecommerce team are trying to sell sand to the Australians and the pictures showing the different grit sizes are taking an age to load in Perth, WA. You could replicate your application in a closer region and deal with the challenges of keeping your data in sync across region but that's a pain: it's time to get a Content Delivery Network (CDN). Azure Front Door is similar to WAF enabled CDNs like CloudFlare. In fact most people who need Azure Front Door are probably already using CloudFlare so if you aren't familiar with CloudFlare then you probably aren't going to benefit much from Azure Front Door. Both rely on a large network of edge servers spread around the globe which act as caching reverse proxies for your customers to connect to. It saves you having lots of versions of your application spread around lots of regions because it caches static assets like image files, CSS files, and script assets. Dynamic content is still retrieved in realtime from the origin server.
+Sometimes you just want to get your assets a bit closer to your customers. The folks in the ecommerce team are trying to sell sand to the Australians and the pictures showing the different grit sizes are taking an age to load in Perth, WA. You could replicate your application in a closer region and deal with the challenges of keeping your data in sync across region but that's a pain: it's time to get a Content Delivery Network (CDN). Azure Front Door is similar to other WAF enabled CDNs like CloudFlare. In fact most people who need Azure Front Door are probably already using CloudFlare so if you aren't familiar with CloudFlare then you probably aren't going to benefit much from Azure Front Door. Both rely on a large network of edge servers spread around the globe which act as caching reverse proxies for your customers to connect to. It saves you having lots of versions of your application spread around lots of regions because it caches static assets like image files, CSS files, and script assets. Dynamic content is still retrieved in realtime from the origin server. As Front Door terminates the connection at the edge and serves from the edge cache where possible, it's the logical place to put the WAF. It's unlikely you'll benefit from having a WAF at the Application Gateway, or indeed benefit from having an Application Gateway at all, if your application is safely hidden behind Azure Front Door.
+
+```mermaid
+
+graph TB
+    subgraph RG["Resource Group"]
+        AFD["Azure Front Door with WAF"]
+        subgraph UKS["UK South Region"]
+            subgraph VNETS["VNet UK South (10.0.0.0/16)"]
+                subgraph SUBS["Subnet (10.0.1.0/24)"]
+                    LBS["Load Balancer (Standard)"]
+                    VM1["VM 1 (Availability Zone 1)"]
+                    VM2["VM 2 (Availability Zone 2)"]
+                    VM3["VM 3 (Availability Zone 3)"]
+                end
+            end
+        end
+        
+        subgraph UKW["UK West Region"]
+            subgraph VNETW["VNet UK West (10.1.0.0/16)"]
+                subgraph SUBW["Subnet (10.1.1.0/24)"]
+                    LBW["Load Balancer (Standard)"]
+                    VM4["VM 4 (No AZ)"]
+                end
+            end
+        end
+    end
+    
+    AFD --> LBS
+    AFD --> LBW
+    LBS --> VM1
+    LBS --> VM2
+    LBS --> VM3
+    LBW --> VM4
+
+    style RG fill:#bbbbbb,stroke:#bbbbbb
+    style UKS fill:#e1f5fe,stroke:#0288d1
+    style UKW fill:#e1f5fe,stroke:#0288d1
+    style VNETS fill:#e8f5e9,stroke:#2e7d32
+    style VNETW fill:#e8f5e9,stroke:#2e7d32
+
+```
+
+There are always edge cases where you would need both Front Door and Application Gateway, the main one being where you want to retain the TLS termination that you get in Application Gateway whilst also benefiting from the edge caching of Front Door and perhaps if you really wanted WAF both locally and at the edge but that isn't really a typical architecture. For the most part it's one or the other, use Application Gateway and Azure Traffic Manager to bring customers to you or use Azure Front Door to bring our application closer to your customers. In both cases the WAF goes at the very edge as the first thing that the traffic hits, either at the Front Door or the Application Gateway but rarely both.
