@@ -55,7 +55,8 @@ style VNETS fill:#e8f5e9,stroke:#2e7d32
 
 Giving out three different addresses for your three application instances is going to be troublesome so at a bare minimum we're going to need to set ourselves up with some sort of loadbalancer. In reality you're probably going to want autoscaling groups behind a loadbalancer but that's not something we're doing in a lab like this.
 
-> The magic of the Azure Loadbalancer is that it doesn't really work in the > same way that the AWS ones or a typical on premise loadbalancer does. It
+> The magic of the Azure Loadbalancer is that it doesn't really work in the 
+> same way that the AWS ones or a typical on premise loadbalancer does. It
 > works pretty ephemerally within the fabric so it isn't some sort of VM
 > that can terminate a connection, it looks at the first encapsulated packet
 > in transit, decides where it's going, and then sends all subsequent
