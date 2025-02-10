@@ -21,7 +21,7 @@ echo "Hello, World from UK South, AZ1" > /var/www/html/index.html
 ```
 
 > If you use teraform you can add the bootstrap script above into there and
-> you don't even have to SSH into it. Either way don't forget to configure 
+> you don't even have to SSH into it. Either way don't forget to configure
 > an NSG to allow tcp/22 for ssh and tcp/80 for http inbound.
 
 You should now have something that looks a bit like this:
