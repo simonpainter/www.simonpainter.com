@@ -55,15 +55,9 @@ style VNETS fill:#e8f5e9,stroke:#2e7d32
 
 Giving out three different addresses for your three application instances is going to be troublesome so at a bare minimum we're going to need to set ourselves up with some sort of loadbalancer. In reality you're probably going to want autoscaling groups behind a loadbalancer but that's not something we're doing in a lab like this.
 
-> The magic of the Azure Loadbalancer is that it doesn't really work in the 
-> same way that the AWS ones or a typical on premise loadbalancer does. It
-> works pretty ephemerally within the fabric so it isn't some sort of VM
-> that can terminate a connection, it looks at the first encapsulated packet
-> in transit, decides where it's going, and then sends all subsequent
-> encapsulated traffic to the right place based on a 5 tuple hash table.
-> The nature of Azure Loadbalancer means that it is always zone redundant.
+> The magic of the Azure Load Balancer is that it operates at Layer 4 (TCP/UDP) and doesn't really work in the same way that the AWS ones or a typical on-premises load balancer does. It works ephemerally within the fabric so it isn't some sort of VM that can terminate a connection. Instead, it looks at the first encapsulated packet in transit, decides where it's going using a 5-tuple hash (source IP, source port, destination IP, destination port, protocol type), and then sends all subsequent encapsulated traffic to the right place. The nature of Azure Load Balancer means that it is always zone redundant.
 
-We can put an azure loadbalancer in front of our VMs, we would also need a public IP for it, but that means that your traffic from the internet is getting directly terminated on the VM itself. That's pretty scary stuff nowadays. Try it with your hello world server for a while and take a look at your access logs and see how long it takes before the bad guys are probing it. A much better solution is some sort of reverse proxy that will terminate the connections: Azure Application Gateway does this nicely. For those familiar with on premise kit like F5 LTMs that's the closest analogy in that it will terminate a connection, do TLS offload and provide some separation of your external traffic flows and your internal traffic flows.
+We can put an azure loadbalancer in front of our VMs, we would also need a public IP for it, but that means that your traffic from the internet is getting directly terminated on the VM itself. That's pretty scary stuff nowadays. Try it with your hello world server for a while and take a look at your access logs and see how long it takes before the bad guys are probing it. A much better solution is some sort of reverse proxy that will terminate the connections: Azure Application Gateway does this nicely. Operating at Layer 7 (HTTP/HTTPS), it functions similarly to on-premises equipment like F5 LTMs in that it will terminate a connection, perform TLS offload and provide separation between your external and internal traffic flows.
 
 ```bash
 simon@MacBook-Pro WAF % curl http://172.167.121.180
@@ -82,9 +76,7 @@ For the v2 SKU specifically, Microsoft recommends:
 
 The other thing about the Application Gateway to note is that because it's a group of VMs they are deployed across availability zones so an Application Gateway is always Zone Redundant.
 
-> Oh, yeah, did you see that? If the AppGW has a WAF on it you'll need a
-> bigger subnet. That's because a WAF is quite taxing on the AppGW so it'll
-> need to scale out more. It's all just software on a VM after all.
+> Oh, yeah, did you see that? If the AppGW has a WAF on it you'll need a bigger subnet. That's because a WAF is quite taxing on the AppGW so it'll need to scale out more. The WAF capability comes in two versions (v1 and v2), with v2 offering enhanced features and better performance. WAF policies can be created separately and shared across multiple Application Gateways, allowing for consistent security rules across your infrastructure. It's all just software on a VM after all.
 
 Anyway, here we are with our zone redundant web application in a single region. For most organisations that's it. That's all you need. If your customers are all based in a single geography and you have no data soverignty needs then that's enough. Availability zones are there to provide all the redundancy you need with, in most cases, metro area physical separation and separate failure domains across all the things that matter like power, cooling, and connectivity.
 
@@ -225,3 +217,56 @@ graph TB
 ```
 
 There are always edge cases where you would need both Front Door and Application Gateway, the main one being where you want to retain the TLS termination that you get in Application Gateway whilst also benefiting from the edge caching of Front Door and perhaps if you really wanted WAF both locally and at the edge but that isn't really a typical architecture. For the most part it's one or the other, use Application Gateway and Azure Traffic Manager to bring customers to you or use Azure Front Door to bring our application closer to your customers. In both cases the WAF goes at the very edge as the first thing that the traffic hits, either at the Front Door or the Application Gateway but rarely both.
+
+### Cost and Performance Considerations
+
+#### Single Region with Application Gateway + WAF
+
+**Costs:**
+
+- Application Gateway v2: Fixed hourly rate plus processing costs per GB
+- WAF Policy: Additional cost per Application Gateway instance
+- Public IP: Small fixed monthly cost
+- VMs: Compute costs plus associated storage
+- Data Transfer: Charged for outbound traffic
+
+**Performance:**
+
+- Latency: 1-5ms added by Application Gateway
+- WAF Impact: 2-8ms additional processing time
+- Zone Redundancy: < 10ms between availability zones
+- Throughput: Up to 120 Gbps with v2 SKU
+- Auto-scaling: Scales at ~60% CPU utilization
+
+#### Multi-Region with Traffic Manager
+
+**Additional Costs:**
+
+- Traffic Manager: Monthly cost per million DNS queries
+- Secondary Region: Doubles infrastructure costs
+- Inter-Region Data Transfer: Higher costs for cross-region traffic
+- Additional Public IPs and Application Gateways
+
+**Performance:**
+
+- DNS Latency: 50-100ms for initial resolution
+- Regional Failover: 10-30 seconds (DNS propagation)
+- Cross-Region Traffic: Varies by region pair (e.g., UK South to UK West ~10ms)
+- No performance impact on subsequent requests
+
+#### Global Distribution with Front Door
+
+**Costs:**
+
+- Front Door: Base cost plus per-route charges
+- WAF Rules: Per-rule processing charges
+- CDN Cache: Storage and request costs
+- Data Transfer: Reduced by caching but varies by region
+
+**Performance:**
+
+- Edge Latency: < 10ms to nearest point of presence
+- Cache Hit Ratio: Typically 60-80% for static content
+- Dynamic Content: 30-60% faster than direct access
+- Global Load Balancing: Automatic routing to nearest healthy origin
+- SSL/TLS Termination: At edge reduces backend load
