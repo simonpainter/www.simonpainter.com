@@ -39,7 +39,7 @@ When the GWLB receives the processed traffic back from the NVA, it looks at the 
 
 ### Two arm model
 
-The two arm model is particularly useful for shared internet egress. A Gateway Load Balancer Endpoint in a VPC can be a target for the routing table and that then forwards over GENEVE tunnels to an autoscaling group of NVAs that SNAT the traffic and forward to their internet egress. It might be a cheaper model than using a whole heap of [AWS Firewalls](../Security/aws-dns-firewall.md).
+The two arm model is particularly useful for shared internet egress. A Gateway Load Balancer Endpoint in a VPC can be a target for the routing table and that then forwards over GENEVE tunnels to an autoscaling group of NVAs that SNAT the traffic and forward to their internet egress. It might be a cheaper model than using a whole heap of [AWS Firewalls](aws-dns-firewall.md).
 
 >![Two Arm](img/gwlb-2-arm.png)
 >
@@ -95,4 +95,4 @@ Alternatively if [you want to use something else](https://aws.amazon.com/blogs/n
 
 ## Summary
 
-Using off the shelf NVAs is probably the first port of call for most people - if you need to use GWLB it's probably because you have a very specific set of technologies in mind. If you just want Suricata then consider the [AWS Firewall](../Security/aws-dns-firewall.md) which seems to have Suricata under the hood. If you really want to do something clever with your own NVAs then prepare for a bit of pain getting GENEVE support into your Linux boxes.
+Using off the shelf NVAs is probably the first port of call for most people - if you need to use GWLB it's probably because you have a very specific set of technologies in mind. If you just want Suricata then consider the [AWS Firewall](aws-dns-firewall.md) which seems to have Suricata under the hood. If you really want to do something clever with your own NVAs then prepare for a bit of pain getting GENEVE support into your Linux boxes.

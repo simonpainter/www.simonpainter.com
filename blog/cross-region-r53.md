@@ -20,7 +20,7 @@ When working with Azure cloud networking, certain limitations become apparent, p
 
 ## Background: The Azure Alternatives
 
-[Adam Stuart](https://www.youtube.com/c/AdamStuart1/videos) does a great job [discussing the alternatives](https://github.com/adstuart/azure-crossregion-private-lb) from an Azure centric viewpoint and the conventional approach to these requirements in Azure involves using [Anycast with RouteServer](Anycast/anycast-route-server.md). While this solution elegantly addresses both needs, it requires implementing Network Virtual Appliances (NVAs). For organisations pursuing architectural purity, NVAs can become "pets" rather than "cattle" - a maintenance burden that goes against cloud-native principles.
+[Adam Stuart](https://www.youtube.com/c/AdamStuart1/videos) does a great job [discussing the alternatives](https://github.com/adstuart/azure-crossregion-private-lb) from an Azure centric viewpoint and the conventional approach to these requirements in Azure involves using [Anycast with RouteServer](anycast-route-server.md). While this solution elegantly addresses both needs, it requires implementing Network Virtual Appliances (NVAs). For organisations pursuing architectural purity, NVAs can become "pets" rather than "cattle" - a maintenance burden that goes against cloud-native principles.
 
 The challenge then becomes finding a way to achieve these requirements using only cloud-native constructs. Using Azure alone, we face significant constraints. Cross-region failover requires exposing health checks to the internet, and closest-instance routing isn't feasible with Azure's native tooling for private networks. This is where AWS Route 53 enters the picture, offering more mature capabilities in these areas.
 

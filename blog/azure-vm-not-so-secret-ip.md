@@ -9,7 +9,7 @@ tags:
 
 ## The Mystery Begins
 
-The reason I fell down the rabbit hole with regard to [finding my public ip](../finding-my-ip.md) was because of a section in an old Azure networking book my friend was reading which said:
+The reason I fell down the rabbit hole with regard to [finding my public ip](finding-my-ip.md) was because of a section in an old Azure networking book my friend was reading which said:
 
 >To allow Azure internal communication between resources in Virtual Networks and Azure services, Azure assigns public IP
 >addresses to VMs, which identifies them internally. Let's call these public IP addresses AzPIP (this is an unofficial
@@ -18,7 +18,7 @@ The reason I fell down the rabbit hole with regard to [finding my public ip](../
 <!-- truncate -->
 [Page Source](img/azure-networking.jpg)
 
-This led to a bit of Friday night investigation as we wanted to know what this IP was and what it was for and also why it appeared to be different from the one used for the default outbound internet access. I mention default internet outbound internet access because that was the first thing we checked, comparing the result from the test mentioned in the book with what happens if you do one of the other tests for [finding your public ip](../finding-my-ip.md) like `curl ident.me` and others.
+This led to a bit of Friday night investigation as we wanted to know what this IP was and what it was for and also why it appeared to be different from the one used for the default outbound internet access. I mention default internet outbound internet access because that was the first thing we checked, comparing the result from the test mentioned in the book with what happens if you do one of the other tests for [finding your public ip](finding-my-ip.md) like `curl ident.me` and others.
 
 ## Initial Investigation
 

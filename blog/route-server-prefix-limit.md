@@ -10,7 +10,7 @@ tags:
 ---
 ## Counting prefixes the same way my wife counts my mistakes
 
-Anyone who has accidentally advertised too many prefixes and watched their ISP BGP peerings collapse (I'm looking at you, BT) knows that prefix limits are a common safeguard in networking. While exploring [anycast](../Anycast/anycast-route-server.md) configurations in Azure, I carefully noted the official Route Server prefix limit of 1,000 routes. However, I recently discovered something far more interesting in the fine print about [how Azure actually calculates this limit](https://learn.microsoft.com/en-us/azure/route-server/route-server-faq#how-is-the-1000-route-limit-calculated-on-a-bgp-peering-session-between-an-nva-and-azure-route-server).
+Anyone who has accidentally advertised too many prefixes and watched their ISP BGP peerings collapse (I'm looking at you, BT) knows that prefix limits are a common safeguard in networking. While exploring [anycast](anycast-route-server.md) configurations in Azure, I carefully noted the official Route Server prefix limit of 1,000 routes. However, I recently discovered something far more interesting in the fine print about [how Azure actually calculates this limit](https://learn.microsoft.com/en-us/azure/route-server/route-server-faq#how-is-the-1000-route-limit-calculated-on-a-bgp-peering-session-between-an-nva-and-azure-route-server).
 <!-- truncate -->
 The documentation states:
 

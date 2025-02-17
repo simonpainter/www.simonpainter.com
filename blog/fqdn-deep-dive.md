@@ -32,8 +32,7 @@ Azure Firewall requires DNS proxy enablement for any FQDN-based network rules. T
 FortiGate offers more flexibility through two distinct approaches:
 
 1. Traditional DNS proxy mode, similar to Azure Firewall
-
-1. DNS packet sniffing mode, enabling passive monitoring without proxy requirements
+2. DNS packet sniffing mode, enabling passive monitoring without proxy requirements
 
 Enforza focuses on Layer 7 HTTP/HTTPS traffic, avoiding the complexity of DNS proxy architecture entirely.
 
@@ -43,21 +42,16 @@ Each platform handles Layer 7 inspection differently, particularly for HTTPS tra
 
 Azure Firewall’s application rules use SNI inspection by default, examining the TLS handshake without decrypting traffic. Full TLS inspection requires Premium SKU and presents several limitations:
 
-* Requires certificate deployment and management
-
-* Cannot inspect certain categories (health, finance, government)
-
-* Limited to outbound and east-west traffic
+- Requires certificate deployment and management
+- Cannot inspect certain categories (health, finance, government)
+- Limited to outbound and east-west traffic
 
 FortiGate provides comprehensive options:
 
-* SNI-based inspection without decryption
-
-* Full TLS inspection with certificate management
-
-* Web filter profiles with granular control
-
-* Support for custom certificate authorities
+- SNI-based inspection without decryption
+- Full TLS inspection with certificate management
+- Web filter profiles with granular control
+- Support for custom certificate authorities
 
 Enforza implements SNI-based filtering exclusively, optimised for cloud workloads and system-to-system communication.
 
@@ -67,9 +61,8 @@ FortiGate stands alone in supporting wildcard FQDN filters at Layer 3, achieved 
 
 Azure Firewall restricts wildcard support to application rules:
 
-* HTTP/HTTPS traffic
-
-* MSSQL protocol
+- HTTP/HTTPS traffic
+- MSSQL protocol
 
 Enforza supports wildcards only for HTTP/HTTPS, aligning with its focused approach to web traffic filtering.
 
@@ -83,15 +76,11 @@ Full URL path filtering (beyond the slash) requires full TLS inspection, somethi
 
 Modern cloud architectures predominantly handle system-to-system communication, where traditional full TLS inspection often proves unnecessary. For these scenarios, SNI-based filtering provides several advantages:
 
-* Lower latency through avoided decryption
-
-* Simplified certificate management
-
-* Reduced operational complexity
-
-* Sufficient security for known API endpoints
-
-* Better performance at scale
+- Lower latency through avoided decryption
+- Simplified certificate management
+- Reduced operational complexity
+- Sufficient security for known API endpoints
+- Better performance at scale
 
 ### Certificate Management Overhead
 
@@ -99,27 +88,19 @@ The implications of certificate management vary significantly between platforms:
 
 Azure Firewall Premium requires:
 
-* Integration with Azure Key Vault
-
-* Intermediate CA certificate deployment
-
-* Trust configuration on endpoints
-
-* Regular certificate rotation
-
-* Premium SKU licensing
+- Integration with Azure Key Vault
+- Intermediate CA certificate deployment
+- Trust configuration on endpoints
+- Regular certificate rotation
+- Premium SKU licensing
 
 FortiGate demands:
 
-* Complex PKI infrastructure
-
-* Certificate deployment strategies
-
-* Trust store management
-
-* Mobile device considerations
-
-* Regular maintenance overhead
+- Complex PKI infrastructure
+- Certificate deployment strategies
+- Trust store management
+- Mobile device considerations
+- Regular maintenance overhead
 
 Enforza avoids certificate management entirely through its SNI-focused approach.
 
@@ -133,25 +114,18 @@ Represents Microsoft’s cloud-native vision with clear architectural boundaries
 
 Strengths:
 
-* Native Azure integration
-
-* Simplified management interface
-
-* Automated scaling
-
-* Consistent security model
-
-* Lower operational complexity
+- Native Azure integration
+- Simplified management interface
+- Automated scaling
+- Consistent security model
+- Lower operational complexity
 
 Limitations:
 
-* Rigid architectural constraints
-
-* Limited protocol support for wildcards
-
-* Premium SKU requirements for advanced features
-
-* Less granular control options
+- Rigid architectural constraints
+- Limited protocol support for wildcards
+- Premium SKU requirements for advanced features
+- Less granular control options
 
 ### FortiGate
 
@@ -159,25 +133,18 @@ Provides traditional enterprise firewall capabilities with maximum flexibility:
 
 Strengths:
 
-* Comprehensive protocol support
-
-* Layer 3 wildcard FQDN filtering
-
-* Granular policy control
-
-* Flexible deployment options
-
-* Deep packet inspection capabilities
+- Comprehensive protocol support
+- Layer 3 wildcard FQDN filtering
+- Granular policy control
+- Flexible deployment options
+- Deep packet inspection capabilities
 
 Limitations:
 
-* Complex configuration requirements
-
-* Significant operational overhead
-
-* Requires specialist expertise
-
-* Higher maintenance burden
+- Complex configuration requirements
+- Significant operational overhead
+- Requires specialist expertise
+- Higher maintenance burden
 
 ### Enforza
 
@@ -185,23 +152,17 @@ Focuses on modern cloud workload requirements:
 
 Strengths:
 
-* Simplified deployment model
-
-* Efficient SNI-based filtering
-
-* Multi-cloud support
-
-* Lower operational overhead
-
-* Cost-effective implementation
+- Simplified deployment model
+- Efficient SNI-based filtering
+- Multi-cloud support
+- Lower operational overhead
+- Cost-effective implementation
 
 Limitations:
 
-* Limited to HTTP/HTTPS traffic
-
-* No Layer 3 wildcard support
-
-* Less granular control options
+- Limited to HTTP/HTTPS traffic
+- No Layer 3 wildcard support
+- Less granular control options
 
 ## Conclusion
 
@@ -209,13 +170,10 @@ The choice between these platforms reflects fundamental differences in organisat
 
 Azure Firewall embodies Microsoft’s cloud-native vision, prioritising architectural purity over functional breadth. This approach particularly suits organisations with:
 
-* Limited traditional firewall expertise
-
-* Strong cloud platform knowledge
-
-* Preference for managed services
-
-* Acceptance of prescribed security patterns
+- Limited traditional firewall expertise
+- Strong cloud platform knowledge
+- Preference for managed services
+- Acceptance of prescribed security patterns
 
 However, this architectural purity comes at the cost of flexibility. Organisations often find themselves adapting security requirements to fit Azure Firewall’s constraints rather than the platform adapting to business needs.
 

@@ -12,7 +12,7 @@ What to do about global site load balancing.
 
 ### Introduction: The Evolution of Global Load Balancing
 
-Global failover between regional data centres has traditionally been tackled using DNS-based global site load balancer solutions like the trusty F5 GTM. As organisations have migrated to cloud networks, this method has been largely replicated with capabilities like [AWS Route 53](../cross-region-r53.md) and Azure Traffic Manager. These DNS-based solutions offer the ability to direct traffic to the best regional instance of an application.
+Global failover between regional data centres has traditionally been tackled using DNS-based global site load balancer solutions like the trusty F5 GTM. As organisations have migrated to cloud networks, this method has been largely replicated with capabilities like [AWS Route 53](cross-region-r53.md) and Azure Traffic Manager. These DNS-based solutions offer the ability to direct traffic to the best regional instance of an application.
 <!-- truncate -->
 DNS-based global load balancers solve cross-region failover problems by offering health checks and the ability to perform IP geolocation-based routing to specific instances. The latter gives us the ability to offer regionalisation of an application, which can provide market-targeted versions of a site, language tailoring, and also address data sovereignty concerns.
 
@@ -22,7 +22,7 @@ There are several ways to fill this gap, including:
 
 1. Deploy a traditional GTM solution, either on-premises or as a Network Virtual Appliance (NVA), and integrate it into the hybrid cloud.
 2. Implement an anycast routing solution.
-3. Think the [unthinkable](../cross-region-r53.md).
+3. Think the [unthinkable](cross-region-r53.md).
 
 This article focuses on the second approach: implementing anycast in Azure using Network Virtual Appliances (NVAs) and Azure Route Server. This method provides a robust solution for routing traffic efficiently across multiple regions, particularly for private network scenarios where DNS-based solutions fall short.
 

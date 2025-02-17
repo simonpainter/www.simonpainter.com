@@ -17,7 +17,7 @@ AWS and Azure share fundamental networking principles that form the foundation o
 
 ### Peering
 
-It's worth remembering that it's the CIDR that is checked for overlaps, particularly relevant in [Azure Subnet Peering](Azure/subnet-peering.md), not the subnets within that CIDR. The example diagram below applies equally to VPC in AWS as it does in VNets in Azure.
+It's worth remembering that it's the CIDR that is checked for overlaps, particularly relevant in [Azure Subnet Peering](subnet-peering.md), not the subnets within that CIDR. The example diagram below applies equally to VPC in AWS as it does in VNets in Azure.
 
 ```mermaid
 graph LR
@@ -42,7 +42,7 @@ graph LR
     style X fill:#ffebee,stroke:#ff0000
 ```
 
-When peering you can selectivitely add routes across VPC peerings in AWS using the route tables. In Azure the default is to add routes for the whole CIDR however the slighly misleadingly named [Subnet Peering](Azure/subnet-peering.md) can be used to selectively allow specific subnet routes across VNet peering.
+When peering you can selectivitely add routes across VPC peerings in AWS using the route tables. In Azure the default is to add routes for the whole CIDR however the slighly misleadingly named [Subnet Peering](subnet-peering.md) can be used to selectively allow specific subnet routes across VNet peering.
 
 ### Prefix Advertisements via BGP
 
@@ -116,7 +116,7 @@ You can add and remove CIDR blocks in Azure pretty much however you like whereas
 ### Routing
 
 AWS and Azure handle routing within their virtual networks quite differently. In AWS VPCs, every subnet must have an associated route table (either explicitly associated or using the main route table by default). While local routes within the VPC are automatically created, they can be overridden by more specific routes in the route table, giving administrators granular control over internal traffic flows.
-Azure uses a system routes approach, where built-in system routes handle traffic flow within the VNet and to the internet. While these system routes cannot be deleted, they can be overridden using User-Defined Routes (UDRs). Azure implements a clear routing precedence: custom routes take precedence over system routes, and routes learned through [virtual network peering](Azure/subnet-peering.md) take precedence over routes learned through VPN gateways. This hierarchy gives network administrators control over traffic flow while maintaining predictable fallback behavior.
+Azure uses a system routes approach, where built-in system routes handle traffic flow within the VNet and to the internet. While these system routes cannot be deleted, they can be overridden using User-Defined Routes (UDRs). Azure implements a clear routing precedence: custom routes take precedence over system routes, and routes learned through [virtual network peering](subnet-peering.md) take precedence over routes learned through VPN gateways. This hierarchy gives network administrators control over traffic flow while maintaining predictable fallback behavior.
 
 ### IPv6
 
