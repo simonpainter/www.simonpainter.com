@@ -65,7 +65,31 @@ const config = {
             label: 'GitHub',
             position: 'right',
           },
-
+          {
+            href: '/tags/azure',
+            label: 'Azure',
+            position: 'left',
+          },
+          {
+            href: '/tags/aws',
+            label: 'AWS',
+            position: 'left',
+          },
+          {
+            href: '/tags/business',
+            label: 'Business',
+            position: 'left',
+          },
+          {
+            href: '/tags/programming',
+            label: 'Programming',
+            position: 'left',
+          },
+          {
+            href: '/tags/security',
+            label: 'Security',
+            position: 'left',
+          },
         ],
       },
       footer: {

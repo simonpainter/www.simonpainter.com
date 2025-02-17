@@ -1,116 +1,114 @@
 ai:
   label: 'Artificial Intelligence'
   permalink: '/ai'
-  description: 'Personal musings'
+  description: 'Exploring artificial intelligence concepts, developments, and applications'
 
 anycast:
   label: 'Anycast'
   permalink: '/anycast'
-  description: 'Personal musings'
+  description: 'Articles about IP anycast technology, implementation, with particular reference to using it in Azure'
 
 aws:
   label: 'AWS'
   permalink: '/aws'
-  description: 'Personal musings'
+  description: 'AWS cloud services, architecture patterns, and implementation guides'
 
 azure:
   label: 'Azure'
   permalink: '/azure'
-  description: 'Personal musings'
+  description: 'Microsoft Azure cloud platform tutorials, services, and solutions'
 
 bash:
   label: 'Bash'
   permalink: '/bash'
-  description: 'Personal musings'
+  description: 'Shell scripting tutorials, tips, and automation techniques'
 
 business:
   label: 'Business'
   permalink: '/business'
-  description: 'Business related content'
+  description: 'Business strategy, management insights, and industry analysis'
 
 cloud:
   label: 'Cloud'
   permalink: '/cloud'
-  description: 'Personal musings'
-
+  description: 'Cloud computing concepts, architectures, and multi-cloud strategies'
 
 dhcp:
   label: 'DHCP'
   permalink: '/dhcp'
-  description: 'Personal musings'
+  description: 'DHCP protocol deep dives, configuration, and troubleshooting'
 
 dns:
   label: 'DNS'
   permalink: '/dns'
-  description: 'Personal musings'
+  description: 'DNS architecture, implementation strategies, and best practices'
 
 docusaurus:
   label: 'Docusaurus'
   permalink: '/docusaurus'
-  description: 'Personal musings'
-
+  description: 'Docusaurus static site generator guides and implementations'
 
 enforza:
   label: 'enforza.io'
   permalink: '/enforza'
-  description: 'Personal musings'
+  description: 'Updates and insights about enforza.io services and features'
 
 expressroute:
   label: 'ExpressRoute'
   permalink: '/expressroute'
-  description: 'Personal musings'
+  description: 'Azure ExpressRoute connectivity solutions and configurations'
 
 github:
   label: 'Github'
   permalink: '/github'
-  description: 'Personal musings'
+  description: 'GitHub platform features, workflows, and best practices'
 
 github-actions:
   label: 'Github Action'
   permalink: '/github-actions'
-  description: 'Personal musings'
+  description: 'CI/CD automation using GitHub Actions workflows'
 
 labs:
   label: 'Labs'
   permalink: '/labs'
-  description: 'Personal musings'
+  description: 'Technical experiments, proof-of-concepts, and learning projects'
 
 networks:
   label: 'Networks'
   permalink: '/networks'
-  description: 'Personal musings'
+  description: 'Network architecture, protocols, and implementation guides'
 
 opinion:
   label: 'Opinion'
   permalink: '/opinion'
-  description: 'Personal musings'
+  description: 'Personal viewpoints on technology trends and industry developments'
 
 ospf:
   label: 'OSPF'
   permalink: '/ospf'
-  description: 'Personal musings'
+  description: 'OSPF routing protocol information and design patterns'
 
 personal:
   label: 'Personal'
   permalink: '/personal'
-  description: 'Personal musings'
+  description: 'Personal reflections, experiences, and my journey in technology'
 
 powershell:
   label: 'Powershell'
   permalink: '/powershell'
-  description: 'Personal musings'
+  description: 'PowerShell scripting tutorials and automation solutions'
 
 programming:
   label: 'Programming'
   permalink: '/programming'
-  description: 'Personal musings'
+  description: 'Software development concepts, patterns, and practices'
 
 python:
   label: 'Python'
   permalink: '/python'
-  description: 'Personal musings'
+  description: 'Python programming tutorials, tips, and best practices'
 
 security:
   label: 'Security'
   permalink: '/security'
-  description: 'Personal musings'
+  description: 'Cybersecurity concepts, implementations, and best practices'

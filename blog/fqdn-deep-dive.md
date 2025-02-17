@@ -5,7 +5,6 @@ authors: spainter
 tags:
   - azure
   - enforza
-  - programming
   - security
 ---
 
