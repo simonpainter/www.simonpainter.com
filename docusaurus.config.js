@@ -1,8 +1,6 @@
 // @ts-check
 import {themes as prismThemes} from 'prism-react-renderer';
 
-
-
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Simon Painter',
@@ -34,12 +32,16 @@ const config = {
       'classic',
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
-        docs: {
-          routeBasePath: '/',
+        docs: false,
+        blog: {
           editUrl: 'https://github.com/simonpainter/my-website/blob/main/',
-          sidebarPath: require.resolve('./sidebars.js')
+          routeBasePath: '/',
+          blogTitle: 'Simon Painter',
+          blogDescription: 'A place to keep things',
+          postsPerPage: 'ALL',
+          blogSidebarTitle: 'All posts',
+          blogSidebarCount: 'ALL',
         },
-        blog: false,
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
@@ -63,6 +65,7 @@ const config = {
             label: 'GitHub',
             position: 'right',
           },
+
         ],
       },
       footer: {
