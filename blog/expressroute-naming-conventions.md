@@ -5,6 +5,7 @@ authors: spainter
 tags:
   - azure
   - expressroute
+date: 2025-01-29
 
 ---
 

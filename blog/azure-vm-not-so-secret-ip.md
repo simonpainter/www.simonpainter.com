@@ -1,9 +1,11 @@
 ---
 
 title: The secret IP that turned out to be DNS forwarding.
+authors: spainter
 tags:
   - azure
   - dns
+date: 2024-11-17
 
 ---
 

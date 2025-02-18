@@ -6,6 +6,8 @@ tags:
   - business
   - aws
   - azure
+date: 2024-11-17
+
 ---
 
 ## My Perspective

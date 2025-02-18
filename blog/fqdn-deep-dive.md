@@ -6,6 +6,8 @@ tags:
   - azure
   - enforza
   - security
+date: 2024-11-16
+
 ---
 
 Not all FQDN filters are built the same.

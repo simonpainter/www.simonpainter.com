@@ -5,6 +5,8 @@ authors: spainter
 tags:
   - opinion
   - business
+date: 2024-12-25
+
 ---
 
 ## Breaking the Technical Hierarchy Trap

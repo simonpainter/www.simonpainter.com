@@ -5,15 +5,15 @@ authors: spainter
 tags:
   - azure
   - anycast
+date: 2024-12-10
 
 ---
 
 What to do about global site load balancing.
-
+<!-- truncate -->
 ### Introduction: The Evolution of Global Load Balancing
 
 Global failover between regional data centres has traditionally been tackled using DNS-based global site load balancer solutions like the trusty F5 GTM. As organisations have migrated to cloud networks, this method has been largely replicated with capabilities like [AWS Route 53](cross-region-r53.md) and Azure Traffic Manager. These DNS-based solutions offer the ability to direct traffic to the best regional instance of an application.
-<!-- truncate -->
 DNS-based global load balancers solve cross-region failover problems by offering health checks and the ability to perform IP geolocation-based routing to specific instances. The latter gives us the ability to offer regionalisation of an application, which can provide market-targeted versions of a site, language tailoring, and also address data sovereignty concerns.
 
 However, DNS options don’t excel at addressing latency or network path-based closest instance routing. While Route 53 can be used on a private hybrid network to fulfil many of these functions (although geolocation on private hybrid networks is understandably clumsy), Azure Traffic Manager is internet-only. This limitation creates a gap that needs to be addressed, especially for organisations with complex hybrid cloud architectures.

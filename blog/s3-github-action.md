@@ -6,6 +6,7 @@ tags:
   - aws
   - github
   - github-actions
+date: 2024-11-17
 
 ---
 

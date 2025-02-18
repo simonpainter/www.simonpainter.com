@@ -5,6 +5,7 @@ authors: spainter
 tags:
   - azure
   - security
+date: 2025-01-10
 
 ---
 

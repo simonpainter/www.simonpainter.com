@@ -5,17 +5,17 @@ authors: spainter
 tags:
   - personal
   - ai
+date: 2024-11-20
 
 ---
 
 > Note for US readers: CV, or Curriculum Vitae, is the standard term in the UK and many other countries for what Americans call
 > a resume. While traditionally a CV might be longer and more detailed than a resume, the terms are often used interchangeably
 > in today's international job market.
-
+<!--truncate-->
 ## Introduction
 
 As a network architect who's spent decades building resilient systems, I recently found myself applying engineering principles to an unexpected domain: my CV. What started as a simple experiment with AI tools evolved into a fascinating exercise in A/B testing and data-driven optimisation. The project has not only yielded interesting initial results but has also provided insights into how AI might transform the way we present ourselves professionally.
-<!--truncate-->
 
 ## The Genesis of the Experiment
 

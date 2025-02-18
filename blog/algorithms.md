@@ -6,15 +6,17 @@ tags:
   - ai
   - python
   - programming
-  
+date: 2024-12-23
+
 ---
+Some common search alorithms and how they work.
+<!--truncate-->
 
 ## Breadth-First Search (BFS)
 
 Breadth-First Search explores a maze like ripples spreading out from a stone dropped in water - it checks all possible paths one step at a time before moving further. It uses a queue data structure, which means it processes paths in the order they were discovered (first-in, first-out).
 Imagine a simple maze where you're trying to find the exit. BFS would first check all paths that are one step away from your starting position, then all paths two steps away, and so on. It keeps track of where it has been to avoid going in circles.
 The key strength of BFS is that it guarantees finding the shortest possible path to the exit, making it excellent for scenarios where the shortest route is crucial. However, it requires significant memory as it needs to store all possible paths it discovers. In our maze example, BFS would find the shortest path to the exit, but it would explore many unnecessary areas if the exit happens to be far from the start.
-<!--truncate-->
 
 ```python
 def bfs_maze(maze, start, end):

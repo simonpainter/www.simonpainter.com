@@ -5,6 +5,7 @@ authors: spainter
 tags:
   - networks
   - personal
+date: 2025-01-02
 
 ---
 

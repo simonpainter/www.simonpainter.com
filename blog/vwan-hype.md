@@ -5,6 +5,7 @@ authors: spainter
 tags:
   - azure
   - opinion
+date: 2024-11-17
 
 ---
 

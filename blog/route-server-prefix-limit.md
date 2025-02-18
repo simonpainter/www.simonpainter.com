@@ -6,6 +6,7 @@ tags:
   - azure
   - networks
   - labs
+date: 2025-01-12
 
 ---
 ## Counting prefixes the same way my wife counts my mistakes

@@ -6,7 +6,7 @@ tags:
   - aws
   - azure
   - networks
-
+date: 2025-01-17
 ---
 
 When you create a VNet in Azure or a VPC in AWS you have to allocate a CIDR range from which you subnets will be allocated. There are some nuances between the different service providers as you try to expand your networks which can lead to some challenges. Knowing the different rules from the start can help you plan your CIDR ranges appropriately. We'll start with what's the same across AWS and Azure and then look at the differences.

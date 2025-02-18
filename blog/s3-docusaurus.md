@@ -7,6 +7,8 @@ tags:
   - github
   - github-actions
   - docusaurus
+date: 2024-11-17
+
 ---
 
 I've now extended the github action for those who want to create their sites in Docusaurus and then have the commited and pushed changes automagically get built and synced to their S3 bucket. Static S3 sites are a great way to host static sites and Docusaurus is a great tool for rendering sites out of simple markdown content. 

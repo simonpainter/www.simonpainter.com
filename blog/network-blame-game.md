@@ -5,7 +5,8 @@ tags:
   - opinion
   - business
   - networks
-  
+date: 2024-11-17
+
 ---
 
 Rethinking Infrastructure Support

@@ -4,6 +4,7 @@ title: Cloud networking news from Ignite 2024
 authors: spainter
 tags:
   - azure
+date: 2024-11-17
 
 ---
 

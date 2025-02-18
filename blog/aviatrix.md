@@ -6,6 +6,7 @@ tags:
   - azure
   - aws
   - opinion
+date: 2025-01-22
 
 ---
 

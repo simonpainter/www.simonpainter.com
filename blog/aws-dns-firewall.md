@@ -5,6 +5,7 @@ authors: spainter
 tags:
   - aws
   - security
+date: 2025-01-22
 
 ---
 
