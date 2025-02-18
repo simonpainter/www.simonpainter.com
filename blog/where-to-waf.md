@@ -1,7 +1,9 @@
 ---
 
 title: Where to WAF
-authors: simonpainter
+authors: 
+  - simonpainter
+  - zainkhan
 tags:
   - azure
   - security

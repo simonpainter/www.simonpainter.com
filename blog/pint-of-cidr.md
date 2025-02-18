@@ -1,7 +1,9 @@
 ---
 
 title: "CIDR ranges in AWS and Azure"
-authors: simonpainter
+authors:
+  - simonpainter
+  - zainkhan
 tags:
   - aws
   - azure

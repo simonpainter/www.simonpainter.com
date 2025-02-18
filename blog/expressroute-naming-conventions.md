@@ -1,7 +1,9 @@
 ---
 
 title: ExpressRoute construct naming
-authors: simonpainter
+authors: 
+  - simonpainter
+  - zainkhan
 tags:
   - azure
   - expressroute

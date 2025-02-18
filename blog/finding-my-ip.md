@@ -1,7 +1,9 @@
 ---
 
 title: Ways of finding your IP
-authors: simonpainter
+authors: 
+  - simonpainter
+  - zainkhan
 tags:
   - dns
   - bash
