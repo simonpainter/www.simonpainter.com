@@ -5,6 +5,8 @@ tags:
   - aws
   - security
   - labs
+date: 2024-02-03
+
 ---
 
 I went down the AWS Gateway Load Balancer rabbit hole recently and it's an interesting solution to some quite specific problems. There are use cases for it on ingress and egress where regulatory requirements, or more likely legacy skillsets, dictate that traffic passes through NVA based network security appliances. The problem with NVAs is often the difficulty scaling them in AWS. You need to distribute traffic and typically you need a loadbalancer but you can't use an ALB or a NLB because unlike Azure the load balancers in AWS do not allow for traffic routing so they cannot be targets for route tables in the same way Azure loadbalancers can be targets for UDRs.
