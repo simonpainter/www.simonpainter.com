@@ -1,7 +1,7 @@
 ---
 
 title: "Azure Private Link Services: Enabling Secure and Flexible Network Architectures"
-authors: spainter
+authors: simonpainter
 tags:
   - azure
 date: 2024-08-07

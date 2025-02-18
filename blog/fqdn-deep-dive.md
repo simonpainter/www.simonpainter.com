@@ -1,7 +1,7 @@
 ---
 
 title: "FQDN Filtering"
-authors: spainter
+authors: simonpainter
 tags:
   - azure
   - enforza

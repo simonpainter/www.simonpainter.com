@@ -1,7 +1,7 @@
 ---
 
 title: "How the internet works"
-authors: spainter
+authors: simonpainter
 tags:
   - networks
   - personal

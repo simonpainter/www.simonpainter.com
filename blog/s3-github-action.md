@@ -1,7 +1,7 @@
 ---
 
 title: How to set up Github Actions to publish to S3 website
-authors: spainter
+authors: simonpainter
 tags:
   - aws
   - github

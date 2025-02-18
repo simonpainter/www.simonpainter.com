@@ -1,7 +1,7 @@
 ---
 
 title: "Beyond DNS: Implementing Anycast in Azure with Route Server and NVAs"
-authors: spainter
+authors: simonpainter
 tags:
   - azure
   - anycast

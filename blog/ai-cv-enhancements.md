@@ -1,7 +1,7 @@
 ---
 
 title: Zen and the art of AI CVs
-authors: spainter
+authors: simonpainter
 tags:
   - personal
   - ai

@@ -1,6 +1,6 @@
 ---
 title: "Cloud Readiness Assessment Methodology"
-authors: spainter
+authors: simonpainter
 tags:
   - cloud
   - business

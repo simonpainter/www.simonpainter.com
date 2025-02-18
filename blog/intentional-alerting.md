@@ -1,7 +1,7 @@
 ---
 
 title: "The Power of Intentional Alerting"
-authors: spainter
+authors: simonpainter
 tags:
   - personal
   - business

@@ -1,7 +1,7 @@
 ---
 
 title: "SD-WAN: A Strategic Step Toward Zero Trust"
-authors: spainter
+authors: simonpainter
 tags:
   - networks
   - opinion

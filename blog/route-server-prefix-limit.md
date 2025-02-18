@@ -1,7 +1,7 @@
 ---
 
 title: The prefix limit in Azure Route Server and how it's counted
-authors: spainter
+authors: simonpainter
 tags:
   - azure
   - networks

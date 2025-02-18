@@ -1,6 +1,6 @@
 ---
 title: A little look at the AWS Gateway Load Balancer
-authors: spainter
+authors: simonpainter
 tags:
   - aws
   - security

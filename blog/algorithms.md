@@ -1,7 +1,7 @@
 ---
 
 title: Summary of common search algorithms
-authors: spainter
+authors: simonpainter
 tags:
   - ai
   - python

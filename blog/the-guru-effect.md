@@ -1,7 +1,7 @@
 ---
 
 title: The case for non-technical managers in technical teams
-authors: spainter
+authors: simonpainter
 tags:
   - opinion
   - business

@@ -1,7 +1,7 @@
 ---
 
 title: Aviatrix. What's all that about?
-authors: spainter
+authors: simonpainter
 tags:
   - azure
   - aws

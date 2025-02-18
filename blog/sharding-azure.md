@@ -1,6 +1,6 @@
 ---
 title: Understanding Azure AZ Sharding and Physical Zone Mapping
-authors: spainter
+authors: simonpainter
 tags:
   - azure
 date: 2025-01-08

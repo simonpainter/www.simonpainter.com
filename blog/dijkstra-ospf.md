@@ -1,7 +1,7 @@
 ---
 
 title: Dijkstra in OSPF
-authors: spainter
+authors: simonpainter
 tags:
   - networks
   - programming

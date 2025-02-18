@@ -1,6 +1,6 @@
 ---
 title: "From Network Blame to Platform Teams"
-authors: spainter
+authors: simonpainter
 tags:
   - opinion
   - business

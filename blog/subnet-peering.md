@@ -1,7 +1,7 @@
 ---
 
 title: Azure Subnet Peering
-authors: spainter
+authors: simonpainter
 tags:
   - azure
   - networks

@@ -1,7 +1,7 @@
 ---
 
 title: The secret IP that turned out to be DNS forwarding.
-authors: spainter
+authors: simonpainter
 tags:
   - azure
   - dns

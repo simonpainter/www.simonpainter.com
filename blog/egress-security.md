@@ -1,7 +1,7 @@
 ---
 
 title: "Egress Security from Cloud"
-authors: spainter
+authors: simonpainter
 tags:
   - cloud
   - business

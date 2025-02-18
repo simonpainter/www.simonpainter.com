@@ -1,8 +1,8 @@
-spainter:
+simonpainter:
   name: Simon Painter
   title: Cloud Network Architect
   url: https://github.com/SimonPainter
   image_url: https://github.com/SimonPainter.png
-  email: blog@simonpainter.com
   socials:
     github: SimonPainter
+    linkedin: sipainter

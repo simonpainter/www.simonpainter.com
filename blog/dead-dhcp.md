@@ -1,7 +1,7 @@
 ---
 
 title: "Finding dead DHCP scopes"
-authors: spainter
+authors: simonpainter
 tags:
   - dhcp
   - powershell

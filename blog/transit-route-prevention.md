@@ -1,7 +1,7 @@
 ---
 
 title: Transit route prevention with Azure Route Server
-authors: spainter
+authors: simonpainter
 tags:
   - azure
   - networks

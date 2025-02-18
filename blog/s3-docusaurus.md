@@ -1,7 +1,7 @@
 ---
 
 title: Uploading my Docusaurus site
-authors: spainter
+authors: simonpainter
 tags:
   - aws
   - github

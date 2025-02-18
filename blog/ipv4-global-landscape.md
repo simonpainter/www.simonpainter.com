@@ -1,7 +1,7 @@
 ---
 
 title: IPv6 Adoption
-authors: spainter
+authors: simonpainter
 tags:
   - business
   - networks

@@ -1,7 +1,7 @@
 ---
 
 title: AWS Egress Security
-authors: spainter
+authors: simonpainter
 tags:
   - aws
   - security

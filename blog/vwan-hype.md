@@ -1,7 +1,7 @@
 ---
 
 title: "Azure Virtual WAN: The Promise vs. Reality"
-authors: spainter
+authors: simonpainter
 tags:
   - azure
   - opinion
