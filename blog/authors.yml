@@ -5,7 +5,7 @@ simonpainter:
   socials:
     github: SimonPainter
     linkedin: sipainter
-
+  page: true
 zainkhan:
   name: Zain Khan
   title: Cloud Network Engineer
@@ -13,3 +13,4 @@ zainkhan:
   socials:
     github: zainkhn
     linkedin: zainkhan123
+  page: true
