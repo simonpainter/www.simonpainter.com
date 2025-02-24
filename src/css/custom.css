@@ -1,63 +1,104 @@
-/* Import Inter font */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+/* Import Inter font and JetBrains Mono for console feel */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap');
 
-/* Dark mode theme - Black with green accents */
-[data-theme='dark'] {
- /* Core colors */
- --ifm-navbar-background-color: #000000;
- --ifm-background-color: #000000;
- --ifm-color-content: #ffffff;
- --ifm-color-content-secondary: #cccccc;
- 
- /* Interactive elements */
- --ifm-link-color: #00ff00;
- --ifm-menu-color-active: #00ff00;
- --ifm-breadcrumb-color-active: #00ff00;
- --ifm-table-of-contents-link-color: #ffffff;
- 
- /* Code blocks */
- --ifm-code-background: #000000;
- --docusaurus-highlighted-code-line-bg: #162018;
- --prism-background-color: #000000;
- --prism-color: #00ff00;
- 
- /* Borders & accents */
- --ifm-toc-border-color: #333333;
+/* Common variables for both modes */
+:root {
+  /* Font settings */
+  --ifm-font-family-base: 'Inter', system-ui, -apple-system, sans-serif;
+  --ifm-font-family-monospace: 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  
+  /* Heading sizes - smaller and less obtrusive */
+  --ifm-h1-font-size: 1.8rem;
+  --ifm-h2-font-size: 1.3rem;
+  --ifm-h3-font-size: 1.1rem;
 }
 
-/* Dark mode overrides */
-[data-theme='dark'] .markdown blockquote {
- border-left: 3px solid #00ff00;
+/* Improved typography and sizing */
+.markdown h1 {
+  font-size: 1.8rem;
+  font-weight: 500;
+  margin-bottom: 1.2rem;
+  letter-spacing: -0.02em;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 0.5rem;
 }
 
-[data-theme='dark'] .navbar-sidebar__brand img,
-[data-theme='dark'] .navbar__brand img {
- filter: invert(100%);
+.markdown h2 {
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-top: 1.8rem;
+  margin-bottom: 0.8rem;
 }
 
-[data-theme='dark'] .table-of-contents__link {
- color: #ffffff;
+.markdown h3,
+.markdown h4 {
+  font-size: 1.1rem;
+  font-weight: 500;
 }
 
-[data-theme='dark'] .table-of-contents__link:hover,
-[data-theme='dark'] .table-of-contents__link--active {
- color: #00ff00;
+/* Add specific styling for post headers on the main blog pages */
+.blog-list-page h1,
+.blog-post-page h1 {
+  font-size: 1.6rem;
+  margin-bottom: 0.6rem;
 }
 
-/* Code syntax overrides for dark mode */
-[data-theme='dark'] code {
- background-color: #000000 !important;
- color: #00ff00 !important;
+/* Style blog post headings more prominently when in individual post pages */
+.blog-post-page .blog-post h1 {
+  font-size: 1.7rem;
+  font-weight: 600;
 }
 
-[data-theme='dark'] .token {
- color: #00ff00 !important;
- text-shadow: none !important;
+/* Consistent styling for article listings */
+article {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #eaeaea;
 }
 
-[data-theme='dark'] pre[class*="language-"],
-[data-theme='dark'] code[class*="language-"] {
- background: #000000 !important;
- color: #00ff00 !important;
- text-shadow: none !important;
+article h2 a {
+  font-size: 1.2rem;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+article h2 a:hover {
+  text-decoration: underline;
+}
+
+/* Better text readability */
+.markdown p, 
+.markdown li {
+  line-height: 1.6;
+}
+
+/* Improved code block appearance */
+code {
+  font-family: var(--ifm-font-family-monospace);
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+}
+
+.markdown pre {
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+pre code {
+  padding: 0;
+}
+
+/* Better blockquote styling */
+.markdown blockquote {
+  padding: 0.5rem 1rem;
+}
+
+/* Improved tag styling */
+.tag {
+  margin-right: 0.5rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  text-decoration: none;
 }
