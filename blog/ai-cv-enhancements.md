@@ -1,10 +1,13 @@
 ---
 
 title: Zen and the art of AI CVs
-authors: simonpainter
+authors: 
+  - simonpainter
+  - joebloggs
 tags:
   - personal
   - ai
+  - dummy
 date: 2024-11-20
 
 ---
