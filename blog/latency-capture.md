@@ -14,7 +14,7 @@ date: 2025-02-25
 ---
 
 A little while ago I set out to find a way to measure the overhead that FQDN filtering places on https web traffic. The [results are shared here](https://www.linkedin.com/pulse/comparing-azure-firewall-enforza-https-inspection-analysis-painter-yc7nf/?trackingId=4SToGIPsTAWvIDmHddeMGg%3D%3D) however I thought I would take the opportunity to discuss the methodology here in a bit more detail.
-<!---truncate--->
+<!-- truncate -->
 [The respository contains the tools you will need](https://github.com/simonpainter/capture_latency) to either replicate and confirm my own testing or do your own, perhaps on a wider selection of firewalls. It consists of two scripts, one to capture and one to analyse the captures; this approach is necessary because precise timing is required and I didn't want to tie up the capture box doing analysis until after the captures were completed. The capture script repeatedly connects to an https URL and pulls down the contents of a page and while doing so does a packet capture of outbound https traffic.
 The analysis script trawls through the captures and extracts the time to first byte by looking at the [TCP](how-the-internet-works.md#tcp-transmission-control-protocol) streams and noting the timestamps for the begining of the session and first usable byte.
 
