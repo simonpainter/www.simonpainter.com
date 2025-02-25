@@ -21,14 +21,14 @@ However, DNS options don’t excel at addressing latency or network path-based c
 There are several ways to fill this gap, including:
 
 1. Deploy a traditional GTM solution, either on-premises or as a Network Virtual Appliance (NVA), and integrate it into the hybrid cloud.
-2. Implement an anycast routing solution.
+2. Implement an Anycast routing solution.
 3. Think the [unthinkable](cross-region-r53.md).
 
-This article focuses on the second approach: implementing anycast in Azure using Network Virtual Appliances (NVAs) and Azure Route Server. This method provides a robust solution for routing traffic efficiently across multiple regions, particularly for private network scenarios where DNS-based solutions fall short.
+This article focuses on the second approach: implementing Anycast in Azure using Network Virtual Appliances (NVAs) and Azure Route Server. This method provides a robust solution for routing traffic efficiently across multiple regions, particularly for private network scenarios where DNS-based solutions fall short.
 
 ### Understanding the Need for Anycast in Azure
 
-Before diving into the implementation details, it’s crucial to understand why anycast is necessary and how it complements Azure’s existing offerings.
+Before diving into the implementation details, it’s crucial to understand why Anycast is necessary and how it complements Azure’s existing offerings.
 
 ### The Gap in Azure’s Global Load Balancing Solutions
 
@@ -52,7 +52,7 @@ Anycast addresses these limitations by offering:
 ### Key Components
 
 1. Azure Route Server: Acts as a bridge between NVAs and Azure’s networking infrastructure.
-2. Network Virtual Appliance (NVA): Advertise the anycast IP address and handle traffic.
+2. Network Virtual Appliance (NVA): Advertise the Anycast IP address and handle traffic.
 3. ExpressRoute: Enables hybrid connectivity between Azure and on-premises networks.
 4. Virtual Network Gateways: Facilitate communication between Azure and on-premises networks.
 
@@ -61,9 +61,9 @@ Anycast addresses these limitations by offering:
 The implementation typically involves:
 
 1. Hub and spoke topologies in multiple Azure regions.
-2. NVA in each region advertising the same IP address (the anycast IP) to Azure Route Server.
+2. NVA in each region advertising the same IP address (the Anycast IP) to Azure Route Server.
 3. Azure Route Server propagating these routes to on-premises networks via ExpressRoute or VPN Gateway.
-4. On-premises infrastructure resolving the application’s DNS name to the anycast IP.
+4. On-premises infrastructure resolving the application’s DNS name to the Anycast IP.
 
 ### Detailed Configuration Steps
 
@@ -74,7 +74,7 @@ The implementation typically involves:
 2. Configure NVA:
  — Deploy NVAs in the hub virtual networks.
  — Configure BGP on the NVAs to peer with Azure Route Server.
- — Advertise the anycast IP address (/32) from each NVA to its local Route Server.
+ — Advertise the Anycast IP address (/32) from each NVA to its local Route Server.
 
 3. ExpressRoute or VPN Configuration:
  — Set up ExpressRoute circuits or VPN Gateways to connect on-premises networks to Azure.
@@ -85,17 +85,17 @@ The implementation typically involves:
  — No manual configuration is needed for this peering.
 
 5. Route Propagation:
- — Azure Route Server learns the anycast route from the NVAs.
+ — Azure Route Server learns the Anycast route from the NVAs.
  — It then propagates this route to the ExpressRoute gateway, which advertises it to the on-premises network.
 
 6. On-premises Routing:
- — On-premises routers receive the anycast route from multiple Azure regions.
+ — On-premises routers receive the Anycast route from multiple Azure regions.
  — They typically use equal-cost multi-path (ECMP) routing to distribute traffic across available paths.
 
 ### Health Checks and Failover
 
 - Implement health checks in the NVAs to monitor the application’s availability.
-- Configure NVAs to stop advertising the anycast route if the application becomes unhealthy in their region.
+- Configure NVAs to stop advertising the Anycast route if the application becomes unhealthy in their region.
 - This prevents traffic from being routed to an unavailable instance of the application.
 
 Traffic Flow and NAT Considerations
@@ -114,7 +114,7 @@ Traffic Flow and NAT Considerations
 
 ### Real-World Application: Anycast for Regional Internet Egress
 
-To illustrate the practical benefits of anycast routing, let’s explore a real-world scenario where it was used to solve a complex networking challenge.
+To illustrate the practical benefits of Anycast routing, let’s explore a real-world scenario where it was used to solve a complex networking challenge.
 
 ### The Challenge: Global Internet Egress with Regional Constraints
 
@@ -130,15 +130,15 @@ In a large multinational retail organisation, there was a need to provide region
 
 ### The Solution: Anycast with F5 LTM and Conditional Route Injection
 
-To address these challenges, an anycast solution was implemented using F5 Local Traffic Manager (LTM) appliances with conditional route injection. This approach is conceptually similar to the Azure anycast solution using Route Server and NVAs. Here’s how it worked:
+To address these challenges, an Anycast solution was implemented using F5 Local Traffic Manager (LTM) appliances with conditional route injection. This approach is conceptually similar to the Azure Anycast solution using Route Server and NVAs. Here’s how it worked:
 
 1. Anycast IP Address: A single IP address was used globally for the proxy service.
 
 2. Regional F5 LTM Deployment: F5 LTM appliances were deployed in multiple regions, including a dedicated instance in China.
 
-3. Conditional Route Injection: Each F5 LTM was configured to inject the anycast route into the local network only if the proxy service was healthy.
+3. Conditional Route Injection: Each F5 LTM was configured to inject the Anycast route into the local network only if the proxy service was healthy.
 
-4. BGP Routing: The anycast routes were propagated through the global network using BGP, ensuring that clients always routed to the nearest available proxy.
+4. BGP Routing: The Anycast routes were propagated through the global network using BGP, ensuring that clients always routed to the nearest available proxy.
 
 5. Health Checks: Regular health checks on the proxy services ensured that unhealthy instances would not attract traffic.
 
@@ -158,12 +158,12 @@ This solution provided several key benefits:
 
 ### Parallels with Azure Anycast Implementation
 
-This real-world example closely mirrors the anycast implementation possible in Azure using Route Server and NVAs:
+This real-world example closely mirrors the Anycast implementation possible in Azure using Route Server and NVAs:
 
 - The F5 LTM appliances play a similar role to the NVAs in Azure, F5 LTM is one of the options you can use as your NVA.
 - Conditional route injection based on health checks is a key feature in both scenarios.
 - BGP is used for route propagation in both cases, with Azure Route Server facilitating this in the cloud environment.
-- Both solutions provide a way to implement anycast routing for private network traffic, filling the gap left by DNS-based solutions.
+- Both solutions provide a way to implement Anycast routing for private network traffic, filling the gap left by DNS-based solutions.
 
 ### Advanced Configurations
 
@@ -193,6 +193,6 @@ This real-world example closely mirrors the anycast implementation possible in A
 
 ### Conclusion
 
-Implementing anycast in Azure using Route Server and NVAs provides a powerful solution for global traffic management in hybrid cloud environments. It offers improved reliability, optimised routing, and enhanced performance for critical applications that require private network connectivity. While more complex than some alternatives, the benefits in terms of flexibility and control make it an attractive option for organisations with demanding global networking requirements.
+Implementing Anycast in Azure using Route Server and NVAs provides a powerful solution for global traffic management in hybrid cloud environments. It offers improved reliability, optimised routing, and enhanced performance for critical applications that require private network connectivity. While more complex than some alternatives, the benefits in terms of flexibility and control make it an attractive option for organisations with demanding global networking requirements.
 
 By leveraging the strengths of Azure Route Server for seamless route propagation and NVAs for traffic management, this solution bridges the gap between on-premises networks and Azure, enabling truly global and resilient application delivery in private network scenarios.

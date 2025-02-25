@@ -72,7 +72,7 @@ simon@vm3:~$ dig TXT o-o.myaddr.l.google.com +short
 At this point we knew two things pretty much for certain:
 
 -The 'AzPIP' was not the same IP as was used for default outbound internet access.
--There appeared to be an implicit NAT gateway in place because both VM2 and VM3 which didn't have PIPs were sharing the same public IP.
+-There appeared to be an implicit NAT gateway in place because both VM2 and VM3, which didn't have PIPs, were sharing the same public IP.
 
 I wanted to know if there was any sharing of this 'AzPIP', it seemed fairly bizarre that there was a public IP assigned to each VM that was basically invisible to the end customer. This led to a  *friday night grade idea*: spin up a load of VMs in the same AZ and have them report their AzPIP. I used a small bit of terraform and a boot up script which looked a bit like this:
 

@@ -49,7 +49,7 @@ The magic happens in the forwarding rule itself. We configure it to capture all 
 
 ### Setting Up AWS Route 53
 
-On the AWS side, we create a private hosted zone for internal.example.com and associate it with our VPC. The key component is the Route 53 Resolver inbound endpoint, which we configure with an IP addresse in the private subnet. This is the IP addresse that Azure's outbound resolver will forward queries to.
+On the AWS side, we create a private hosted zone for internal.example.com and associate it with our VPC. The key component is the Route 53 Resolver inbound endpoint, which we configure with an IP address in the private subnet. This is the IP address that Azure's outbound resolver will forward queries to.
 The Flow in Action
 When it all comes together, the DNS resolution flow works like this:
 
