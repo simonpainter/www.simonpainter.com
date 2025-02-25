@@ -19,7 +19,7 @@ To answer that we have to go back and look at what VNet peering is. Actually we 
 
 > You can subnet that however you choose in order to use some or all of the CIDR address space. There
 > are some [great tools](https://blog.pichuang.com.tw/azure-subnets.html) to help you use your CIDR
-> ranges efficinently.
+> ranges efficiently.
 
 When you peer a pair of VNets you gain the ability to route between them. The route to VNet 2 appears in the route table for VNet 1 and vice versa. The whole CIDR is advertised as a greedy summary rather than the individual subnets. With Azure Subnet Peering you can selectively peer specific subnets rather than the whole VNet CIDR. This means you have granular control of what subnets can route between each other.
 
