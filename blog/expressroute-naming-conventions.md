@@ -13,7 +13,7 @@ date: 2025-01-29
 
 ## Make it make sense
 
-I will always be a network engineer and that means that some words have very specific meanings that have taken root in my soul. The terminology within ExpressRoute has bothered me for ages and when speaking to a few people I found that I am not the only one who finds it unintuitive. To me a circuit is a single link but to Microsoft a circuit is the pair of links and the associated peerings! Two thumbs up to that, Microsoft, or rather in your own language 'one expressroute thumb'.
+I will always be a network engineer and that means that some words have very specific meanings that have taken root in my soul. The terminology within ExpressRoute has bothered me for ages and when speaking to a few people I found that I am not the only one who finds it unintuitive. To me a circuit is a single link but to Microsoft a circuit is the pair of links and the associated peerings! Two thumbs up to that, Microsoft, or rather in your own language 'one ExpressRoute thumb'.
 <!-- truncate -->
 Here's a run down of what's what, starting with the wires.
 

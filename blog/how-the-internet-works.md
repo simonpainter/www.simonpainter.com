@@ -53,7 +53,7 @@ Computer A                Computer B
 
 While parallel communication might seem superior due to its ability to transmit multiple bits simultaneously, it comes with its own challenges. The primary issue is something called "clock skew" - where bits sent at the same time might arrive slightly offset due to minute differences in wire length or electrical characteristics. This becomes more problematic as distances increase or transmission speeds rise.
 
-> At higher speeds or longer distances, the complexity of keeping multiple data lines synchronized in parallel
+> At higher speeds or longer distances, the complexity of keeping multiple data lines synchronised in parallel
 > communication becomes increasingly difficult. This is why modern high-speed communications (like USB 3.0, SATA,
 > and PCIe) use multiple serial lanes rather than parallel communications. They achieve high throughput by
 > running the serial communications at very high frequencies rather than sending bits in parallel.
@@ -406,7 +406,7 @@ Address Pool Management:
 
 Our network now has two addressing systems that need to work together:
 
-- IP addresses (for logical network organization)
+- IP addresses (for logical network organisation)
 - MAC addresses (for physical frame delivery)
 
 This creates a problem: when a device wants to send data to an IP address on its local network, how does it know which MAC address to put in the frame? Consider this scenario:
@@ -945,7 +945,7 @@ Port    Proto   Service         Purpose
 68      UDP     DHCP-Client    Network configuration (client side)
 69      UDP     TFTP           Trivial file transfer (network boot)
 80      TCP     HTTP           Web traffic
-123     UDP     NTP            Time synchronization
+123     UDP     NTP            Time synchronisation
 443     TCP     HTTPS          Secure web traffic
 445     TCP     SMB            File/printer sharing
 514     UDP     Syslog         System logging
