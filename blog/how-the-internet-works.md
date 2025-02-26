@@ -15,7 +15,7 @@ On a few occasions I have been asked to explain networks to people with no prior
 <!-- truncate -->
 ## Let's start with the cable
 
-The first job before us is to connect two computers together. Computers talk in ones and zeros because they are for the most part only able to understand if a signal on a wire is there (a one) or not (a zero). If you connect two computers, or other networked devices, the lowest level of connectivity is likely to be a cable carrying an electricial signal, a fibre optic cable carrying pulses of light or some sort of radio frequency with modulated frequency or amplitude which denotes an on or off. If you are dealing with an electrical signal you need a common ground wire as well to make the circuit but for everything else you just need a wire to transmit in one direction and another to transmit in the other.
+The first job before us is to connect two computers together. Computers talk in ones and zeros because they are for the most part only able to understand if a signal on a wire is there (a one) or not (a zero). If you connect two computers, or other networked devices, the lowest level of connectivity is likely to be a cable carrying an electrical signal, a fibre optic cable carrying pulses of light or some sort of radio frequency with modulated frequency or amplitude which denotes an on or off. If you are dealing with an electrical signal you need a common ground wire as well to make the circuit but for everything else you just need a wire to transmit in one direction and another to transmit in the other.
 
 ### Serial vs Parallel Communication
 
@@ -64,7 +64,7 @@ The tradeoff between serial and parallel communications is a perfect example of 
 
 ### Serial clocks
 
-The next problem to solve in order to make serial communcations this work is how we ensure that both computers know when a one and a zero start and finish, serial connections rely on both computers knowing the rate at data is flowing.  In a simple system both computers can be configured to know the rate of transfer, say 9600 bits per second and they sample the data received at that rate and will typically be fine. For faster and more accurate transfer another wire with a clock signal is needed. The clock signal acts like a metronome, providing the timing reference that keeps both sender and receiver synchronised. This synchronisation ensures that bits are sampled at the correct moments to accurately interpret the data.
+The next problem to solve in order to make serial communications this work is how we ensure that both computers know when a one and a zero start and finish, serial connections rely on both computers knowing the rate at data is flowing.  In a simple system both computers can be configured to know the rate of transfer, say 9600 bits per second and they sample the data received at that rate and will typically be fine. For faster and more accurate transfer another wire with a clock signal is needed. The clock signal acts like a metronome, providing the timing reference that keeps both sender and receiver synchronised. This synchronisation ensures that bits are sampled at the correct moments to accurately interpret the data.
 
 > The baud rate, measured in *symbols per second*, represents how many signal changes can occur on the communication
 > channel in one second. While baud rate was historically equivalent to bits per second in early systems where each
@@ -141,7 +141,7 @@ The first 32 ASCII values (0-31) are control characters designed for controlling
 
 Many are still used today - notably TAB, LF, CR for text formatting and XON/XOFF for flow control in serial communications.
 
-The full ASCII table is useful when disecting captures of low level protocols.
+The full ASCII table is useful when dissecting captures of low level protocols.
 
 ```text
 Dec Hex ASCII   Dec Hex ASCII   Dec Hex ASCII   Dec Hex ASCII
@@ -254,7 +254,7 @@ Now that we have our data organised into frames, our computer nodes connected to
 
 As we scale out our hub and spoke network we hit another problem, collisions. We need each computer node to take turns in sending data. This means that computer nodes listen for gaps in the data flow at the end of frames before they start sending their own frames. On occasions, two computers connected to a hub will both want to send data and both will listen for the end of a frame and then try to send their own frames at the same time. When two computer nodes send data at the same time the hub is not clever enough, as it's just a simple electrical repeater, to hold one frame for a bit while it transmits the other. When hubs detect more than one sender at a time they will reject both senders which causes them to stop sending and those senders will then wait a random amount of time (to avoid colliding again) before they attempt to transmit again.
 
-As networks grow there will be an increase in the liklihood of collisions and there will also be a drop in performance because a lot of data is getting sent to computer nodes that will discard it as it is not meant for them.
+As networks grow there will be an increase in the likelihood of collisions and there will also be a drop in performance because a lot of data is getting sent to computer nodes that will discard it as it is not meant for them.
 
 ## Switching to something cleverer
 
@@ -568,7 +568,7 @@ All traffic (default route) -->LN
 
 ```
 
-This is great until we want to make changes, or perhaps changes are forced upon us by unexpected failures. Let's say we add in an undersea cable crossing the pacific to connect Tokyo and San Francisco. Many such cables exist and we might want to use it for communciations between those two sites. We probably don't want to use it for communications between London and New York though because that cable is shorter.
+This is great until we want to make changes, or perhaps changes are forced upon us by unexpected failures. Let's say we add in an undersea cable crossing the pacific to connect Tokyo and San Francisco. Many such cables exist and we might want to use it for communications between those two sites. We probably don't want to use it for communications between London and New York though because that cable is shorter.
 
 ```mermaid
 graph LR
@@ -955,7 +955,7 @@ Port    Proto   Service         Purpose
 
 ## People don't need to study preposterous acronyms
 
-Now you have reached the end of this you also know a bit more about the OSI model and what people mean when they talk about 'layer 2' or 'layer 3' networks. Networking is conceptually organised into discrete layers which have standardised interfaces between them. Those layers have irritatingly unintitive names:
+Now you have reached the end of this you also know a bit more about the OSI model and what people mean when they talk about 'layer 2' or 'layer 3' networks. Networking is conceptually organised into discrete layers which have standardised interfaces between them. Those layers have irritatingly unintuitive names:
 
 - Layer 1 - **P**hysical
 - Layer 2 - **D**atalink

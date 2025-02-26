@@ -32,7 +32,7 @@ This becomes even more powerful when you consider that in modern networks, the d
 
 ## The Computational Challenge
 
-Let's examine what happens when we try different approaches to route matching. Note that this is illustrative pseudocode and not a worthwhile implimentation.
+Let's examine what happens when we try different approaches to route matching. Note that this is illustrative pseudocode and not a worthwhile implementation.
 
 ### Approach 1: First Match
 
