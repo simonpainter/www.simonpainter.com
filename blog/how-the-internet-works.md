@@ -953,6 +953,43 @@ Port    Proto   Service         Purpose
 
 ### Sir Tim and the World Wide Web
 
+In 1989, Tim Berners-Lee proposed a solution for a distributed knowledge sharing system that was worked on at CERN and named the World Wide Web. It comprised of an application protocol called hypertext transfer protocol (http) and a markup language called hypertext markup language (html).
+
+#### The Birth at CERN (1989-1991)
+
+Tim Berners-Lee, a British physicist and computer scientist working at CERN (the European Organization for Nuclear Research), identified a critical problem: scientists struggled to share information efficiently across different computer systems. His solution was revolutionary yet elegantly simple.
+
+In March 1989, Berners-Lee submitted a proposal titled "Information Management: A Proposal" to his supervisors at CERN. By December 1990, he had implemented the first web server (CERN HTTPd), browser (WorldWideWeb, later renamed Nexus), and the initial versions of HTML and HTTP.
+
+#### HTML: The Evolution of a Markup Language
+
+HTML began as a simple language derived from SGML (Standard Generalized Markup Language). The first version was informal, containing just 18 elements focused on basic document structure and hyperlinks.
+
+- **HTML 1.0** (1991): Never formalized but established the concept of linked documents
+- **HTML 2.0** (1995): The first official specification, standardizing core elements
+- **HTML 3.2** (1997): Introduced tables and applets
+- **HTML 4.0** (1997-1999): Added stylesheets, scripts, and accessibility features
+- **XHTML** (2000): Reformulated HTML as an XML application for stricter validation
+- **HTML5** (2014): A major overhaul introducing semantic elements, multimedia support, and APIs for complex web applications
+
+#### HTTP: From Simple to Sophisticated
+
+HTTP evolved alongside HTML to facilitate the transfer of web resources:
+
+- **HTTP/0.9** (1991): An unnamed, extremely simple protocol allowing only GET requests
+- **HTTP/1.0** (1996): Added headers, status codes, and support for different document types
+- **HTTP/1.1** (1997): Introduced persistent connections, chunked transfers, and host headers
+- **HTTP/2** (2015): Introduced multiplexing, server push, and header compression for improved performance
+- **HTTP/3** (2022): Implemented over QUIC protocol to reduce latency and improve reliability
+
+#### From Academic Project to Global Revolution
+
+What began as a solution for physics researchers quickly transcended CERN's walls. By 1993, CERN announced that the World Wide Web would be free for everyone to use and develop. This decision catalysed exponential growth.
+
+The creation of the W3C (World Wide Web Consortium) in 1994, with Berners-Lee as its director, established a governing body to guide web standards development. This ensured that the web would remain open, accessible, and universally compatible.
+
+By the mid-1990s, the Web had transformed from an academic curiosity to a global phenomenon, forever changing how humanity communicates, conducts business, and shares knowledge.
+
 ## People don't need to study preposterous acronyms
 
 Now you have reached the end of this you also know a bit more about the OSI model and what people mean when they talk about 'layer 2' or 'layer 3' networks. Networking is conceptually organised into discrete layers which have standardised interfaces between them. Those layers have irritatingly unintuitive names:
