@@ -1,6 +1,6 @@
 ---
 
-title: FizzBuzz Revisited: A Tale of Two Algorithms
+title: "FizzBuzz Revisited: A Tale of Two Algorithms"
 authors: simonpainter
 tags:
   - personal
