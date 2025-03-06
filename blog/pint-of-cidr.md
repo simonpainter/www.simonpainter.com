@@ -8,6 +8,8 @@ tags:
   - aws
   - azure
   - networks
+  - cloud
+  - educational
 date: 2025-02-17
 ---
 

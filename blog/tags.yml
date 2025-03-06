@@ -112,3 +112,23 @@ security:
   label: 'Security'
   permalink: '/security'
   description: 'Cybersecurity concepts, implementations, and best practices'
+
+algorithms:
+  label: 'Algorithms'
+  permalink: '/algorithms'
+  description: 'Computational algorithms, efficiency analysis, and practical implementations'
+
+routing-protocols:
+  label: 'Routing Protocols'
+  permalink: '/routing-protocols'
+  description: 'Deep dives into network routing protocols like BGP, OSPF, and related technologies'
+
+zero-trust:
+  label: 'Zero Trust'
+  permalink: '/zero-trust'
+  description: 'Zero Trust security architecture, implementation strategies, and best practices'
+
+educational:
+  label: 'Educational'
+  permalink: '/educational'
+  description: 'In-depth explanations and comprehensive guides on fundamental technical concepts'

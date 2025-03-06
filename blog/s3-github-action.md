@@ -6,6 +6,8 @@ tags:
   - aws
   - github
   - github-actions
+  - docusaurus
+  - cloud
 date: 2024-11-17
 
 ---
