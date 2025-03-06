@@ -4,7 +4,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Simon Painter',
-  tagline: 'Somewhere to keep things',
+  tagline: 'A place to keep things',
   favicon: 'img/favicon.ico',
 
   url: 'https://www.simonpainter.com',
@@ -13,7 +13,6 @@ const config = {
   organizationName: 'simonpainter',
   projectName: 'my-website',
 
-  // Change this to 'warn' temporarily to help debug
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
 
@@ -41,6 +40,8 @@ const config = {
           postsPerPage: 'ALL',
           blogSidebarTitle: 'All posts',
           blogSidebarCount: 'ALL',
+          showReadingTime: true,
+          sortPosts: 'descending',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -52,17 +53,30 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      colorMode: {
+        defaultMode: 'light',
+        disableSwitch: false,
+        respectPrefersColorScheme: true,
+      },
       image: 'img/social-card.png',
+      metadata: [
+        {name: 'keywords', content: 'blog, tech, cloud, programming, azure, aws, networking, security'},
+        {name: 'twitter:card', content: 'summary_large_image'},
+        {name: 'og:type', content: 'website'},
+        {name: 'og:title', content: 'Simon Painter - A place to keep things'},
+        {name: 'og:description', content: 'A collection of articles on cloud, programming, networking, and more'},
+      ],
       navbar: {
+        hideOnScroll: false,
         title: 'A place to keep things',
         logo: {
           src: 'img/logo.svg',
-          alt: 'Site Logo'
+          alt: 'Simon Painter Logo'
         },
         items: [
           {
-            href: 'https://github.com/simonpainter',
-            label: 'GitHub',
+            href: '/tags',
+            label: 'All Tags',
             position: 'right',
           },
           {
@@ -76,11 +90,6 @@ const config = {
             position: 'left',
           },
           {
-            href: '/tags/business',
-            label: 'Business',
-            position: 'left',
-          },
-          {
             href: '/tags/programming',
             label: 'Programming',
             position: 'left',
@@ -90,16 +99,44 @@ const config = {
             label: 'Security',
             position: 'left',
           },
+          {
+            href: '/tags/business',
+            label: 'Business',
+            position: 'left',
+          },
+          {
+            href: 'https://github.com/simonpainter',
+            label: 'GitHub',
+            position: 'right',
+          },
+          {
+            href: 'https://www.linkedin.com/in/sipainter/',
+            label: 'LinkedIn',
+            position: 'right',
+          },
         ],
       },
       footer: {
         style: 'dark',
         links: [
           {
-            title: 'About me',
+            title: 'Content',
             items: [
               {
-                label: 'Github',
+                label: 'All Posts',
+                to: '/',
+              },
+              {
+                label: 'All Tags',
+                to: '/tags',
+              },
+            ],
+          },
+          {
+            title: 'Connect',
+            items: [
+              {
+                label: 'GitHub',
                 href: 'https://github.com/simonpainter',
               },
               {
@@ -109,7 +146,7 @@ const config = {
             ],
           },
           {
-            title: 'Activities',
+            title: 'Projects',
             items: [
               {
                 label: 'Refried Bean',
@@ -121,17 +158,19 @@ const config = {
               },
             ],
           }
-
         ],
         copyright: `Copyright © ${new Date().getFullYear()} Simon Painter`,
       },
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
+        additionalLanguages: ['bash', 'diff', 'json', 'yaml', 'markdown'],
+      },
+      tableOfContents: {
+        minHeadingLevel: 2,
+        maxHeadingLevel: 4,
       },
     }),
 };
-
-
 
 export default config;
