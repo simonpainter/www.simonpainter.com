@@ -104,7 +104,7 @@ graph TB
 
 ### CIDR flexibility
 
-When you create an Azure VNet you are encouraged to create an IP range and a subnet within it. These can be deleted or resized. When you create a VPC in Azure you are required to create a primary CIDR which cannot be deleted or resized.
+When you create an Azure VNet you are encouraged to create an IP range and a subnet within it. These can be deleted or resized. When you create a VPC in AWS you are required to create a primary CIDR which cannot be deleted or resized.
 
 > You can expand or shrink an Azure CIDR address space in a VNet, including shrinking a CIDR that contains a subnet (so long as
 > the new size still contains all the subnets in that CIDR). You can expand and shrink an Azure Subnet provided there are no
