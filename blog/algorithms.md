@@ -9,7 +9,7 @@ tags:
 date: 2024-12-23
 
 ---
-Some common search alorithms and how they work.
+Some common search algorithms and how they work. This post summarizes key search algorithms used in computer science, explaining their approaches, strengths, weaknesses, and implementation patterns.
 <!--truncate-->
 
 ## Breadth-First Search (BFS)

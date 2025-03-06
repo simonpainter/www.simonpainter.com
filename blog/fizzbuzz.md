@@ -15,6 +15,7 @@ date: 2025-03-04
 FizzBuzz has long been a staple of programming interviews. The problem is deceptively simple: print numbers from 1 to n, but replace multiples of 3 with "Fizz", multiples of 5 with "Buzz", and multiples of both with "FizzBuzz". It's not meant to be a challenging algorithmic puzzle; most candidates with basic programming knowledge should solve it without difficulty.
 
 So why does this trivial problem persist in the interview landscape? Because FizzBuzz's true value isn't in filtering out candidates who can't code—it's in opening discussions about complexity, language characteristics, optimisation, and the subtle costs of different operations. The best interviewers don't just ask candidates to solve FizzBuzz; they use it as a starting point for a deeper technical conversation.
+<!-- truncate -->
 
 In this article, we'll explore two common FizzBuzz implementations, benchmark them in both Python and C, and discover some surprising results that highlight why seemingly trivial problems can reveal profound insights about programming languages and performance optimisation.
 
