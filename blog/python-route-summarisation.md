@@ -6,6 +6,8 @@ tags:
   - python
   - programming
   - networks
+  - labs
+  - routing-protocols
 date: 2023-01-07
 
 ---

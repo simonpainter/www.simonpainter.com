@@ -5,6 +5,9 @@ authors: simonpainter
 tags:
   - networks
   - personal
+  - programming
+  - dns
+  - educational
 date: 2025-01-02
 
 ---

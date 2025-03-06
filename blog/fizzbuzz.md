@@ -6,6 +6,8 @@ tags:
   - personal
   - programming
   - python
+  - algorithms
+  - educational
 date: 2025-03-04
 
 ---

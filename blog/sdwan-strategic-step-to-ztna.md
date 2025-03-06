@@ -6,6 +6,8 @@ tags:
   - networks
   - opinion
   - business
+  - security
+  - zero-trust
 date: 2024-11-17
 
 ---
