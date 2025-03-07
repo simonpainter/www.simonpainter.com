@@ -18,7 +18,6 @@ FizzBuzz has long been a staple of programming interviews. The problem is decept
 
 So why does this trivial problem persist in the interview landscape? Because FizzBuzz's true value isn't in filtering out candidates who can't code—it's in opening discussions about complexity, language characteristics, optimisation, and the subtle costs of different operations. The best interviewers don't just ask candidates to solve FizzBuzz; they use it as a starting point for a deeper technical conversation.
 <!-- truncate -->
-
 In this article, we'll explore two common FizzBuzz implementations, benchmark them in both Python and C, and discover some surprising results that highlight why seemingly trivial problems can reveal profound insights about programming languages and performance optimisation.
 
 ## Two Approaches to FizzBuzz
