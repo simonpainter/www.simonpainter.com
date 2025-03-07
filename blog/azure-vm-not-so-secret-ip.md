@@ -7,6 +7,8 @@ authors:
 tags:
   - azure
   - dns
+  - networks
+  - cloud
 date: 2024-11-17
 
 ---

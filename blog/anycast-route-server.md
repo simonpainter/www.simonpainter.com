@@ -5,6 +5,8 @@ authors: simonpainter
 tags:
   - azure
   - anycast
+  - networks
+  - cloud
 date: 2024-12-10
 
 ---

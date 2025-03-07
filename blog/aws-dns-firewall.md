@@ -5,6 +5,8 @@ authors: simonpainter
 tags:
   - aws
   - security
+  - dns
+  - cloud
 date: 2025-01-22
 
 ---

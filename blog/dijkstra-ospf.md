@@ -6,6 +6,9 @@ tags:
   - networks
   - programming
   - ospf
+  - algorithms
+  - routing-protocols
+  - educational
 date: 2024-12-23
 
 ---

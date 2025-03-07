@@ -5,6 +5,7 @@ authors: simonpainter
 tags:
   - personal
   - ai
+  - business
 date: 2024-11-20
 
 ---

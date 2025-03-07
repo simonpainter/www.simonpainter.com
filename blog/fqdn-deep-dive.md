@@ -11,6 +11,7 @@ date: 2024-11-16
 ---
 
 Not all FQDN filters are built the same.
+<!-- truncate -->
 
 ## Executive Summary
 
@@ -21,7 +22,7 @@ This analysis examines the technical implementations of FQDN filtering across th
 - FortiGate’s unique DNS packet sniffing for wildcard FQDN support
 - Implications of TLS inspection requirements for URL path filtering
 - Architectural considerations for system-to-system communication
-<!-- truncate -->
+
 ## Technical Implementation Analysis
 
 ### DNS Proxy Architectures

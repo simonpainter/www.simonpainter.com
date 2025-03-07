@@ -1,104 +1,423 @@
-/* Import Inter font and JetBrains Mono for console feel */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap');
+/* Import modern fonts - Inter for body text and JetBrains Mono for code */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap');
 
-/* Common variables for both modes */
+/* Root variables for both light and dark mode */
 :root {
   /* Font settings */
   --ifm-font-family-base: 'Inter', system-ui, -apple-system, sans-serif;
   --ifm-font-family-monospace: 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   
-  /* Heading sizes - smaller and less obtrusive */
-  --ifm-h1-font-size: 1.8rem;
-  --ifm-h2-font-size: 1.3rem;
-  --ifm-h3-font-size: 1.1rem;
+  /* Spacing */
+  --ifm-spacing-horizontal: 1.5rem;
+  
+  /* Base colors - will be overridden by mode-specific colors */
+  --ifm-color-primary: #2563eb;
+  --ifm-color-primary-dark: #1d4ed8;
+  --ifm-color-primary-darker: #1e40af;
+  --ifm-color-primary-darkest: #1e3a8a;
+  --ifm-color-primary-light: #3b82f6;
+  --ifm-color-primary-lighter: #60a5fa;
+  --ifm-color-primary-lightest: #93c5fd;
+  
+  /* Heading sizes - refined for better readability */
+  --ifm-h1-font-size: 2rem;
+  --ifm-h2-font-size: 1.5rem;
+  --ifm-h3-font-size: 1.25rem;
+  --ifm-h4-font-size: 1rem;
+  
+  /* Container width for better content display */
+  --ifm-container-width: 1140px;
+  --ifm-container-width-xl: 1320px;
+  
+  /* Navbar styling */
+  --ifm-navbar-height: 4rem;
+  --ifm-navbar-padding-vertical: 0.75rem;
+  --ifm-navbar-padding-horizontal: 1.5rem;
+  --ifm-navbar-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  
+  /* Link styling */
+  --ifm-link-decoration: none;
+  --ifm-link-hover-decoration: underline;
+  
+  /* Code and syntax highlighting */
+  --ifm-code-font-size: 0.9rem;
+  --ifm-code-border-radius: 4px;
+  --ifm-pre-padding: 1.5rem;
+  
+  /* Global radii */
+  --ifm-global-radius: 6px;
+  --ifm-global-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
 }
 
-/* Improved typography and sizing */
+/* Light mode specific colors */
+html[data-theme='light'] {
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #f8fafc;
+  --ifm-color-content: #1e293b;
+  --ifm-color-content-secondary: #64748b;
+  --ifm-heading-color: #0f172a;
+  --ifm-border-color: #e2e8f0;
+  --ifm-toc-border-color: #e2e8f0;
+  --ifm-navbar-background-color: rgba(255, 255, 255, 0.95);
+  --ifm-navbar-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  --ifm-footer-background-color: #f1f5f9;
+  --ifm-code-background: #f1f5f9;
+  --ifm-card-background-color: #ffffff;
+  --tag-background: #f1f5f9;
+  --tag-color: #334155;
+  --blockquote-background: #f8fafc;
+  --blockquote-border: #e2e8f0;
+}
+
+/* Dark mode specific colors */
+html[data-theme='dark'] {
+  --ifm-background-color: #0f172a;
+  --ifm-background-surface-color: #1e293b;
+  --ifm-color-content: #e2e8f0;
+  --ifm-color-content-secondary: #94a3b8;
+  --ifm-heading-color: #f8fafc;
+  --ifm-border-color: #334155;
+  --ifm-toc-border-color: #334155;
+  --ifm-navbar-background-color: rgba(15, 23, 42, 0.95);
+  --ifm-navbar-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+  --ifm-footer-background-color: #1e293b;
+  --ifm-code-background: #1e293b;
+  --ifm-card-background-color: #1e293b;
+  --tag-background: #334155;
+  --tag-color: #e2e8f0;
+  --blockquote-background: #1e293b;
+  --blockquote-border: #334155;
+  
+  /* Slightly adjust primary colors for dark mode */
+  --ifm-color-primary: #3b82f6;
+  --ifm-color-primary-dark: #2563eb;
+  --ifm-color-primary-darker: #1d4ed8;
+  --ifm-color-primary-darkest: #1e40af;
+  --ifm-color-primary-light: #60a5fa;
+  --ifm-color-primary-lighter: #93c5fd;
+  --ifm-color-primary-lightest: #bfdbfe;
+}
+
+/* ===== TYPOGRAPHY ===== */
+
+/* Improved heading typography */
 .markdown h1 {
-  font-size: 1.8rem;
-  font-weight: 500;
-  margin-bottom: 1.2rem;
-  letter-spacing: -0.02em;
-  border-bottom: 1px solid #e0e0e0;
-  padding-bottom: 0.5rem;
+  font-size: var(--ifm-h1-font-size);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--ifm-border-color);
 }
 
 .markdown h2 {
-  font-size: 1.3rem;
-  font-weight: 500;
-  margin-top: 1.8rem;
-  margin-bottom: 0.8rem;
+  font-size: var(--ifm-h2-font-size);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
 }
 
 .markdown h3,
 .markdown h4 {
-  font-size: 1.1rem;
-  font-weight: 500;
-}
-
-/* Add specific styling for post headers on the main blog pages */
-.blog-list-page h1,
-.blog-post-page h1 {
-  font-size: 1.6rem;
-  margin-bottom: 0.6rem;
-}
-
-/* Style blog post headings more prominently when in individual post pages */
-.blog-post-page .blog-post h1 {
-  font-size: 1.7rem;
+  font-size: var(--ifm-h3-font-size);
   font-weight: 600;
-}
-
-/* Consistent styling for article listings */
-article {
-  margin-bottom: 2rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid #eaeaea;
-}
-
-article h2 a {
-  font-size: 1.2rem;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-article h2 a:hover {
-  text-decoration: underline;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
 }
 
 /* Better text readability */
 .markdown p, 
 .markdown li {
-  line-height: 1.6;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+  color: var(--ifm-color-content);
 }
 
-/* Improved code block appearance */
+/* Blog post list styling */
+.blog-list-page article {
+  margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--ifm-border-color);
+}
+
+.blog-list-page article:last-child {
+  border-bottom: none;
+}
+
+.blog-list-page h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.blog-list-page h2 a {
+  color: var(--ifm-heading-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.blog-list-page h2 a:hover {
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+
+/* Blog post page styling */
+.blog-post-page .blog-post-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+/* ===== CODE BLOCKS ===== */
+
+/* Inline code */
 code {
   font-family: var(--ifm-font-family-monospace);
+  font-size: var(--ifm-code-font-size);
   padding: 0.2rem 0.4rem;
-  border-radius: 3px;
+  border-radius: var(--ifm-code-border-radius);
+  background: var(--ifm-code-background);
 }
 
+/* Code blocks */
 .markdown pre {
-  border-radius: 4px;
-  border: 1px solid #e0e0e0;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border-radius: var(--ifm-global-radius);
+  margin-bottom: 1.5rem;
+  box-shadow: var(--ifm-global-shadow-md);
 }
 
 pre code {
   padding: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
-/* Better blockquote styling */
-.markdown blockquote {
-  padding: 0.5rem 1rem;
-}
+/* ===== UI ELEMENTS ===== */
 
-/* Improved tag styling */
+/* Tags styling */
 .tag {
-  margin-right: 0.5rem;
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
+  display: inline-block;
+  margin-right: 0.75rem;
+  margin-bottom: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
   text-decoration: none;
+  background-color: var(--tag-background);
+  color: var(--tag-color);
+  transition: all 0.2s ease;
+}
+
+.tag:hover {
+  opacity: 0.8;
+  text-decoration: none;
+}
+
+/* Blockquote styling */
+.markdown blockquote {
+  border-left: 3px solid var(--ifm-color-primary);
+  background-color: var(--blockquote-background);
+  border-radius: var(--ifm-global-radius);
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  color: var(--ifm-color-content-secondary);
+}
+
+.markdown blockquote p {
+  margin-bottom: 0;
+}
+
+/* Table styling */
+.markdown table {
+  display: table;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: var(--ifm-global-radius);
+  overflow: hidden;
+  box-shadow: var(--ifm-global-shadow-md);
+}
+
+.markdown table th,
+.markdown table td {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--ifm-border-color);
+}
+
+.markdown table th {
+  background-color: var(--ifm-background-surface-color);
+  font-weight: 600;
+}
+
+/* Images */
+.markdown img {
+  border-radius: var(--ifm-global-radius);
+  display: block;
+  max-width: 100%;
+  margin: 1.5rem auto;
+  box-shadow: var(--ifm-global-shadow-md);
+}
+
+/* ===== NAVBAR & FOOTER ===== */
+
+/* Navbar styling */
+.navbar {
+  backdrop-filter: blur(8px);
+}
+
+.navbar__brand {
+  font-weight: 600;
+}
+
+.navbar__logo {
+  height: 24px;
+  margin-right: 0.5rem;
+}
+
+.navbar__link {
+  font-weight: 500;
+  position: relative;
+}
+
+.navbar__link--active {
+  font-weight: 600;
+}
+
+.navbar__link--active:after {
+  content: '';
+  position: absolute;
+  bottom: -0.5rem;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--ifm-color-primary);
+  border-radius: 2px;
+}
+
+/* Footer styling */
+.footer {
+  padding: 4rem 0;
+}
+
+.footer__link-item {
+  color: var(--ifm-color-content-secondary);
+  transition: color 0.2s ease;
+}
+
+.footer__link-item:hover {
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+
+.footer__title {
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* ===== SIDEBAR ===== */
+
+.blog-sidebar {
+  border-radius: var(--ifm-global-radius);
+  padding: 1.5rem;
+}
+
+.blog-sidebar__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.blog-sidebar__item {
+  margin-bottom: 0.5rem;
+}
+
+/* ===== BLOG SIDEBAR YEAR GROUPING ===== */
+
+/* Year category headings */
+.menu__list-item-collapsible {
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 0.5rem 0.75rem;
+  margin-top: 0.5rem;
+  border-radius: var(--ifm-global-radius);
+  background-color: var(--ifm-background-surface-color);
+  transition: all 0.2s ease;
+}
+
+.menu__list-item-collapsible:hover {
+  background-color: var(--ifm-color-primary-lightest);
+}
+
+/* Blog post items */
+.menu__list .menu__list-item a {
+  color: var(--ifm-color-content);
+  font-size: 0.95rem;
+  padding: 0.4rem 0 0.4rem 1rem;
+  border-left: 2px solid transparent;
+  margin-left: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.menu__list .menu__list-item a:hover {
+  color: var(--ifm-color-primary);
+  border-left: 2px solid var(--ifm-color-primary-lighter);
+  background-color: transparent;
+}
+
+.menu__list .menu__list-item a.menu__link--active {
+  color: var(--ifm-color-primary);
+  border-left: 2px solid var(--ifm-color-primary);
+  font-weight: 500;
+  background-color: transparent;
+}
+
+/* ===== PAGINATION ===== */
+
+.pagination-nav {
+  margin-top: 3rem;
+}
+
+.pagination-nav__link {
+  border: 1px solid var(--ifm-border-color);
+  border-radius: var(--ifm-global-radius);
+  transition: all 0.2s ease;
+}
+
+.pagination-nav__link:hover {
+  background-color: var(--ifm-background-surface-color);
+}
+
+/* ===== RESPONSIVENESS ===== */
+
+@media (max-width: 996px) {
+  :root {
+    --ifm-spacing-horizontal: 1rem;
+  }
+  
+  .markdown h1 {
+    font-size: 1.75rem;
+  }
+  
+  .blog-post-page .blog-post-title {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .markdown h1 {
+    font-size: 1.5rem;
+  }
+  
+  .blog-post-page .blog-post-title {
+    font-size: 1.5rem;
+  }
+  
+  .markdown pre {
+    padding: 1rem;
+  }
 }

@@ -6,6 +6,8 @@ tags:
   - cloud
   - business
   - security
+  - networks
+  - zero-trust
 date: 2024-11-16
 
 ---
