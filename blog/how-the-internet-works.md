@@ -615,7 +615,7 @@ Building up a routing table dynamically relies on routers talking to each other.
 > trying to find a route to Edinburgh you are probably going to be wasting your time looking at routes that start off
 > going south. OSPF has no such heuristic to influence path selection so relies on cost alone.
 
-Now we have got to the point where we can get data from one part of the world to the other across our IP network. We still need to figure out a bit more about what to send to make it useful but we don't operate the only network. The Internet is, by definition, a collection of networks that have joined together to form a larger network. Inter is a prefix that means between, whereas intra means within. An intranet is within your own network and internet means between separate networks. So how do we connect our networks and exchange routing information with other networks in a safe way? We want to have something on the border of our network that allows us to carefully exchange information about the networks we know about within our autonomous system and the networks they can see within their autonomous system. We might also want to exchange information about other autonomous systems that we are connected to that others can reach through us. The protocol for exchanging this information at the border of our network is Border Gateway Protocol, or BGP.
+Now we have got to the point where we can get data from one part of the world to the other across our IP network. We still need to figure out a bit more about what to send to make it useful but we don't operate the only network. The Internet is, by definition, a collection of networks that have joined together to form a larger network. Inter is a prefix that means between, whereas intra means within. An intranet is within your own network and internet means between separate networks. So how do we connect our networks and exchange routing information with other networks in a safe way? We want to have something on the border of our network that allows us to carefully exchange information about the networks we know about within our autonomous system and the networks they can see within their autonomous system. We might also want to exchange information about other autonomous systems that we are connected to that others can reach through us. The protocol for exchanging this information at the border of our network is Border Gateway Protocol, or [BGP](/tags/bgp).
 
 ### Peering with other networks
 
@@ -650,12 +650,12 @@ graph LR
 
 ```
 
-Each autonomous sytem for internet peering is assigned a unique number, the Autonomous System Number (ASN). BGP uses this to track the path a route has taken through different networks to ensure that there are no loops. It also uses the list of ASNs that a route has been through to get a crude estimate of the distance to the destination using the path length; in most cases a route that passes through the fewer networks is considered better than one that passes through more networks.
-Unlike internal routing protocols, BGP is not designed to focus on finding the shortest path, it is designed to solve a different set of problems:
+Each autonomous sytem for internet peering is assigned a unique number, the Autonomous System Number (ASN). [BGP](/tags/bgp) uses this to track the path a route has taken through different networks to ensure that there are no loops. It also uses the list of ASNs that a route has been through to get a crude estimate of the distance to the destination using the path length; in most cases a route that passes through the fewer networks is considered better than one that passes through more networks.
+Unlike internal routing protocols, [BGP](/tags/bgp) is not designed to focus on finding the shortest path, it is designed to solve a different set of problems:
 
 ### Policy Enforcement
 
-BGP allows network owners to apply policies to routing decisions at their perimeter to control what routes they allow into their network. Note that BGP controls the routing information, the control plane, and not the data plane itself. Firewalls and other security technologies provide that layer of protection. As part of the agreement to peer with another network it is common for organisations to share their [routing policy](https://www.rfc-editor.org/rfc/rfc2622) so that both peers know what to expect.
+[BGP](/tags/bgp) allows network owners to apply policies to routing decisions at their perimeter to control what routes they allow into their network. Note that [BGP](/tags/bgp) controls the routing information, the control plane, and not the data plane itself. Firewalls and other security technologies provide that layer of protection. As part of the agreement to peer with another network it is common for organisations to share their [routing policy](https://www.rfc-editor.org/rfc/rfc2622) so that both peers know what to expect.
 
 ```text
 AS 65001's Policy:
@@ -680,18 +680,18 @@ Instead of advertising:
   192.168.3.0/24
   192.168.4.0/24
 
-BGP can summarise as:
+[BGP](/tags/bgp) can summarise as:
   192.168.0.0/22
 ```
 
 ### Path Selection
 
-> BGP's genius is that it doesn't just share routes - it shares the path to reach those routes. This path
+> [BGP](/tags/bgp)'s genius is that it doesn't just share routes - it shares the path to reach those routes. This path
 > information (called the AS_PATH) lets networks make informed decisions about which routes to trust and use.
 > It's like not just knowing there's a road to a destination, but knowing exactly which countries you'll pass
 > through to get there.
 
-BGP routers establish TCP sessions (on port 179) with their peers and exchange routes through UPDATE messages:
+[BGP](/tags/bgp) routers establish TCP sessions (on port 179) with their peers and exchange routes through UPDATE messages:
 
 ```text
 Router A                Router B
@@ -706,21 +706,21 @@ Router A                Router B
    |<--Keepalive---------| "Still here too!"
 ```
 
-BGP does not direcly allow a network admin to make routing choices within another ASN but it does allow them to provide information which can influence that decision. Routing decisions within an ASN are entirely controlled by the network admins of that ASN and how they choose to use the routing information provided to them.
+[BGP](/tags/bgp) does not direcly allow a network admin to make routing choices within another ASN but it does allow them to provide information which can influence that decision. Routing decisions within an ASN are entirely controlled by the network admins of that ASN and how they choose to use the routing information provided to them.
 
 ```text
-BGP Path Selection (in order):
+[BGP](/tags/bgp) Path Selection (in order):
 1. Highest LOCAL_PREF
 2. Shortest AS_PATH
 3. Lowest ORIGIN type
 4. Lowest MED
-5. External over internal BGP
+5. External over internal [BGP](/tags/bgp)
 6. Lowest IGP metric to next hop
 7. Lowest router ID (tie breaker)
 ```
 
-> BGP's deliberate slowness in converging is actually a feature, not a bug. When a route disappears and
-> reappears frequently (called route flapping), BGP implements route dampening to maintain stability.
+> [BGP](/tags/bgp)'s deliberate slowness in converging is actually a feature, not a bug. When a route disappears and
+> reappears frequently (called route flapping), [BGP](/tags/bgp) implements route dampening to maintain stability.
 > This prevents unstable routes from causing cascading problems across the internet.
 
 ## What to transport
