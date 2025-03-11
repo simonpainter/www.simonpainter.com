@@ -680,7 +680,7 @@ Instead of advertising:
   192.168.3.0/24
   192.168.4.0/24
 
-[BGP](/tags/bgp) can summarise as:
+BGP can summarise as:
   192.168.0.0/22
 ```
 
@@ -709,12 +709,12 @@ Router A                Router B
 [BGP](/tags/bgp) does not direcly allow a network admin to make routing choices within another ASN but it does allow them to provide information which can influence that decision. Routing decisions within an ASN are entirely controlled by the network admins of that ASN and how they choose to use the routing information provided to them.
 
 ```text
-[BGP](/tags/bgp) Path Selection (in order):
+BGP Path Selection (in order):
 1. Highest LOCAL_PREF
 2. Shortest AS_PATH
 3. Lowest ORIGIN type
 4. Lowest MED
-5. External over internal [BGP](/tags/bgp)
+5. External over internal BGP
 6. Lowest IGP metric to next hop
 7. Lowest router ID (tie breaker)
 ```
