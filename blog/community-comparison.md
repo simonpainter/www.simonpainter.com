@@ -55,7 +55,7 @@ In [AWS](/tags/aws) there is a simpler scoping mechanism where routes learned fr
 
 ### Service Communities
 
-[Azure](/tags/azure) supports an [extensive list of communities for public services](https://learn.microsoft.com/en-us/azure/expressroute/expressroute-routing#service-to-bgp-community-value) while [AWS](/tags/aws) publishes a detailed JSON formatted list](https://ip-ranges.amazonaws.com/ip-ranges.json) of their prefixes along with information about the services and regions they support; this leaves it for the customer to implement service filtering without communities.
+[Azure](/tags/azure) supports an [extensive list of communities for public services](https://learn.microsoft.com/en-us/azure/expressroute/expressroute-routing#service-to-bgp-community-value) while [AWS](/tags/aws) publishes a [detailed JSON formatted list](https://ip-ranges.amazonaws.com/ip-ranges.json) of their prefixes along with information about the services and regions they support; this leaves it for the customer to implement service filtering without communities.
 
 ### Local Preference Communities
 
