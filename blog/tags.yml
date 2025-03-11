@@ -23,6 +23,12 @@ bash:
   permalink: '/bash'
   description: 'Shell scripting tutorials, tips, and automation techniques'
 
+bgp:
+  label: 'BGP'
+  permalink: '/bgp'
+  description: 'Related to BGP in networking, including design, configuration, and troubleshooting'
+
+
 business:
   label: 'Business'
   permalink: '/business'

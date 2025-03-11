@@ -7,6 +7,7 @@ authors:
 tags:
   - azure
   - expressroute
+  - bgp
 date: 2025-01-29
 
 ---

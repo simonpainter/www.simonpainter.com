@@ -5,6 +5,7 @@ authors: simonpainter
 tags:
   - azure
   - networks
+  - bgp
 date: 2024-11-17
 
 ---
