@@ -27,7 +27,7 @@ Both Azure and AWS tag their route prefixes with BGP communities and support spe
 
 ## ER and DX public connections
 
-On Azure ExpressRoute you can create a `Microsoft Peering` to route your traffic to public services over your ExpressRoute rather than over the internet. Microsoft aren't all that keen on this, expecially for [Microsoft 365](https://learn.microsoft.com/en-us/microsoft-365/enterprise/azure-expressroute?view=o365-worldwide). On an AWS Direct Connect you can create a public vif which performs the same function allowing you to route connectivity to public AWS services over a low (or at least predictable) latency private connection rather than over the internet.
+On Azure ExpressRoute you can create a `Microsoft Peering` to route your traffic to public services over your ExpressRoute rather than over the internet. Microsoft aren't all that keen on this, expecially for [Microsoft 365](https://learn.microsoft.com/en-us/microsoft-365/enterprise/azure-expressroute?view=o365-worldwide). On an AWS Direct Connect you can create a `public vif` which performs the same function allowing you to route connectivity to public AWS services over a low (or at least predictable) latency private connection rather than over the internet.
 
 ### NO_EXPORT
 
