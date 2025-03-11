@@ -8,6 +8,7 @@ tags:
   - networks
   - labs
   - routing-protocols
+  - bgp
 date: 2023-01-07
 
 ---
