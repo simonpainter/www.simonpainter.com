@@ -67,7 +67,7 @@ A rather neat thing from [AWS](/tags/aws) is the ability to influence Local Pref
 >
 > 7224:7300 — High preference
 
-This is particularly useful because _Local Preference Always Wins_ so you can override AS PATH length and home region association to influence path selection and ECMP across regions.
+This is particularly useful because [_Local Preference Always Wins_](how-the-internet-works.md#path-selection) so you can override AS PATH length and home region association to influence path selection and ECMP across regions.
 
 > OK, you're right, [longest prefix](longest-prefix-matching.md) beats LOCAL_PREF. It's probably better to say
 > _Local Preference Always Wins In [BGP](/tags/bgp)_ but that's not as catchy.
