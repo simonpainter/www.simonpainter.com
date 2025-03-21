@@ -5,7 +5,7 @@ description: "Investigating Network Latency in Azure: A Deep Dive into Long-Live
 authors: simonpainter
 tags:
   - azure
-  - networking
+  - networks
   - cloud
 date: 2025-03-20
 
@@ -14,7 +14,7 @@ date: 2025-03-20
 ## Background
 
 Understanding network latency in cloud environments is crucial for architects and developers building distributed systems. While cloud providers like Microsoft Azure offer significant flexibility and scale, the underlying network topology can have profound impacts on application performance.
-<!-- truncate -->
+
 For many systems, especially those running persistent connections like databases, message queues, or API gateways, seemingly small differences in network latency can compound into significant performance issues. Moreover, the behaviour of long-lived TCP connections across different network boundaries is not always well documented but can be critical for application reliability.
 
 This investigation was motivated by several questions that routinely challenge cloud architects: How significant are the latency differences between VMs in the same availability zone versus across zones or regions? How consistent is network performance over time? What happens to long-lived TCP connections during infrastructure maintenance? I set out to answer these questions with empirical testing and analysis.
@@ -36,6 +36,7 @@ I created a controlled test environment in Azure using a consistent configuratio
 ### Experimental Design
 
 I employed a simple but effective approach using TCP echo servers for my testing. For my test scenarios, I established three different connectivity patterns: a Baseline test with client and server in the same Availability Zone (AZ1) in UKSouth; a Cross AZ test with client in AZ2 connecting to server in AZ1 within the same VNET in UKSouth; and a Cross Region test with client in UKWest connecting to server in UKSouth via peered VNETs. This allowed me to measure the impact of crossing availability zone and regional boundaries.
+
 
 ```mermaid
 
@@ -96,7 +97,7 @@ All tools and configurations are available in the repository, allowing for repro
 
 ### Latency Performance Summary
 
-My testing revealed significant and consistent differences in network latency across the three scenarios. For the Same AZ (Baseline) test, I observed a mean latency of 315 μs, with P95 at 375 μs and P99 at 450 μs. The Cross AZ test showed considerably higher latencies, with a mean of 675 μs, P95 at 950 μs, and P99 at 1,250 μs. The Cross Region test demonstrated the highest latencies by far, with a mean of 2,250 μs, P95 at 3,800 μs, and P99 at 5,100 μs.
+My testing revealed significant and consistent differences in network latency across the three scenarios. For the Same AZ (Baseline) test, I observed a mean latency of 315 μs, with P95 at 375 μs and P99 at 450 μs. The Cross AZ test showed considerably higher latencies, with a mean of 675 μs, P95 at 950 μs, and P99 at 1,250 μs. The Cross Region test demonstrated the highest latencies by far, with a mean of 2,250 μs, P95 at 3,800 μs, and P99 at 5,100 μs. 
 
 These results demonstrate clear performance ratios across the different scenarios. Traffic between availability zones is approximately 2.1 times slower than traffic within a single availability zone. Cross-region traffic is about 7.1 times slower than within a single availability zone, and approximately 3.3 times slower than cross-AZ traffic. These ratios provide concrete guidance for architects making placement decisions for latency-sensitive workloads.
 
@@ -184,6 +185,16 @@ When designing for high availability across zones, architects should account for
 
 Network path optimisation should be a priority, with cross-region calls minimised for frequent operations. My findings suggest that cross-region communication should be reserved for less time-sensitive operations, with synchronous dependencies across regions avoided whenever possible. For necessary cross-region communication, consider asynchronous patterns for non-critical operations to reduce the impact of the higher latency.
 
+| **Latency Sensitivity** | **Recommended Placement** | **Appropriate Design Patterns** |
+|-------------------------|---------------------------|---------------------------------|
+| Critical Path (<1ms required) | Same AZ (~315μs) | Synchronous Communication |
+| Important Path (1-3ms acceptable) | Same AZ or Cross AZ (315-675μs) | Synchronous with timeout handling, Asynchronous, Caching |
+| Standard Path (>3ms acceptable) | Any placement | Asynchronous Communication, Data Replication |
+| **Cross-Region Communication** | **Avoid for** | **Suitable for** |
+| | Frequent synchronous operations | Asynchronous processing |
+| | Latency-sensitive workflows | Data replication and backups |
+| | Interactive user experiences | Batch processing |
+
 ### Application-Level Mitigations
 
 To build resilient applications in light of potential connection interruptions, I recommend implementing robust connection management strategies. Connection pooling with health checks and automatic renewal can help applications recover quickly from failures. Libraries like connection pools should be configured to detect stale connections and replace them proactively, rather than waiting for operations to fail.
@@ -232,7 +243,7 @@ These findings highlight the importance of building applications with network re
 
 ## Appendix: Test Details
 
-My testing ran from March 18-20, 2025, using a [custom echo client/server](https://github.com/simonpainter/echo_test/) setup deployed on B1 VMs (1 vCPU, 1 GB RAM). I used a consistent packet size of 64 bytes sent at a frequency of 1 packet every 5 seconds. The total packets processed were substantial: 40,500 packets for the Baseline test, 41,556 packets for the Cross AZ test, and 41,583 packets for the Cross Region test. All packets were successfully delivered until the respective connection terminations occurred.
+My testing ran from March 18-20, 2025, using a custom echo client/server setup deployed on B1 VMs (1 vCPU, 1 GB RAM). I used a consistent packet size of 64 bytes sent at a frequency of 1 packet per second. The total packets processed were substantial: 40,500 packets for the Baseline test, 41,556 packets for the Cross AZ test, and 41,583 packets for the Cross Region test. All packets were successfully delivered until the respective connection terminations occurred.
 
 The consistency in methodology and configuration allowed me to isolate the effect of network topology on performance, providing reliable comparative data across the different scenarios. I've made my complete methodology, configuration details, and source code available in the accompanying repository for those interested in reproducing or extending this research.
 
@@ -241,7 +252,7 @@ The consistency in methodology and configuration allowed me to isolate the effec
 | Testing Period | March 18-20, 2025 |
 | VM Size | B1 (1 vCPU, 1 GB RAM) |
 | Packet Size | 64 bytes |
-| Frequency | 1 packet every 5 seconds |
+| Frequency | 1 packet per second |
 | Baseline Test Packets | 40,500 |
 | Cross AZ Test Packets | 41,556 |
 | Cross Region Test Packets | 41,583 |
