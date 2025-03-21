@@ -187,13 +187,9 @@ Network path optimisation should be a priority, with cross-region calls minimise
 
 | **Latency Sensitivity** | **Recommended Placement** | **Appropriate Design Patterns** |
 |-------------------------|---------------------------|---------------------------------|
-| Critical Path (<1ms required) | Same AZ (~315μs) | Synchronous Communication |
+| Critical Path (\<1ms required) | Same AZ (~315μs) | Synchronous Communication |
 | Important Path (1-3ms acceptable) | Same AZ or Cross AZ (315-675μs) | Synchronous with timeout handling, Asynchronous, Caching |
 | Standard Path (>3ms acceptable) | Any placement | Asynchronous Communication, Data Replication |
-| **Cross-Region Communication** | **Avoid for** | **Suitable for** |
-| | Frequent synchronous operations | Asynchronous processing |
-| | Latency-sensitive workflows | Data replication and backups |
-| | Interactive user experiences | Batch processing |
 
 ### Application-Level Mitigations
 
