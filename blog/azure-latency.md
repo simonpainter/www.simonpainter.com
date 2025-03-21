@@ -1,7 +1,7 @@
 ---
 
 title: Azure Latency
-description: "Investigating Network Latency in Azure: A Deep Dive into Long-Lived TCP Connections"
+description: "Investigating Network Latency in Azure and Long-Lived TCP Connections - part 1"
 authors: simonpainter
 tags:
   - azure
@@ -14,7 +14,7 @@ date: 2025-03-20
 ## Background
 
 Understanding network latency in cloud environments is crucial for architects and developers building distributed systems. While cloud providers like Microsoft Azure offer significant flexibility and scale, the underlying network topology can have profound impacts on application performance.
-
+<!-- truncate -->
 For many systems, especially those running persistent connections like databases, message queues, or API gateways, seemingly small differences in network latency can compound into significant performance issues. Moreover, the behaviour of long-lived TCP connections across different network boundaries is not always well documented but can be critical for application reliability.
 
 This investigation was motivated by several questions that routinely challenge cloud architects: How significant are the latency differences between VMs in the same availability zone versus across zones or regions? How consistent is network performance over time? What happens to long-lived TCP connections during infrastructure maintenance? I set out to answer these questions with empirical testing and analysis.
@@ -81,11 +81,11 @@ For data collection, I recorded precise timestamps for both send and receive ope
 
 ### Tooling
 
-I developed custom tools to ensure precise measurements throughout my testing. The server component consisted of a standard TCP echo service running on port 7 via xinetd, a lightweight service manager for internet services. On the client side, I created a Python-based application that sends packets and measures round-trip time with nanosecond precision. I also implemented a comprehensive logging system with both human-readable logs and CSV data for analysis.
+I developed [custom tools to ensure precise measurements throughout my testing](https://github.com/simonpainter/echo_test/). The server component consisted of a standard TCP echo service running on port 7 via xinetd, a lightweight service manager for internet services. On the client side, I created a Python-based application that sends packets and measures round-trip time with nanosecond precision. I also implemented a comprehensive logging system with both human-readable logs and CSV data for analysis.
 
-My echo client was designed to measure and record precise timing information for each packet exchange, including timestamps at the nanosecond level and calculated round-trip times. The client application handled connection management, error recovery, and data collection, ensuring robust and consistent measurements throughout the extended testing period.
+My [echo client](https://github.com/simonpainter/echo_test/) was designed to measure and record precise timing information for each packet exchange, including timestamps at the nanosecond level and calculated round-trip times. The client application handled connection management, error recovery, and data collection, ensuring robust and consistent measurements throughout the extended testing period.
 
-All tools and configurations are available in the repository, allowing for reproducibility of the experiments. I've provided the complete source code, setup scripts, and analysis tools so that others can verify my results or conduct similar investigations in their own environments.
+All tools and configurations are available in [the repository](https://github.com/simonpainter/echo_test/), allowing for reproducibility of the experiments. I've provided the complete source code, setup scripts, and analysis tools so that others can verify my results or conduct similar investigations in their own environments.
 
 | **Echo Test Flow Step** | **Description** |
 |-------------------------|-----------------|
@@ -169,7 +169,7 @@ My analysis suggests Azure employs a temporary redirect mechanism during VM migr
 
 ### Next Research Phase
 
-These findings open several avenues for further investigation that I plan to pursue. I'm particularly interested in understanding how adding Azure Firewall to the network path affects connection stability during maintenance events. The firewall maintains state for connections passing through it, potentially introducing additional complexity to the migration process.
+These findings open several avenues for further investigation that I plan to pursue. I'm particularly interested in understanding how adding Azure Firewall to the network path affects connection stability during maintenance events. The firewall maintains state for connections passing through it, potentially introducing additional complexity to the migration process. Azure Firewalls are also, themselves, scaling groups of VMs with a well documented limitation around long lived TCP connections.
 
 Testing the effectiveness of periodic connection refresh as a mitigation strategy is another area for exploration. By proactively refreshing connections at regular intervals (e.g., every 4-6 hours), applications might avoid the disruption caused by infrastructure maintenance. This strategy needs empirical validation to determine optimal refresh intervals and implementation approaches.
 
@@ -197,7 +197,7 @@ To build resilient applications in light of potential connection interruptions, 
 
 Applications should be designed to handle connection failures gracefully with exponential backoff retry mechanisms. When a connection fails, the application should attempt reconnection with progressively longer wait times between attempts, helping to prevent overwhelming the network or server during recovery. This pattern is particularly important for cross-region connections, which my testing showed to be more susceptible to variability.
 
-Connection age monitoring is another valuable strategy. Consider proactively refreshing connections that exceed certain age thresholds, such as 6-8 hours. My testing showed failures in connections that were approximately 11 hours old, suggesting that a more conservative refresh interval might prevent disruption. This approach trades slightly increased overhead during normal operation for improved resilience during maintenance events.
+Connection age monitoring is another valuable strategy. Consider proactively refreshing connections that exceed certain age thresholds, such as 6-8 hours. My testing showed failures in connections that were approximately 11 hours old, suggesting that a more conservative refresh interval might prevent disruption. This approach trades slightly increased overhead during normal operation for improved resilience during maintenance events. That said I suspect the host migration would have disrupted a 10 minute old connection as much as an 11 hour migration but there is more to investigate.
 
 Implementing circuit breaker patterns can also help applications quickly fail over during connectivity issues rather than waiting for timeouts. By detecting patterns of failures and temporarily preventing operations that are likely to fail, circuit breakers can reduce the impact of connection problems on end users and allow systems to degrade gracefully.
 
@@ -212,9 +212,7 @@ Implementing circuit breaker patterns can also help applications quickly fail ov
 
 ### Performance Optimisation Strategies
 
-For optimal performance in Azure environments, I recommend adopting a colocation strategy that groups services with frequent communication in the same availability zone. My testing demonstrated that same-zone communication is significantly faster and more consistent than communication across zones or regions. For services with tight coupling or frequent interactions, the performance benefits of colocation can outweigh the availability advantages of distribution.
-
-Regional partitioning is another effective approach, designing systems that minimise required cross-region communication. This might involve replicating data or services to each region and routing requests to the nearest instance, or partitioning workloads so that most processing occurs within a single region. Cross-region calls should be reserved for less frequent operations like synchronisation or aggregation.
+For optimal performance in Azure environments, I recommend adopting a colocation strategy that groups services with frequent communication in the same availability zone. My testing demonstrated that same-zone communication is significantly faster and more consistent than communication across zones or regions. This should be qualified though for applications that do not have strict latency requirements because even across regions in the same geo the latency was only 5ms which might be fine for most applications.
 
 Implementing appropriate caching layers can significantly reduce the impact of network latency. By caching frequently accessed data close to the compute resources that need it, applications can avoid network calls altogether for many operations. This is particularly valuable for reducing cross-region traffic, where my testing showed the highest latency penalties.
 
@@ -231,7 +229,7 @@ Asynchronous communication patterns are well-suited for non-critical cross-regio
 
 ## Conclusion
 
-My investigation provides valuable insights into Azure's network performance across different boundaries and the behaviour of long-lived TCP connections during infrastructure maintenance. Through careful measurement and analysis, I've quantified the latency differences between same-AZ, cross-AZ, and cross-region communication, providing concrete data to inform architecture decisions.
+My investigation provides insights into Azure's network performance across different boundaries and the behaviour of long-lived TCP connections during infrastructure maintenance. Through careful measurement and analysis, I've quantified the latency differences between same-AZ, cross-AZ, and cross-region communication, providing concrete data to inform architecture decisions.
 
 The clear latency hierarchy (Same AZ < Cross AZ < Cross Region) was expected, but the precise measurements offer concrete data for architects making placement decisions. More surprising was the evidence of VM migration affecting long-lived connections, with distinct latency shift patterns preceding connection termination. These patterns suggest that Azure employs a temporary redirection mechanism during VM maintenance that eventually expires, causing established connections to fail.
 
