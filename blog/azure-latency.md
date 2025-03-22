@@ -13,11 +13,12 @@ date: 2025-03-20
 
 ## Background
 
-Understanding network latency in cloud environments is crucial for architects and developers building distributed systems. While cloud providers like Microsoft Azure offer significant flexibility and scale, the underlying network topology can have profound impacts on application performance.
+Understanding network latency is important for architects and developers building distributed systems, and especially so in cloud environments. While cloud providers like Microsoft Azure offer significant flexibility and scale, the underlying network topology can have profound impacts on application performance. Microsoft has invested heavily in [low latency hollow core fibre](microsoft-ignite-2024.md), through a [significant technology investment](https://medium.simonpainter.com/optimising-azure-network-architectures-leveraging-microsofts-hollow-core-fibre-innovation-4b0ec39cb33c) and I am sure that where they have innovated, others will follow.
+
 <!-- truncate -->
 For many systems, especially those running persistent connections like databases, message queues, or API gateways, seemingly small differences in network latency can compound into significant performance issues. Moreover, the behaviour of long-lived TCP connections across different network boundaries is not always well documented but can be critical for application reliability.
 
-This investigation was motivated by several questions that routinely challenge cloud architects: How significant are the latency differences between VMs in the same availability zone versus across zones or regions? How consistent is network performance over time? What happens to long-lived TCP connections during infrastructure maintenance? I set out to answer these questions with empirical testing and analysis.
+This investigation was motivated by several questions that routinely challenge cloud architects: How significant are the latency differences between VMs in the same availability zone versus across zones or regions? How consistent is network performance over time? What happens to long-lived TCP connections during infrastructure maintenance? I set out to find some answers to these questions as they are relevant to many but also not well documented.
 
 ## Research Methodology
 
@@ -36,7 +37,6 @@ I created a controlled test environment in Azure using a consistent configuratio
 ### Experimental Design
 
 I employed a simple but effective approach using TCP echo servers for my testing. For my test scenarios, I established three different connectivity patterns: a Baseline test with client and server in the same Availability Zone (AZ1) in UKSouth; a Cross AZ test with client in AZ2 connecting to server in AZ1 within the same VNET in UKSouth; and a Cross Region test with client in UKWest connecting to server in UKSouth via peered VNETs. This allowed me to measure the impact of crossing availability zone and regional boundaries.
-
 
 ```mermaid
 
@@ -73,6 +73,8 @@ My measurement approach involved each client sending a 64-byte packet to the ech
 
 For data collection, I recorded precise timestamps for both send and receive operations, calculated RTT with microsecond resolution, and maintained detailed logging of any connection issues or anomalies that arose during testing. This comprehensive approach gave me a rich dataset for subsequent analysis.
 
+The reason I didn't use ICMP is that it's a control protocol and often handled differently on networks than application traffic. A TCP connection looks far more like application traffic to any network management and prioritisation policies.
+
 | **Test Scenario** | **Client Location** | **Server Location** | **Network Path** |
 |-------------------|---------------------|---------------------|-----------------|
 | Baseline | AZ1, UK South | AZ1, UK South | Same AZ, Same VNET |
@@ -90,16 +92,18 @@ All tools and configurations are available in [the repository](https://github.co
 | **Echo Test Flow Step** | **Description** |
 |-------------------------|-----------------|
 | Connection Establishment | TCP SYN, SYN-ACK, ACK sequence to establish connection |
-| Testing Cycle (1/sec) | Record send time → Send 64-byte packet → Receive echo response → Record receive time → Calculate RTT → Log data to CSV |
+| Testing Cycle (configurable frequency) | Record send time → Send 64-byte packet → Receive echo response → Record receive time → Calculate RTT → Log data to CSV |
 | Test Termination | Connection timeout or interruption → Record statistics |
 
 ## Experimental Results
 
 ### Latency Performance Summary
 
-My testing revealed significant and consistent differences in network latency across the three scenarios. For the Same AZ (Baseline) test, I observed a mean latency of 315 μs, with P95 at 375 μs and P99 at 450 μs. The Cross AZ test showed considerably higher latencies, with a mean of 675 μs, P95 at 950 μs, and P99 at 1,250 μs. The Cross Region test demonstrated the highest latencies by far, with a mean of 2,250 μs, P95 at 3,800 μs, and P99 at 5,100 μs. 
+My testing revealed significant and consistent differences in network latency across the three scenarios. For the Same AZ (Baseline) test, I observed a mean latency of 315 μs, with P95 at 375 μs and P99 at 450 μs. The Cross AZ test showed considerably higher latencies, with a mean of 675 μs, P95 at 950 μs, and P99 at 1,250 μs. The Cross Region test demonstrated the highest latencies by far, with a mean of 2,250 μs, P95 at 3,800 μs, and P99 at 5,100 μs.
 
-These results demonstrate clear performance ratios across the different scenarios. Traffic between availability zones is approximately 2.1 times slower than traffic within a single availability zone. Cross-region traffic is about 7.1 times slower than within a single availability zone, and approximately 3.3 times slower than cross-AZ traffic. These ratios provide concrete guidance for architects making placement decisions for latency-sensitive workloads.
+It's also worth knowing that a test on the echo server to localhost came in at around 200 μs consistently which accounts for the time getting through the network stack and the server processing the request and response. This can be deducted from the results if you are interested in the pure network portion of the test however the data is for comparison purposes and not raw network benchmarking so I have not done this.
+
+These results demonstrate clear and largely expected performance ratios across the different scenarios. These ratios provide concrete evidence to support well understood principles for architects making placement decisions for latency-sensitive workloads. I think the really big takeaway, on a test over 55 hours, is how consistent the latency is and for some the consistency and predictability is more important than the actual speed.
 
 | **Latency Metric** | **Same AZ (Baseline)** | **Cross AZ** | **Cross Region** |
 |--------------------|------------------------|--------------|------------------|
@@ -135,11 +139,13 @@ Perhaps the most interesting observation came from the connection terminations. 
 
 The most intriguing aspect of my investigation emerged when I analysed the latency patterns immediately before connection termination. I divided the last 500 records before termination into 100-record segments and found distinct shift patterns across the different test scenarios.
 
-For the Baseline Test (Same AZ), I observed a significant 17.4% reduction in average latency in the final 100 records compared to the previous segment. Several statistically significant drops were detected starting around 200 records before termination, and segment averages showed progressive improvement in the final phase. This pattern suggests a potential migration to a more efficient host or network path.
+For the Baseline Test (Same AZ), I observed a significant shift in average latency in the final 100 records, decreasing from 955.87 μs to 789.58 μs compared to the previous segment. This represents a reduction of 166.29 μs. Several statistically significant drops were detected starting around 200 records before termination, with segment averages showing progressive changes from 813.14 μs (records 500-401), increasing to 888.09 μs, 925.49 μs, and peaking at 955.87 μs (records 200-101), before dropping to 789.58 μs in the final 100 records. This pattern suggests a potential migration to a more efficient host or network path.
 
-The Cross AZ Test exhibited a different pattern, with a 5.0% increase in average latency in the final 100 records. I noted an initial decrease (8-10% below average) from records ~250-150, followed by a sustained increase in the final 150 records. This pattern might represent first the migration preparation phase and then the post-migration redirect phase.
+The Cross AZ Test exhibited a different pattern, with average latency increasing from 1403.46 μs to 1473.22 μs (a difference of 69.76 μs) in the final 100 records. I noted an initial average of 1421.41 μs (records 500-401), decreasing to 1388.25 μs (records 400-301), then rising to 1433.61 μs (records 300-201), before dropping slightly to 1403.46 μs (records 200-101) and finally increasing to 1473.22 μs in the last 100 records. The dip to approximately 1388 μs from records 400-301 followed by a sustained increase to 1473 μs in the final segment might represent first the migration preparation phase and then the post-migration redirect phase.
 
-The Cross Region Test showed the most stable pattern with minimal variations throughout the 500-record sample. I observed only a slight 2.3% reduction in average latency in the final 100 records compared to the previous segment, suggesting that cross-region communication is less affected by local host changes.
+The Cross Region Test showed the most stable pattern with minimal variations throughout the 500-record sample. The latency measurements remained relatively consistent: 5320.39 μs (records 500-401), 5242.55 μs (records 400-301), 5384.39 μs (records 300-201), 5388.18 μs (records 200-101), and 5262.40 μs (last 100 records). I observed only a slight reduction of 125.78 μs between the penultimate and final segments (from 5388.18 μs to 5262.40 μs), suggesting that cross-region communication is less affected by local host changes.
+
+The differences are all consistent with physical relocation of one of the VMs and the time differences are consistent with it being a change within the AZ, such as a host migration.
 
 | **Segment** | **Baseline Test (μs)** | **% Change** | **Cross AZ Test (μs)** | **% Change** | **Cross Region Test (μs)** | **% Change** |
 |-------------|------------------------|--------------|------------------------|--------------|----------------------------|--------------|
@@ -169,29 +175,15 @@ My analysis suggests Azure employs a temporary redirect mechanism during VM migr
 
 ### Next Research Phase
 
-These findings open several avenues for further investigation that I plan to pursue. I'm particularly interested in understanding how adding Azure Firewall to the network path affects connection stability during maintenance events. The firewall maintains state for connections passing through it, potentially introducing additional complexity to the migration process. Azure Firewalls are also, themselves, scaling groups of VMs with a well documented limitation around long lived TCP connections.
+These findings open several avenues for further investigation that I plan to pursue. I'm particularly interested in understanding how adding Azure Firewall to the network path affects connection stability; there are well documented issues with Azure firewall and long lived tcp connections that I want to explore.
 
-Testing the effectiveness of periodic connection refresh as a mitigation strategy is another area for exploration. By proactively refreshing connections at regular intervals (e.g., every 4-6 hours), applications might avoid the disruption caused by infrastructure maintenance. This strategy needs empirical validation to determine optimal refresh intervals and implementation approaches.
+Testing the effectiveness of periodic connection refresh as a mitigation strategy is another area for exploration. By proactively refreshing connections at regular intervals (e.g., every 4-6 hours), applications might avoid the disruption caused by infrastructure maintenance, however if it's due to scheduled maintanence events this is unlikely. This strategy needs empirical validation to determine optimal refresh intervals and implementation approaches.
 
 I also plan to investigate whether larger VM sizes with higher SLA commitments exhibit different migration patterns. It's possible that premium VM tiers receive different treatment during maintenance events, which could influence application architecture decisions for mission-critical workloads with stringent availability requirements.
 
+There is also room for exploring how placement groups influence this behaviour, a worthy suggestion from [Zain](https://www.simonpainter.com/authors/zainkhan) who may beat me to that particular exploration.
+
 ## Practical Recommendations for Cloud Network Architects
-
-### Network Design Considerations
-
-Based on my findings, I recommend several design principles for Azure network architectures. For latency-sensitive workloads, keeping communication within the same availability zone whenever possible yields significantly better performance—my testing showed approximately 7 times better performance than cross-region communication. This difference can be critical for applications like databases, caches, or real-time processing systems where microseconds matter.
-
-When designing for high availability across zones, architects should account for the latency penalty, which my testing showed to be approximately twice that of same-zone communication. This trade-off between availability and performance needs careful consideration, particularly for applications with strict response time requirements. The increased latency may necessitate architectural changes such as asynchronous processing or increased parallelism to maintain acceptable end-user experiences.
-
-Network path optimisation should be a priority, with cross-region calls minimised for frequent operations. My findings suggest that cross-region communication should be reserved for less time-sensitive operations, with synchronous dependencies across regions avoided whenever possible. For necessary cross-region communication, consider asynchronous patterns for non-critical operations to reduce the impact of the higher latency.
-
-| **Latency Sensitivity** | **Recommended Placement** | **Appropriate Design Patterns** |
-|-------------------------|---------------------------|---------------------------------|
-| Critical Path (\<1ms required) | Same AZ (~315μs) | Synchronous Communication |
-| Important Path (1-3ms acceptable) | Same AZ or Cross AZ (315-675μs) | Synchronous with timeout handling, Asynchronous, Caching |
-| Standard Path (>3ms acceptable) | Any placement | Asynchronous Communication, Data Replication |
-
-### Application-Level Mitigations
 
 To build resilient applications in light of potential connection interruptions, I recommend implementing robust connection management strategies. Connection pooling with health checks and automatic renewal can help applications recover quickly from failures. Libraries like connection pools should be configured to detect stale connections and replace them proactively, rather than waiting for operations to fail.
 
@@ -201,15 +193,6 @@ Connection age monitoring is another valuable strategy. Consider proactively ref
 
 Implementing circuit breaker patterns can also help applications quickly fail over during connectivity issues rather than waiting for timeouts. By detecting patterns of failures and temporarily preventing operations that are likely to fail, circuit breakers can reduce the impact of connection problems on end users and allow systems to degrade gracefully.
 
-| **Resilience Strategy** | **Implementation Approach** | **Benefits** |
-|-------------------------|------------------------------|--------------|
-| Connection Pooling | Maintain multiple connections with health checks | Quick recovery from individual connection failures |
-| Connection Age Monitoring | Refresh connections older than 6-8 hours | Avoid disruption during maintenance events |
-| Exponential Backoff | Progressive wait time between reconnection attempts | Prevent overwhelming systems during recovery |
-| Circuit Breakers | Temporarily disable failing operations | Allow graceful degradation instead of cascading failures |
-| Fallback Mechanisms | Use cached data or alternative paths | Maintain functionality during connectivity issues |
-| Recovery Monitoring | Continuously check for system recovery | Automatically restore normal operation when possible |
-
 ### Performance Optimisation Strategies
 
 For optimal performance in Azure environments, I recommend adopting a colocation strategy that groups services with frequent communication in the same availability zone. My testing demonstrated that same-zone communication is significantly faster and more consistent than communication across zones or regions. This should be qualified though for applications that do not have strict latency requirements because even across regions in the same geo the latency was only 5ms which might be fine for most applications.
@@ -218,15 +201,6 @@ Implementing appropriate caching layers can significantly reduce the impact of n
 
 Asynchronous communication patterns are well-suited for non-critical cross-region operations. Instead of waiting for remote operations to complete, applications can queue requests for asynchronous processing and continue with other work. This approach decouples components across network boundaries and improves overall system responsiveness, especially for user-facing applications.
 
-| **Optimisation Strategy** | **Approach** | **Best Applied To** |
-|---------------------------|--------------|---------------------|
-| Colocation | Place frequently communicating services in same AZ | Tightly coupled services, latency-sensitive interactions |
-| Regional Partitioning | Minimize cross-region dependencies | User-facing applications, regional compliance requirements |
-| Caching Layers | Cache frequently accessed data near compute | Read-heavy workloads, reference data |
-| Asynchronous Communication | Queue requests for background processing | Cross-region operations, non-critical workflows |
-| Data Replication | Maintain copies of data in multiple regions | Disaster recovery, regional performance optimization |
-| Connection Reuse | Maintain persistent connections for repeated calls | Microservices with frequent communication |
-
 ## Conclusion
 
 My investigation provides insights into Azure's network performance across different boundaries and the behaviour of long-lived TCP connections during infrastructure maintenance. Through careful measurement and analysis, I've quantified the latency differences between same-AZ, cross-AZ, and cross-region communication, providing concrete data to inform architecture decisions.
@@ -234,19 +208,3 @@ My investigation provides insights into Azure's network performance across diffe
 The clear latency hierarchy (Same AZ < Cross AZ < Cross Region) was expected, but the precise measurements offer concrete data for architects making placement decisions. More surprising was the evidence of VM migration affecting long-lived connections, with distinct latency shift patterns preceding connection termination. These patterns suggest that Azure employs a temporary redirection mechanism during VM maintenance that eventually expires, causing established connections to fail.
 
 These findings highlight the importance of building applications with network resilience in mind, particularly when maintaining persistent connections across availability zones or regions. While cloud platforms like Azure provide tremendous flexibility and generally high performance, understanding their network characteristics remains essential for optimising application performance and reliability. By incorporating the design considerations and resilience strategies outlined in this article, architects can create systems that deliver better performance while gracefully handling the inevitable infrastructure changes in cloud environments.
-
-## Appendix: Test Details
-
-My testing ran from March 18-20, 2025, using a custom echo client/server setup deployed on B1 VMs (1 vCPU, 1 GB RAM). I used a consistent packet size of 64 bytes sent at a frequency of 1 packet per second. The total packets processed were substantial: 40,500 packets for the Baseline test, 41,556 packets for the Cross AZ test, and 41,583 packets for the Cross Region test. All packets were successfully delivered until the respective connection terminations occurred.
-
-The consistency in methodology and configuration allowed me to isolate the effect of network topology on performance, providing reliable comparative data across the different scenarios. I've made my complete methodology, configuration details, and source code available in the accompanying repository for those interested in reproducing or extending this research.
-
-| **Test Parameter** | **Value** |
-|-------------------|-----------|
-| Testing Period | March 18-20, 2025 |
-| VM Size | B1 (1 vCPU, 1 GB RAM) |
-| Packet Size | 64 bytes |
-| Frequency | 1 packet per second |
-| Baseline Test Packets | 40,500 |
-| Cross AZ Test Packets | 41,556 |
-| Cross Region Test Packets | 41,583 |
