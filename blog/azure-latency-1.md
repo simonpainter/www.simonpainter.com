@@ -1,7 +1,6 @@
 ---
 
-title: Azure Latency
-description: "Investigating Network Latency in Azure and Long-Lived TCP Connections - part 1"
+title: Azure Latency Part 1
 authors: simonpainter
 tags:
   - azure
