@@ -22,9 +22,9 @@ Our first job is to connect two computers. Computers talk in ones and zeros beca
 
 ### Serial vs Parallel Communication
 
-When connecting two computers, data can be transmitted either serially (one bit at a time) or in parallel (multiple bits simultaneously). Each approach has distinct characteristics that make it suitable for different scenarios.
+When connecting two computers, we can send data either serially (one bit at a time) or in parallel (multiple bits at once). Each method works better in different situations.
 
-In serial communication, bits are sent one after another along a single wire (plus ground). Think of it like a single-lane road where cars (bits) must travel in sequence:
+In serial communication, bits travel one after another along a single wire (plus ground). Think of it like a single-lane road where cars (bits) must travel in sequence:
 
 ```text
 Computer A                Computer B
@@ -36,7 +36,7 @@ Computer A                Computer B
     Time: 1 2 3 4 5    (each bit sent sequentially)
 ```
 
-Parallel communication, by contrast, uses multiple wires to send several bits simultaneously. This is like a multi-lane highway where multiple cars (bits) can travel side-by-side:
+Parallel communication, on the other hand, uses multiple wires to send several bits at the same time. This is like a multi-lane highway where multiple cars (bits) can travel side-by-side:
 
 ```text
 Computer A                Computer B
@@ -54,20 +54,20 @@ Computer A                Computer B
     Time: 1            (all bits sent simultaneously)
 ```
 
-While parallel communication might seem superior due to its ability to transmit multiple bits simultaneously, it comes with its own challenges. The primary issue is something called "clock skew" - where bits sent at the same time might arrive slightly offset due to minute differences in wire length or electrical characteristics. This becomes more problematic as distances increase or transmission speeds rise.
+While parallel communication might seem better because it can send multiple bits at once, it has its own problems. The main issue is "clock skew" - where bits sent together might arrive slightly out of sync due to tiny differences in wire length or electrical properties. This gets worse as distances grow or speeds increase.
 
 > At higher speeds or longer distances, the complexity of keeping multiple data lines synchronised in parallel
 > communication becomes increasingly difficult. This is why modern high-speed communications (like USB 3.0, SATA,
 > and PCIe) use multiple serial lanes rather than parallel communications. They achieve high throughput by
 > running the serial communications at very high frequencies rather than sending bits in parallel.
 
-Serial communication, while seemingly slower at first glance, can actually achieve higher speeds over longer distances because it only needs to maintain timing on a single data line. This is why most modern high-speed computer interfaces have moved away from parallel to serial communications, often using multiple serial lanes when higher bandwidth is needed.
+Serial communication, though it seems slower at first glance, can actually reach higher speeds over longer distances because it only needs to keep timing on a single data line. That's why most modern high-speed computer interfaces have switched from parallel to serial communications, often using multiple serial lanes when they need more bandwidth.
 
-The tradeoff between serial and parallel communications is a perfect example of how engineering decisions in computer networking often involve balancing theoretical performance against practical limitations. In our further discussion of networking, we'll focus primarily on serial communications as they form the basis of most modern network interfaces.
+The balance between serial and parallel communications shows how network engineering often means trading theoretical performance for practical solutions. As we continue discussing networking, we'll mainly focus on serial communications since they're the foundation of most modern network interfaces.
 
 ### Serial clocks
 
-The next problem to solve in order to make serial communications this work is how we ensure that both computers know when a one and a zero start and finish, serial connections rely on both computers knowing the rate at data is flowing.  In a simple system both computers can be configured to know the rate of transfer, say 9600 bits per second and they sample the data received at that rate and will typically be fine. For faster and more accurate transfer another wire with a clock signal is needed. The clock signal acts like a metronome, providing the timing reference that keeps both sender and receiver synchronised. This synchronisation ensures that bits are sampled at the correct moments to accurately interpret the data.
+The next problem to solve is making sure both computers know when ones and zeros start and end. Serial connections need both computers to know how fast data is flowing. In a simple system, both computers can be set to the same rate, like 9600 bits per second, and they sample the data at that rate, which usually works fine. For faster and more accurate transfers, we need another wire with a clock signal. This clock signal works like a metronome, giving a timing reference that keeps sender and receiver in sync. This synchronization makes sure bits are sampled at just the right moments to be interpreted correctly.
 
 > The baud rate, measured in *symbols per second*, represents how many signal changes can occur on the communication
 > channel in one second. While baud rate was historically equivalent to bits per second in early systems where each
@@ -76,11 +76,11 @@ The next problem to solve in order to make serial communications this work is ho
 > bits per second. This is only important so that you realise that while bit rate and baud are often used
 > interchangeably they are not the same.
 
-The relationship between clock signals and baud rate is intimate - one computer must generate a clock signal that matches the baud rate so both computers can sample their incoming data stream at the optimal points between signal transitions.
+The relationship between clock signals and baud rate is very close - one computer must create a clock signal that matches the baud rate so both computers can sample their incoming data at just the right points between signal changes.
 
 ### We can send numbers, what about letters?
 
-When connecting two computers we established that they communicate in ones and zeros, but humans prefer to work with text. ASCII (American Standard Code for Information Interchange) solves this by using 7 bits to represent 128 different characters. Each character maps to a specific binary number - for example, the letter 'A' is represented as binary 1000001 (decimal 65).
+We've established that computers talk in ones and zeros, but humans prefer text. ASCII (American Standard Code for Information Interchange) solves this by using 7 bits to represent 128 different characters. Each character maps to a specific binary number - for example, the letter 'A' is represented as binary 1000001 (decimal 65).
 
 > ASCII's use of 7 bits rather than 8 reflects its 1960s origins, when the 8th bit was reserved for parity - a simple
 > error detection scheme. The parity bit would be set to make the total number of 1s either odd or even, allowing
