@@ -244,7 +244,7 @@ graph TD
 
 ### Frames and MAC addresses
 
-In order to understand when the data for each destination starts and finishes it's useful to organise it, or frame it, in a discrete block with a start and a finish. Data frames have headers with the source and destination addresses and a marker at the end to show that the data payload has finished. The addresses are, like everything in networks, just numbers, but large numbers with trillions of possiblities which ensures they are unique.
+To know where data for each destination starts and ends, we organize it in "frames" - discrete blocks with clear start and end points. Data frames have headers containing source and destination addresses, plus an end marker showing where the data payload finishes. These addresses are just numbers (like everything in networks), but they're very large numbers with trillions of possibilities, ensuring they're unique.
 
 > A MAC address (short for medium access control address or media access control address) is a unique identifier
 > assigned to a network interface. It is a 48-bit address space which contains potentially over 281 trillion
@@ -252,25 +252,38 @@ In order to understand when the data for each destination starts and finishes it
 > hardcode onto network interfaces; due to the sheer quantity of available addresses it's statistically impossible that
 > two devices on a network could ever have the same MAC addresss.
 
-Now that we have our data organised into frames, our computer nodes connected to a hub and each one uniquely addressed we can start to scale out. We can connect hubs to hubs if we like because the data sent by one hub will be repeated to other hubs. One thing we can't do though is form loops of hubs because they are not clever enough to realise if a data frame is in an endless loop as it is repeated by each hub in the loop and then endlessly repeated to every computer node on the network. This is just one of the many ways we can get to some serious congestion in our hub and spoke network.
+With our data in frames, all computers connected to a hub, and each one uniquely addressed, we can start scaling our network. We can even connect hubs to other hubs since data sent by one hub will be repeated to all connected hubs. But we must avoid creating loops of hubs, as they aren't smart enough to recognize when a data frame is caught in an endless loop, being repeated by each hub and broadcast to every computer on the network. This is just one way network congestion can happen in hub and spoke networks.
 
 ### Collisions
 
-As we scale out our hub and spoke network we hit another problem, collisions. We need each computer node to take turns in sending data. This means that computer nodes listen for gaps in the data flow at the end of frames before they start sending their own frames. On occasions, two computers connected to a hub will both want to send data and both will listen for the end of a frame and then try to send their own frames at the same time. When two computer nodes send data at the same time the hub is not clever enough, as it's just a simple electrical repeater, to hold one frame for a bit while it transmits the other. When hubs detect more than one sender at a time they will reject both senders which causes them to stop sending and those senders will then wait a random amount of time (to avoid colliding again) before they attempt to transmit again.
+As our hub and spoke network grows, we face another problem: collisions. Computers need to take turns sending data. They do this by listening for gaps in data flow at the end of frames before sending their own. Sometimes, two computers will both detect the end of a frame and try to send their own frames simultaneously. 
 
-As networks grow there will be an increase in the likelihood of collisions and there will also be a drop in performance because a lot of data is getting sent to computer nodes that will discard it as it is not meant for them.
+When this happens, the hub (being just a simple electrical repeater) can't buffer one frame while transmitting the other. Instead, when hubs detect multiple senders at once, they reject both transmissions. The sending computers then stop, wait for a random amount of time (to avoid colliding again), and try retransmitting.
+
+As networks grow, collisions become more likely. Performance also drops because lots of data gets sent to computers that simply discard it because it's not addressed to them.
 
 ## Switching to something cleverer
 
-Instead of simple hubs which are just electrical repeaters, we need a device that can look at the destination MAC address, compare it to a table in memory and then send that data out of the correct interface where the destination computer node is connected. In order to do this we have more problems to solve. First of all we need to work out how to populate that table which stores MAC addresses and the ports they are associated with. The easiest way to do this is to look at the source MAC address of frames and associate them with the interfaces they are received on. If we get a frame with a destination MAC address we don't know about then we can flood it to all interfaces and see which one the computer responds from. As this switching device is going to be a bit cleverer we will need to give it a processor and some memory, taking it from dumb electrical repeater that a hub was into a processing computer in its own right. With memory it can hold frames in a buffer while it looks in its MAC table to work out where to send them. It can also use that buffer in cases where the interfaces get congested.
+Instead of simple hubs that just repeat electrical signals, we need a smarter device that can:
+1. Look at the destination MAC address
+2. Compare it to a table in memory
+3. Send data only through the correct port where the destination computer is connected
+
+This raises new challenges. First, we need to build that table mapping MAC addresses to ports. The simplest way is to examine the source MAC address of incoming frames and note which port they arrived on. When we see a destination MAC address we don't recognize, we can "flood" the frame to all ports and see which one gets a response.
+
+This switch needs both a processor and memory, transforming it from a dumb repeater into an actual computing device. With memory, it can temporarily store frames in a buffer while it consults its MAC table to determine where to send them. These buffers also help manage congestion when multiple incoming interfaces try to send to the same outgoing interface.
 
 ### Congestion
 
-Congestion happens where several computer nodes want to send data to one computer node at the same time. If two computer nodes are sending at their maximum interface capacity then the receiving computer would need twice as much interface capacity to receive it all. In some cases this is what we do but for the most part we would buffer the traffic as it comes in and then send it out as fast as we can until the buffer empties. If the congestion is sustained over a long period of time then traffic must be prioritised.
+Congestion occurs when multiple computers try to send data to the same computer simultaneously. If two computers are sending at their maximum speed, the receiving computer would need twice the capacity to handle it all. 
+
+Sometimes we solve this by increasing the receiving interface's capacity, but more commonly we buffer the incoming traffic and send it out as fast as possible until the buffer clears. When congestion persists for extended periods, we need to prioritize certain traffic types over others.
 
 ### MAC tables and why they don't scale
 
-Maintaining a table of MAC addresses and the ports they are associated has some complexity and that complexity increases as a network scales. Imagine having to know the MAC address for every one of the billions of network devices on the internet and what port to use to get to it? Imagine having to flood the entire internet with a frame to find out which node responds to it? The upper limits to the number of devices on your network will be determined by the size of your MAC address table and the complexity of sorting and searching it.
+Managing a table that maps MAC addresses to ports gets increasingly complex as networks grow. Think about trying to track the MAC address of every device on the internet - billions of them - and knowing which port to use to reach each one. Or imagine flooding the entire internet with a frame just to find one device!
+
+The practical limit to your network size depends on two factors: how big your MAC address table can be, and how efficiently you can search through it. This creates a fundamental scalability problem.
 
 > MAC tables, like the phone book, are a simple lookup search algoritm. The simplest way is to look at every entry,
 > which means that you have to do **n** comparisons where **n** is the size of MAC table. If you sort the MAC table you
