@@ -21,7 +21,7 @@ AWS and Azure share basic networking principles that shape their virtual network
 
 ### Peering
 
-It's worth remembering that it's the CIDR that is checked for overlaps, particularly relevant in [Azure Subnet Peering](subnet-peering.md), not the subnets within that CIDR. The example diagram below applies equally to VPC in AWS as it does in VNets in Azure.
+Remember that when checking for overlaps, particularly in [Azure Subnet Peering](subnet-peering.md), the system looks at the entire CIDR range, not individual subnets within it. The diagram below shows this concept for both AWS VPCs and Azure VNets.
 
 ```mermaid
 graph LR
@@ -46,15 +46,15 @@ graph LR
     style X fill:#ffebee,stroke:#ff0000
 ```
 
-When peering you can selectivitely add routes across VPC peerings in AWS using the route tables. In Azure the default is to add routes for the whole CIDR however the slighly misleadingly named [Subnet Peering](subnet-peering.md) can be used to selectively allow specific subnet routes across VNet peering.
+With AWS, you can selectively add routes across VPC peerings using route tables. Azure's default is to add routes for the entire CIDR, but you can use the somewhat misleadingly named [Subnet Peering](subnet-peering.md) to selectively allow specific subnet routes across VNet peering.
 
 ### Prefix Advertisements via BGP
 
-As with the overlap checking, BGP route advertisements via VPN gateways, ExpressRoute Gateways, and Direct Connect Gateways are based on the CIDR summaries not the individual subnets. By default all CIDR ranges in a VNet or VPC are advertised.
+Similar to overlap checking, BGP route advertisements through VPN gateways, ExpressRoute Gateways, and Direct Connect Gateways use CIDR summaries rather than individual subnets. By default, both cloud providers advertise all CIDR ranges in a VNet or VPC.
 
 ## The differences
 
-AWS has less flexibility compared to Azure around CIDR range creation, and more importantly deletion. There are also some significant differences around sizing which need to be taken into account when planning your network: make your CIDR too small and you have to add additional ones later, perhaps without the ability to summarise, but make them too big and you cannot easily reclaim unused IP address space.
+AWS offers less flexibility than Azure for creating and especially deleting CIDR ranges. There are also important sizing differences to consider when planning your network. If you make your CIDR too small, you'll need to add more ranges later (possibly without the ability to summarize them). Make them too big, and you'll have wasted IP address space that's difficult to reclaim.
 
 ### CIDR sizing with IPv4
 
@@ -74,13 +74,18 @@ AWS has less flexibility compared to Azure around CIDR range creation, and more 
 
 ### Reserved IPs
 
-Within each Azure or AWS subnet there are reserved IPs - although the numbers in documentation are different they are actually the same because AWS does not count the broadcast address as reserved. In both AWS and Azure (and pretty much every other network except [the magical /31](https://datatracker.ietf.org/doc/html/rfc3021)) the network address and broadcast address are unusable. They both allocate the first usable address (`network +1`) as the default gateway for the subnet and then a further two IPs are reserved (`network +2` and `network +3`); in Azure those are the two DNS IPs for the subnet.
+Both Azure and AWS reserve certain IPs in each subnet, though their documentation shows different numbers because AWS doesn't count the broadcast address as reserved. In both clouds (like nearly all networks except [the magical /31](https://datatracker.ietf.org/doc/html/rfc3021)), you can't use the network or broadcast addresses. 
 
-> `Network +2` is the network address plus two. Remember that [an IP is just a 32 bit integer](how-the-internet-works.md#finding-the-router) despite how we like to present it
-> as dotted decimal. If the subnet is 192.168.0.0/24 then the network address is 192.168.0.0 and `network +2` is 192.168.0.2. If
-> the subnet is 192.168.0.128/25 then the network address is 192.168.0.128 and `network +2` would be 192.168.0.130.
+Both providers reserve the first usable address (`network +1`) as the default gateway. They also reserve two more addresses (`network +2` and `network +3`). In Azure, these are used for DNS.
 
-AWS reserved IPs `network +2` and `network +3` is a bit weird. I would love to know what the AWS engineers were on when they came up with this. `Network +3` is reserved in every subnet and unusable. It's reserved for future use but as we are quite a long way into the future since it was first reserved we can probably assum they haven't thought of a good use for it yet. The `network +2` IP of the primary CIDR is used for that CIDR as the DNS IP address however the `network +2` IP is also reserved in each subnet, even though it won't always be the same IP as the CIDR DNS server IP. It gets even weirder when you consider that 169.254.169.253 exists as a mythical beast that responds to DNS queries within your VPCs as well.
+> `Network +2` simply means "network address plus two." Remember that [an IP address is just a 32-bit integer](how-the-internet-works.md#finding-the-router), 
+> though we usually write it in dotted decimal. For example, in a 192.168.0.0/24 subnet, the network address is 192.168.0.0 
+> and `network +2` is 192.168.0.2. In a 192.168.0.128/25 subnet, the network address is 192.168.0.128, making 
+> `network +2` 192.168.0.130.
+
+AWS's handling of reserved IPs at `network +2` and `network +3` is quite strange. I often wonder what inspired the AWS engineers who created this system. `Network +3` is reserved in every subnet but unusable - supposedly for "future use," though it's been reserved for so long that I suspect they haven't found a good use for it yet.
+
+The `network +2` IP of the primary CIDR serves as the DNS IP address for that CIDR. However, the `network +2` IP is also reserved in each subnet, even when it's not the same as the CIDR DNS server IP. Things get even stranger when you consider that 169.254.169.253 also exists as a magical address that responds to DNS queries within your VPCs.
 
 ```mermaid
 graph TB
@@ -106,22 +111,30 @@ graph TB
 
 ### CIDR flexibility
 
-When you create an Azure VNet you are encouraged to create an IP range and a subnet within it. These can be deleted or resized. When you create a VPC in AWS you are required to create a primary CIDR which cannot be deleted or resized.
+When creating an Azure VNet, you're prompted to set up an IP range and a subnet within it. Later, you can delete or resize these as needed. With AWS, you must create a primary CIDR for your VPC - and once created, you can't delete or resize it.
 
-> You can expand or shrink an Azure CIDR address space in a VNet, including shrinking a CIDR that contains a subnet (so long as
-> the new size still contains all the subnets in that CIDR). You can expand and shrink an Azure Subnet provided there are no
-> VMs or other services runnng in that subnet. You will need to force VNet peerings to resync though if you make changes to
-> peered VNets. At the time of writing there is a public preview of [multiple prefixes on a single subnet](https://learn.microsoft.com/en-us/azure/virtual-network/how-to-multiple-prefixes-subnet)
-> which allows you to add prefixes to a subnet that already has resources in it while the resources are still in there. This
-> has particular benefits when you want to expand a scale set that is in use.
+> Azure lets you expand or shrink CIDR address spaces in a VNet, even ones containing subnets (as long as the 
+> new size still contains all those subnets). You can also resize Azure subnets if they don't contain VMs or other 
+> services. Keep in mind that after making changes to peered VNets, you'll need to force VNet peerings to resync.
+> 
+> At the time of writing, Azure offers a public preview of [multiple prefixes on a single subnet](https://learn.microsoft.com/en-us/azure/virtual-network/how-to-multiple-prefixes-subnet). 
+> This feature lets you add address ranges to subnets that are already in use - particularly helpful when you need 
+> to expand a scale set without disruption.
 
-You can add and remove CIDR blocks in Azure pretty much however you like whereas the primary AWS CIDR for a VPC is fixed and cannot be changed. You can add more non overlapping CIDRs and those can be deleted later if necessary.
+In Azure, you can add and remove CIDR blocks with great flexibility. In AWS, while the primary VPC CIDR is fixed, you can add additional non-overlapping CIDRs and delete those secondary ones if needed.
 
 ### Routing
 
-AWS and Azure handle routing within their virtual networks quite differently. In AWS VPCs, every subnet must have an associated route table (either explicitly associated or using the main route table by default). While local routes within the VPC are automatically created, they can be overridden by more specific routes in the route table, giving administrators granular control over internal traffic flows.
-Azure uses a system routes approach, where built-in system routes handle traffic flow within the VNet and to the internet. While these system routes cannot be deleted, they can be overridden using User-Defined Routes (UDRs). Azure implements a clear routing precedence: custom routes take precedence over system routes, and routes learned through [virtual network peering](subnet-peering.md) take precedence over routes learned through VPN gateways. This hierarchy gives network administrators control over traffic flow while maintaining predictable fallback behavior.
+AWS and Azure take very different approaches to virtual network routing.
+
+In AWS VPCs, each subnet must have an associated route table (either explicitly assigned or using the default main table). While the system automatically creates local routes within the VPC, you can override these with more specific routes, giving you fine-grained control over internal traffic flows.
+
+Azure uses a "system routes" approach. Built-in system routes manage traffic flow within the VNet and to the internet. You can't delete these system routes, but you can override them with User-Defined Routes (UDRs). Azure has a clear routing precedence: custom routes trump system routes, and routes learned through [virtual network peering](subnet-peering.md) take precedence over those learned through VPN gateways. This structure gives you control while maintaining predictable fallback behavior.
 
 ### IPv6
 
-IPv6 implementation differs slightly between AWS and Azure, though both platforms maintain most common constraints. Both providers enforce /64 subnet sizes and require dual-stack IPv6 deployments - you cannot run IPv6-only networks in either cloud. AWS allows you to work with IPv6 CIDRs ranging from /28 to /64 at the VPC level, while Azure bizarely allows you to create CIDRs from /7 down to /128 but still enforces the /64 size for subnets. AWS's approach to IPv6 is more permanent: once created on a VPC it cannot be changed, while Azure offers more flexibility by allowing IPv6 to be both enabled and disabled on VNets after creation.
+AWS and Azure implement IPv6 somewhat differently, though they share major constraints. Both enforce /64 subnet sizes and require dual-stack IPv6 deployments - you can't run IPv6-only networks in either cloud.
+
+AWS lets you work with IPv6 CIDRs from /28 to /64 at the VPC level. Once you enable IPv6 on a VPC, you can't change or remove it.
+
+Azure bizarrely allows you to create IPv6 CIDRs from /7 all the way down to /128, but still enforces the standard /64 size for subnets. Unlike AWS, Azure lets you enable and disable IPv6 on VNets after creation, giving you more flexibility.
