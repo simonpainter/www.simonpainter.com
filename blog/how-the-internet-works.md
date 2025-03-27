@@ -94,11 +94,11 @@ Parity bit = 1        (to make total 1s even)
 Final byte  = 11000001
 ```
 
-This ASCII standard was very much designed around English text, with the available 128 characters covering the Latin alphabet (both upper and lower case), numbers, punctuation marks, and control characters like carriage return and line feed. While this worked well for English-speaking countries, it proved problematic for languages with different alphabets or character sets.
+ASCII was designed mainly for English text, with its 128 characters covering the Latin alphabet (both uppercase and lowercase), numbers, punctuation marks, and control characters like carriage return and line feed. This worked fine for English-speaking countries but caused problems for languages with different alphabets or character sets.
 
 ### Enter Unicode
 
-As computing spread globally, ASCII's limitations became apparent. Unicode was developed to handle text from all of the world's writing systems. While ASCII uses 7 bits, Unicode can use multiple bytes to represent characters, allowing it to handle millions of different characters rather than just 128.
+As computing spread worldwide, ASCII's limits became obvious. Unicode was created to handle text from all the world's writing systems. While ASCII uses just 7 bits, Unicode can use multiple bytes to represent characters, letting it handle millions of different characters instead of just 128.
 
 ```text
 Character encoding comparison:
@@ -112,11 +112,11 @@ UTF-8:    '世' = 11100100 10111000 10000000 (24 bits)
 > which helped smooth the transition. This is why protocols like HTTP headers still use ASCII - they can be processed
 > by both old and new systems without any confusion.
 
-The transition from ASCII to Unicode is still ongoing. While modern applications and websites typically use Unicode, many networking protocols and legacy systems continue to use ASCII, particularly in areas where backwards compatibility is crucial or where the character set is limited to simple English text.
+We're still moving from ASCII to Unicode. While modern apps and websites mostly use Unicode, many networking protocols and older systems still use ASCII, especially where backward compatibility matters or where only simple English text is needed.
 
 ## Control characters
 
-The first 32 ASCII values (0-31) are control characters designed for controlling teletype and early computer terminals:
+The first 32 ASCII values (0-31) are control characters designed for teletype machines and early computer terminals:
 
 ```text
 00 NUL - Null character, used as a string terminator
@@ -142,9 +142,9 @@ The first 32 ASCII values (0-31) are control characters designed for controlling
 17-1F - Various block/record/unit separators and escape codes
 ```
 
-Many are still used today - notably TAB, LF, CR for text formatting and XON/XOFF for flow control in serial communications.
+Many are still used today - particularly TAB, LF, CR for text formatting and XON/XOFF for flow control in serial communications.
 
-The full ASCII table is useful when dissecting captures of low level protocols.
+The full ASCII table is handy when examining low-level protocol captures.
 
 ```text
 Dec Hex ASCII   Dec Hex ASCII   Dec Hex ASCII   Dec Hex ASCII
@@ -185,7 +185,7 @@ Dec Hex ASCII   Dec Hex ASCII   Dec Hex ASCII   Dec Hex ASCII
 
 ### That's two computers, how about n?
 
-Connecting two computers with a serial connection is great but what about if you want to introduce a third node? The simplest answer is to use a full mesh topology where each computer node has a direct serial connection to the both of the other computer nodes.
+Connecting two computers with a serial connection works well, but what if you want to add a third node? The simplest solution is a full mesh topology where each computer has a direct connection to both other computers.
 
 ```mermaid
 graph LR
@@ -194,7 +194,7 @@ graph LR
     A --- C
 ```
 
-This really doesn't scale well though. You need one serial link to connect two nodes, three serial links to connect three nodes but for four you need six serial links. When you get to five computer nodes in full mesh you need ten serial links.
+This approach doesn't scale well. You need one link for two nodes, three links for three nodes, but six links for four nodes. With five computers in a full mesh, you need ten links.
 
 ```mermaid
 graph TB
@@ -206,14 +206,15 @@ graph TB
     B --- C
 ```
 
-> The formula for the number of connections between **n** computer nodes is n(n-1)/2 and the important thing to recognise
-> in that forumla is that **n** is multiplied by **n** (OK, it's n-1 but who quibbles about the -1?) which makes it an
-> exponential growth. Exponential growth is really bad when you get to big numbers and 50 computer nodes in a small
-> office would need 1225 serial connections to be provisioned, configured and working.
+> The formula for connections between **n** computer nodes is n(n-1)/2. The key point is that **n** is multiplied by 
+> **n** (well, n-1, but that's nitpicking), creating exponential growth. Exponential growth becomes impractical 
+> quickly - 50 computers in a small office would need 1,225 connections to be set up, configured and maintained.
 
 ## Addressing the problem
 
-Now we have decided that point to point links in a full mesh are a bad idea we need to start connecting more than one device on the same shared wire. In order to do that we need to solve another problem first, and that's making sure that each device gets the right data and that's the start of addressing. If we have a shared wire with all the computers connected, perhaps with some sort of T shaped splitter, we can transmit from any computer node and it will be received by all of the other computer nodes. If we prefix each chunk of data with a destination address and each computer knows its own address then it can ignore data that is not meant for it. This probably sounds bonkers in the current climate of cybersecurity but we used to be a lot more trusting.
+Since full mesh networks don't scale well, we need to connect multiple devices on a shared wire. But first, we need to solve another problem: making sure each device gets only the data meant for it. This is where addressing begins.
+
+If we have a shared wire connecting all computers (perhaps using T-shaped splitters), any computer can send data that all others receive. By adding a destination address to each data chunk, and having each computer know its own address, devices can ignore data not meant for them. This might sound crazy in today's security-conscious world, but networks were much more trusting in the early days.
 
 ```mermaid
 %%{init: {'gitGraph': { 'showCommitLabel':true,'mainBranchName': 'Bus Topology'}} }%%
@@ -226,9 +227,9 @@ gitGraph
 
   ```
   
-Topologies like the single wire (bus topology) above are problematic. A break in the cable at any point will split your network into two separate networks which can't talk to each other. A ring topology will address this to some extent because a single break just turns a ring topology into a bus topology.
+Single-wire setups (bus topology) have problems. A cable break anywhere splits your network into two separate networks that can't communicate. A ring topology helps somewhat because a single break just converts it to a bus topology.
 
-Having a star or a *hub and spoke* topology means that any single link failing results in a problem for that spoke only and not any of the others. The hub is a simple electrical repeater device which receives a signal from one computer node and repeats it to the other connected computer nodes. Each computer node receives every signal and if the destination address matches its own then it processes the data and if if doesn't then the data is ignored.
+Star or *hub and spoke* topology is better - if one link fails, only that device is affected, not the entire network. The hub is a simple electrical repeater that receives signals from one computer and forwards them to all others. Each computer checks if the destination address matches its own - if yes, it processes the data; if not, it ignores it.
 
 ```mermaid
 graph TD
