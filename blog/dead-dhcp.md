@@ -9,7 +9,7 @@ date: 2024-11-16
 
 ---
 
-I am working on a DHCP migration and it turns out that the people who managed the DHCP server previously weren’t that great at cleaning up old scopes when sites were closed. It’s next to impossible to identify from the number of leases because some of the live sites are only rarely used so I thought I’d knock up a little script to ping the default gateway to see if the subnet is still there.
+I'm working on a DHCP migration and discovered the previous admins didn't clean up old scopes when sites closed. It's hard to identify dead scopes from lease numbers since some live sites are rarely used. So I've created a simple script to ping the default gateway to check if the subnet still exists.
 <!-- truncate -->
 ```powershell
 # Requires DHCP Server Module for Powershell
