@@ -13,11 +13,11 @@ tags:
 date: 2025-02-17
 ---
 
-When you create a VNet in Azure or a VPC in AWS you have to allocate a CIDR range from which you subnets will be allocated. There are some nuances between the different service providers as you try to expand your networks which can lead to some challenges. Knowing the different rules from the start can help you plan your CIDR ranges appropriately. We'll start with what's the same across AWS and Azure and then look at the differences.
+When you create a VNet in Azure or a VPC in AWS, you need to allocate a CIDR range for your subnets. There are key differences between these cloud providers when expanding networks, which can create challenges. Knowing these rules from the start helps you plan your CIDR ranges better. I'll start with what's similar across AWS and Azure, then look at the differences.
 <!-- truncate -->
 ## The similarities
 
-AWS and Azure share fundamental networking principles that form the foundation of their virtual network offerings. Both platforms allow you to create isolated network environments using your own private IP address schemas and both have logical constructs (VPCs and VNets) which form the building blocks of those private networks. Both require a CIDR range from which subnets can be allocated and both allow their network logical constructs to be peered together provided the CIDR ranges in both networks do not overlap.
+AWS and Azure share basic networking principles that shape their virtual network offerings. Both let you build isolated network environments with your own private IP address schemas. They both use logical building blocks (VPCs and VNets) for these private networks. Both need a CIDR range to create subnets, and both let you connect these networks through peering as long as the CIDR ranges don't overlap.
 
 ### Peering
 
