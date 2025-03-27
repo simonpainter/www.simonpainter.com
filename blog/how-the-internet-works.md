@@ -285,31 +285,41 @@ Managing a table that maps MAC addresses to ports gets increasingly complex as n
 
 The practical limit to your network size depends on two factors: how big your MAC address table can be, and how efficiently you can search through it. This creates a fundamental scalability problem.
 
-> MAC tables, like the phone book, are a simple lookup search algoritm. The simplest way is to look at every entry,
-> which means that you have to do **n** comparisons where **n** is the size of MAC table. If you sort the MAC table you
-> can use cleverer algorithms that are more efficient to search the table but that means you have to sort the table again
-> whenever there is a change to the network topology. This is why network loops can be so disasterous for a switch
-> because it will see traffic from the same MAC address coming from more than one port and have to keep updating its MAC
-> address table and ensuring it's sorted. Even the most efficient sort algorithms can be resource intensive when they
-> are done over and over again.
+> MAC tables work like a phone book lookup. The simplest approach is checking every entry one by one - that's 
+> **n** comparisons where **n** is the size of your MAC table. You can use smarter algorithms with a sorted table,
+> but then you need to re-sort it whenever the network changes. This explains why network loops cause such havoc for
+> switches - they'll see the same MAC address coming from multiple ports and constantly need to update and re-sort
+> their tables. Even the most efficient sorting algorithms become resource-intensive when run repeatedly.
 
 ## Finding the router
 
-If our networks are limited by the size of the MAC address table we need to think of them as individual segments that can be joined up into larger networks. For this to work we need to have a more organised addressing system that means we can organise addresses into blocks have have a table of address blocks rather than individual addresses. Internet Protocol organises data into packets, which are similar to frames, which also have a source and a destination address. The common analogy is that the IP packet is an envelope, perhaps addressed to someone in another city, and the frame is the postman's bag that carries it to the post office. A person addresses the letter (packet) and hands it to the postman who puts it in their bag (the frame). That bag is carried to a sorting office (a router) where it is removed from the bag, inspected and put in another bag destined for the sorting office in the right city. Once it is received there the letter is inspected again and the address is compared to a table showing which addresses are on which delivery run and they are put in the appropriate post bag to be delivered.
+Since MAC address tables limit our network size, we need to think of networks as separate segments that can be connected into larger networks. To make this work, we need a more organized addressing system that groups addresses into blocks rather than tracking each individual address.
 
-This introduces a new device, a router, and the new addressing scheme, the Internet Protocol (IP) address. IP addresses are just 32 bit numbers but that means it can be between 0 and 4,294,967,295. Decimal notation isn't really that good for understanding the nuance of how these numbers are organised so we break the 32 bits into four chunks (or octets) of 8 bits and then represent those in decimal.
+The Internet Protocol (IP) does exactly this. It organizes data into packets (similar to frames) with source and destination addresses. 
+
+A helpful analogy: think of an IP packet as a letter addressed to someone in another city, and the frame as the postman's bag carrying it to the post office. You write the address on your letter (packet) and give it to the postman, who puts it in their bag (frame). The bag goes to a sorting office (router) where your letter is taken out, examined, and placed in another bag heading to the right city. When it arrives there, your letter is checked again, matched against delivery routes, and placed in the appropriate postbag for final delivery.
+
+This introduces two key elements: the router device and the Internet Protocol (IP) addressing scheme. IP addresses are simply 32-bit numbers, giving us a range from 0 to 4,294,967,295. Since decimal notation makes these huge numbers hard to work with, we split the 32 bits into four 8-bit chunks (octets) and represent each in decimal form.
 
 ```text
 If we take a dotted decimal IP address like 192.168.0.1 and convert each octet to binary we get 11000000.10101000.00000000.00000001. This is actually a representation of the single 32 bit number 11000000101010000000000000000001 or 3,232,235,521 in decimal. 
 ```
 
-Our IP addresses can be grouped into networks by splitting the binary into a network, or subnet, portion and a host address portion. The network portion is the address of the network that contains the host and the host portion is the address of the computer node or host within that network. Routers need only maintain a list of routes to other networks and so know the route to every subnet or host within those networks. They also need to know the corresponding MAC address for each IP within their own local subnets but we'll get to that later.
+We can group IP addresses into networks by dividing the binary digits into two parts: a network (or subnet) portion and a host portion. The network part identifies which network the host belongs to, while the host part identifies the specific computer within that network. 
 
-> In the early days of IP there was a concept of address classes - their size dictated by their class. Now we don't
-> use those classes so you will see CIDR (Classless Inter-Domain Routing) notation which uses the number of bits used in
-> the network address to show which parts are the network address and which parts are the host address.
+This structure means routers only need to maintain routes to networks, not to individual hosts. Each route covers all hosts within that network. Routers still need to know the MAC addresses corresponding to IPs in their local subnets, but we'll cover that shortly.
 
-In a simple network where we have a CIDR of 10.0.0.0/24 we can look at the first 24 bits (conveniently the first three octets) as the network portion and the last 8 bits (the last octet) as the host portion. This means that the first 24 bits will stay the same and we can address our devices with the remaining 8 bits. With 8 bits we have a decimal number range of 0 to 255 inclusive but really we want to reserve the first and the last addresses, 0 and 255 for special purposes. We keep the 0 as the network address so we don't use that for a host and we keep the last as the broadcast address - that means anything sent to that address gets sent to every host on the network segment. That leaves us 254 other addresses (10.0.0.1 - 10.0.0.254) to allocate to our hosts. When you deal with different sized CIDR ranges it gets a bit more complicated because the number if bits doesn't always line up with the octets but the principle still applies.
+> IP addressing originally used a class system, with network size determined by the class. Today, we use CIDR 
+> (Classless Inter-Domain Routing) notation instead, which shows exactly how many bits are used for the network
+> portion. This more flexible approach allows networks of any size, not just predetermined class sizes.
+
+Let's look at a simple example: a CIDR network of 10.0.0.0/24. The "/24" means the first 24 bits (conveniently the first three octets) are the network portion, with the last 8 bits (the last octet) being the host portion. 
+
+This setup keeps the first 24 bits constant (10.0.0), while we can use the remaining 8 bits to address our devices. With 8 bits, we get numbers from 0 to 255, but we reserve two addresses for special purposes:
+- 0 (10.0.0.0) is the network address itself
+- 255 (10.0.0.255) is the broadcast address, which sends data to all hosts on the segment
+
+This leaves us 254 usable addresses (10.0.0.1 through 10.0.0.254) for our actual devices. With different CIDR sizes, things get more complex when the network/host boundary doesn't align with octet boundaries, but the same principles apply.
 
 > While IPv4 addresses use dotted decimal notation, both MAC addresses and IPv6 addresses are typically represented in
 > hexadecimal. This difference stems from their distinct purposes and historical contexts. Decimal notation works well
