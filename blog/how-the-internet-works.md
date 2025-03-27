@@ -321,18 +321,17 @@ This setup keeps the first 24 bits constant (10.0.0), while we can use the remai
 
 This leaves us 254 usable addresses (10.0.0.1 through 10.0.0.254) for our actual devices. With different CIDR sizes, things get more complex when the network/host boundary doesn't align with octet boundaries, but the same principles apply.
 
-> While IPv4 addresses use dotted decimal notation, both MAC addresses and IPv6 addresses are typically represented in
-> hexadecimal. This difference stems from their distinct purposes and historical contexts. Decimal notation works well
-> for IPv4 because each octet only ranges from 0-255 - numbers that humans can readily understand. MAC addresses (48 bits)
-> and IPv6 addresses (128 bits) use hexadecimal because it provides a more compact and manageable representation for
-> larger numbers. For example, each 16-bit block in an IPv6 address can represent values up to 65535, which would be
-> unwieldy in decimal but is easily represented as four hexadecimal digits.
-> Hexadecimal is particularly efficient for representing byte-oriented data because each byte (8 bits) maps perfectly to
-> two hexadecimal digits. Each group of 4 bits (called a nibble or a nybble) converts to a single hex digit 0-F. This makes it easy
-> to read and manipulate binary data, which is why packet captures and network debugging tools typically display their
-> output in hexadecimal format.
+> We represent IPv4 addresses in dotted decimal, but MAC and IPv6 addresses use hexadecimal notation. Why 
+> the difference? It's partly historical and partly practical. Decimal works fine for IPv4 because each octet is
+> just 0-255, which is easy for humans to comprehend. But MAC addresses (48 bits) and IPv6 addresses (128 bits)
+> are much longer, making hexadecimal more efficient. A 16-bit block in IPv6 could be up to 65,535 in decimal,
+> but just four hex digits.
+>
+> Hex is particularly good for byte-oriented data because one byte (8 bits) maps perfectly to two hex digits.
+> Each 4-bit group (called a nibble) converts to a single hex character 0-F. This makes binary data easier to
+> read and work with, which is why network tools typically show packet captures in hex format.
 
-When IP packets travel across networks, they carry their addressing information in a structured header. This header prefixes the actual data being sent and contains everything a router needs to know to get the packet to its destination. Let's look inside an IP packet to see how these addresses are actually used:
+As IP packets travel across networks, they carry addressing information in a structured header. This header sits in front of the actual data and contains everything routers need to route the packet correctly. Let's peek inside an IP packet to see how these addresses work:
 
 ```mermaid
 ---
@@ -355,13 +354,25 @@ packet-beta
   184-191: "Padding"
 ```
 
-The source and destination addresses each take up 32 bits - exactly the size of our IP addresses. But the header contains much more than just addresses. It includes a Time to Live field that prevents packets from circulating forever if there's a routing loop, a Protocol field that tells us what kind of data follows (like TCP or UDP), and fields for handling large messages that need to be split across multiple packets (the Identification, Flags, and Fragment Offset fields).
+The source and destination addresses each take up 32 bits - exactly one IP address worth of space. But the header contains much more:
 
-The Version field tells us which version of IP we're using - 4 for IPv4 in this case. IHL (Internet Header Length) tells us how long the header itself is, as it can vary if optional fields are included. The Type of Service field (now usually called Differentiated Services) lets us mark packets that need special handling, like those carrying voice calls that need to arrive quickly.
+- A Time to Live field prevents packets from circulating forever in routing loops
+- A Protocol field identifies what type of data follows (TCP, UDP, etc.)
+- Several fields handle large messages that need splitting across multiple packets
 
-Each router along the packet's journey will examine this header, use the destination address to decide where to send the packet next, decrease the Time to Live value by one, and update the checksum. If the Time to Live reaches zero, the router discards the packet and sends an error message back to the source address - this prevents packets from circulating endlessly when something goes wrong.
+The Version field tells us which IP version we're using (4 for IPv4). The IHL (Internet Header Length) indicates how long the header is, since it can vary with optional fields. The Type of Service field (now called Differentiated Services) lets us flag packets needing special handling, like voice calls that need minimal delay.
 
-Now with your new addressing scheme we need one more piece of information - where to send stuff that isn't on our local segment. Routers will have a routing table but for the end host computer they just need a default gateway address on their network segment to send things to if they aren't in their own network. Back in the postman analogy if you hand a letter to the postman that is addressed to someone on his round he'll probably just deliver it but if it's not then he will take it to your local sorting office, your default gateway to the postal routing system.
+As a packet travels, each router:
+1. Examines the header
+2. Uses the destination address to decide where to send it next
+3. Decreases the Time to Live value by one
+4. Updates the checksum
+
+If Time to Live reaches zero, the router destroys the packet and sends an error message back to the source. This prevents packets from bouncing around endlessly when routing problems occur.
+
+With our IP addressing scheme, we need one more piece of information: where to send packets that aren't on our local network. While routers maintain full routing tables, end hosts just need to know their default gateway - an address on their local network to which they send any traffic destined for other networks.
+
+Going back to our postal analogy: if you give your postman a letter addressed to someone on his route, he'll deliver it directly. For all other destinations, he takes it to the local sorting office - your default gateway to the wider postal system.
 
 ```text
 In an example where our local host has an address of 10.0.0.1 and is on network 10.0.0.0/24 the network portion is 10.0.0.0 and the host portion is 1. The computer works that out using a subnet mask which comprises of 24 ones (from the 24 in the network address CIDR notation) and 8 zeros to make it up to a total of 32 bits. A 24 bit subnet mask is 11111111.11111111.11111111.00000000 or 255.255.255.0
