@@ -39,20 +39,6 @@ The site is built using:
 - Optimized code highlighting
 - Social sharing metadata
 
-## Repositories
-
-### [Using pcaps to measure ttfb](https://github.com/simonpainter/capture_latency)
-
-Tool to measure time to first usable byte (ttfb) through L7 firewalls by analyzing TCP and SSL handshake times.
-
-### [MoodBadger](https://github.com/simonpainter/MoodBadger)
-
-An e-paper application for the Badger2040 board to help communicate feelings and emotional states.
-
-### [Chatbot](https://github.com/simonpainter/chatbot)
-
-A conversational AI experiment that emerged from friendly banter.
-
 ## Development
 
 To run the site locally:
