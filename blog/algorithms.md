@@ -9,14 +9,18 @@ tags:
 date: 2024-12-23
 
 ---
-Some common search algorithms and how they work. This post summarizes key search algorithms used in computer science, explaining their approaches, strengths, weaknesses, and implementation patterns.
+I've put together a summary of some common search algorithms and how they work. This post covers key search algorithms used in computer science, explaining their approaches, strengths, weaknesses, and showing Python implementation examples.
 <!--truncate-->
 
 ## Breadth-First Search (BFS)
 
 Breadth-First Search explores a maze like ripples spreading out from a stone dropped in water - it checks all possible paths one step at a time before moving further. It uses a queue data structure, which means it processes paths in the order they were discovered (first-in, first-out).
-Imagine a simple maze where you're trying to find the exit. BFS would first check all paths that are one step away from your starting position, then all paths two steps away, and so on. It keeps track of where it has been to avoid going in circles.
-The key strength of BFS is that it guarantees finding the shortest possible path to the exit, making it excellent for scenarios where the shortest route is crucial. However, it requires significant memory as it needs to store all possible paths it discovers. In our maze example, BFS would find the shortest path to the exit, but it would explore many unnecessary areas if the exit happens to be far from the start.
+
+Imagine a simple maze where you're trying to find the exit. BFS would first check all paths that are one step away from your starting position, then all paths two steps away, and so on. It keeps track of where it's been to avoid going in circles.
+
+The key strength of BFS is that it guarantees finding the shortest possible path to the exit, making it excellent for scenarios where the shortest route is crucial. However, it requires significant memory as it needs to store all possible paths it discovers. 
+
+In our maze example, BFS would find the shortest path to the exit, but it would explore many unnecessary areas if the exit happens to be far from the start.
 
 ```python
 def bfs_maze(maze, start, end):
@@ -46,9 +50,12 @@ def bfs_maze(maze, start, end):
 ## Depth-First Search (DFS)
 
 Depth-First Search behaves like an explorer who always goes as far as possible down each path before backtracking. It uses a stack data structure, meaning it processes the most recently discovered path first (last-in, first-out).
+
 Using our maze example, DFS would pick one direction and keep going until it either hits a dead end or finds the exit. If it reaches a dead end, it backtracks to the last junction and tries a different path.
-DFS uses minimal memory compared to BFS as it only needs to remember the current path it's exploring. However, it doesn't guarantee finding the shortest path - it will find a path to the exit, but it might not be the most efficient one. In our maze, DFS might find a long, winding path to the exit even if there's a much shorter route available.
-I'll add comparisons to Dijkstra's algorithm, focusing on practical differences and use cases.
+
+DFS uses minimal memory compared to BFS as it only needs to remember the current path it's exploring. However, it doesn't guarantee finding the shortest path - it will find a path to the exit, but it might not be the most efficient one. 
+
+In our maze, DFS might find a long, winding path to the exit even if there's a much shorter route available.
 
 ```python
 def dfs_maze(maze, start, end):
@@ -80,7 +87,9 @@ Greedy Best-First Search is like having a compass that points towards your desti
 
 GBFS uses a priority queue, where paths that appear more promising (according to the heuristic) are explored first. The heuristic might be something simple like straight-line distance to the exit.
 
-Unlike Dijkstra's algorithm, which methodically calculates the shortest path to every point it visits, GBFS makes quick decisions based solely on estimated distance to the goal. This makes GBFS typically faster than Dijkstra's algorithm, but at the cost of not guaranteeing the shortest path. In our maze, GBFS might get stuck following a path that looks promising but actually leads to a long detour around walls that aren't visible from the start.
+Unlike Dijkstra's algorithm, which methodically calculates the shortest path to every point it visits, GBFS makes quick decisions based solely on estimated distance to the goal. This makes GBFS typically faster than Dijkstra's algorithm, but at the cost of not guaranteeing the shortest path. 
+
+In our maze, GBFS might get stuck following a path that looks promising but actually leads to a long detour around walls that aren't visible from the start.
 
 ```python
 def gbfs_maze(maze, start, end):
@@ -119,9 +128,9 @@ A* combines the best aspects of Dijkstra's algorithm and GBFS. It uses both the 
 
 Using our maze example, A* would consider both how far it has already travelled from the start and its estimate of how far it still needs to go to reach the exit. It uses a priority queue like Dijkstra's algorithm, but adds the heuristic component to guide its search more effectively.
 
-While Dijkstra's algorithm methodically explores in all directions until it finds the goal, potentially visiting many unnecessary nodes, A\* uses its heuristic to focus the search towards the goal while still guaranteeing the shortest path. In our maze, A* would find the shortest path while typically exploring fewer dead ends than Dijkstra's algorithm.
+While Dijkstra's algorithm methodically explores in all directions until it finds the goal, potentially visiting many unnecessary nodes, A* uses its heuristic to focus the search towards the goal while still guaranteeing the shortest path. In our maze, A* would find the shortest path while typically exploring fewer dead ends than Dijkstra's algorithm.
 
-This makes A\* particularly efficient when you have good information about your destination's location and can make accurate estimates of remaining distances. However, if your heuristic estimates are poor or unavailable, A* effectively becomes Dijkstra's algorithm, making Dijkstra's algorithm the better choice for scenarios where you can't reliably estimate distances to the goal.
+This makes A* particularly efficient when you have good information about your destination's location and can make accurate estimates of remaining distances. However, if your heuristic estimates are poor or unavailable, A* effectively becomes Dijkstra's algorithm, making Dijkstra's algorithm the better choice for scenarios where you can't reliably estimate distances to the goal.
 
 ```python
 def astar_maze(maze, start, end):
@@ -164,7 +173,7 @@ The algorithm guarantees finding the shortest path not just to the exit, but to 
 
 Dijkstra's algorithm is ideal for situations where you either don't have reliable estimates of distances to the goal, or when you need to find shortest paths to multiple destinations. In our maze, it would find the shortest path to the exit while also finding the shortest paths to every junction it explores along the way.
 
-The key difference between Dijkstra's algorithm and A\* is that Dijkstra's algorithm doesn't use any heuristic information about the goal's location. This makes it more widely applicable but potentially slower than A* in scenarios where good heuristics are available. The difference from GBFS is that Dijkstra's algorithm guarantees finding the shortest path, while GBFS trades this guarantee for potentially faster initial solution finding.
+The key difference between Dijkstra's algorithm and A* is that Dijkstra's algorithm doesn't use any heuristic information about the goal's location. This makes it more widely applicable but potentially slower than A* in scenarios where good heuristics are available. The difference from GBFS is that Dijkstra's algorithm guarantees finding the shortest path, while GBFS trades this guarantee for potentially faster initial solution finding.
 
 ```python
 def dijkstra_maze(maze, start, end):
@@ -194,3 +203,15 @@ def dijkstra_maze(maze, start, end):
                 
     return None  # No path found
 ```
+
+## When to Use Each Algorithm
+
+In my experience, choosing the right algorithm depends on your specific needs:
+
+- Use **BFS** when you need the shortest path and all steps cost the same (like moving through a grid)
+- Use **DFS** when you want to explore as deeply as possible before backtracking or when memory is limited
+- Use **Greedy Best-First Search** when speed is more important than finding the absolute shortest path
+- Use **A*** when you need the shortest path and have a good heuristic to guide your search
+- Use **Dijkstra's algorithm** when you need the shortest path but don't have a reliable heuristic, or when you need shortest paths to multiple destinations
+
+I often find A* to be the most practical choice for pathfinding problems, as it combines the guarantees of Dijkstra's algorithm with the efficiency of a heuristic approach. However, if I'm working with a simple grid where all moves cost the same, BFS is often cleaner and simpler to implement while still guaranteeing the shortest path.
