@@ -7,7 +7,7 @@ date: 2025-01-08
 
 ---
 
-I had a conversation today about sharding in Azure. It's a fairly well known thing in AWS but it's employed in Azure as well and has some important implications for workload placement in a few specific use cases. This post explores the concept of AZ sharding, its implications for cross-subscription services, and techniques for mapping physical AZs to achieve optimal performance.
+I had a conversation today about sharding in Azure. It's a fairly well-known thing in AWS but it's employed in Azure as well and has some important implications for workload placement in a few specific use cases. In this post, I'll explore the concept of AZ sharding, its implications for cross-subscription services, and techniques for mapping physical AZs to achieve optimal performance.
 <!-- truncate -->
 ## What is AZ Sharding?
 
@@ -61,25 +61,24 @@ The primary reasons for AZ sharding include:
 - Security: The abstraction makes it harder for malicious actors to target specific physical infrastructure.
 
 > Microsoft is a little vague about how far apart their AZs are within a
-> region. In fact some regions may not have AZs within the definition that we
-> have come to accept it now. We assume that the physical distance between each
-> AZ is somewhere between 10 miles and 100 miles but in reality I have been
-> told that there are AZs which share the same campus, even though they do not
-> share power, cooling, connectivity etc.
+> region. In fact, some regions may not have AZs within the definition that we
+> have come to accept it now. I've been told that the physical distance between each
+> AZ is somewhere between 10 miles and 100 miles, but in reality, there are AZs which share 
+> the same campus, even though they don't share power, cooling, connectivity, etc.
 
 While AZ sharding provides important benefits, there are legitimate scenarios where services in different subscriptions need to be co-located in the same physical AZ:
 
 ### High-Frequency Trading
 
-In financial services, particularly high-frequency trading, microseconds matter. When two companies need to interact with trading systems or market data providers, having their services in the same physical AZ can significantly reduce latency. This latency reduction can be the difference between a profitable trade and a missed opportunity. Betting and gaming providers have similar requirements for low latency data exchange across subscriptions.
+In financial services, particularly high-frequency trading, microseconds matter. When two companies need to interact with trading systems or market data providers, having their services in the same physical AZ can significantly reduce latency. This latency reduction can be the difference between a profitable trade and a missed opportunity. I've seen betting and gaming providers that have similar requirements for low latency data exchange across subscriptions.
 
-### Multi subscription microservices
+### Multi Subscription Microservices
 
-It is fairly common to have complex application ecosystems within an organisation that are segregated into separate subscriptions for organisational reasons, yet which require low latency communication.
+It's fairly common to have complex application ecosystems within an organisation that are segregated into separate subscriptions for organisational reasons, yet which require low latency communication.
 
-## Building your own AZ map in a subscription
+## Building Your Own AZ Map in a Subscription
 
-As the sharding is done on a subscription by subscription basis you need to query each subscription using the `/locations` API endpoint as below. Note that you would of course need to replace `{SubscriptionId}` with the subscription you are querying. The command below extracts the UK South information as an example.
+As the sharding is done on a subscription by subscription basis, you need to query each subscription using the `/locations` API endpoint as below. Note that you would of course need to replace `{SubscriptionId}` with the subscription you're querying. The command below extracts the UK South information as an example.
 
 ```powershell
 simon [ ~ ]$ az rest 
@@ -106,6 +105,8 @@ The rather verbose response for the above would look something like this.
     "type":"Region"}]
 ```
 
-As you can see in this subscription what looks like AZ 1 is actually mapped to the physical uksouth-az2. Provided you have access to this information for both subscriptions you can plan your deployments to place services in the same physical AZ where required.
+As you can see in this subscription, what looks like AZ 1 is actually mapped to the physical uksouth-az2. Provided you have access to this information for both subscriptions, you can plan your deployments to place services in the same physical AZ where required.
 
-But what if you don't have access to that information? How do you make sure that you are as close to a resource in Azure as possible without knowing what physical AZ they are in? A novel approach I heard about from someone in the gaming industry is to spin up many hundreds of VMs across all AZs and then test the latency to the target. Keeping the instances that have the lowest latency to the target service, and destroying those that do not, ensures that you are getting the best performance.
+But what if you don't have access to that information? How do you make sure that you're as close to a resource in Azure as possible without knowing what physical AZ they're in? A novel approach I heard about from someone in the gaming industry is to spin up many hundreds of VMs across all AZs and then test the latency to the target. By keeping the instances that have the lowest latency to the target service and destroying those that don't, you can ensure that you're getting the best performance.
+
+Have you encountered scenarios where AZ sharding has impacted your application performance? I'd love to hear about your experiences with mapping physical AZs and any creative solutions you've developed.
