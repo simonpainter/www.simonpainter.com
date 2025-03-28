@@ -19,7 +19,7 @@ The documentation states:
 
 > Currently, Route Server can accept a maximum of 1000 routes from a single BGP peer. When processing BGP route updates, this limit is calculated as the number of current routes learnt from a BGP peer plus the number of routes coming in the BGP route update. For example, if an NVA initially advertises 501 routes to Route Server and later re-advertises these 501 routes in a BGP route update, the route server calculates this as 1002 routes and tear down the BGP session.
 
-This behavior was surprising enough that I had to verify it in the lab.
+This behavior was surprising enough that I had to verify it in my lab.
 
 ## Testing the Limit
 
@@ -49,7 +49,7 @@ protocol bgp {
 }
 ```
 
-To test the limit, I needed to generate a bunch of /32 routes. While I should probably have written a script, Excel's concatenate function was right there, tempting me with its simplicity. This gave me 500 routes that looked like:
+To test the limit, I needed to generate a bunch of /32 routes. While I probably should have written a script, Excel's concatenate function was right there, tempting me with its simplicity. This gave me 500 routes that looked like:
 
 ```bash
 protocol static static_bgp {
@@ -90,8 +90,10 @@ While this behavior is technically documented, it's buried in the FAQ and could 
 
 This could be particularly problematic in SD-WAN deployments. Imagine having 1,000 prefixes from various sites – a single site's route update could temporarily disconnect all sites from Azure.
 
-The option still exists to scale out to multiple NVAs because the prefix limit is per peer and not per route server; the documentation is a bit vague but I have tested this to confirm. The maximum number of peers (the number of NVAs) for a single route server is 8, so realistically you can work with 4000 prefixes per route server.
+The option still exists to scale out to multiple NVAs because the prefix limit is per peer and not per route server; the documentation is a bit vague, but I've tested this to confirm. The maximum number of peers (the number of NVAs) for a single route server is 8, so realistically you can work with 4,000 prefixes per route server.
 
 ## The Takeaway
 
-For my deployments where reliability is crucial, I'm setting a hard limit at 500 prefixes. Sometimes, the safest path isn't pushing the documented limits to their maximum, but understanding the nuances and building in a comfortable buffer.
+For my deployments where reliability is crucial, I'm setting a hard limit at 500 prefixes. Sometimes, the safest path isn't pushing the documented limits to their maximum but understanding the nuances and building in a comfortable buffer.
+
+Have you encountered any similar surprises in Azure networking features? I'd love to hear about your experiences with Route Server or other BGP deployments in the cloud.
