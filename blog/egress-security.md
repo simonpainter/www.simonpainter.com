@@ -16,13 +16,13 @@ The Case for Application-Level Controls
 
 ## Introduction
 
-The approach to securing outbound internet traffic often reflects an organisation’s security maturity more than its technical requirements. System-to-system communication, such as API calls to cloud services, presents fundamentally different challenges compared to user browsing. Understanding these differences is crucial for implementing effective security controls without unnecessary complexity or risk.
+I've noticed that an organisation's approach to securing outbound internet traffic often reflects its security maturity more than its technical requirements. System-to-system communication, such as API calls to cloud services, presents fundamentally different challenges compared to user browsing. Understanding these differences is crucial for implementing effective security controls without unnecessary complexity or risk.
 <!-- truncate -->
 ## Contrasting Approaches by Security Maturity
 
 ### The Less Mature Organisation
 
-Organisations early in their security journey often default to implementing broad controls at the network edge. A common approach involves full TLS inspection of all outbound traffic using Azure Firewall Premium, regardless of whether it’s predictable system-to-system API calls or unpredictable user browsing.
+Organisations early in their security journey often default to implementing broad controls at the network edge. A common approach I see involves full TLS inspection of all outbound traffic using Azure Firewall Premium, regardless of whether it's predictable system-to-system API calls or unpredictable user browsing.
 
 This approach introduces several significant challenges:
 
@@ -84,7 +84,7 @@ This mature approach recognises that system-to-system communication is predictab
 
 ## The Case for Traffic Separation
 
-Modern security architectures should separate the handling of user and system traffic:
+In my experience, modern security architectures should separate the handling of user and system traffic:
 
 ### System-to-System Traffic
 
@@ -112,7 +112,7 @@ For unpredictable human-initiated browsing:
 
 ## Best Practice Recommendations
 
-Application-Level Controls Instead of relying on edge decryption, focus on:
+Application-Level Controls Instead of relying on edge decryption, I recommend focusing on:
 
 * Implementing strict endpoint allow listing in application code
 
@@ -134,8 +134,10 @@ Network-Level Controls Adopt a nuanced approach:
 
 ## Conclusion
 
-The path to security maturity involves moving away from blanket edge controls towards context-aware security implementations. Organisations should strive to implement security controls as close to the application as possible, reserving edge-based inspection for unpredictable user traffic where it provides genuine security value.
+I believe the path to security maturity involves moving away from blanket edge controls towards context-aware security implementations. Organisations should strive to implement security controls as close to the application as possible, reserving edge-based inspection for unpredictable user traffic where it provides genuine security value.
 
-Less mature organisations often implement broad edge controls out of an abundance of caution, but this approach can introduce more risks than it mitigates. The journey to maturity involves understanding that effective security isn’t about inspecting everything at the edge, but rather about implementing appropriate controls at the right points in the architecture.
+Less mature organisations often implement broad edge controls out of an abundance of caution, but I've seen this approach introduce more risks than it mitigates. The journey to maturity involves understanding that effective security isn't about inspecting everything at the edge, but rather about implementing appropriate controls at the right points in the architecture.
 
 Success lies in recognising that system-to-system communication can be effectively controlled through application-level mechanisms, while user traffic requires different approaches. This nuanced understanding marks the difference between organisations implementing security through broad controls versus those taking a more sophisticated, risk-based approach.
+
+Have you had experiences with either of these approaches in your organisation? I'd be interested to hear about what's worked well and what challenges you've faced.
