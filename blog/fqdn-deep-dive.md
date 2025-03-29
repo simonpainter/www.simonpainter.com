@@ -15,11 +15,11 @@ Not all FQDN filters are built the same.
 
 ## Executive Summary
 
-This analysis examines the technical implementations of FQDN filtering across three platforms: [Azure Firewall](https://learn.microsoft.com/en-us/azure/firewall/overview), [FortiGate](https://www.fortinet.com/products/next-generation-firewall), and [Enforza](https://www.enforza.io/). We explore the fundamental differences in their approaches to DNS handling, TLS inspection, and wildcard filtering capabilities. Key focus areas include:
+I've been looking at the technical implementations of FQDN filtering across three platforms: [Azure Firewall](https://learn.microsoft.com/en-us/azure/firewall/overview), [FortiGate](https://www.fortinet.com/products/next-generation-firewall), and [Enforza](https://www.enforza.io/). There are some fundamental differences in how they handle DNS, TLS inspection, and wildcard filtering capabilities. The key areas I'll cover include:
 
 - DNS proxy implementations for Layer 3 filtering
 - SNI-based vs full TLS inspection approaches for Layer 7 filtering
-- FortiGate’s unique DNS packet sniffing for wildcard FQDN support
+- FortiGate's unique DNS packet sniffing for wildcard FQDN support
 - Implications of TLS inspection requirements for URL path filtering
 - Architectural considerations for system-to-system communication
 
@@ -27,7 +27,7 @@ This analysis examines the technical implementations of FQDN filtering across th
 
 ### DNS Proxy Architectures
 
-Both Azure Firewall and FortiGate implement DNS proxy capabilities for Layer 3 network rules, though their approaches differ significantly.
+Both Azure Firewall and FortiGate implement DNS proxy capabilities for Layer 3 network rules, though their approaches are quite different.
 
 Azure Firewall requires DNS proxy enablement for any FQDN-based network rules. This mandatory configuration ensures all DNS queries flow through the firewall, maintaining accurate FQDN-to-IP mapping. The firewall updates these mappings every 15 seconds, with IPs expiring after 15 minutes if no longer returned by DNS queries.
 
@@ -42,10 +42,10 @@ Enforza focuses on Layer 7 HTTP/HTTPS traffic, avoiding the complexity of DNS pr
 
 Each platform handles Layer 7 inspection differently, particularly for HTTPS traffic:
 
-Azure Firewall’s application rules use SNI inspection by default, examining the TLS handshake without decrypting traffic. Full TLS inspection requires Premium SKU and presents several limitations:
+Azure Firewall's application rules use SNI inspection by default, examining the TLS handshake without decrypting traffic. Full TLS inspection requires Premium SKU and presents several limitations:
 
 - Requires certificate deployment and management
-- Cannot inspect certain categories (health, finance, government)
+- Can't inspect certain categories (health, finance, government)
 - Limited to outbound and east-west traffic
 
 FortiGate provides comprehensive options:
@@ -112,7 +112,7 @@ Enforza avoids certificate management entirely through its SNI-focused approach.
 
 ### Azure Firewall
 
-Represents Microsoft’s cloud-native vision with clear architectural boundaries:
+Represents Microsoft's cloud-native vision with clear architectural boundaries:
 
 Strengths:
 
@@ -170,19 +170,21 @@ Limitations:
 
 The choice between these platforms reflects fundamental differences in organisational maturity and architectural philosophy.
 
-Azure Firewall embodies Microsoft’s cloud-native vision, prioritising architectural purity over functional breadth. This approach particularly suits organisations with:
+Azure Firewall embodies Microsoft's cloud-native vision, prioritising architectural purity over functional breadth. This approach particularly suits organisations with:
 
 - Limited traditional firewall expertise
 - Strong cloud platform knowledge
 - Preference for managed services
 - Acceptance of prescribed security patterns
 
-However, this architectural purity comes at the cost of flexibility. Organisations often find themselves adapting security requirements to fit Azure Firewall’s constraints rather than the platform adapting to business needs.
+However, this architectural purity comes at the cost of flexibility. Organisations often find themselves adapting security requirements to fit Azure Firewall's constraints rather than the platform adapting to business needs.
 
 FortiGate offers comprehensive capabilities but demands significant expertise. Its traditional approach suits organisations with mature security teams capable of managing complex configurations and maintaining sophisticated policy frameworks.
 
 Enforza provides a pragmatic middle ground, particularly suitable for organisations focused on modern web-based workloads without the operational overhead of traditional enterprise firewalls.
 
-The key to successful implementation lies in matching the solution to organisational capabilities rather than technical features alone. Azure Firewall’s simplified approach, while potentially constraining for sophisticated security teams, provides a solid foundation for organisations with limited network security expertise. Conversely, FortiGate’s flexibility, while powerful, may prove overwhelming for teams without dedicated firewall engineering capabilities.
+In my experience, the key to successful implementation lies in matching the solution to organisational capabilities rather than technical features alone. Azure Firewall's simplified approach, while potentially constraining for sophisticated security teams, provides a solid foundation for organisations with limited network security expertise. Conversely, FortiGate's flexibility, while powerful, may prove overwhelming for teams without dedicated firewall engineering capabilities.
 
-As cloud architectures continue to evolve, the balance between architectural purity and business requirements becomes increasingly crucial. Azure Firewall’s cloud-native approach, though sometimes restrictive, offers a clear path forward for organisations prioritising operational simplicity over granular control. For organisations requiring more flexibility and comprehensive protocol support, FortiGate’s traditional approach remains valuable, despite its complexity. Enforza’s focused approach offers an alternative for organisations seeking effective web traffic control without the operational overhead of traditional solutions.
+As cloud architectures continue to evolve, the balance between architectural purity and business requirements becomes increasingly crucial. Azure Firewall's cloud-native approach, though sometimes restrictive, offers a clear path forward for organisations prioritising operational simplicity over granular control. For organisations requiring more flexibility and comprehensive protocol support, FortiGate's traditional approach remains valuable, despite its complexity. Enforza's focused approach offers an alternative for organisations seeking effective web traffic control without the operational overhead of traditional solutions.
+
+I've found that most organisations end up using a combination of these approaches depending on their specific workloads, security requirements, and existing expertise. There's no one-size-fits-all solution, but understanding the strengths and limitations of each platform helps make informed decisions.
