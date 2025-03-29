@@ -11,7 +11,7 @@ date: 2025-03-24
 
 ---
 
-I have already [written a bit about various firewalls](fqdn-deep-dive.md) and their performance with FQDN filtering; I have also [made the case](egress-security.md) for a 'less is more' approach to egress security where it is appropriate but the matter of FQDN filtering keeps coming up so I thought I would write a bit more about it.
+I've already [written a bit about various firewalls](fqdn-deep-dive.md) and their performance with FQDN filtering. I've also [made the case](egress-security.md) for a 'less is more' approach to egress security where it makes sense. But the topic of FQDN filtering keeps coming up, so I thought I'd share a few more thoughts on it.
 <!-- truncate -->
 
 ## Why FQDN Filtering Matters
@@ -58,7 +58,7 @@ Let's look at how firewalls can handle this challenge.
 
 ## The Five Tuples: Old School Filtering That Still Works
 
-Even though we need FQDN filtering, we should talk about the traditional approach first - the five tuples.
+Even though we need FQDN filtering, I think it's worth talking about the traditional approach first - the five tuples.
 
 | Component | Header | Description | Example |
 |:----------|:-------|:------------|:--------|
@@ -76,13 +76,18 @@ For services with stable IPs, like many internal apps, five-tuple rules are stil
 
 ## DNS-based FQDN Filtering: A Good Idea With Problems
 
-Many firewalls  let you create rules using domain names instead of IP addresses. Here's how it works:
+Many firewalls let you create rules using domain names instead of IP addresses. Here's how it works:
 
 You set up a rule allowing traffic to "app.company.com" instead of specific IPs. The firewall regularly looks up this domain and updates its internal rules with whatever IPs it finds. Traffic to those IPs gets allowed.
 
 It sounds great, but there's a big issue - making sure the firewall sees the same IPs as your users do. When a user looks up "app.company.com", they might get different IPs than what the firewall found.
 
-This happens for many reasons. Some services rotate through IPs for load balancing. Some give different answers based on where you are. Some use special routing that can send you to different servers. If the firewall and user get different answers, connections break even though you have a valid rule.
+This happens for many reasons:
+- Some services rotate through IPs for load balancing
+- Some give different answers based on where you are
+- Some use special routing that can send you to different servers
+
+If the firewall and user get different answers, connections break even though you have a valid rule.
 
 Some vendors try to fix this with a DNS proxy. All DNS queries go through the firewall, so it sees exactly what users see. This works well in simple networks.
 
@@ -139,7 +144,11 @@ Hypertext Transfer Protocol
 
 The firewall looks at the `Host` header to see which domain the user wants. It checks this against its rules and decides whether to allow the connection.
 
-This approach works well with dynamic IPs and load balancing. The domain name comes straight from the user's request, not from DNS lookups. But it comes with costs. Examining traffic content takes a lot more processing power than simple packet filtering. The firewall needs more memory to track connections. There's added delay while the firewall reads enough data. As traffic grows, you need more powerful hardware.
+This approach works well with dynamic IPs and load balancing. The domain name comes straight from the user's request, not from DNS lookups. But it comes with costs:
+- Examining traffic content takes a lot more processing power than simple packet filtering
+- The firewall needs more memory to track connections
+- There's added delay while the firewall reads enough data
+- As traffic grows, you need more powerful hardware
 
 Also, this only works for protocols that include the domain name in plain text. Many don't.
 
@@ -153,7 +162,12 @@ There are two main ways to handle this:
 
 One approach is to have the firewall decrypt and inspect all HTTPS traffic. The firewall sits in the middle, creating separate encrypted connections with both the user and the website. This lets it see everything inside the encrypted tunnel.
 
-But this has big drawbacks. Decryption takes huge amounts of processing power, often slowing firewalls by 60-80%. You need to install trusted root certificates on all devices. Many apps don't work with this approach. There are privacy concerns. And if not done right, it can actually make security worse.
+But this has big drawbacks:
+- Decryption takes huge amounts of processing power, often slowing firewalls by 60-80%
+- You need to install trusted root certificates on all devices
+- Many apps don't work with this approach
+- There are privacy concerns
+- If not done right, it can actually make security worse
 
 For these reasons, many companies find this approach too difficult to implement widely.
 
@@ -170,7 +184,11 @@ Here's how it works:
 
 This approach doesn't need special certificates. It's much faster than full decryption. It works with most modern browsers and websites. And it keeps the connection secure.
 
-But it has limits too. A new standard called Encrypted Client Hello will eventually hide this information. SNI only shows the website name, not the specific pages you visit. It only appears when a connection first starts. And some applications don't use it correctly.
+But it has limits too:
+- A new standard called Encrypted Client Hello will eventually hide this information
+- SNI only shows the website name, not the specific pages you visit
+- It only appears when a connection first starts
+- Some applications don't use it correctly
 
 Despite these limits, SNI inspection is often the most practical choice for HTTPS filtering.
 
@@ -180,7 +198,11 @@ So what's the best approach for your network? It depends on your situation.
 
 For smaller, simpler networks with a single internet connection, using your firewall's DNS proxy with FQDN rules works well. Add SNI inspection for HTTPS. You might want full decryption just for high-risk sites.
 
-For large companies with complex networks, mix your approaches. Use IP-based rules where possible. Consider a dedicated web proxy instead of doing everything at the firewall. Use SNI inspection at all internet exit points. Only decrypt traffic for specific high-risk categories.
+For large companies with complex networks, mix your approaches:
+- Use IP-based rules where possible
+- Consider a dedicated web proxy instead of doing everything at the firewall
+- Use SNI inspection at all internet exit points
+- Only decrypt traffic for specific high-risk categories
 
 For high-security environments, you might need to funnel all internet traffic through a central point, decrypt more traffic, and use more advanced tools to inspect application traffic.
 
