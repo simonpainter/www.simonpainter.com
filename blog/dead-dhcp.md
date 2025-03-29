@@ -9,8 +9,15 @@ date: 2024-11-16
 
 ---
 
-I am working on a DHCP migration and it turns out that the people who managed the DHCP server previously weren’t that great at cleaning up old scopes when sites were closed. It’s next to impossible to identify from the number of leases because some of the live sites are only rarely used so I thought I’d knock up a little script to ping the default gateway to see if the subnet is still there.
+I'm working on a DHCP migration and discovered the previous admins didn't clean up old scopes when sites closed. It's hard to identify dead scopes from lease numbers since some live sites are rarely used. So I've created a simple script to ping the default gateway to check if the subnet still exists.
 <!-- truncate -->
+
+## How it works
+
+The script grabs all DHCP scopes from a server, then tries to ping each scope's default gateway (Option 003 Router). If the ping succeeds, the subnet likely still exists. If it fails, that scope is probably for a closed site and can be removed.
+
+Here's the PowerShell script:
+
 ```powershell
 # Requires DHCP Server Module for Powershell
 # Select the DHCP Server to run the report against
@@ -47,3 +54,24 @@ $data
 $data | Export-Csv -Path $OutputPath -Append
 }
 ```
+
+## Using the script
+
+To use this script:
+
+1. Make sure you have the DHCP Server PowerShell module installed
+2. Change the `$DhcpServer` variable to your DHCP server's name
+3. Run the script in PowerShell
+
+The script creates a CSV file with all scopes and their ping results. You can then filter for failed pings to identify dead scopes for cleanup.
+
+## Why this matters
+
+Cleaning up unused DHCP scopes isn't just about keeping things tidy. It also:
+
+- Makes DHCP servers easier to manage
+- Reduces confusion during troubleshooting
+- Speeds up server performance
+- Prevents IP address conflicts if you reuse address ranges
+
+Since most migrations are charged by the work required, removing unneeded scopes before migration can also save you money.
