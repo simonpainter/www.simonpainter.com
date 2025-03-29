@@ -12,7 +12,7 @@ date: 2025-01-17
 
 ## A Matter of Western Digital Privilege
 
-In a recent conversation about IPv6 adoption at a Western technology company, a familiar scene played out. Engineers and architects discussed IPv6 implementation as an optional future consideration rather than an immediate necessity. 'We don't really need it yet', was the prevailing sentiment. This perspective, common among Western organisations, reveals a profound blindspot born of privilege – one that unconsciously perpetuates digital inequality on a global scale.
+In a recent conversation about IPv6 adoption at a Western technology company, I witnessed a familiar scene play out. Engineers and architects discussed IPv6 implementation as an optional future consideration rather than an immediate necessity. 'We don't really need it yet', was the prevailing sentiment. This perspective, common among Western organisations, reveals a profound blindspot born of privilege – one that unconsciously perpetuates digital inequality on a global scale.
 <!-- truncate -->
 ### The Historical Echo in Digital Infrastructure
 
@@ -38,4 +38,6 @@ The choice to adopt IPv6 isn't just about technical infrastructure – it's abou
 
 The conversation about IPv6 adoption needs to shift from technical necessity to digital equity. Our ability to ignore IPv6 isn't a sign that it's unnecessary – it's a reflection of historical privilege in address allocation. By recognising this privilege and acting to address it through proactive IPv6 adoption, we can work towards a more equitable digital future, one where technical infrastructure supports rather than hinders global participation in the digital economy.
 
-The time has come to acknowledge that our IPv4 privilege comes with a responsibility to lead in building a more inclusive internet infrastructure. The question isn't whether IPv6 is necessary – it's whether we're willing to use our position of privilege to help create a more equitable digital world.
+I believe the time has come to acknowledge that our IPv4 privilege comes with a responsibility to lead in building a more inclusive internet infrastructure. The question isn't whether IPv6 is necessary – it's whether we're willing to use our position of privilege to help create a more equitable digital world.
+
+Have you considered how your organisation's approach to IPv6 adoption might be influenced by your position of privilege in the digital ecosystem? I'd love to hear your thoughts on balancing technical considerations with broader social responsibility.
