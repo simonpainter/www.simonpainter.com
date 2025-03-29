@@ -14,13 +14,14 @@ date: 2025-01-29
 
 ## Make it make sense
 
-I will always be a network engineer and that means that some words have very specific meanings that have taken root in my soul. The terminology within ExpressRoute has bothered me for ages and when speaking to a few people I found that I am not the only one who finds it unintuitive. To me a circuit is a single link but to Microsoft a circuit is the pair of links and the associated peerings! Two thumbs up to that, Microsoft, or rather in your own language 'one ExpressRoute thumb'.
+I will always be a network engineer, and that means some words have very specific meanings that have taken root in my soul. The terminology within ExpressRoute has bothered me for ages, and when speaking to a few people, I found that I'm not the only one who finds it unintuitive. To me, a circuit is a single link, but to Microsoft, a circuit is the pair of links and the associated peerings! Two thumbs up to that, Microsoft, or rather in your own language 'one ExpressRoute thumb'.
 <!-- truncate -->
-Here's a run down of what's what, starting with the wires.
+Here's a rundown of what's what, starting with the wires.
 
 ### ExpressRoute Direct (ERD) port pair
 
-Pair of physical ports in a peering location in the Microsoft Enterprise Edge (MSEE) and enable the physical fibre cross connects at layer 1 to the customer router. Prior to ERD being available as a product these would typically exist only in the form of a cross connect to service providers who offered ExpressRoute connectivity services, but are now offered direct to customers who have the requirement and the necessary supporting infrastructure.
+This is a pair of physical ports in a peering location in the Microsoft Enterprise Edge (MSEE). They enable the physical fibre cross connects at layer 1 to the customer router. Before ERD was available as a product, these would typically exist only as cross connects to service providers who offered ExpressRoute connectivity services. Now they're offered directly to customers who have the requirement and the necessary supporting infrastructure.
+
 Microsoft documents refer to these as ExpressRoute Direct *resources* to either add or remove confusion with [ExpressRoute Direct Circuits](#expressroute-direct-circuit).
 
 ```mermaid
@@ -44,9 +45,9 @@ flowchart TD
 ```
 
 > ExpressRoute Direct resources are provided as a pair of ports in separate MSEE devices to ensure that maintenance outages or
-> failures on a single MSEE do not cause loss of service. It is not possible to buy them with a single link.
+> failures on a single MSEE don't cause loss of service. It's not possible to buy them with a single link.
 
-ExpressRoute Directs are paired inside a single peering location except when they used in [ExpressRoute Metro](#expressroute-metro); in that case the separate [ExpressRoute Direct Ports](#expressroute-direct-port) are supplied in two separate peering locations but still function as a pair.
+ExpressRoute Directs are paired inside a single peering location except when they're used in [ExpressRoute Metro](#expressroute-metro). In that case, the separate [ExpressRoute Direct Ports](#expressroute-direct-port) are supplied in two separate peering locations but still function as a pair.
 
 #### Vlan tagging
 
@@ -67,27 +68,27 @@ be unique across all circuits and peerings on the ExpressRoute Direct
 port pair.
 ```
 
-To simplify the choice you either have to maintain unique vlan tags for all [peerings](#expressroute-peering) in all [circuits](#expressroute-circuit) using an [ExpressRoute Direct](#expressroute-direct-erd-port-pair) resource with Dot1Q, or you alternatively choose 802.1QinQ where a separate outer tag is allocated for each [ExpressRoute Circuit](#expressroute-circuit) over the ExpressRoute Direct and that means you only need to have the vlan tags for each [peerings](#expressroute-peering) unique within that [circuit](#expressroute-circuit).
+To simplify the choice: with Dot1Q, you have to maintain unique VLAN tags for all [peerings](#expressroute-peering) in all [circuits](#expressroute-circuit) using an [ExpressRoute Direct](#expressroute-direct-erd-port-pair) resource. Alternatively, with 802.1QinQ, a separate outer tag is allocated for each [ExpressRoute Circuit](#expressroute-circuit) over the ExpressRoute Direct. This means you only need to have the VLAN tags for each [peering](#expressroute-peering) unique within that [circuit](#expressroute-circuit).
 
 ### ExpressRoute Direct Port
 
-Nominally a single port on the MSEE or a single fibre pair cross connect to that port. These cannot be bought separately and are supplied as pairs in the same peering location, or in a metro pair in two separate locations for [ExpressRoute Metro](#expressroute-metro).
+This is nominally a single port on the MSEE or a single fibre pair cross connect to that port. You can't buy these separately - they're supplied as pairs in the same peering location, or in a metro pair in two separate locations for [ExpressRoute Metro](#expressroute-metro).
 
 ### ExpressRoute Direct Circuit
 
-Exactly the same as an [ExpressRoute Circuit](#expressroute-circuit) however instead of being provided over a telco partner's infrastructure it's provisioned over an [ExpressRoute Direct](#expressroute-direct-erd-port-pair) resource. A single [ExpressRoute Direct port pair](#expressroute-direct-erd-port-pair) resource can have multiple ExpressRoute Direct Circuits associated with it.
+This is exactly the same as an [ExpressRoute Circuit](#expressroute-circuit). However, instead of being provided over a telco partner's infrastructure, it's provisioned over an [ExpressRoute Direct](#expressroute-direct-erd-port-pair) resource. A single [ExpressRoute Direct port pair](#expressroute-direct-erd-port-pair) resource can have multiple ExpressRoute Direct Circuits associated with it.
 
 ### ExpressRoute Circuit
 
-These are the logical constructs which encompasses two [ExpressRoute Links](#expressroute-link). A circuit can be associated with more than one [ExpressRoute Connection](#expressroute-connection) to an [ExpressRoute Gateway](#expressroute-gateway)
+These are the logical constructs which encompass two [ExpressRoute Links](#expressroute-link). A circuit can be associated with more than one [ExpressRoute Connection](#expressroute-connection) to an [ExpressRoute Gateway](#expressroute-gateway).
 
 ### ExpressRoute Link
 
-Each [ExpressRoute Circuit](#expressroute-circuit) is made up of two links, these are the logical connections between customer (or telco) managed equipment and the MSEE.
+Each [ExpressRoute Circuit](#expressroute-circuit) is made up of two links. These are the logical connections between customer (or telco) managed equipment and the MSEE.
 
 ### ExpressRoute Peering
 
-Each [ExpressRoute Circuit](#expressroute-circuit) consists of a pair of [links](#expressroute-link) and each of these can have distinct peerings. A peering is required for each link and a single circuit can support both [Azure private peerings](#peering-type-azure-private-peering) and [Microsoft peerings](#peering-type-microsoft-peering).
+Each [ExpressRoute Circuit](#expressroute-circuit) consists of a pair of [links](#expressroute-link), and each of these can have distinct peerings. A peering is required for each link, and a single circuit can support both [Azure private peerings](#peering-type-azure-private-peering) and [Microsoft peerings](#peering-type-microsoft-peering).
 
 ```mermaid
 flowchart LR
@@ -184,7 +185,7 @@ Connectivity to Microsoft online services (Microsoft 365, Azure PaaS services, a
 
 ### ExpressRoute Connection
 
-A Connection is the resource that links an [ExpressRoute Circuit](#expressroute-circuit) at the MSEE to an [ExpressRoute Gateway](#expressroute-gateway). You can have more than one connection on a single [ExpressRoute Circuit](#expressroute-circuit), A standard Azure ExpressRoute circuit can typically support up to 10 connections to virtual networks, all within the same geopolitical region; however this limit is the default and can be raised.
+A Connection is the resource that links an [ExpressRoute Circuit](#expressroute-circuit) at the MSEE to an [ExpressRoute Gateway](#expressroute-gateway). You can have more than one connection on a single [ExpressRoute Circuit](#expressroute-circuit). A standard Azure ExpressRoute circuit can typically support up to 10 connections to virtual networks, all within the same geopolitical region; however, this limit is the default and can be raised.
 
 ### ExpressRoute Gateway
 
@@ -214,7 +215,7 @@ Key points:
 
 ### ExpressRoute Metro
 
-ExpressRoute Metro is a variation of an ExpressRoute Circuit where the separate [ExpressRoute Links](#expressroute-link) are provisioned in different physical peering locations within a metro area. This give additional geographic redundancy for those who do not require two separate resillient [ExpressRoute Circuits](#expressroute-circuit) in two separate locations.
+ExpressRoute Metro is a variation of an ExpressRoute Circuit where the separate [ExpressRoute Links](#expressroute-link) are provisioned in different physical peering locations within a metro area. This gives additional geographic redundancy for those who don't require two separate resilient [ExpressRoute Circuits](#expressroute-circuit) in two separate locations.
 
 ```mermaid
 
@@ -239,7 +240,7 @@ flowchart TD
 
 ```
 
-> ExpressRoute Metro can be selected when ordering an [ExpressRoute Direct](#expressroute-direct-erd-port-pair) and the metro pair
+> ExpressRoute Metro can be selected when ordering an [ExpressRoute Direct](#expressroute-direct-erd-port-pair), and the metro pair
 > appears like any single peering location on the list of available locations.
 
 ### Summary
@@ -255,3 +256,5 @@ erDiagram
     "ExpressRoute Gateway" ||--o{ "ExpressRoute Connection" : "can have many"
 
 ```
+
+I hope this helps clear up some of the confusion around ExpressRoute terminology. It took me a while to wrap my head around it, especially since I'm used to more traditional networking terms. If you're working with Azure networking, print this out or bookmark it - you'll probably need to refer back to it a few times until the naming conventions start to feel natural!
