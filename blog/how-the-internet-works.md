@@ -14,17 +14,17 @@ date: 2025-01-02
 
 ## Introduction
 
-On a few occasions I have been asked to explain networks to people with no prior experience and it's quite hard to work out where to start; there is so much history and so many concepts from general computer science that have got us to where we are today. I have long believed that to truly understand a concept it's very valuable to be able to organise your understanding in a way that means you can explain it to someone else. My goal here is not just to explain many of the contributions to networking that make the internet work but also organise some of my own understanding and explore areas where I have taken things on faith rather than asking why they are the way they are. The approach for this will be to assume we're starting with nothing and rebuilding the internet from the ground up and solving the problems that were solved to get us where we are today.
+I've been asked to explain networks to people with no experience several times and it's hard to know where to start. There's so much history and so many computer science concepts that have led us to where we are today. I've always believed that to truly understand something, you need to be able to explain it to someone else. My goal here isn't just to explain the bits that make the internet work, but also to organise my own understanding and explore areas where I've taken things on faith instead of questioning why they exist. I'll start from nothing and rebuild the internet from scratch, solving the same problems that got us where we are today.
 <!-- truncate -->
 ## Let's start with the cable
 
-The first job before us is to connect two computers together. Computers talk in ones and zeros because they are for the most part only able to understand if a signal on a wire is there (a one) or not (a zero). If you connect two computers, or other networked devices, the lowest level of connectivity is likely to be a cable carrying an electrical signal, a fibre optic cable carrying pulses of light or some sort of radio frequency with modulated frequency or amplitude which denotes an on or off. If you are dealing with an electrical signal you need a common ground wire as well to make the circuit but for everything else you just need a wire to transmit in one direction and another to transmit in the other.
+Our first job is to connect two computers. Computers talk in ones and zeros because they only understand if a signal is present (a one) or absent (a zero). When you connect two computers, the lowest level of connectivity is usually a cable carrying electricity, a fibre optic cable with light pulses, or radio waves with changing frequency or amplitude to show on or off. With electrical signals, you need a ground wire to complete the circuit, but for everything else, you just need one wire to send and another to receive.
 
 ### Serial vs Parallel Communication
 
-When connecting two computers, data can be transmitted either serially (one bit at a time) or in parallel (multiple bits simultaneously). Each approach has distinct characteristics that make it suitable for different scenarios.
+When connecting two computers, we can send data either serially (one bit at a time) or in parallel (multiple bits at once). Each method works better in different situations.
 
-In serial communication, bits are sent one after another along a single wire (plus ground). Think of it like a single-lane road where cars (bits) must travel in sequence:
+In serial communication, bits travel one after another along a single wire (plus ground). Think of it like a single-lane road where cars (bits) must travel in sequence:
 
 ```text
 Computer A                Computer B
@@ -36,7 +36,7 @@ Computer A                Computer B
     Time: 1 2 3 4 5    (each bit sent sequentially)
 ```
 
-Parallel communication, by contrast, uses multiple wires to send several bits simultaneously. This is like a multi-lane highway where multiple cars (bits) can travel side-by-side:
+Parallel communication, on the other hand, uses multiple wires to send several bits at the same time. This is like a multi-lane highway where multiple cars (bits) can travel side-by-side:
 
 ```text
 Computer A                Computer B
@@ -54,20 +54,20 @@ Computer A                Computer B
     Time: 1            (all bits sent simultaneously)
 ```
 
-While parallel communication might seem superior due to its ability to transmit multiple bits simultaneously, it comes with its own challenges. The primary issue is something called "clock skew" - where bits sent at the same time might arrive slightly offset due to minute differences in wire length or electrical characteristics. This becomes more problematic as distances increase or transmission speeds rise.
+While parallel communication might seem better because it can send multiple bits at once, it has its own problems. The main issue is "clock skew" - where bits sent together might arrive slightly out of sync due to tiny differences in wire length or electrical properties. This gets worse as distances grow or speeds increase.
 
 > At higher speeds or longer distances, the complexity of keeping multiple data lines synchronised in parallel
 > communication becomes increasingly difficult. This is why modern high-speed communications (like USB 3.0, SATA,
 > and PCIe) use multiple serial lanes rather than parallel communications. They achieve high throughput by
 > running the serial communications at very high frequencies rather than sending bits in parallel.
 
-Serial communication, while seemingly slower at first glance, can actually achieve higher speeds over longer distances because it only needs to maintain timing on a single data line. This is why most modern high-speed computer interfaces have moved away from parallel to serial communications, often using multiple serial lanes when higher bandwidth is needed.
+Serial communication, though it seems slower at first glance, can actually reach higher speeds over longer distances because it only needs to keep timing on a single data line. That's why most modern high-speed computer interfaces have switched from parallel to serial communications, often using multiple serial lanes when they need more bandwidth.
 
-The tradeoff between serial and parallel communications is a perfect example of how engineering decisions in computer networking often involve balancing theoretical performance against practical limitations. In our further discussion of networking, we'll focus primarily on serial communications as they form the basis of most modern network interfaces.
+The balance between serial and parallel communications shows how network engineering often means trading theoretical performance for practical solutions. As we continue discussing networking, we'll mainly focus on serial communications since they're the foundation of most modern network interfaces.
 
 ### Serial clocks
 
-The next problem to solve in order to make serial communications this work is how we ensure that both computers know when a one and a zero start and finish, serial connections rely on both computers knowing the rate at data is flowing.  In a simple system both computers can be configured to know the rate of transfer, say 9600 bits per second and they sample the data received at that rate and will typically be fine. For faster and more accurate transfer another wire with a clock signal is needed. The clock signal acts like a metronome, providing the timing reference that keeps both sender and receiver synchronised. This synchronisation ensures that bits are sampled at the correct moments to accurately interpret the data.
+The next problem to solve is making sure both computers know when ones and zeros start and end. Serial connections need both computers to know how fast data is flowing. In a simple system, both computers can be set to the same rate, like 9600 bits per second, and they sample the data at that rate, which usually works fine. For faster and more accurate transfers, we need another wire with a clock signal. This clock signal works like a metronome, giving a timing reference that keeps sender and receiver in sync. This synchronization makes sure bits are sampled at just the right moments to be interpreted correctly.
 
 > The baud rate, measured in *symbols per second*, represents how many signal changes can occur on the communication
 > channel in one second. While baud rate was historically equivalent to bits per second in early systems where each
@@ -76,11 +76,11 @@ The next problem to solve in order to make serial communications this work is ho
 > bits per second. This is only important so that you realise that while bit rate and baud are often used
 > interchangeably they are not the same.
 
-The relationship between clock signals and baud rate is intimate - one computer must generate a clock signal that matches the baud rate so both computers can sample their incoming data stream at the optimal points between signal transitions.
+The relationship between clock signals and baud rate is very close - one computer must create a clock signal that matches the baud rate so both computers can sample their incoming data at just the right points between signal changes.
 
 ### We can send numbers, what about letters?
 
-When connecting two computers we established that they communicate in ones and zeros, but humans prefer to work with text. ASCII (American Standard Code for Information Interchange) solves this by using 7 bits to represent 128 different characters. Each character maps to a specific binary number - for example, the letter 'A' is represented as binary 1000001 (decimal 65).
+We've established that computers talk in ones and zeros, but humans prefer text. ASCII (American Standard Code for Information Interchange) solves this by using 7 bits to represent 128 different characters. Each character maps to a specific binary number - for example, the letter 'A' is represented as binary 1000001 (decimal 65).
 
 > ASCII's use of 7 bits rather than 8 reflects its 1960s origins, when the 8th bit was reserved for parity - a simple
 > error detection scheme. The parity bit would be set to make the total number of 1s either odd or even, allowing
@@ -94,11 +94,11 @@ Parity bit = 1        (to make total 1s even)
 Final byte  = 11000001
 ```
 
-This ASCII standard was very much designed around English text, with the available 128 characters covering the Latin alphabet (both upper and lower case), numbers, punctuation marks, and control characters like carriage return and line feed. While this worked well for English-speaking countries, it proved problematic for languages with different alphabets or character sets.
+ASCII was designed mainly for English text, with its 128 characters covering the Latin alphabet (both uppercase and lowercase), numbers, punctuation marks, and control characters like carriage return and line feed. This worked fine for English-speaking countries but caused problems for languages with different alphabets or character sets.
 
 ### Enter Unicode
 
-As computing spread globally, ASCII's limitations became apparent. Unicode was developed to handle text from all of the world's writing systems. While ASCII uses 7 bits, Unicode can use multiple bytes to represent characters, allowing it to handle millions of different characters rather than just 128.
+As computing spread worldwide, ASCII's limits became obvious. Unicode was created to handle text from all the world's writing systems. While ASCII uses just 7 bits, Unicode can use multiple bytes to represent characters, letting it handle millions of different characters instead of just 128.
 
 ```text
 Character encoding comparison:
@@ -112,11 +112,11 @@ UTF-8:    '世' = 11100100 10111000 10000000 (24 bits)
 > which helped smooth the transition. This is why protocols like HTTP headers still use ASCII - they can be processed
 > by both old and new systems without any confusion.
 
-The transition from ASCII to Unicode is still ongoing. While modern applications and websites typically use Unicode, many networking protocols and legacy systems continue to use ASCII, particularly in areas where backwards compatibility is crucial or where the character set is limited to simple English text.
+We're still moving from ASCII to Unicode. While modern apps and websites mostly use Unicode, many networking protocols and older systems still use ASCII, especially where backward compatibility matters or where only simple English text is needed.
 
 ## Control characters
 
-The first 32 ASCII values (0-31) are control characters designed for controlling teletype and early computer terminals:
+The first 32 ASCII values (0-31) are control characters designed for teletype machines and early computer terminals:
 
 ```text
 00 NUL - Null character, used as a string terminator
@@ -142,9 +142,9 @@ The first 32 ASCII values (0-31) are control characters designed for controlling
 17-1F - Various block/record/unit separators and escape codes
 ```
 
-Many are still used today - notably TAB, LF, CR for text formatting and XON/XOFF for flow control in serial communications.
+Many are still used today - particularly TAB, LF, CR for text formatting and XON/XOFF for flow control in serial communications.
 
-The full ASCII table is useful when dissecting captures of low level protocols.
+The full ASCII table is handy when examining low-level protocol captures.
 
 ```text
 Dec Hex ASCII   Dec Hex ASCII   Dec Hex ASCII   Dec Hex ASCII
@@ -185,7 +185,7 @@ Dec Hex ASCII   Dec Hex ASCII   Dec Hex ASCII   Dec Hex ASCII
 
 ### That's two computers, how about n?
 
-Connecting two computers with a serial connection is great but what about if you want to introduce a third node? The simplest answer is to use a full mesh topology where each computer node has a direct serial connection to the both of the other computer nodes.
+Connecting two computers with a serial connection works well, but what if you want to add a third node? The simplest solution is a full mesh topology where each computer has a direct connection to both other computers.
 
 ```mermaid
 graph LR
@@ -194,7 +194,7 @@ graph LR
     A --- C
 ```
 
-This really doesn't scale well though. You need one serial link to connect two nodes, three serial links to connect three nodes but for four you need six serial links. When you get to five computer nodes in full mesh you need ten serial links.
+This approach doesn't scale well. You need one link for two nodes, three links for three nodes, but six links for four nodes. With five computers in a full mesh, you need ten links.
 
 ```mermaid
 graph TB
@@ -206,14 +206,15 @@ graph TB
     B --- C
 ```
 
-> The formula for the number of connections between **n** computer nodes is n(n-1)/2 and the important thing to recognise
-> in that forumla is that **n** is multiplied by **n** (OK, it's n-1 but who quibbles about the -1?) which makes it an
-> exponential growth. Exponential growth is really bad when you get to big numbers and 50 computer nodes in a small
-> office would need 1225 serial connections to be provisioned, configured and working.
+> The formula for connections between **n** computer nodes is n(n-1)/2. The key point is that **n** is multiplied by 
+> **n** (well, n-1, but that's nitpicking), creating exponential growth. Exponential growth becomes impractical 
+> quickly - 50 computers in a small office would need 1,225 connections to be set up, configured and maintained.
 
 ## Addressing the problem
 
-Now we have decided that point to point links in a full mesh are a bad idea we need to start connecting more than one device on the same shared wire. In order to do that we need to solve another problem first, and that's making sure that each device gets the right data and that's the start of addressing. If we have a shared wire with all the computers connected, perhaps with some sort of T shaped splitter, we can transmit from any computer node and it will be received by all of the other computer nodes. If we prefix each chunk of data with a destination address and each computer knows its own address then it can ignore data that is not meant for it. This probably sounds bonkers in the current climate of cybersecurity but we used to be a lot more trusting.
+Since full mesh networks don't scale well, we need to connect multiple devices on a shared wire. But first, we need to solve another problem: making sure each device gets only the data meant for it. This is where addressing begins.
+
+If we have a shared wire connecting all computers (perhaps using T-shaped splitters), any computer can send data that all others receive. By adding a destination address to each data chunk, and having each computer know its own address, devices can ignore data not meant for them. This might sound crazy in today's security-conscious world, but networks were much more trusting in the early days.
 
 ```mermaid
 %%{init: {'gitGraph': { 'showCommitLabel':true,'mainBranchName': 'Bus Topology'}} }%%
@@ -226,9 +227,9 @@ gitGraph
 
   ```
   
-Topologies like the single wire (bus topology) above are problematic. A break in the cable at any point will split your network into two separate networks which can't talk to each other. A ring topology will address this to some extent because a single break just turns a ring topology into a bus topology.
+Single-wire setups (bus topology) have problems. A cable break anywhere splits your network into two separate networks that can't communicate. A ring topology helps somewhat because a single break just converts it to a bus topology.
 
-Having a star or a *hub and spoke* topology means that any single link failing results in a problem for that spoke only and not any of the others. The hub is a simple electrical repeater device which receives a signal from one computer node and repeats it to the other connected computer nodes. Each computer node receives every signal and if the destination address matches its own then it processes the data and if if doesn't then the data is ignored.
+Star or *hub and spoke* topology is better - if one link fails, only that device is affected, not the entire network. The hub is a simple electrical repeater that receives signals from one computer and forwards them to all others. Each computer checks if the destination address matches its own - if yes, it processes the data; if not, it ignores it.
 
 ```mermaid
 graph TD
@@ -243,7 +244,7 @@ graph TD
 
 ### Frames and MAC addresses
 
-In order to understand when the data for each destination starts and finishes it's useful to organise it, or frame it, in a discrete block with a start and a finish. Data frames have headers with the source and destination addresses and a marker at the end to show that the data payload has finished. The addresses are, like everything in networks, just numbers, but large numbers with trillions of possiblities which ensures they are unique.
+To know where data for each destination starts and ends, we organize it in "frames" - discrete blocks with clear start and end points. Data frames have headers containing source and destination addresses, plus an end marker showing where the data payload finishes. These addresses are just numbers (like everything in networks), but they're very large numbers with trillions of possibilities, ensuring they're unique.
 
 > A MAC address (short for medium access control address or media access control address) is a unique identifier
 > assigned to a network interface. It is a 48-bit address space which contains potentially over 281 trillion
@@ -251,64 +252,86 @@ In order to understand when the data for each destination starts and finishes it
 > hardcode onto network interfaces; due to the sheer quantity of available addresses it's statistically impossible that
 > two devices on a network could ever have the same MAC addresss.
 
-Now that we have our data organised into frames, our computer nodes connected to a hub and each one uniquely addressed we can start to scale out. We can connect hubs to hubs if we like because the data sent by one hub will be repeated to other hubs. One thing we can't do though is form loops of hubs because they are not clever enough to realise if a data frame is in an endless loop as it is repeated by each hub in the loop and then endlessly repeated to every computer node on the network. This is just one of the many ways we can get to some serious congestion in our hub and spoke network.
+With our data in frames, all computers connected to a hub, and each one uniquely addressed, we can start scaling our network. We can even connect hubs to other hubs since data sent by one hub will be repeated to all connected hubs. But we must avoid creating loops of hubs, as they aren't smart enough to recognize when a data frame is caught in an endless loop, being repeated by each hub and broadcast to every computer on the network. This is just one way network congestion can happen in hub and spoke networks.
 
 ### Collisions
 
-As we scale out our hub and spoke network we hit another problem, collisions. We need each computer node to take turns in sending data. This means that computer nodes listen for gaps in the data flow at the end of frames before they start sending their own frames. On occasions, two computers connected to a hub will both want to send data and both will listen for the end of a frame and then try to send their own frames at the same time. When two computer nodes send data at the same time the hub is not clever enough, as it's just a simple electrical repeater, to hold one frame for a bit while it transmits the other. When hubs detect more than one sender at a time they will reject both senders which causes them to stop sending and those senders will then wait a random amount of time (to avoid colliding again) before they attempt to transmit again.
+As our hub and spoke network grows, we face another problem: collisions. Computers need to take turns sending data. They do this by listening for gaps in data flow at the end of frames before sending their own. Sometimes, two computers will both detect the end of a frame and try to send their own frames simultaneously. 
 
-As networks grow there will be an increase in the likelihood of collisions and there will also be a drop in performance because a lot of data is getting sent to computer nodes that will discard it as it is not meant for them.
+When this happens, the hub (being just a simple electrical repeater) can't buffer one frame while transmitting the other. Instead, when hubs detect multiple senders at once, they reject both transmissions. The sending computers then stop, wait for a random amount of time (to avoid colliding again), and try retransmitting.
+
+As networks grow, collisions become more likely. Performance also drops because lots of data gets sent to computers that simply discard it because it's not addressed to them.
 
 ## Switching to something cleverer
 
-Instead of simple hubs which are just electrical repeaters, we need a device that can look at the destination MAC address, compare it to a table in memory and then send that data out of the correct interface where the destination computer node is connected. In order to do this we have more problems to solve. First of all we need to work out how to populate that table which stores MAC addresses and the ports they are associated with. The easiest way to do this is to look at the source MAC address of frames and associate them with the interfaces they are received on. If we get a frame with a destination MAC address we don't know about then we can flood it to all interfaces and see which one the computer responds from. As this switching device is going to be a bit cleverer we will need to give it a processor and some memory, taking it from dumb electrical repeater that a hub was into a processing computer in its own right. With memory it can hold frames in a buffer while it looks in its MAC table to work out where to send them. It can also use that buffer in cases where the interfaces get congested.
+Instead of simple hubs that just repeat electrical signals, we need a smarter device that can:
+1. Look at the destination MAC address
+2. Compare it to a table in memory
+3. Send data only through the correct port where the destination computer is connected
+
+This raises new challenges. First, we need to build that table mapping MAC addresses to ports. The simplest way is to examine the source MAC address of incoming frames and note which port they arrived on. When we see a destination MAC address we don't recognize, we can "flood" the frame to all ports and see which one gets a response.
+
+This switch needs both a processor and memory, transforming it from a dumb repeater into an actual computing device. With memory, it can temporarily store frames in a buffer while it consults its MAC table to determine where to send them. These buffers also help manage congestion when multiple incoming interfaces try to send to the same outgoing interface.
 
 ### Congestion
 
-Congestion happens where several computer nodes want to send data to one computer node at the same time. If two computer nodes are sending at their maximum interface capacity then the receiving computer would need twice as much interface capacity to receive it all. In some cases this is what we do but for the most part we would buffer the traffic as it comes in and then send it out as fast as we can until the buffer empties. If the congestion is sustained over a long period of time then traffic must be prioritised.
+Congestion occurs when multiple computers try to send data to the same computer simultaneously. If two computers are sending at their maximum speed, the receiving computer would need twice the capacity to handle it all. 
+
+Sometimes we solve this by increasing the receiving interface's capacity, but more commonly we buffer the incoming traffic and send it out as fast as possible until the buffer clears. When congestion persists for extended periods, we need to prioritize certain traffic types over others.
 
 ### MAC tables and why they don't scale
 
-Maintaining a table of MAC addresses and the ports they are associated has some complexity and that complexity increases as a network scales. Imagine having to know the MAC address for every one of the billions of network devices on the internet and what port to use to get to it? Imagine having to flood the entire internet with a frame to find out which node responds to it? The upper limits to the number of devices on your network will be determined by the size of your MAC address table and the complexity of sorting and searching it.
+Managing a table that maps MAC addresses to ports gets increasingly complex as networks grow. Think about trying to track the MAC address of every device on the internet - billions of them - and knowing which port to use to reach each one. Or imagine flooding the entire internet with a frame just to find one device!
 
-> MAC tables, like the phone book, are a simple lookup search algoritm. The simplest way is to look at every entry,
-> which means that you have to do **n** comparisons where **n** is the size of MAC table. If you sort the MAC table you
-> can use cleverer algorithms that are more efficient to search the table but that means you have to sort the table again
-> whenever there is a change to the network topology. This is why network loops can be so disasterous for a switch
-> because it will see traffic from the same MAC address coming from more than one port and have to keep updating its MAC
-> address table and ensuring it's sorted. Even the most efficient sort algorithms can be resource intensive when they
-> are done over and over again.
+The practical limit to your network size depends on two factors: how big your MAC address table can be, and how efficiently you can search through it. This creates a fundamental scalability problem.
+
+> MAC tables work like a phone book lookup. The simplest approach is checking every entry one by one - that's 
+> **n** comparisons where **n** is the size of your MAC table. You can use smarter algorithms with a sorted table,
+> but then you need to re-sort it whenever the network changes. This explains why network loops cause such havoc for
+> switches - they'll see the same MAC address coming from multiple ports and constantly need to update and re-sort
+> their tables. Even the most efficient sorting algorithms become resource-intensive when run repeatedly.
 
 ## Finding the router
 
-If our networks are limited by the size of the MAC address table we need to think of them as individual segments that can be joined up into larger networks. For this to work we need to have a more organised addressing system that means we can organise addresses into blocks have have a table of address blocks rather than individual addresses. Internet Protocol organises data into packets, which are similar to frames, which also have a source and a destination address. The common analogy is that the IP packet is an envelope, perhaps addressed to someone in another city, and the frame is the postman's bag that carries it to the post office. A person addresses the letter (packet) and hands it to the postman who puts it in their bag (the frame). That bag is carried to a sorting office (a router) where it is removed from the bag, inspected and put in another bag destined for the sorting office in the right city. Once it is received there the letter is inspected again and the address is compared to a table showing which addresses are on which delivery run and they are put in the appropriate post bag to be delivered.
+Since MAC address tables limit our network size, we need to think of networks as separate segments that can be connected into larger networks. To make this work, we need a more organized addressing system that groups addresses into blocks rather than tracking each individual address.
 
-This introduces a new device, a router, and the new addressing scheme, the Internet Protocol (IP) address. IP addresses are just 32 bit numbers but that means it can be between 0 and 4,294,967,295. Decimal notation isn't really that good for understanding the nuance of how these numbers are organised so we break the 32 bits into four chunks (or octets) of 8 bits and then represent those in decimal.
+The Internet Protocol (IP) does exactly this. It organizes data into packets (similar to frames) with source and destination addresses. 
+
+A helpful analogy: think of an IP packet as a letter addressed to someone in another city, and the frame as the postman's bag carrying it to the post office. You write the address on your letter (packet) and give it to the postman, who puts it in their bag (frame). The bag goes to a sorting office (router) where your letter is taken out, examined, and placed in another bag heading to the right city. When it arrives there, your letter is checked again, matched against delivery routes, and placed in the appropriate postbag for final delivery.
+
+This introduces two key elements: the router device and the Internet Protocol (IP) addressing scheme. IP addresses are simply 32-bit numbers, giving us a range from 0 to 4,294,967,295. Since decimal notation makes these huge numbers hard to work with, we split the 32 bits into four 8-bit chunks (octets) and represent each in decimal form.
 
 ```text
 If we take a dotted decimal IP address like 192.168.0.1 and convert each octet to binary we get 11000000.10101000.00000000.00000001. This is actually a representation of the single 32 bit number 11000000101010000000000000000001 or 3,232,235,521 in decimal. 
 ```
 
-Our IP addresses can be grouped into networks by splitting the binary into a network, or subnet, portion and a host address portion. The network portion is the address of the network that contains the host and the host portion is the address of the computer node or host within that network. Routers need only maintain a list of routes to other networks and so know the route to every subnet or host within those networks. They also need to know the corresponding MAC address for each IP within their own local subnets but we'll get to that later.
+We can group IP addresses into networks by dividing the binary digits into two parts: a network (or subnet) portion and a host portion. The network part identifies which network the host belongs to, while the host part identifies the specific computer within that network. 
 
-> In the early days of IP there was a concept of address classes - their size dictated by their class. Now we don't
-> use those classes so you will see CIDR (Classless Inter-Domain Routing) notation which uses the number of bits used in
-> the network address to show which parts are the network address and which parts are the host address.
+This structure means routers only need to maintain routes to networks, not to individual hosts. Each route covers all hosts within that network. Routers still need to know the MAC addresses corresponding to IPs in their local subnets, but we'll cover that shortly.
 
-In a simple network where we have a CIDR of 10.0.0.0/24 we can look at the first 24 bits (conveniently the first three octets) as the network portion and the last 8 bits (the last octet) as the host portion. This means that the first 24 bits will stay the same and we can address our devices with the remaining 8 bits. With 8 bits we have a decimal number range of 0 to 255 inclusive but really we want to reserve the first and the last addresses, 0 and 255 for special purposes. We keep the 0 as the network address so we don't use that for a host and we keep the last as the broadcast address - that means anything sent to that address gets sent to every host on the network segment. That leaves us 254 other addresses (10.0.0.1 - 10.0.0.254) to allocate to our hosts. When you deal with different sized CIDR ranges it gets a bit more complicated because the number if bits doesn't always line up with the octets but the principle still applies.
+> IP addressing originally used a class system, with network size determined by the class. Today, we use CIDR 
+> (Classless Inter-Domain Routing) notation instead, which shows exactly how many bits are used for the network
+> portion. This more flexible approach allows networks of any size, not just predetermined class sizes.
 
-> While IPv4 addresses use dotted decimal notation, both MAC addresses and IPv6 addresses are typically represented in
-> hexadecimal. This difference stems from their distinct purposes and historical contexts. Decimal notation works well
-> for IPv4 because each octet only ranges from 0-255 - numbers that humans can readily understand. MAC addresses (48 bits)
-> and IPv6 addresses (128 bits) use hexadecimal because it provides a more compact and manageable representation for
-> larger numbers. For example, each 16-bit block in an IPv6 address can represent values up to 65535, which would be
-> unwieldy in decimal but is easily represented as four hexadecimal digits.
-> Hexadecimal is particularly efficient for representing byte-oriented data because each byte (8 bits) maps perfectly to
-> two hexadecimal digits. Each group of 4 bits (called a nibble or a nybble) converts to a single hex digit 0-F. This makes it easy
-> to read and manipulate binary data, which is why packet captures and network debugging tools typically display their
-> output in hexadecimal format.
+Let's look at a simple example: a CIDR network of 10.0.0.0/24. The "/24" means the first 24 bits (conveniently the first three octets) are the network portion, with the last 8 bits (the last octet) being the host portion. 
 
-When IP packets travel across networks, they carry their addressing information in a structured header. This header prefixes the actual data being sent and contains everything a router needs to know to get the packet to its destination. Let's look inside an IP packet to see how these addresses are actually used:
+This setup keeps the first 24 bits constant (10.0.0), while we can use the remaining 8 bits to address our devices. With 8 bits, we get numbers from 0 to 255, but we reserve two addresses for special purposes:
+- 0 (10.0.0.0) is the network address itself
+- 255 (10.0.0.255) is the broadcast address, which sends data to all hosts on the segment
+
+This leaves us 254 usable addresses (10.0.0.1 through 10.0.0.254) for our actual devices. With different CIDR sizes, things get more complex when the network/host boundary doesn't align with octet boundaries, but the same principles apply.
+
+> We represent IPv4 addresses in dotted decimal, but MAC and IPv6 addresses use hexadecimal notation. Why 
+> the difference? It's partly historical and partly practical. Decimal works fine for IPv4 because each octet is
+> just 0-255, which is easy for humans to comprehend. But MAC addresses (48 bits) and IPv6 addresses (128 bits)
+> are much longer, making hexadecimal more efficient. A 16-bit block in IPv6 could be up to 65,535 in decimal,
+> but just four hex digits.
+>
+> Hex is particularly good for byte-oriented data because one byte (8 bits) maps perfectly to two hex digits.
+> Each 4-bit group (called a nibble) converts to a single hex character 0-F. This makes binary data easier to
+> read and work with, which is why network tools typically show packet captures in hex format.
+
+As IP packets travel across networks, they carry addressing information in a structured header. This header sits in front of the actual data and contains everything routers need to route the packet correctly. Let's peek inside an IP packet to see how these addresses work:
 
 ```mermaid
 ---
@@ -331,13 +354,25 @@ packet-beta
   184-191: "Padding"
 ```
 
-The source and destination addresses each take up 32 bits - exactly the size of our IP addresses. But the header contains much more than just addresses. It includes a Time to Live field that prevents packets from circulating forever if there's a routing loop, a Protocol field that tells us what kind of data follows (like TCP or UDP), and fields for handling large messages that need to be split across multiple packets (the Identification, Flags, and Fragment Offset fields).
+The source and destination addresses each take up 32 bits - exactly one IP address worth of space. But the header contains much more:
 
-The Version field tells us which version of IP we're using - 4 for IPv4 in this case. IHL (Internet Header Length) tells us how long the header itself is, as it can vary if optional fields are included. The Type of Service field (now usually called Differentiated Services) lets us mark packets that need special handling, like those carrying voice calls that need to arrive quickly.
+- A Time to Live field prevents packets from circulating forever in routing loops
+- A Protocol field identifies what type of data follows (TCP, UDP, etc.)
+- Several fields handle large messages that need splitting across multiple packets
 
-Each router along the packet's journey will examine this header, use the destination address to decide where to send the packet next, decrease the Time to Live value by one, and update the checksum. If the Time to Live reaches zero, the router discards the packet and sends an error message back to the source address - this prevents packets from circulating endlessly when something goes wrong.
+The Version field tells us which IP version we're using (4 for IPv4). The IHL (Internet Header Length) indicates how long the header is, since it can vary with optional fields. The Type of Service field (now called Differentiated Services) lets us flag packets needing special handling, like voice calls that need minimal delay.
 
-Now with your new addressing scheme we need one more piece of information - where to send stuff that isn't on our local segment. Routers will have a routing table but for the end host computer they just need a default gateway address on their network segment to send things to if they aren't in their own network. Back in the postman analogy if you hand a letter to the postman that is addressed to someone on his round he'll probably just deliver it but if it's not then he will take it to your local sorting office, your default gateway to the postal routing system.
+As a packet travels, each router:
+1. Examines the header
+2. Uses the destination address to decide where to send it next
+3. Decreases the Time to Live value by one
+4. Updates the checksum
+
+If Time to Live reaches zero, the router destroys the packet and sends an error message back to the source. This prevents packets from bouncing around endlessly when routing problems occur.
+
+With our IP addressing scheme, we need one more piece of information: where to send packets that aren't on our local network. While routers maintain full routing tables, end hosts just need to know their default gateway - an address on their local network to which they send any traffic destined for other networks.
+
+Going back to our postal analogy: if you give your postman a letter addressed to someone on his route, he'll deliver it directly. For all other destinations, he takes it to the local sorting office - your default gateway to the wider postal system.
 
 ```text
 In an example where our local host has an address of 10.0.0.1 and is on network 10.0.0.0/24 the network portion is 10.0.0.0 and the host portion is 1. The computer works that out using a subnet mask which comprises of 24 ones (from the 24 in the network address CIDR notation) and 8 zeros to make it up to a total of 32 bits. A 24 bit subnet mask is 11111111.11111111.11111111.00000000 or 255.255.255.0
