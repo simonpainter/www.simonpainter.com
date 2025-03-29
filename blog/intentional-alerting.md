@@ -12,32 +12,40 @@ date: 2024-11-17
 
 ## Lessons from Personal Tech and Enterprise IT
 
-Notifications and alerts are ubiquitous in our always-on, hyper-connected world. But as I’ve learnt from personal experience and my work in enterprise IT, more alerts don’t necessarily mean better outcomes. In fact, over-alerting can be downright counterproductive.
+Notifications and alerts are everywhere in our always-on, connected world. But as I've learned from personal experience and my work in enterprise IT, more alerts don't always mean better outcomes. In fact, too many alerts can be completely counterproductive.
 <!-- truncate -->
-My journey with intentional alerting began with my Apple Watch. At first, I was thrilled to have every app sending me real-time updates. But I quickly found myself overwhelmed by the constant buzzing on my wrist. I was being pulled out of the moment, distracted from what I was doing, all to check alerts that were rarely urgent or actionable.
+My journey with intentional alerting began with my Apple Watch. At first, I was excited to have every app sending me real-time updates. But I quickly felt overwhelmed by the constant buzzing on my wrist. I was being pulled out of the moment, distracted from what I was doing, all to check alerts that were rarely urgent or needed action.
 
-So I made a change. I disabled notifications for everything except the essential real-time communications that I need to respond to immediately, like calls, texts, and critical messaging apps. The result? I’m more focused, less stressed, and I’ve reclaimed control over my attention.
+So I made a change. I turned off notifications for everything except essential real-time communications that need immediate responses, like calls, texts, and critical messaging apps. The result? I'm more focused, less stressed, and I've taken back control of my attention.
 
-This principle of intentional alerting is just as powerful in the world of IT, especially networking. Too often, organisations adopt a “more is better” approach to alerts, either leaving every possible notification enabled or hesitating to turn any off for fear of missing something important. The result is a firehose of alerts that quickly overwhelms teams and leads to alert fatigue and lack of ownership.
+This principle of intentional alerting is just as powerful in IT, especially networking. Too often, companies take a "more is better" approach to alerts, either leaving every possible notification on or hesitating to turn any off for fear of missing something important. The result is a flood of alerts that quickly overwhelms teams and leads to alert fatigue and lack of ownership.
 
-The solution is to be ruthlessly intentional about which alerts are enabled and how they’re managed. Every alert should have a clear owner and a defined action plan. If you can’t articulate who is responsible for an alert and what they should do about it, that’s a red flag that the alert may not be necessary.
+The solution is to be ruthlessly intentional about which alerts are enabled and how they're managed. Every alert should have a clear owner and a defined action plan. If you can't explain who's responsible for an alert and what they should do about it, that's a warning sign that the alert might not be necessary.
 
-One effective tool for this is what I call an “alert dictionary” — a centralised resource that maps out key information for each alert, such as:
+One effective tool for this is what I call an "alert dictionary" — a central resource that maps out key information for each alert, such as:
 
 - Who owns the alert
-
 - What specific actions should be taken in response
+- When it should trigger (and when it shouldn't)
+- How urgent the response needs to be
+- What systems or services it affects
 
-- The urgency level of the alert
+## Creating an intentional alerting strategy
 
-- How the alert should be delivered based on its urgency (email, text, page, etc.)
+If you're drowning in alerts, here's how to start being more intentional:
 
-Documenting this in a wiki or knowledge base makes it accessible to the whole team and easier to keep updated. Importantly, the very process of articulating these details for each alert forces intentionality. It quickly reveals which alerts are truly essential and which are just noise.
+1. **Audit your current alerts**: List all existing notifications across your systems. Note which ones actually prompt action and which are just "nice to know."
 
-For example, an alert about a redundant power supply failure might warrant an email to the service desk to open a ticket with the vendor for a replacement. But it likely doesn’t justify paging a senior engineer in the middle of the night.
+2. **Identify the critical few**: Which alerts are truly essential for keeping your business running? These usually relate to customer impact, security incidents, or major system failures.
 
-By being deliberate about alerting, IT teams can reduce stress, improve responsiveness, and ensure they’re not missing the forest for the trees. Less noise means more bandwidth for what matters most.
+3. **Establish clear ownership**: Every alert should have someone responsible for it. No more alerts going to "the team" - assign them to specific roles.
 
-The payoff of intentional alerting extends beyond the walls of IT. In a world of information overload, we could all benefit from being more mindful about the alerts we enable in our personal and professional lives. By filtering out the noise, we create space for focus, productivity, and presence.
+4. **Create response plans**: For each alert you keep, document what actions should be taken, by whom, and within what timeframe.
 
-It’s a small shift that can make a big difference. So whether it’s your smartwatch or your network monitoring system, I encourage you to take a hard look at your alerts. Keep the ones that are truly essential, and have the courage to silence the rest. Your attention (and your team) will thank you.
+5. **Start culling**: Be ruthless about turning off non-essential alerts. You can always turn them back on if they prove necessary.
+
+## The payoff of being intentional
+
+Taking control of your alerting strategy yields massive benefits. Your teams will experience less alert fatigue, respond more quickly to the alerts that matter, and waste less time on trivial notifications. Issues get resolved faster because the signal-to-noise ratio improves dramatically.
+
+Just like my Apple Watch experience, being intentional about alerts in enterprise IT leads to more focus, less stress, and better control over what deserves your attention. The most effective IT operations aren't the ones with the most sophisticated alerting systems - they're the ones that have carefully designed their notifications to drive the right actions at the right time.
