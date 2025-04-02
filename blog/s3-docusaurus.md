@@ -13,7 +13,7 @@ date: 2024-11-17
 
 I've now extended the GitHub action for those of us who want to create sites in Docusaurus and then have our committed and pushed changes automatically built and synced to an S3 bucket. Static S3 sites are a great way to host static content, and Docusaurus is a brilliant tool for rendering sites out of simple markdown content. 
 <!-- truncate -->
-As with the [static S3 action](s3-github-action.md) I created earlier, you'll need to set up (or reuse) an IAM user with the correct policy. If you're reusing the policy on another bucket, remember to add it in the resources section. You'll also need to populate the secrets in the repository if you're doing it in a new GitHub repository.
+As with the [static S3 action](s3-github-action.md) I used earlier, you'll need to set up (or reuse) an IAM user with the correct policy. If you're reusing the policy on another bucket, remember to add it in the resources section. You'll also need to populate the secrets in the repository if you're doing it in a new GitHub repository.
 
 Here's the GitHub Action workflow that I'm using:
 
@@ -64,5 +64,3 @@ jobs:
 ```
 
 I've found this to be incredibly useful for my workflow. Now whenever I push changes to my main branch, the site automatically rebuilds and deploys to S3. This saves me from manually running the build process and uploading files, which was becoming quite tedious as my site grew.
-
-Have you tried setting up something similar for your projects? I'd love to hear about any improvements or variations you've made to this basic workflow.
