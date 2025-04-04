@@ -13,7 +13,7 @@ date: 2025-03-20
 When I set out to explore network latency in Azure, I had a simple goal: to understand how physical distance affects performance. After all, we've all heard that farther apart means slower connections. But I wanted specifics - exactly how much slower? And how consistent is that performance? I also wanted to see how long lived TCP connections performed across the Azure network.
 
 I'm sharing what I've learned from my first round of tests, setting a baseline that we can build on later.
-
+<!-- truncate -->
 ## My simple test setup
 
 I kept things straightforward. I set up a few small VMs (B1, 1 vCPU, 1 GB RAM) in different locations and measured how long it took to send data between them:

@@ -14,7 +14,7 @@ date: 2025-04-04
 In [my previous post](azure-latency-1.md), I shared some basic latency tests across Azure networks. The results were pretty predictable: the closer things are physically, the faster they communicate. Not exactly groundbreaking.
 
 But when I expanded my testing to include longer distances and different connection methods, I stumbled onto something genuinely surprising: **PrivateLink connections can actually be faster than direct VNET peering** - sometimes significantly so.
-
+<!-- truncate -->
 Let me walk you through what I found, because it might change how you connect your services across Azure regions.
 
 ## The expanded test setup
