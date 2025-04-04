@@ -187,6 +187,7 @@ az network vnet peering create -n "vnet2-2-to-vnet1-2" -g vnet-demo-rg -o none\
         --peer-complete-vnet false \
         --remote-subnet-names subnet2 --local-subnet-names subnet2
 ```
+
 ```mermaid
 flowchart TB
     subgraph Azure["Azure Cloud"]
