@@ -21,17 +21,24 @@ Let me walk you through what I found, because it might change how you connect yo
 
 I created a standardised lab environment using Terraform ([available here](https://gist.github.com/simonpainter/05c28f5aae79ca9482dab46854eae320)) to test different connection scenarios:
 
-1. **UK South to West US** tests
-2. **East Asia to South East Asia** tests
-3. **UK regional** tests
-
-For each scenario, I tested three connection methods:
-
 - Direct VNET peering VM to VM
 - Direct VNET peering VM to Azure Load Balancer and then VM
 - Azure PrivateLink
 
-All tests used the same testing methodology: a simple echo server on port 7 with clients sending 64-byte packets and measuring the round-trip time down to the microsecond.
+I tested these across three different pairs of regions.
+
+1. **UK South to West US**
+2. **East Asia to South East Asia**
+3. **UK regional, UK West and UK South**
+
+All tests used the same testing methodology: a simple echo server on port 7 with clients sending 64-byte packets and measuring the round-trip time down to the microsecond. I ran these tests for long period - in some cases up to seven days; this was both to gather a huge sample set and also to validate Azure's behaviour with really long lived TCP connections.
+
+> We know that some of the constructs like Azure Firewall and Azure Application Gateway are not designed
+> for long lived TCP connections, by virtue of being little more than a managed scale set of VMs, but 
+> VNet peering, Azure Loadbalancer and Privatelink are very capable of supporting really long lived TCP
+> connections although my previous article showed there is likely to be a break in the connection after a host
+> migration. If you really need to avoid those connection drops then you will need to look at dedicate
+> Azure hosts.
 
 ```mermaid
 flowchart TD
@@ -111,11 +118,11 @@ I have a few theories about why PrivateLink and Load Balancer connections might 
 
 3. **Connection acceleration** - These services might include some form of transparent acceleration technology.
 
-Without insider knowledge of Azure's network architecture, I can't say for certain which factor is most important. But the data consistently shows these alternative connection methods outperforming direct peering.
+Without insider knowledge of Azure's network architecture, I can't say for certain which factor is most important. But the data consistently shows these connection methods out performing direct peering.
 
 ## Stability patterns
 
-Beyond just average latency, I also analyzed the stability of these connections by looking at standard deviation and high-latency events:
+Beyond just average latency, I also analysed the stability of these connections by looking at standard deviation and high-latency events:
 
 | Connection Method | High Latency Events | Pattern |
 |-------------------|---------------------|---------|
