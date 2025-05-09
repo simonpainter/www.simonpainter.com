@@ -12,17 +12,16 @@ date: 2025-05-09
 
 ---
 ![Kayaking near Svalbard](img/svalbard-kayak.jpeg)
-The Arctic wind whipped across my face as I looked up at the entrance of what might be humanity's most important insurance policy. It has been a place that has fascianted me since I read a New Scientist article about it many years ago, and there I was, staring at the concrete wedge jutting from the mountainside, its façade glittering with an art installation that catches the summer Arctic sunlight.
+
+The Arctic wind whipped across my face as I looked up at the entrance of what might be humanity's most important insurance policy. It has been a place that has fascinated me since I read a New Scientist article about it many years ago, and there I was, staring at the concrete wedge jutting from the mountainside, its façade glittering with an art installation that catches the summer Arctic sunlight.
 
 ## An Unexpected Lesson in Disaster Recovery
 
-My recent visit to Svalbard, home of the Global Seed Vault, offered surprising insights into IT disaster recovery practices - and a stark reminder of its real-world importance.
+Last year I visited Svalbard, home of the Global Seed Vault. The trip was planned around doing some kayaking in the arctic waters but it also offered surprising insights into IT disaster recovery practices - and a stark reminder of its real-world importance.
 
-This "doomsday" seed bank, nestled deep in Arctic permafrost, safeguards millions of crop seeds. Its mission? To preserve agricultural biodiversity against global catastrophes.
+The "doomsday" seed bank, nestled deep in Arctic permafrost, safeguards millions of crop seeds. Its mission? To preserve agricultural biodiversity against global catastrophes.
 
-I'm not a botanist or agricultural expert. I'm an IT professional who happened to be on holiday in one of the world's most remote locations. But standing there, I couldn't help but see the striking similarities between this frozen fortress and the backup strategies we implement in our digital worlds.
-
-## The Architecture of Resilience
+I'm not a botanist or agricultural expert, I was an IT professional in one of the world's most remote locations. Standing there, I couldn't help but see the striking similarities between this frozen fortress and the backup strategies we implement in our digital worlds.
 
 The parallels to IT backup strategies aren't just coincidental - they're fundamental principles of resilience:
 
@@ -36,7 +35,7 @@ It's the physical equivalent of air-gapping critical backups - keeping them comp
 
 The vault doesn't hold original samples - it stores duplicates from gene banks worldwide. This approach preserves the original specimens in their primary locations while creating an additional safety net.
 
-In IT terms, this is like maintaining your primary data stores while creating offline backups that remain untouched until needed.
+In IT terms, this is like maintaining your near line backups while creating offline backups that remain untouched until needed.
 
 ### Environmental Controls with Passive Fallbacks
 
@@ -62,23 +61,6 @@ This real-world example underscores a crucial lesson for IT professionals: disas
 
 ## The Vault's Design Philosophy
 
-The Svalbard vault's design mirrors best practices in data protection:
-
-```mermaid
-flowchart TD
-    A[Seed Vault Strategy] --> B[Geographic Isolation]
-    A --> C[Redundant Storage]
-    A --> D[Environmental Controls]
-    A --> E[Regular Updates]
-    A --> F[Passive Fallbacks]
-    
-    B --> G[Protection from Regional Threats]
-    C --> H[Original Samples Remain in Primary Locations]
-    D --> I[Optimal Preservation Conditions]
-    E --> J[Current Comprehensive Collection]
-    F --> K[Function Without Power/Intervention]
-```
-
 The vault relies on multiple layers of protection:
 
 - It's built high above sea level to protect against rising waters and flooding
@@ -86,82 +68,12 @@ The vault relies on multiple layers of protection:
 - Its contents are duplicates, preserving original samples in their primary locations when possible
 - The facility is designed to run with minimal human intervention
 
-Standing in that frozen landscape, I couldn't help but think about our own backup strategies. How many of these principles do we truly incorporate?
-
-## Lessons for IT Professionals
-
-As IT professionals, we should ask ourselves:
-
-### Are our backups truly isolated?
-
-The vault is physically isolated from the facilities it's backing up. In IT terms, this means having backups that can't be compromised by the same threats that might affect your primary systems.
-
-It's not enough to back up to another server in the same data centre. True isolation means geographic separation and network separation.
-
-### Do we have passive protections?
-
-The vault uses natural cooling from permafrost as a backup to its mechanical cooling systems. What passive protections do your backup systems have?
-
-Could your recovery processes still function if primary infrastructure were completely unavailable? Do you have documentation accessible outside your normal systems?
-
-### Have we tested real restoration?
-
-ICARDA successfully restored their seed collection from the vault. When was the last time you tested a full restoration from your backups?
-
-Not just verifying that the backup completed successfully, but actually restoring the data and confirming it works as expected.
-
-### Do we plan for physical inaccessibility?
-
-The Syrian withdrawal happened because the original facility became physically inaccessible due to conflict. In our increasingly uncertain world, how would you access your backups if your primary facility were suddenly inaccessible?
-
-This might sound far-fetched, but disasters from flooding to fire to civil unrest can make facilities temporarily or permanently inaccessible.
-
-## Implementation in Practice
-
-What might these principles look like in a practical IT context? Here's a simplified approach:
-
-```python
-def implement_seed_vault_principles(organisation_data):
-    """Apply Svalbard Seed Vault principles to data protection.
-    
-    This function creates a resilient backup strategy based on
-    the principles observed at the Global Seed Vault.
-    """
-    # Create geographically isolated backups
-    primary_backups = create_local_backups(organisation_data)
-    offsite_backups = send_to_remote_location(primary_backups)
-    
-    # Ensure environmental controls with passive fallbacks
-    for backup_location in all_backup_locations:
-        if not has_passive_cooling(backup_location):
-            add_passive_cooling(backup_location)
-        
-        if not has_backup_power(backup_location):
-            add_backup_power(backup_location)
-    
-    # Schedule regular updates
-    schedule_regular_backups(organisation_data, frequency='daily')
-    
-    # Test restoration processes
-    for critical_system in organisation_data.critical_systems:
-        test_restoration(critical_system)
-        document_restoration_process(critical_system)
-    
-    # Create physical access contingency plans
-    backup_access_methods = create_contingency_access(all_backup_locations)
-    distribute_access_methods(trusted_personnel)
-    
-    return resilient_backup_strategy
-```
-
-The key is thinking beyond traditional backup approaches to create truly resilient systems that can withstand not just technical failures but real-world disasters.
+Standing in that harsh landscape, I couldn't help but think about our own backup strategies. How many of these principles do we truly incorporate?
 
 ## A Reminder of Real Stakes
 
 The Seed Vault reminds us: Whether it's crops or data, robust backup strategies are essential for our collective future. And as the Syrian example shows, these aren't just theoretical precautions - they're practical necessities in an unpredictable world.
 
-As I left Svalbard, I carried with me not just photos of a unique facility but a renewed perspective on my role as an IT professional. Our work in creating resilient systems isn't just about meeting compliance requirements or following best practices - it's about creating safety nets that might one day prove as crucial as those frozen seeds.
+As I left Svalbard, I carried with me not just photos of a unique experience but a renewed perspective on my role in ensuring resilleince of critical infrastructure. Our work in creating systems isn't just about meeting compliance requirements or following best practices - it's about creating safety nets that might one day prove as crucial as those frozen seeds.
 
 In IT, we often talk about disaster recovery in abstract terms. The Global Seed Vault makes it concrete. It's a physical manifestation of hope and foresight - qualities we should all bring to our work in protecting the digital resources that power our world.
-
-What backup principles from the Seed Vault could you apply to your own systems? I'd love to hear your thoughts.
