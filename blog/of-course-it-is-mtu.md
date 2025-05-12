@@ -13,7 +13,7 @@ Any time I have to do anything with [OSPF](/tags/ospf) I remind myself how it ca
 
 <!--truncate-->
 
-## What we were trying to do 
+## What we were trying to do
 
 The objective was to insert some Juniper SRX firewalls into the traffic flow north/south out of a heritage Nexus 7K datacentre. The northbound connection was OSPF area zero up to some telco managed CE switches and the idea was to get everything up and running on the side before cutting the traffic flow over.
 
@@ -56,11 +56,15 @@ system jumbomtu 9216
 
 This didn't actually work for us because if the default value is set then it doesn't appear in the config. What's even more confusing is the line `Note: Platforms that use Per-Port MTU Configuration L2 ports can only use the System Jumbo MTU configuration on the switch or 1500`. It is fairly reasonable to assume that if the system MTU defaults to 9216 then the interface MTU might also default to that.
 
-## Anyway...
+## Anyway
 
 Anyway I digress. The inside OSPF neighbours had come up, the outside was stuck in LOADING. The config on the Juniper L2 interfaces configured at 9192 and the Cisco Vlan interface configured to 9174 to correspond to the same L3 MTU. We argued amongst ourselves that it all pointed to MTU but we couldn't figure out the inconsistency. We found through methodical troubleshooting that if we shut down the inside interfaces and flushed the ospf database on the inside we could get the adjacency up on the outside but it didn't load all the routes when we brought up the inside adjacency.
 
-After a bit of desperation we had Juniper and Cisco on a call together to troubleshoot and one of the Juniper engineers realised that he couldn't ping 1501 bytes from the SRX to the N7K vlan interface. This had us arguing even more because perhaps it was a bug preventing the MTU configuration applying. I was at this point that I had a dim and distant memory that in fact the default interface MTU was in fact 1500 despite the default system MTU being 9216. That still didn't really explain why it came up consistently on the inside but not on the outside. Or did it?
+We looked at all the things we could think of and explored some weird stuff like CPU usage on the OSPF instances but came to a blank.
+
+After a bit of desperation we had Juniper and Cisco on a call together to troubleshoot and one of the Juniper engineers realised that he couldn't ping 1501 bytes from the SRX to the N7K vlan interface. This had us arguing even more: perhaps it was a bug preventing the MTU configuration applying? We confirmed it by seeing that the giants were incrementing on the interface counter and there in the interface status was the interface MTU at 1500 not the expected 9216.
+
+I was at this point that I had a dim and distant memory that in fact the default interface MTU was in fact 1500 despite the default system MTU being 9216. That still didn't really explain why it came up consistently on the inside but not on the outside. Or did it?
 
 The SRXs were matching the L3 MTUs and bringing up the neighbour on the inside. The Cisco switches were sending all the LSUs and because they are small they were getting through the L2 interface because they were less than 1500 bytes. The Juniper was then doing the same with the outside VRF which matched the L3 MTU but because the Juniper packages a load of LSUs up together some of them weren't under the 1500 bytes and were not getting through, this caused the adjacency to get stuck in LOADING state. This behaviour also explained why taking down the inside adjacency allowed the outside adjacency to come up; there were no routes in the SRX database other than its own connected interfaces so the LSUs to the outside vrf were under the 1500 byte L2 MTU and got through OK.
 
