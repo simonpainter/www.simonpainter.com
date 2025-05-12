@@ -18,7 +18,7 @@ I've found that traditional justifications for SD-WAN adoption have often focuse
 <!-- truncate -->
 ### The Cost Reality
 
-In my experience, organisations must accept that the transition period will likely increase rather than decrease costs. Running SD-WAN alongside existing infrastructure, maintaining dual skills, and managing the complexity of hybrid operations typically results in higher operational and capital expenses during the transition. I've seen the true cost benefits emerge only when zero trust transformation is complete and traditional network security controls can be decommissioned.
+In my experience, organisations must accept that the transition period will likely increase rather than decrease costs. Running SD-WAN alongside existing infrastructure, maintaining dual skills, and managing the complexity of hybrid operations typically results in higher operational and capital expenses during the transition. I've seen the true cost benefits emerge only when transformation is complete.
 
 ### The Zero Trust Imperative
 
