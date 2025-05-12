@@ -3,7 +3,7 @@
 title: Of course it's MTU, but how is it MTU?
 authors: simonpainter
 tags:
-  - network
+  - networks
   - ospf
 date: 2025-05-12
 
