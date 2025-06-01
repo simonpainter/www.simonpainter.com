@@ -11,7 +11,7 @@ date: 2025-06-01
 ---
 
 I have found that Azure networking has been designed to be familiar to network engineers, even though a lot of the logical constructs are based on smoke and mirrors they largely behave like the things we're used to; a great example being the VNet that doesn't exist or the load balancer that is also a figment of our imagination. AWS Networking on the other hands seems to have been created by a bunch of developers high on peyote who thought they knew better than everyone else. This is why it took me a few years to pass the AWS Advanced Networking exam but only a few days to pass the Azure Networking Engineering Associate exam.
-
+<!-- truncate -->
 This philosophical difference becomes crystal clear when comparing Azure Route Server and AWS Route Server - two services with confusingly similar names that solve different problems and are reflective of their respective platforms' fundamental approaches to networking.
 
 ## The Azure Approach: BGP as a Service
