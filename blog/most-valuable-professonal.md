@@ -10,16 +10,15 @@ date: 2025-06-01
 
 ---
 
-So here's something I definitely didn't see coming when I started my little blog... I just got the email that I've been awarded Microsoft Most Valuable Professional (MVP) status in [Your Category]!
-
+So here's something I definitely didn't see coming when I started my blog, I just got the email that I've been awarded [Microsoft Most Valuable Professional (MVP)](https://mvp.microsoft.com/en-US/MVP/profile/b2f997ef-b877-45ff-9504-cea463f548b5) status for Cloud and Datacenter Management - On-Premises Networking.
 <!-- truncate -->
-
-
 ## How Did This Even Happen?
 
-Honestly, this whole thing started pretty selfishly. I began blogging as basically a digital notebook - a place to dump solutions to problems I'd figured out so I wouldn't have to solve them again. And let me tell you, there's nothing quite like the experience of googling a problem, finding the perfect solution, and realizing it's from your own blog post that you'd completely forgotten writing!
+Honestly, this whole thing started pretty selfishly. I began blogging as basically a digital notebook - a place to dump solutions to problems I'd figured out so I wouldn't have to solve them again. There's nothing quite like the experience of googling a problem, finding the perfect solution, and realising it's from your own blog post that you'd completely forgotten writing!
 
 But then something interesting happened. I kept adding more content because I figured it might actually help other people who were going through the same journey I was - transitioning from traditional network engineering and architecture into this whole cloud networking world. Turns out I wasn't wrong about that.
+
+![MVP](img/MVP_Badge.png)
 
 ## From Network Cables to Cloud Configs
 
@@ -29,15 +28,12 @@ My blog became this weird collection of "here's how I solved this networking pro
 
 ## What's an MVP Anyway?
 
-For those who don't know (because I certainly didn't when I started), Microsoft MVPs are basically community contributors who share what they know. We're not Microsoft employees - we're just people who've decided that when we figure something out, we should probably tell other people about it too.
+For those who don't know, Microsoft MVPs are basically community contributors who share what they know. ~~They're~~ We're not Microsoft employees - we're just people who've decided that when we figure something out, we should probably tell other people about it too.
 
 The whole thing is built around the idea that the best way to learn is to teach, and the best way to solve problems is to share solutions. Which, coincidentally, is exactly why I started writing things down in the first place.
 
-## The Accidental Community Thing
-
-What's been really cool is watching how this accidental community involvement has grown. Started with blog posts, then answering questions in forums (because hey, I'd probably run into that problem before), then somehow I ended up [speaking at events/running workshops/whatever you do].
-
-The validation has been amazing. Seeing cloud networking emerge as its own specialty, with its own certifications and career paths, makes me feel like those early blog posts about "why doesn't this work like my physical switches?" were actually onto something.
+> There are only about 3500 Microsoft MVPs in the world. Weirdly there is now some unlikely 
+> over representation in the community by people called [Simon Painter](https://mvp.microsoft.com/en-US/MVP/profile/f0449906-0cce-ed11-a7c6-000d3a5603d3) - if anyone wants to book us as a double act I think he'd be up for it.
 
 ## What's Next?
 
@@ -47,16 +43,6 @@ I'm planning to keep doing exactly what I've been doing - solving problems, writ
 
 ## Thanks!
 
-This wouldn't have happened without all the people who've read the blog, asked questions, shared their own solutions, and generally made me feel like this was worth doing. Also thanks to [specific people if you want to mention them] for putting up with me constantly saying "oh, I should write a blog post about that."
+This wouldn't have happened without all the people who've read the blog, asked questions, shared their own solutions, and generally made me feel like this was worth doing. Also thanks to a lot of people for putting up with me constantly saying "oh, I should write a blog post about that."
 
-And obviously, thanks to whoever nominated me for this thing. Still not sure how that works, but I appreciate it!
-
----
-
-Got cloud networking questions? Hit me up - I probably either know the answer or have already written a blog post about it and forgotten where I put it.
-
-**Find me at:**
-- [Your Blog]
-- [LinkedIn]
-- [Twitter/X]
-- [GitHub]
+And obviously, thanks to Adam who nominated me for it.
