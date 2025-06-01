@@ -45,4 +45,4 @@ I'm planning to keep doing exactly what I've been doing - solving problems, writ
 
 This wouldn't have happened without all the people who've read the blog, asked questions, shared their own solutions, and generally made me feel like this was worth doing. Also thanks to a lot of people for putting up with me constantly saying "oh, I should write a blog post about that" - you know who you are.
 
-And obviously, thanks to Adam who nominated me for it.
+And obviously, thanks to [Adam](https://www.linkedin.com/in/adamsharif/) who nominated me for it.
