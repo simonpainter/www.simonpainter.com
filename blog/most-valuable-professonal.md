@@ -14,9 +14,9 @@ So here's something I definitely didn't see coming when I started my blog, I jus
 <!-- truncate -->
 ## How Did This Even Happen?
 
-Honestly, this whole thing started pretty selfishly. I began blogging as basically a digital notebook - a place to dump solutions to problems I'd figured out so I wouldn't have to solve them again. There's nothing quite like the experience of googling a problem, finding the perfect solution, and realising it's from your own blog post that you'd completely forgotten writing!
+Honestly, this whole thing started pretty selfishly. I began blogging as a digital notebook - a place to dump solutions to problems I'd figured out so I wouldn't have to solve them again. There's nothing quite like the experience of googling a problem, finding the perfect solution, and realising it's from your own blog post that you'd completely forgotten writing the last time you had that problem!
 
-But then something interesting happened. I kept adding more content because I figured it might actually help other people who were going through the same journey I was - transitioning from traditional network engineering and architecture into this whole cloud networking world. Turns out I wasn't wrong about that.
+But then something happened. I kept adding more content because I figured it might help other people who were going through the same journey I was - transitioning from traditional network engineering and architecture into this whole cloud networking world. Turns out I wasn't wrong about that.
 
 ![MVP](img/MVP_Badge.png)
 
@@ -37,12 +37,12 @@ The whole thing is built around the idea that the best way to learn is to teach,
 
 ## What's Next?
 
-Being an MVP comes with some pretty neat perks - early access to new stuff, direct lines to product teams, and a network of other people who are just as excited about technology as I am. But honestly, the best part is just knowing that this thing I started for purely selfish reasons has actually helped people.
+Being an MVP comes with some pretty cool perks - early access to new stuff, direct lines to product teams, and a network of other people who are just as excited about technology as I am. But honestly, the best part is just knowing that this thing I started for purely selfish reasons has actually helped people.
 
 I'm planning to keep doing exactly what I've been doing - solving problems, writing about them, and hopefully making the cloud networking journey a little less painful for everyone else. Just now with a fancier badge to go with it.
 
-## Thanks!
+## Thank you
 
-This wouldn't have happened without all the people who've read the blog, asked questions, shared their own solutions, and generally made me feel like this was worth doing. Also thanks to a lot of people for putting up with me constantly saying "oh, I should write a blog post about that."
+This wouldn't have happened without all the people who've read the blog, asked questions, shared their own solutions, and generally made me feel like this was worth doing. Also thanks to a lot of people for putting up with me constantly saying "oh, I should write a blog post about that" - you know who you are.
 
 And obviously, thanks to Adam who nominated me for it.
