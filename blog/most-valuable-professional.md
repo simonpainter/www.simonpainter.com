@@ -32,7 +32,7 @@ For those who don't know, Microsoft MVPs are basically community contributors wh
 
 The whole thing is built around the idea that the best way to learn is to teach, and the best way to solve problems is to share solutions. Which, coincidentally, is exactly why I started writing things down in the first place.
 
-> There are only about 3500 Microsoft MVPs in the world. Weirdly there is now some unlikely 
+> There are only about 3500 Microsoft MVPs in the world. Weirdly there is now some unlikely
 > over representation in the community by people called [Simon Painter](https://mvp.microsoft.com/en-US/MVP/profile/f0449906-0cce-ed11-a7c6-000d3a5603d3) - if anyone wants to book us as a double act I think he'd be up for it.
 
 ## What's Next?
