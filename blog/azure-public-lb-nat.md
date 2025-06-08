@@ -18,7 +18,7 @@ Let me show you what I mean.
 
 Azure Public Load Balancer typically sits in front of your web servers, databases, or APIs. Traffic hits the load balancer's public IP, and it decides which backend server gets each request. Simple enough.
 
-But here's where it gets interesting - that same load balancer can handle much more sophisticated network address translation scenarios; rather than assigning a public IP to each VM in a VNet you can create specific DNAT rules for inbound traffic with 1:1 port translation. You can also create specific SNAT rules for outboud rules based on address pools that mean you can go way above and beyond the 64000 port limit of a single IP.
+But here's where it gets interesting - that same load balancer can handle much more sophisticated network address translation scenarios; rather than assigning a public IP to each VM in a VNet you can create specific DNAT rules for inbound traffic with 1:1 port translation. You can also create specific SNAT rules for outbound rules based on address pools that mean you can go way above and beyond the 64000 port limit of a single IP.
 
 ## Rule-Based NAT for Inbound Connections
 
@@ -125,7 +125,7 @@ flowchart TB
 
 Load balancer outbound rules can solve this. With multiple public IPs, you can get around 64,000 SNAT ports per IP. That's a massive increase in capacity whilst maintaining your fixed IP pool for whitelisting. You don't get the level of layer 7 filtering you get with a firewall but you do get something that supports long lived TCP connections.
 
-Here's the calculation that matters: if you have 1,000 concurrent connections that each last 30 seconds, plus the TCP TIME_WAIT period of 240 seconds, you need about 4,500 SNAT ports. Azure Firewall's 2,500 port limit won't cut it, but a single load balancer IP gives you more than 10 times that capacity.
+Here's the calculation that matters: if you have 1,000 concurrent connections that each last 30 seconds, plus the TCP TIME_WAIT period of 240 seconds, you need about 9,000 SNAT ports. Azure Firewall's 2,500 port limit won't cut it, but a single load balancer IP gives you more than 10 times that capacity.
 
 ## Why Long-Lived Connections Love Load Balancers
 
