@@ -11,7 +11,7 @@ date: 2025-06-08
 ---
 
 Most people think of Azure Public Load Balancer as that thing that spreads web traffic across multiple servers. Fair enough - that's what it does best. But it's actually a Swiss Army knife for network address translation that can solve some tricky connectivity problems you might not expect.
-
+<!-- truncate -->
 Let me show you what I mean.
 
 ## The Load Balancer You Think You Know
