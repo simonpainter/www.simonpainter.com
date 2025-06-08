@@ -33,7 +33,7 @@ I tested these across three different pairs of regions.
 All tests used the same testing methodology: a simple echo server on port 7 with clients sending 64-byte packets and measuring the round-trip time down to the microsecond. I ran these tests for long period - in some cases up to seven days; this was both to gather a huge sample set and also to validate Azure's behaviour with really long lived TCP connections.
 
 > We know that some of the constructs like Azure Firewall and Azure Application Gateway are not designed
-> for long lived TCP connections, by virtue of being little more than a managed scale set of VMs, but 
+> for long lived TCP connections, by virtue of being little more than a managed scale set of VMs, but
 > VNet peering, Azure Loadbalancer and Privatelink are very capable of supporting really long lived TCP
 > connections although my previous article showed there is likely to be a break in the connection after a host
 > migration. If you really need to avoid those connection drops then you will need to look at dedicate
