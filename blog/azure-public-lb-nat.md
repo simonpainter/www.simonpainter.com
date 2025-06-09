@@ -139,14 +139,13 @@ There are some limitations to Azure Public Loadbalancers. The good news is that 
 
 **Rules Per Load Balancer**: You can have up to 1,500 total rules per load balancer (this includes both load balancing rules and inbound NAT rules combined). If you're doing microservices with lots of individual endpoints, you might hit this faster than expected.
 
-**Frontend IP Configurations**: 600 IP configurations means that if you were using it for inbound only you could associate 600 PIPs to it and have a couple of ports per IP mapped to different web services. 
+**Frontend IP Configurations**: 600 IP configurations means that if you were using it for inbound only you could associate 600 PIPs to it and have a couple of ports per IP mapped to different web services.
 
 **Outbound Rules**: Limited to 600 outbound rules per load balancer, which should be more than enough for most scenarios.
 
 **Port Range Conflicts**: Inbound NAT rules can't overlap with load balancing rules on the same frontend IP and port. You need to plan your port allocations carefully.
 
 ![Public Loadbalancer Limits](img/lb-limits.png)
-
 
 Here's the bit that catches people out - SNAT port allocation isn't automatic. If you don't configure outbound rules explicitly, Azure gives you a default allocation that's often too small:
 
@@ -195,6 +194,6 @@ The max latency was a biscuit over 200ms this is consistent with the exterme out
 > - Control: 1.32% packets beyond 3σ (5,609 outliers)
 >
 > Performance comparison:
-> Control performed better with 3.3% lower average latency (1,535 vs 1,588 μs) 
-> and more consistent performance. Both tests show scattered extreme outliers 
+> Control performed better with 3.3% lower average latency (1,535 vs 1,588 μs)
+> and more consistent performance. Both tests show scattered extreme outliers
 > throughout their ~5-day test periods rather than clustered spikes.
