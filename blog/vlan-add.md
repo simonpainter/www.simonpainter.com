@@ -17,14 +17,14 @@ A couple of days ago I saw a meme targetted to network engineers and it mentione
 
 > For the uninitiated folks, there is a command to restrict a vlan tagged trunk
 > to only carry specific vlans. The command to restrict it to, say vlans 5, 6, 7 and 9 is
-> `switchport trunk allow vlan 5-7,9`. As you can see you can use ranges or comma separated
+> `switchport trunk allowed vlan 5-7,9`. As you can see you can use ranges or comma separated
 > values.
 >
 > If you want to add vlan 8 to the list above you use the command
-> `switchport trunk allow vlan add 8`. What you definitely don't do is forget the add
-> keyword and just type `switchport trunk allow vlan 8` because that replaces the
+> `switchport trunk allowed vlan add 8`. What you definitely don't do is forget the add
+> keyword and just type `switchport trunk allowed vlan 8` because that replaces the
 > existing list with whatever you included in the command. You could alternatively type
-> `switchport trunk allow vlan 5-9` but who does?
+> `switchport trunk allowed vlan 5-9` but who does?
 
 This is so ingrained into network engineer culture that I don't know a single engineer who doesn't have a war story about either their own mistake or where someone else in their organisation. I remember working at a bank which was in the middle of long ongoing datacentre migration and they were using OTV to stretch L2 from one site to another while VMs and physical tin was moved from one site to the other. A large number of subnets were stretched with the gateway migrated only when roughly 50% of servers had been moved. There were nightly changes to add vlans to OTV and the corresponding trunks and one of them had fallen foul of the vlan add disaster and so every subsequent change manager was obsessive about asking if someone had checked if the add keyword was included in the change plan.
 
