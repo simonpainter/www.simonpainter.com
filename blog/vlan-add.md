@@ -10,7 +10,7 @@ date: 2025-06-12
 
 ---
 
-A couple of days ago I saw a meme targetted to network engineers and it mentioned *'the vlan add disaster'*. I immediately understood what it meant and it feels like it's now such a well know thing, enough to warrant a place in a meme, that it is part of our own zeitgeist for the last decade in networks.
+A couple of days ago I saw a meme targetted to network engineers and it mentioned *'the vlan add disaster'*. I immediately understood what it meant. It feels like it's now such a well know thing, enough to warrant a place in a meme, that it is part of our own zeitgeist for the last decade in networks.
 <!-- truncate -->
 
 ![Adding a vlan to a trunk](img/vlan-add.png)
@@ -26,7 +26,7 @@ A couple of days ago I saw a meme targetted to network engineers and it mentione
 > existing list with whatever you included in the command. You could alternatively type
 > `switchport trunk allowed vlan 5-9` but who does?
 
-This is so ingrained into network engineer culture that I don't know a single engineer who doesn't have a war story about either their own mistake or where someone else in their organisation. I remember working at a bank which was in the middle of long ongoing datacentre migration and they were using OTV to stretch L2 from one site to another while VMs and physical tin was moved from one site to the other. A large number of subnets were stretched with the gateway migrated only when roughly 50% of servers had been moved. There were nightly changes to add vlans to OTV and the corresponding trunks and one of them had fallen foul of the vlan add disaster and so every subsequent change manager was obsessive about asking if someone had checked if the add keyword was included in the change plan.
+This is so ingrained into network engineer culture that I don't know a single engineer who doesn't have a war story about either their own mistake or where someone else in their organisation bodged it. I remember working at a bank which was in the middle of very long ongoing datacentre migration and they were using OTV to stretch L2 from one site to another while VMs and physical tin was moved over. A large number of subnets were stretched with the gateway migrated only when roughly 50% of servers had been moved. There were nightly changes to add vlans to OTV and the corresponding trunks and one of them had fallen foul of the vlan add disaster. By the time I joined, every change manager was obsessed with asking if someone had checked if the add keyword was included in the change plan.
 
 My own story was actually a near miss, not through my own smug cleverness but because a fantastically dilligent ops guy was assigned to peer review my change. He came over with his laptop, pointed to the line in my change script and just said 'nearly, mate'.
 
