@@ -19,7 +19,7 @@ A couple of days ago, I saw a meme targeted at network engineers that mentioned 
 > `switchport trunk allowed vlan 5-7,9`. As you can see, you can use ranges or
 > comma-separated values.
 >
-> If you want to add VLAN 8 to the list above, you use the command 
+> If you want to add VLAN 8 to the list above, you use the command
 > `switchport trunk allowed vlan add 8`. What you definitely don't do is forget the `add`
 > keyword and just type `switchport trunk allowed vlan 8`—because that replaces the existing
 > list with whatever you included in the command. You could alternatively type
