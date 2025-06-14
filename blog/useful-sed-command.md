@@ -72,4 +72,6 @@ Original contents retained as /Users/simon/.ssh/known_hosts.old
 simon@MacBook-Pro latency-test % 
 ```
 
-The host IPs are random Azure pips that I was using at the time of writing this. Don't bother, there was nothing interesting on them at the time and I returned them to the pool a while ago.
+> The host IPs are random Azure pips that I was using at the time of writing this. Don't
+> bother, there was nothing interesting on them at the time and I returned them to the pool
+> a while ago.
