@@ -33,7 +33,7 @@ Tools exist, such as Netbrain et al, to provide visual representations of networ
 
 ## Lessons from Software Development
 
-In software development the use of comments provides a way to create the 'self documenting code' ideal where each element is labelled with comments like a well constructed diagram, but within the source code itself. That approach can work to some extent in infrastrucuture with descriptions, naming conventions and other comment elements in config helping to describe the systems, their functions and their reason.
+In software development the use of comments provides a way to create the 'self documenting code' ideal where each element is labelled with comments like a well constructed diagram, but within the source code itself. That approach can work to some extent in infrastructure with descriptions, naming conventions and other comment elements in config helping to describe the systems, their functions and their reason.
 
 ### Embedding Documentation in Configuration
 
@@ -41,7 +41,7 @@ At a large retailer I became custodian of a few legacy hacks in the core network
 
 ## The Waterfall Documentation Problem
 
-Good documentation in infrastructure is a casualty of waterfall project methodology. A focus on the design document showing what has changed, rather than how the whole system looks afterwards, means that operational teams sometimes have to look through pages of design documents, created to meet stage gates rather than deliver value, to get the nuggets of information they need. In software development the structure of documentation is often around a feature and tools like Jira capture documentation on the fly as features are defined, created, tested and released. These rarely translate well into the project lifecycle of infrastructure and I cannot express the hours I have spent writing updates into Jira about why I have not made progress on a piece of documentation.
+Good documentation in infrastructure is a casualty of waterfall project methodology. A focus on the design document showing what's changed, rather than how the whole system looks afterwards, means that operational teams sometimes have to look through pages of design documents, created to meet stage gates rather than deliver value, to get the nuggets of information they need. In software development the structure of documentation is often around a feature and tools like Jira capture documentation on the fly as features are defined, created, tested and released. These rarely translate well into the project lifecycle of infrastructure and I can't express the hours I've spent writing updates into Jira about why I haven't made progress on a piece of documentation.
 
 ## A Documentation-First Approach
 
@@ -49,8 +49,8 @@ Infrastructure as Code gives us more tools to manage our infrastructure document
 
 ### What Does Documentation-First Mean?
 
-When I write code that I want to keep, be it an application, script or IaC definition in something like Terraform, I start by defining the problem I am trying to solve. I'll describe the overall behaviour and then work from that. If I change what I want it to do then I'll update the documentation. The principle to follow is that the documentation is always right because that's what you have defined; if the documentation and the system diverge then it is the system that must be fixed and not the documentation.
-This leads to strong test driven developement because you have designed what you want the system to do, then you design a test to see if it's doing it, and finally you fix the system so that the tests pass.
+When I write code that I want to keep, be it an application, script or IaC definition in something like Terraform, I start by defining the problem I am trying to solve. I'll describe the overall behaviour and then work from that. If I change what I want it to do then I'll update the documentation. The principle to follow is that the documentation is always right because that's what you've defined; if the documentation and the system diverge then it's the system that must be fixed and not the documentation.
+This leads to strong test driven development because you've designed what you want the system to do, then you design a test to see if it's doing it, and finally you fix the system so that the tests pass.
 
 #### A Simple Example: FizzBuzz Documentation-First
 
@@ -93,22 +93,42 @@ def fizzbuzz(n):
 
 The documentation came first, defining exactly what we wanted. The test validates our understanding, and the code implements the documented behavior. If requirements change, we update the documentation first, then the tests, then the code.
 
-In a world where LLMs are taking over the world it's not much of a leap to see that good documentation of a feature can form the prompt to assist in creating that feature; I think this is far superior to the reverse approach of using an LLM to document the code because the LLM cannot extract the business logic from the code as well as it can extract the code from the business logic.
+```mermaid
+flowchart TD
+    A[📝 Documentation] --> B[🧪 Tests]
+    B --> C[💻 Code]
+    C --> D{Pass?}
+    D -->|No| C
+    D -->|Yes| E[✅ Done]
+    F[📋 Changes] --> A
+```
+
+With LLMs becoming more prevalent, good documentation of a feature can easily form the prompt to help create that feature; I think this is far superior to the reverse approach of using an LLM to document the code because the LLM cannot extract the business logic from the code as well as it can extract the code from the business logic.
 
 ### Benefits of Documentation-First Infrastructure
 
-A common theme in my world is around understanding how we handle things when they don't behave as we want them to. It's very common in my world for infrastructure changes to be snuck in on the back of an incident. I am sure you've been there yourself when a software or business driven change proceeds without infrastrucuture engagement and it doesn't work because there are corresponding changes to be made in infrastructure that weren't included in the plan. In these situation the common question that must be asked is 'has this ever worked?' which separates the things that should behave in a defined way, and don't, and those who are behaving how they are intended to but that intention does not match the new requirements.
-Documentation first approach gives a clear heirarchy. Let's say someone has introduced a new system and they want communication from DC A to DC B on a specific service. If this behaviour is not defined in the documentation then it is clearly not an incident and so cannot be considered 'breakfix'. If the documentation agrees that this traffic flow should be allowed for the system then we should have failed tests for that system already which should have invoked a proactive incident to ensure that the problem is solved.
+A common theme in my world is around understanding how we handle things when they don't behave as we want them to. It's very common in my world for infrastructure changes to be snuck in on the back of an incident. I'm sure you've been there yourself when a software or business driven change proceeds without infrastructure engagement and it doesn't work because there are corresponding changes to be made in infrastructure that weren't included in the plan. In these situations the common question that must be asked is 'has this ever worked?' which separates the things that should behave in a defined way, and don't, and those who are behaving how they're intended to but that intention doesn't match the new requirements.
+Documentation first approach gives a clear hierarchy. Let's say someone has introduced a new system and they want communication from DC A to DC B on a specific service. If this behaviour isn't defined in the documentation then it's clearly not an incident and so can't be considered 'breakfix'. If the documentation agrees that this traffic flow should be allowed for the system then we should have failed tests for that system already which should have invoked a proactive incident to ensure that the problem is solved.
 
 ### Implementation Strategies
 
 This can be solved by documenting a blueprint for an infrastructure, be it an application hosting environment, a campus office location, or in my favourite realm of retail, a store. This documentation can follow a lifecycle similar to code, the wonderful [documentation as code](https://about.gitlab.com/blog/five-fast-facts-about-docs-as-code-at-gitlab/) approach that uses tools like [github](/tags/github) to manage the documentation and things like [docusaurus](/tags/docusaurus) to make it accessible to anyone that needs it. These blueprints are made up of a collection of business focussed features within the infrastructure and allow the capabilities and limitations of the infrastructure to be easily understood.
 
-Using a business focussed feature set as the basis for your documentation also allows you to create a business focussed testing criteria which can form the groundwork for a set of dashboards that demonstrate the infrastrucure is healthy, not by some arbitrarily defined metrics but by useful capabilities. Gone are the 'is the database server responding' and in comes 'can the store authorise POS transactions'. Out goes 'is there sufficient bandwidth on the WAN and in comes 'can 1000 people be on teams calls at the same time'.
+```mermaid
+flowchart LR
+    A[📄 Initial Docs] --> B[🌐 WiFi Feature]
+    B --> C[🔀 Merge v2.0]
+    C --> D[💳 POS Feature]
+    D --> E[🔀 Merge v2.1]
+    E --> F[🚨 Hotfix]
+    F --> G[🔀 Emergency Update]
+```
+
+Using a business focussed feature set as the basis for your documentation also allows you to create a business focussed testing criteria which can form the groundwork for a set of dashboards that demonstrate the infrastructure is healthy, not by some arbitrarily defined metrics but by useful capabilities. Gone are the 'is the database server responding' and in comes 'can the store authorise POS transactions'. Out goes 'is there sufficient bandwidth on the WAN' and in comes 'can 1000 people be on teams calls at the same time'.
 
 ## Conclusion
 
-The shift to documentation-first infrastructure isn't just about better diagrams or more detailed runbooks—it's about fundamentally changing how we think about infrastructure design and management. When documentation becomes the source of truth rather than an afterthought, we create systems that are not only more reliable but also more understandable and maintainable.
+The shift to documentation-first infrastructure isn't just about better diagrams or more detailed runbooks—it's about fundamentally changing how we think about infrastructure design and management. When documentation becomes the source of truth rather than an afterthought, we create systems that aren't only more reliable but also more understandable and maintainable.
 
 The benefits are clear: fewer incident-driven changes, better alignment between business requirements and infrastructure capabilities, and monitoring that actually tells us what matters. Most importantly, documentation-first practices help us answer the critical question "has this ever worked?" before problems arise, not after.
 
