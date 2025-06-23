@@ -10,7 +10,7 @@ date: 2025-06-23
 
 ---
 
-I happened upon the diagram below within the pages on [default outbound internet access](https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/default-outbound-access#when-is-default-outbound-access-provided) and it seemed a little counterintuitive. The decision flow seems to suggest that a VM will use the egress IP of a NAT gateway preferably over an assigened PIP.
+I happened upon the diagram below within the pages on [default outbound internet access](https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/default-outbound-access#when-is-default-outbound-access-provided) and it seemed a little counterintuitive. The decision flow seems to suggest that a VM will use the egress IP of a NAT gateway preferably over an assigned PIP.
 <!-- truncate -->
 ![What's this all about then?](img/decision-tree-load-balancer-thumb.png)
 I am very much of the view that explicitly configured things should always override things that are implicit. It seemed so out of step that I had to test it, in case it was either a mistake in the documentation or my own incorrect interpretation.
