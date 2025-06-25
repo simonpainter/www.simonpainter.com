@@ -1,6 +1,6 @@
 ---
 
-title: Is MCP the new fad for poor data management?
+title: Is MCP the new fad for poor knowledge management?
 authors: simonpainter
 tags:
   - personal
