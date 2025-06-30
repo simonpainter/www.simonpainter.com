@@ -124,7 +124,7 @@ const config = {
 
 
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} Simon Painter`,
+        copyright: `Copyright © ${new Date().getFullYear()} Connectivity Matters. Built with Docusaurus.`,
       },
       prism: {
         theme: prismThemes.github,
