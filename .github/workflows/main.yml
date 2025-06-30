@@ -37,7 +37,13 @@ jobs:
 
       - name: Sync to S3
         run: |
-          aws s3 sync build/ s3://${{ secrets.S3_BUCKET }} \
+          aws s3 sync build/ s3://${{ secrets.S3_BUCKET_PERSONAL }} \
+            --delete \
+            --exclude ".git/*" \
+            --exclude ".github/*"
+          - name: Sync to S3
+        run: |
+          aws s3 sync build/ s3://${{ secrets.S3_BUCKET_BLOG }} \
             --delete \
             --exclude ".git/*" \
             --exclude ".github/*"
