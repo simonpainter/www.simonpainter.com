@@ -3,7 +3,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Connectivity Matters',
+  title: 'Connectivity Matters Blog',
   favicon: 'img/favicon.ico',
 
   url: 'https://www.connectivitymatters.uk',
