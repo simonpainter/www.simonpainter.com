@@ -6,7 +6,7 @@ const config = {
   title: 'Connectivity Matters',
   favicon: 'img/favicon.ico',
 
-  url: 'https://www.simonpainter.com',
+  url: 'https://www.connectivitymatters.uk',
   baseUrl: '/',
 
   organizationName: 'simonpainter',
