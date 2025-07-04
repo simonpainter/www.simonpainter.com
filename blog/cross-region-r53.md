@@ -35,7 +35,7 @@ This approach works beautifully for any private resource, whether it's in AWS, A
 
 ## Requirement 2: Closest-Instance Routing
 
-The challenge of closest-instance routing presents a more complex puzzle. While Anycast traditionally solves this using the [routing protocol's](dijkstra-ospf.md) [network path selection](longest-prefix-matching.md), DNS-based solutions typically rely on geolocation databases - something that's problematic with private IP addresses.
+The challenge of closest-instance routing presents a more complex puzzle. While Anycast traditionally solves this using the routing protocol's [network path selection](longest-prefix-matching.md), DNS-based solutions typically rely on geolocation databases - something that's problematic with private IP addresses.
 
 I've found that AWS takes the query's originating region as the location identifier for geoproximity routing. We can leverage this by creating regional DNS records and assigning them to geoproximity routing with specified AWS regions for each record.
 
