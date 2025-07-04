@@ -10,7 +10,7 @@ tags:
 date: 2025-03-11
 ---
 
-I like to point out to people that _it's easier to train a network person on cloud than it is to train a cloud person on networks_. It's a glib generalisation but it holds true for the most part because there is so much to networking [that comes from history](how-the-internet-works.md) and quite a lot of grounding that a seasoned network engineer or architect will already understand.
+I like to point out to people that _it's easier to train a network person on cloud than it is to train a cloud person on networks_. It's a glib generalisation but it holds true for the most part because there is so much to networking that comes from history and quite a lot of grounding that a seasoned network engineer or architect will already understand.
 A big chunk of the [AWS](/tags/aws) and [Azure](/tags/azure) networking certification covers [BGP](/tags/bgp) and that's one of the reasons they are considered quite hard for some but quite easy for others. [BGP](/tags/bgp) is a topic that many very experienced network engineers in enterprise networking can get through their entire career without touching, but for those who operate at scale or work with MSP and telco networks it's bread and butter.
 <!--truncate-->
 
@@ -67,7 +67,7 @@ A rather neat thing from [AWS](/tags/aws) is the ability to influence Local Pref
 >
 > 7224:7300 — High preference
 
-This is particularly useful because [_Local Preference Always Wins_](how-the-internet-works.md#path-selection) so you can override AS PATH length and home region association to influence path selection and ECMP across regions.
+This is particularly useful because _Local Preference Always Wins_ so you can override AS PATH length and home region association to influence path selection and ECMP across regions.
 
 > OK, you're right, [longest prefix](longest-prefix-matching.md) beats LOCAL_PREF. It's probably better to say
 > _Local Preference Always Wins In [BGP](/tags/bgp)_ but that's not as catchy.

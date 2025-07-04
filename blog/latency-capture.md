@@ -17,7 +17,7 @@ A little while ago I set out to find a way to measure the overhead that FQDN fil
 <!-- truncate -->
 [The repository contains all the tools you'll need](https://github.com/simonpainter/capture_latency) to either replicate and confirm my testing or do your own, perhaps on a wider selection of firewalls. It consists of two scripts, one to capture and one to analyse the captures. I chose this split approach because precise timing is required, and I didn't want to tie up the capture box doing analysis until after the captures were completed.
 
-The capture script repeatedly connects to an HTTPS URL and pulls down the contents of a page. While doing so, it performs a packet capture of outbound HTTPS traffic. The analysis script then trawls through these captures and extracts the time to first byte by looking at the [TCP](how-the-internet-works.md#tcp-transmission-control-protocol) streams and noting the timestamps for the beginning of the session and first usable byte.
+The capture script repeatedly connects to an HTTPS URL and pulls down the contents of a page. While doing so, it performs a packet capture of outbound HTTPS traffic. The analysis script then trawls through these captures and extracts the time to first byte by looking at the TCP streams and noting the timestamps for the beginning of the session and first usable byte.
 
 > There are a number of factors that can cause latency through a firewall at this point in the request, and that can depend
 > on what method of FQDN filtering is being employed. Typically, full TLS inspection would take longer as packets have to be
