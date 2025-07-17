@@ -149,15 +149,18 @@ I really can't fault the additional information around that response. I think I 
 Again this is a prompt that doesn't explicitly mention Netbox. I am running the latest Claude model and it has web search and research turn on so I was optimistic about it performing one of those tasks that we do pretty regularly around budget time.
 
 ```text
-Let me search for information about the current end-of-life status of your Cisco switches to help you determine which ones need replacement.
+Let me search for information about the current end-of-life status of your Cisco 
+switches to help you determine which ones need replacement.
 Now let me check the status of your Cisco Nexus switches.
 
-Based on my research, here are the end-of-life switches you should prioritize for replacement:
+Based on my research, here are the end-of-life switches you should prioritize
+for replacement:
 Critical Priority - Replace Immediately
 Cisco Catalyst 3850-24U-L Switches (SW01 & SW02)
 End of Support: October 31, 2025
 Locations: Skipton and Ilkley (your store locations)
-Status: Cisco hardware warranty ends October 31, 2025, and they will no longer receive security patches or vulnerability support.
+Status: Cisco hardware warranty ends October 31, 2025, and they will no longer 
+receive security patches or vulnerability support.
 ```
 
 I further refined the query to check the dates and format it into a table; it worked flawlessly. I also asked for a diagram which created something pretty cluttered but once I clarified it a bit the results were good.
