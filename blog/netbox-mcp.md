@@ -13,7 +13,8 @@ date: 2025-07-17
 
 I've had some [concerns](mcp-server-document.md) around Model Context Protocol being a new fad to put another front end on poorly managed data, like the search appliances Google sold a decade and a half ago, but I had a play with the [MCP server for Netbox](https://github.com/netboxlabs/netbox-mcp-server) and it's pretty handy.
 <!-- truncate -->
-I have been a little busy since easter but managed to find some time today to have a look at one of the two AI options that [Netbox released back in March](https://netboxlabs.com/blog/new-ways-use-ai-netbox-open-sourced/). The Netbox local MCP server is pretty easy to install (at least it is on a Macbook) and I would say getting a fresh instance of Netbox with some dummy data, and the MCP server, took only a couple of hours to get running.
+
+I have been a little busy since Easter but finally found some time today to dive into one of the two AI options that [NetBox released back in March](https://netboxlabs.com/blog/new-ways-use-ai-netbox-open-sourced/). The NetBox local MCP server installation was surprisingly straightforward (at least it is on a MacBook). All told, getting a fresh instance of NetBox with some dummy data and the MCP server up and running took only a couple of hours.
 
 > If you have not used Netbox then shame on you, it's one of the
 > best tools you can use for keeping track of all the physical stuff
