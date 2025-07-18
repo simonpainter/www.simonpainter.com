@@ -84,7 +84,7 @@ Stores (2 sites), Datacentres (1 site)
 
 ### OK, but why
 
-From time to time people want to know stuff right? Your boss wants to know if we have any of a certain device type because he as been asked by the CISO who is worried about a bug. Or they want to know if there is enough bandwidth in a site because the CEO is going to do an event there and wants to stream it. Over the last couple of decades I have spent many hours gathering data for request that have little or no context and wished I could give direct and easy user friendly access for the people asking the questions to get the information they need. Sure you can give them access to Netbox but if you'd met some of the people I have worked had queries like this fro you wouldn't trust them to run a tap let alone a report on network inventory.
+From time to time people want to know stuff right? Your boss wants to know if we have any of a certain device type because he as been asked by the CISO who is worried about a bug. Or they want to know if there is enough bandwidth in a site because the CEO is going to do an event there and wants to stream it. Over the last couple of decades I have spent many hours gathering data for request that have little or no context and wished I could give direct and easy user friendly access for the people asking the questions to get the information they need. Sure you can give them access to Netbox but if you'd met some of the people I have had queries like this from you wouldn't trust them to run a tap let alone a report on network inventory.
 
 ### Getting into it
 
