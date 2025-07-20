@@ -78,7 +78,7 @@ Both Azure and AWS reserve certain IPs in each subnet, though their documentatio
 
 Both providers reserve the first usable address (`network +1`) as the default gateway. They also reserve two more addresses (`network +2` and `network +3`). In Azure, these are used for DNS.
 
-> `Network +2` simply means "network address plus two." Remember that [an IP address is just a 32-bit integer](how-the-internet-works.md#finding-the-router), 
+> `Network +2` simply means "network address plus two." Remember that an IP address is just a 32-bit integer, 
 > though we usually write it in dotted decimal. For example, in a 192.168.0.0/24 subnet, the network address is 192.168.0.0 
 > and `network +2` is 192.168.0.2. In a 192.168.0.128/25 subnet, the network address is 192.168.0.128, making 
 > `network +2` 192.168.0.130.

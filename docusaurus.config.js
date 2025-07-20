@@ -3,11 +3,10 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Simon Painter',
-  tagline: 'A place to keep things',
+  title: 'Connectivity Matters Blog',
   favicon: 'img/favicon.ico',
 
-  url: 'https://www.simonpainter.com',
+  url: 'https://www.connectivitymatters.uk',
   baseUrl: '/',
 
   organizationName: 'simonpainter',
@@ -33,10 +32,9 @@ const config = {
       ({
         docs: false,
         blog: {
-          editUrl: 'https://github.com/simonpainter/my-website/blob/simonpainter.com/',
+          editUrl: 'https://github.com/simonpainter/my-website/blob/connectivitymatters.uk/',
           routeBasePath: '/',
-          blogTitle: 'Simon Painter',
-          blogDescription: 'A place to keep things',
+          blogTitle: 'Connectivity Matters',
           postsPerPage: 'ALL',
           blogSidebarTitle: 'All posts',
           blogSidebarCount: 'ALL',
@@ -63,15 +61,14 @@ const config = {
         {name: 'keywords', content: 'blog, tech, cloud, programming, azure, aws, networking, security'},
         {name: 'twitter:card', content: 'summary_large_image'},
         {name: 'og:type', content: 'website'},
-        {name: 'og:title', content: 'Simon Painter - A place to keep things'},
+        {name: 'og:title', content: 'Connectivity Matters Blog'},
         {name: 'og:description', content: 'A collection of articles on cloud, programming, networking, and more'},
       ],
       navbar: {
         hideOnScroll: false,
-        title: 'A place to keep things',
         logo: {
-          src: 'img/logo.svg',
-          alt: 'Simon Painter Logo'
+          src: 'img/logo.png',
+          alt: 'Connectivity Matters Logo'
         },
         items: [
           {
@@ -104,16 +101,8 @@ const config = {
             label: 'Business',
             position: 'left',
           },
-          {
-            href: 'https://github.com/simonpainter',
-            label: 'GitHub',
-            position: 'right',
-          },
-          {
-            href: 'https://www.linkedin.com/in/sipainter/',
-            label: 'LinkedIn',
-            position: 'right',
-          },
+
+
         ],
       },
       footer: {
@@ -132,34 +121,10 @@ const config = {
               },
             ],
           },
-          {
-            title: 'Connect',
-            items: [
-              {
-                label: 'GitHub',
-                href: 'https://github.com/simonpainter',
-              },
-              {
-                label: 'LinkedIn',
-                href: 'https://www.linkedin.com/in/sipainter/',
-              },
-            ],
-          },
-          {
-            title: 'Projects',
-            items: [
-              {
-                label: 'Refried Bean',
-                href: 'https://www.refriedbean.uk',
-              },
-              {
-                label: 'Connectivity Matters',
-                href: 'https://www.connectivitymatters.uk',
-              },
-            ],
-          }
+
+
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} Simon Painter`,
+        copyright: `Copyright © ${new Date().getFullYear()} Connectivity Matters. Built with Docusaurus.`,
       },
       prism: {
         theme: prismThemes.github,

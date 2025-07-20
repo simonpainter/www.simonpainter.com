@@ -114,7 +114,8 @@ Translating this into infrastructure if the ticket says that 'the network is run
 
 ### Implementation Strategies
 
-This can be solved by documenting a blueprint for an infrastructure, be it an application hosting environment, a campus office location, or in my favourite realm of retail, a store. This documentation can follow a lifecycle similar to code, the wonderful [documentation as code](https://about.gitlab.com/blog/five-fast-facts-about-docs-as-code-at-gitlab/) approach that uses tools like [github](/tags/github) to manage the documentation and things like [docusaurus](/tags/docusaurus) to make it accessible to anyone that needs it. These blueprints are made up of a collection of business focussed features within the infrastructure and allow the capabilities and limitations of the infrastructure to be easily understood.
+This can be solved by documenting a blueprint for an infrastructure, be it an application hosting environment, a campus office location, or in my favourite realm of retail, a store. This documentation can follow a lifecycle similar to code, the wonderful [documentation as code](https://about.gitlab.com/blog/five-fast-facts-about-docs-as-code-at-gitlab/) approach that uses tools like [github](/tags/github) to manage the documentation and things like 
+docusaurus to make it accessible to anyone that needs it. These blueprints are made up of a collection of business focussed features within the infrastructure and allow the capabilities and limitations of the infrastructure to be easily understood.
 
 ```mermaid
 flowchart LR

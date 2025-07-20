@@ -15,7 +15,7 @@ Since Anthropic open sourced the [Model Context Protocol](https://www.anthropic.
 <!-- truncate -->
 This is great in many ways, being able to choose which integrations your chosen model can use gives flexibility and choice. Being able to create your own using the [numerous SDKs, integrations and implementations](https://github.com/modelcontextprotocol) is a dream come true for those of us exploring this blossoming new territory.
 
-As a network engineer at heart the idea of [integrating an AI agent into IOS XE](https://www.youtube.com/watch?v=2_7YcHtRw2s&feature=youtu.be) with MCP was fascinating and as a cloud fanboi and [Microsoft MVP](most-valuable-professional.md) I loved seeing [Microsoft add an MCP](https://github.com/MicrosoftDocs/mcp) to their substantial repository of public documentation. Microsoft are really setting the bar high on documentation-as-code by the way.
+As a network engineer at heart the idea of [integrating an AI agent into IOS XE](https://www.youtube.com/watch?v=2_7YcHtRw2s&feature=youtu.be) with MCP was fascinating and as a cloud fanboi I loved seeing [Microsoft add an MCP](https://github.com/MicrosoftDocs/mcp) to their substantial repository of public documentation. Microsoft are really setting the bar high on documentation-as-code by the way.
 
 Where I get a bit more concerned is around how breathless enterprise architects and CTO may see this as another silver bullet to their own documentation woes. Time for a story:
 
