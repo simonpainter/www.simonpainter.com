@@ -33,7 +33,7 @@ const config = {
       ({
         docs: false,
         blog: {
-          editUrl: 'https://github.com/simonpainter/my-website/blob/main/',
+          editUrl: 'https://github.com/simonpainter/my-website/blob/simonpainter.com/',
           routeBasePath: '/',
           blogTitle: 'Simon Painter',
           blogDescription: 'A place to keep things',
