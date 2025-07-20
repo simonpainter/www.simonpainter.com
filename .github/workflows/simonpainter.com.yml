@@ -41,4 +41,3 @@ jobs:
             --delete \
             --exclude ".git/*" \
             --exclude ".github/*"
-          - name: Sync to S3

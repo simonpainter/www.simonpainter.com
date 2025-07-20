@@ -138,3 +138,8 @@ educational:
   label: 'Educational'
   permalink: '/educational'
   description: 'In-depth explanations and comprehensive guides on fundamental technical concepts'
+
+mcp:
+  label: 'Model Context Protocol'
+  permalink: '/mcp'
+  description: 'Model Context Protocol topics, implementations, and best practices'
