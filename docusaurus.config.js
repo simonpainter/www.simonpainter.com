@@ -36,7 +36,7 @@ const config = {
           editUrl: 'https://github.com/simonpainter/my-website/blob/simonpainter.com/',
           routeBasePath: '/',
           blogTitle: 'Simon Painter',
-          blogDescription: 'A place to keep things',
+          blogDescription: 'Simon Painter - MVP',
           postsPerPage: 'ALL',
           blogSidebarTitle: 'All posts',
           blogSidebarCount: 'ALL',
@@ -63,12 +63,12 @@ const config = {
         {name: 'keywords', content: 'blog, tech, cloud, programming, azure, aws, networking, security'},
         {name: 'twitter:card', content: 'summary_large_image'},
         {name: 'og:type', content: 'website'},
-        {name: 'og:title', content: 'Simon Painter - A place to keep things'},
+        {name: 'og:title', content: 'Simon Painter - MVP'},
         {name: 'og:description', content: 'A collection of articles on cloud, programming, networking, and more'},
       ],
       navbar: {
         hideOnScroll: false,
-        title: 'A place to keep things',
+        title: 'Simon Painter - MVP',
         logo: {
           src: 'img/logo.svg',
           alt: 'Simon Painter Logo'
