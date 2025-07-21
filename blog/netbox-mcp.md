@@ -59,7 +59,7 @@ Within Claude Desktop you can use the developer extensions and then drop in conf
 
 ### It didn't work
 
-The thing is, it's a bit of a pain to troubleshoot when it doesn't work. When it didn't work the error messages were pretty useless and unless you trawl logs it's hard to figure out what's wrong. I eventually figured out that the MCP server was using Python [requests](https://requests.readthedocs.io/en/latest/) which is understandably a bit fussy about self signed certificates by default. I could have installed a trusted certificate but was already using Cloudflare so used the TLS enabled proxy capability. I had to do a bit of tweaking with CORS and using http rather than https on the origin server but that was eventually enough to get it working. As I said, about two hours total.
+The thing is, it's a bit of a pain to troubleshoot when it doesn't work. When it didn't work the error messages were pretty useless and unless you trawl logs it's hard to figure out what's wrong. I eventually figured out that the MCP server was using Python [requests](https://requests.readthedocs.io/en/latest/) which is understandably a bit fussy about self signed certificates by default. I could have tweaked the code to flag it to not check the cert or installed a trusted certificate but was already using Cloudflare so used the TLS enabled proxy capability. I had to do a bit of tweaking with CORS and switch to using http rather than https on the origin server (again something that a trusted cert could have fixed) but that was eventually enough to get it working. As I said, about two hours total.
 
 ### Starter for 10
 
@@ -72,7 +72,7 @@ Claude understood the intent of my questions and gave an accurate response.
 ```text
 I'll check your NetBox to see how many sites you have configured.
 
-You have 5 sites configured in your NetBox:
+You have 3 sites configured in your NetBox:
 
 Ilkley (Stores group)
 Winnersh Triangle (Datacentres group)
