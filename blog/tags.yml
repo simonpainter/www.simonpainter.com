@@ -143,3 +143,13 @@ mcp:
   label: 'Model Context Protocol'
   permalink: '/mcp'
   description: 'Model Context Protocol topics, implementations, and best practices'
+
+netbox:
+  label: 'Netbox'
+  permalink: '/netbox'
+  description: 'Netbox network management system, configuration, and integration guides'
+
+terraform:
+  label: 'Terraform'
+  permalink: '/terraform'
+  description: 'Infrastructure as Code with Terraform, including best practices and examples'
