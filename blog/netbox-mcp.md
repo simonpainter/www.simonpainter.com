@@ -7,6 +7,7 @@ tags:
   - networks
   - python
   - mcp
+  - netbox
 date: 2025-07-17
 
 ---
