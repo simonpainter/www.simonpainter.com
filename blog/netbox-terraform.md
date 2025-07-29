@@ -61,10 +61,222 @@ The netbox provider currently isn't tested with the latest version of Netbox. Th
 
 For remote state I used terraform cloud with a VCS-driven workflow. This allows you to store your state in a remote location and use version control to manage your changes.There are several optons for remote state but Terraform Cloud is pretty good and very easy to set up. 
 
-I used GitHub Actions for the CI/CD pipeline. I use [GitHub Actions for my own website] so 
+I used GitHub Actions for the CI/CD pipeline. I use [GitHub Actions for my own website](s3-docusaurus.md) so I am fairly familiar with it. You can achieve the whole thing without using Terraform Cloud if you like, so long as you have a remote state backend.
+
+Finally you need to design your Terraform, ideally with modules for reusable consistent building blocks. I have a module that does the subnetting for a repeatable site type; I work a lot in retail so think of repeatable store networks that are very much cattle and not pets. This module allows you to define a site IP address range and then it will create the subnets for you. This is useful for creating consistent networks across multiple sites.
 
 #### Prerequisites
 
 - NetBox instance with API access
 - Terraform Cloud account
 - GitHub repository with Actions enabled
+
+There are some great instructions for setting up a Netbox instance if you want one for you lab. I [recently set one up while playing with the MCP server](netbox-mcp.md) and it was very easy to do. You can use Docker or a virtual machine to run Netbox locally, or you can use a hosted version if you prefer. The rest of the prerequistites are free to set up and you can use the free tier of Terraform Cloud and GitHub Actions to get started.
+
+## Setup Guide
+
+Here's my step-by-step guide to set up the Terraform Cloud and GitHub Actions for managing NetBox infrastructure. This guide is for lab use but gives you the solid foundation to create your own production environment.
+
+### 1. Terraform Cloud Setup
+
+#### 1.1 Create Organisation and Workspace
+
+1. Log in to [Terraform Cloud](https://app.terraform.io)
+2. Create an organisation (if you don't have one)
+3. Create a new workspace:
+   - Choose "VCS-driven workflow"
+   - Connect to your GitHub repository
+   - Set workspace name to `netbox-lab`
+
+#### 1.2 Configure Workspace Settings
+
+1. Go to your workspace → Settings → General
+2. Set **Apply Method** to "Auto apply" for automated deployments
+3. Set **Terraform Version** to 1.8.2
+
+#### 1.3 Configure Workspace Variables
+
+1. Go to your workspace → Variables
+2. Add the following **Terraform variables**:
+   - `netbox_url`: Your NetBox server URL (e.g., `https://netbox.example.com`)
+   - `netbox_token`: Your NetBox API token (mark as sensitive)
+
+#### 1.4 Generate API Token
+
+1. Go to [User Settings → Tokens](https://app.terraform.io/app/settings/tokens)
+2. Click "Create an API token"
+3. Provide a description (e.g., "GitHub Actions")
+4. Copy the token (you'll need it for GitHub)
+
+### 2. GitHub Repository Setup
+
+#### 2.1 Add Repository Secrets
+
+1. Go to your GitHub repository → Settings → Secrets and variables → Actions
+2. Click "New repository secret"
+3. Add the following secret:
+   - **Name**: `TF_API_TOKEN`
+   - **Value**: Your Terraform Cloud API token from step 1.4
+
+#### 2.2 Verify Workflow File
+
+The repository includes `.github/workflows/terraform.yml` which:
+- Runs on push/pull requests to main branch
+- Validates terraform formatting and configuration
+- Creates plan comments on pull requests
+- Triggers Terraform Cloud runs on main branch pushes
+
+Here's my workflow file for reference:
+
+```yaml
+name: 'Terraform'
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.8.2
+        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+    - name: Terraform Format
+      id: fmt
+      run: terraform fmt -check
+
+    - name: Terraform Init
+      id: init
+      run: terraform init
+
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate -no-color
+
+    - name: Terraform Plan
+      id: plan
+      if: github.event_name == 'pull_request'
+      run: terraform plan -no-color -input=false
+      continue-on-error: true
+
+    - name: Update Pull Request
+      uses: actions/github-script@v7
+      if: github.event_name == 'pull_request'
+      env:
+        PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+          #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+          #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+          #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+
+          <details><summary>Show Plan</summary>
+
+          \`\`\`\n
+          ${process.env.PLAN}
+          \`\`\`
+
+          </details>
+
+          *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })
+
+    - name: Terraform Plan Status
+      if: steps.plan.outcome == 'failure'
+      run: exit 1
+
+    - name: Trigger Terraform Cloud Run
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: |
+        echo "Push to main detected. Terraform Cloud will automatically trigger a run."
+
+```
+
+
+### 3. NetBox API Setup
+
+#### 3.1 Generate NetBox API Token
+
+1. Log in to your NetBox instance
+2. Go to Admin → Users → Tokens
+3. Click "Add Token"
+4. Set permissions as needed (typically full access for infrastructure management)
+5. Copy the token
+
+#### 3.2 Configure Variables in Terraform Cloud
+
+1. Return to your Terraform Cloud workspace → Variables
+2. Update the `netbox_token` variable with your NetBox API token
+3. Ensure it's marked as **sensitive**
+
+## My first Terraform
+
+Start simple with a terraform provider configuration. This will allow you to connect to your NetBox instance and start managing resources. Create a file called `provider.tf` in your repository with the following content:
+
+```hcl
+terraform {
+  cloud {
+    organization = "{your-organisation}"
+    workspaces {
+      name = "netbox-lab"
+    }
+  }
+
+  required_providers {
+    netbox = {
+      source  = "e-breuninger/netbox"
+      version = "4.1.0"
+    }
+  }
+}
+
+provider "netbox" {
+  server_url = var.netbox_url
+  api_token  = var.netbox_token
+}
+```
+
+Then you can create a file called `variables.tf` to define the variables used in the provider configuration:
+
+```hcl
+variable "netbox_url" {
+  description = "The URL of the NetBox server"
+  type        = string
+}
+
+variable "netbox_token" {
+  description = "The API token for the NetBox server"
+  type        = string
+  sensitive   = true
+}
+``` 
+
+This should be enough to get you started with the NetBox provider. When you commit and push changes it should trigger the GitHub Actions workflow and run the Terraform commands to validate and apply your configuration. You can check the Actions tab in your GitHub repository to see the progress of the workflow. 
