@@ -177,7 +177,7 @@ const config = {
             ],
           }
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} Connectivity Matters. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Simon Painter`,
       },
       prism: {
         theme: prismThemes.github,
