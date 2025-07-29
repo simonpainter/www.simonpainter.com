@@ -3,7 +3,12 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
+<<<<<<< HEAD
   title: 'Connectivity Matters Blog',
+=======
+  title: 'Simon Painter',
+  tagline: 'A place to keep things',
+>>>>>>> parent of 2752c15 (Updated the branding to reflect the domain.)
   favicon: 'img/favicon.ico',
 
   url: 'https://www.connectivitymatters.uk',
@@ -32,10 +37,14 @@ const config = {
       ({
         docs: false,
         blog: {
-          editUrl: 'https://github.com/simonpainter/my-website/blob/connectivitymatters.uk/',
+          editUrl: 'https://github.com/simonpainter/my-website/blob/main/',
           routeBasePath: '/',
           blogTitle: 'Simon Painter',
+<<<<<<< HEAD
           blogDescription: 'Simon Painter - MVP',
+=======
+          blogDescription: 'A place to keep things',
+>>>>>>> parent of 2752c15 (Updated the branding to reflect the domain.)
           postsPerPage: 'ALL',
           blogSidebarTitle: 'All posts',
           blogSidebarCount: 'ALL',
@@ -62,14 +71,26 @@ const config = {
         {name: 'keywords', content: 'blog, tech, cloud, programming, azure, aws, networking, security'},
         {name: 'twitter:card', content: 'summary_large_image'},
         {name: 'og:type', content: 'website'},
+<<<<<<< HEAD
         {name: 'og:title', content: 'Simon Painter - MVP'},
 
+=======
+        {name: 'og:title', content: 'Simon Painter - A place to keep things'},
+>>>>>>> parent of 2752c15 (Updated the branding to reflect the domain.)
         {name: 'og:description', content: 'A collection of articles on cloud, programming, networking, and more'},
       ],
       navbar: {
         hideOnScroll: false,
+<<<<<<< HEAD
         title: 'Simon Painter - MVP',
 
+=======
+        title: 'A place to keep things',
+        logo: {
+          src: 'img/logo.svg',
+          alt: 'Simon Painter Logo'
+        },
+>>>>>>> parent of 2752c15 (Updated the branding to reflect the domain.)
         items: [
           {
             href: '/tags',
@@ -101,8 +122,16 @@ const config = {
             label: 'Business',
             position: 'left',
           },
-
-
+          {
+            href: 'https://github.com/simonpainter',
+            label: 'GitHub',
+            position: 'right',
+          },
+          {
+            href: 'https://www.linkedin.com/in/sipainter/',
+            label: 'LinkedIn',
+            position: 'right',
+          },
         ],
       },
       footer: {
@@ -121,8 +150,32 @@ const config = {
               },
             ],
           },
-
-
+          {
+            title: 'Connect',
+            items: [
+              {
+                label: 'GitHub',
+                href: 'https://github.com/simonpainter',
+              },
+              {
+                label: 'LinkedIn',
+                href: 'https://www.linkedin.com/in/sipainter/',
+              },
+            ],
+          },
+          {
+            title: 'Projects',
+            items: [
+              {
+                label: 'Refried Bean',
+                href: 'https://www.refriedbean.uk',
+              },
+              {
+                label: 'Connectivity Matters',
+                href: 'https://www.connectivitymatters.uk',
+              },
+            ],
+          }
         ],
         copyright: `Copyright © ${new Date().getFullYear()} Connectivity Matters. Built with Docusaurus.`,
       },

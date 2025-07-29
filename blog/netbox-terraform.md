@@ -61,7 +61,7 @@ The netbox provider currently isn't tested with the latest version of Netbox. Th
 
 For remote state I used terraform cloud with a VCS-driven workflow. This allows you to store your state in a remote location and use version control to manage your changes.There are several optons for remote state but Terraform Cloud is pretty good and very easy to set up. 
 
-I used GitHub Actions for the CI/CD pipeline. I use [GitHub Actions for my own website]() so 
+I used GitHub Actions for the CI/CD pipeline. I use [GitHub Actions for my own website] so 
 
 #### Prerequisites
 
