@@ -38,7 +38,7 @@ Let's start with the overview of the architecture. There are a few components th
 - NetBox Provider: Uses the e-breuninger/netbox provider v4.1.0
 - Remote State: Terraform Cloud with VCS-driven workflow
 - CI/CD: GitHub Actions for automated validation and deployment
-- Modular Design: Store networking resources are organized in a reusable module
+- Modular Design: Store networking resources are organised in a reusable module
 
 The netbox provider currently isn't tested with the latest version of Netbox. This may or may not be a problem for you but it's worth noting. I had no issues with compatibility with my own testing using version 4.1.0 of the provider and Netbox 4.3.4, even though it kept spitting out an alarming warning.
 
@@ -59,7 +59,7 @@ The netbox provider currently isn't tested with the latest version of Netbox. Th
 
 ```
 
-For remote state I used terraform cloud with a VCS-driven workflow. This allows you to store your state in a remote location and use version control to manage your changes.There are several optons for remote state but Terraform Cloud is pretty good and very easy to set up. 
+For remote state I used terraform cloud with a VCS-driven workflow. This allows you to store your state in a remote location and use version control to manage your changes.There are several options for remote state but Terraform Cloud is pretty good and very easy to set up. 
 
 I used GitHub Actions for the CI/CD pipeline. I use [GitHub Actions for my own website](s3-docusaurus.md) so I am fairly familiar with it. You can achieve the whole thing without using Terraform Cloud if you like, so long as you have a remote state backend.
 
