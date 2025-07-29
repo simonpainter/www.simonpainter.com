@@ -3,12 +3,9 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-<<<<<<< HEAD
-  title: 'Connectivity Matters Blog',
-=======
-  title: 'Simon Painter',
-  tagline: 'A place to keep things',
->>>>>>> parent of 2752c15 (Updated the branding to reflect the domain.)
+
+  title: 'Simon Painter - MVP',
+  tagline: 'Simon Painter - MVP',
   favicon: 'img/favicon.ico',
 
   url: 'https://www.connectivitymatters.uk',
@@ -40,11 +37,7 @@ const config = {
           editUrl: 'https://github.com/simonpainter/my-website/blob/main/',
           routeBasePath: '/',
           blogTitle: 'Simon Painter',
-<<<<<<< HEAD
           blogDescription: 'Simon Painter - MVP',
-=======
-          blogDescription: 'A place to keep things',
->>>>>>> parent of 2752c15 (Updated the branding to reflect the domain.)
           postsPerPage: 'ALL',
           blogSidebarTitle: 'All posts',
           blogSidebarCount: 'ALL',
@@ -71,27 +64,14 @@ const config = {
         {name: 'keywords', content: 'blog, tech, cloud, programming, azure, aws, networking, security'},
         {name: 'twitter:card', content: 'summary_large_image'},
         {name: 'og:type', content: 'website'},
-<<<<<<< HEAD
         {name: 'og:title', content: 'Simon Painter - MVP'},
-
-=======
-        {name: 'og:title', content: 'Simon Painter - A place to keep things'},
->>>>>>> parent of 2752c15 (Updated the branding to reflect the domain.)
-        {name: 'og:description', content: 'A collection of articles on cloud, programming, networking, and more'},
+    {name: 'og:description', content: 'A collection of articles on cloud, programming, networking, and more'},
       ],
       navbar: {
         hideOnScroll: false,
-<<<<<<< HEAD
         title: 'Simon Painter - MVP',
 
-=======
-        title: 'A place to keep things',
-        logo: {
-          src: 'img/logo.svg',
-          alt: 'Simon Painter Logo'
-        },
->>>>>>> parent of 2752c15 (Updated the branding to reflect the domain.)
-        items: [
+      items: [
           {
             href: '/tags',
             label: 'All Tags',
