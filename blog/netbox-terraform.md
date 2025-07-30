@@ -17,7 +17,7 @@ There is an [excellent Terraform provider for Netbox](https://registry.terraform
 
 First off let's look at why this is important. Netbox is a fantastic tool for managing your network but like all tools it often relies a lot on manual input. This can lead to inconsistencies and errors, especially in larger environments. By using Terraform you can build the documentation stage in very early in your change workflow and move towards a model where your documentation is treated as code and follows a version control process similar to your infrastructure or application code. By building the actual physical and configuration changes into your workflow your documentation leads the change rather than being an afterthought.
 
-Imagine the scenario where you are installing a new switch into a rack in the datacentre. Typically an engineer would raise the change, install the kit, connect it up and then update the documentation. There may be some steps before to do a design but those are always disconnected from the operational documentation and reality. If you have a remote DC Ops team then you may be required to provide a change form that details cable plans, rack locations and all that but this is a description of the change and not an update to the current state of the infrastructure. 
+Imagine the scenario where you are installing a new switch into a rack in the datacentre. Typically an engineer would raise the change, install the kit, connect it up and then update the documentation. There may be some steps before to do a design but those are always disconnected from the operational documentation and reality. If you have a remote DC Ops team then you may be required to provide a change form that details cable plans, rack locations and all that but this is a description of the change and not an update to the current state of the infrastructure.
 
 If you move to a documentation as code model then you can build the change in Terraform as a feature branch in your version control system and then trigger your CI/CD pipeline to review and approve the change. If the DC ops team are part of the workflow then can perform the change as part of the pipeline request and then the documenation is updated as part of the change. The pull request gives a diff of the specific change but forms an update to the current state as well. For configuration changes, with Netbox as the single source of truth, you can deploy automations from it to ensure there is never any drift from the documentation.
 
@@ -31,7 +31,7 @@ Terraform is the de-facto standard for infrastructure as code. It allows you to 
 
 ### Getting started
 
-Let's start with the overview of the architecture. There are a few components that we'll need to set up in order to get everything working. 
+Let's start with the overview of the architecture. There are a few components that we'll need to set up in order to get everything working.
 
 #### Architecture
 
@@ -59,7 +59,7 @@ The netbox provider currently isn't tested with the latest version of Netbox. Th
 
 ```
 
-For remote state I used terraform cloud with a VCS-driven workflow. This allows you to store your state in a remote location and use version control to manage your changes.There are several options for remote state but Terraform Cloud is pretty good and very easy to set up. 
+For remote state I used terraform cloud with a VCS-driven workflow. This allows you to store your state in a remote location and use version control to manage your changes.There are several options for remote state but Terraform Cloud is pretty good and very easy to set up.
 
 I used GitHub Actions for the CI/CD pipeline. I use [GitHub Actions for my own website](s3-docusaurus.md) so I am fairly familiar with it. You can achieve the whole thing without using Terraform Cloud if you like, so long as you have a remote state backend.
 
@@ -121,6 +121,7 @@ Here's my step-by-step guide to set up the Terraform Cloud and GitHub Actions fo
 #### 2.2 Verify Workflow File
 
 The repository includes `.github/workflows/terraform.yml` which:
+
 - Runs on push/pull requests to main branch
 - Validates terraform formatting and configuration
 - Creates plan comments on pull requests
@@ -220,7 +221,6 @@ jobs:
 
 ```
 
-
 ### 3. NetBox API Setup
 
 #### 3.1 Generate NetBox API Token
@@ -277,6 +277,6 @@ variable "netbox_token" {
   type        = string
   sensitive   = true
 }
-``` 
+```
 
-This should be enough to get you started with the NetBox provider. When you commit and push changes it should trigger the GitHub Actions workflow and run the Terraform commands to validate and apply your configuration. You can check the Actions tab in your GitHub repository to see the progress of the workflow. 
+This should be enough to get you started with the NetBox provider. When you commit and push changes it should trigger the GitHub Actions workflow and run the Terraform commands to validate and apply your configuration. You can check the Actions tab in your GitHub repository to see the progress of the workflow.
