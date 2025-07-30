@@ -3,7 +3,7 @@ name: Build and Deploy to S3
 on:
   push:
     branches:
-      - simonpainter.com
+      - main
 
 jobs:
   build-and-deploy:
