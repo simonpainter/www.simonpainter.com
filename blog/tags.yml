@@ -1,0 +1,155 @@
+ai:
+  label: 'Artificial Intelligence'
+  permalink: '/ai'
+  description: 'Exploring artificial intelligence concepts, developments, and applications'
+
+anycast:
+  label: 'Anycast'
+  permalink: '/anycast'
+  description: 'Articles about IP anycast technology, implementation, with particular reference to using it in Azure'
+
+aws:
+  label: 'AWS'
+  permalink: '/aws'
+  description: 'AWS cloud services, architecture patterns, and implementation guides'
+
+azure:
+  label: 'Azure'
+  permalink: '/azure'
+  description: 'Microsoft Azure cloud platform tutorials, services, and solutions'
+
+bash:
+  label: 'Bash'
+  permalink: '/bash'
+  description: 'Shell scripting tutorials, tips, and automation techniques'
+
+bgp:
+  label: 'BGP'
+  permalink: '/bgp'
+  description: 'Related to BGP in networking, including design, configuration, and troubleshooting'
+
+
+business:
+  label: 'Business'
+  permalink: '/business'
+  description: 'Business strategy, management insights, and industry analysis'
+
+cloud:
+  label: 'Cloud'
+  permalink: '/cloud'
+  description: 'Cloud computing concepts, architectures, and multi-cloud strategies'
+
+dhcp:
+  label: 'DHCP'
+  permalink: '/dhcp'
+  description: 'DHCP protocol deep dives, configuration, and troubleshooting'
+
+dns:
+  label: 'DNS'
+  permalink: '/dns'
+  description: 'DNS architecture, implementation strategies, and best practices'
+
+docusaurus:
+  label: 'Docusaurus'
+  permalink: '/docusaurus'
+  description: 'Docusaurus static site generator guides and implementations'
+
+enforza:
+  label: 'enforza.io'
+  permalink: '/enforza'
+  description: 'Updates and insights about enforza.io services and features'
+
+expressroute:
+  label: 'ExpressRoute'
+  permalink: '/expressroute'
+  description: 'Azure ExpressRoute connectivity solutions and configurations'
+
+github:
+  label: 'Github'
+  permalink: '/github'
+  description: 'GitHub platform features, workflows, and best practices'
+
+github-actions:
+  label: 'Github Action'
+  permalink: '/github-actions'
+  description: 'CI/CD automation using GitHub Actions workflows'
+
+labs:
+  label: 'Labs'
+  permalink: '/labs'
+  description: 'Technical experiments, proof-of-concepts, and learning projects'
+
+networks:
+  label: 'Networks'
+  permalink: '/networks'
+  description: 'Network architecture, protocols, and implementation guides'
+
+opinion:
+  label: 'Opinion'
+  permalink: '/opinion'
+  description: 'Personal viewpoints on technology trends and industry developments'
+
+ospf:
+  label: 'OSPF'
+  permalink: '/ospf'
+  description: 'OSPF routing protocol information and design patterns'
+
+personal:
+  label: 'Personal'
+  permalink: '/personal'
+  description: 'Personal reflections, experiences, and my journey in technology'
+
+powershell:
+  label: 'Powershell'
+  permalink: '/powershell'
+  description: 'PowerShell scripting tutorials and automation solutions'
+
+programming:
+  label: 'Programming'
+  permalink: '/programming'
+  description: 'Software development concepts, patterns, and practices'
+
+python:
+  label: 'Python'
+  permalink: '/python'
+  description: 'Python programming tutorials, tips, and best practices'
+
+security:
+  label: 'Security'
+  permalink: '/security'
+  description: 'Cybersecurity concepts, implementations, and best practices'
+
+algorithms:
+  label: 'Algorithms'
+  permalink: '/algorithms'
+  description: 'Computational algorithms, efficiency analysis, and practical implementations'
+
+routing-protocols:
+  label: 'Routing Protocols'
+  permalink: '/routing-protocols'
+  description: 'Deep dives into network routing protocols like BGP, OSPF, and related technologies'
+
+zero-trust:
+  label: 'Zero Trust'
+  permalink: '/zero-trust'
+  description: 'Zero Trust security architecture, implementation strategies, and best practices'
+
+educational:
+  label: 'Educational'
+  permalink: '/educational'
+  description: 'In-depth explanations and comprehensive guides on fundamental technical concepts'
+
+mcp:
+  label: 'Model Context Protocol'
+  permalink: '/mcp'
+  description: 'Model Context Protocol topics, implementations, and best practices'
+
+netbox:
+  label: 'Netbox'
+  permalink: '/netbox'
+  description: 'Netbox network management system, configuration, and integration guides'
+
+terraform:
+  label: 'Terraform'
+  permalink: '/terraform'
+  description: 'Infrastructure as Code with Terraform, including best practices and examples'

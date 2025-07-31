@@ -1,0 +1,37 @@
+name: Add build log to PR
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write  # Added permission for commenting on PRs
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Docusaurus site
+        run: |
+          npm run build --verbose > build.log 2>&1
+          cat build.log  # Print log for visibility in GitHub Actions console
+
+      - name: Upload build log
+        uses: mshick/add-pr-comment@v2
+        if: always()
+        with:
+          message-path: 'build.log'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}  # Added required token

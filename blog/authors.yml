@@ -1,0 +1,18 @@
+simonpainter:
+  name: Simon Painter
+  title: Cloud Network Architect - Microsoft MVP
+  image_url: https://github.com/SimonPainter.png
+  description: Simon Painter is a seasoned Cloud Network Architect with over two decades of experience designing and implementing enterprise-scale cloud and network infrastructure solutions. With a strong background in technology, retail, and finance, he specialises in multi-cloud networking, hybrid connectivity, and infrastructure automation. Simon has played a key role in large-scale cloud transformations, security initiatives, and network modernisation strategies, helping organisations build resilient, high-performance cloud architectures. Beyond his technical expertise, Simon enjoys making things—whether through 3D printing, building intricate Lego creations, or exploring new technologies. Based in Yorkshire, he shares his life with his wife, three children, and their spaniel, Mabel. Passionate about problem-solving and innovation, he shares insights on cloud networking, automation, and security.
+  socials:
+    github: SimonPainter
+    linkedin: sipainter
+  page: true
+zainkhan:
+  name: Zain Khan
+  title: Cloud Network Engineer
+  image_url: https://github.com/zainkhn.png
+  description: Zain Khan is a seasoned Senior Network Engineer with over a decade of experience designing and delivering enterprise-grade network and cloud infrastructure. With a strong foundation across retail, finance, and enterprise technology environments, he specialises in hybrid connectivity, secure network architecture, and multi-vendor infrastructure design. Zain has played a key role in large-scale network transformations, firewall migrations, and the deployment of greenfield cloud networking environments, helping organisations build resilient, high-performance infrastructure that supports modern business needs. With deep technical expertise across Cisco, Fortinet, Palo Alto, Juniper, and Azure, Zain brings a delivery-focused mindset and is often relied upon as a senior escalation point and technical lead. Outside of the terminal, he enjoys getting outdoors in the Yorkshire countryside—whether hiking in unpredictable weather, flying his drone across the hills or simply relaxing in the company of others. Passionate about problem-solving and practical design, Zain continues to explore new technologies and share his knowledge across engineering teams.
+  socials:
+    github: zainkhn
+    linkedin: zainkhan123
+  page: true
