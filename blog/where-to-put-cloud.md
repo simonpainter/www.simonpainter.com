@@ -156,7 +156,7 @@ graph TD
 There can be a temptation to put compute and infrastructure services - DDI and such things - into the CNF rack, but that's mostly driven by the desire to move entirely from on-premise to cloud, and the CNF is seen as a halfway house for things that can't live in the cloud.
 I would not recommend building out a dependency on a CNF for any sort of compute services because they are typically more expensive than most other colo datacentres, and are often less flexible. Keep your apps and infrastructure services in a datacentre and keep your CNF for connectivity.
 
-It's worth noting that if you have centralised DHCP then you'll need somewhere to put that. DHCP servers in Azure are [not my cup of tea](https://learn.microsoft.com/en-us/azure/virtual-network/how-to-dhcp-azure) so you may need to look at alternatives. Realistically though how many organisations are entirely exclusive in cloud with no on premise servers at all? I recently worked with a client who had a cloud only strategy with all the fanfares that go with it but now still maintain a colo on the quiet.
+It's worth noting that if you have centralised DHCP then you'll need somewhere to put that. DHCP servers in Azure are [not my cup of tea](https://learn.microsoft.com/en-us/azure/virtual-network/how-to-dhcp-azure) so you may need to look at alternatives. Realistically though how many organisations are entirely exclusive in cloud with no on-premise servers at all? I recently worked with a client who had a cloud only strategy with all the fanfares that go with it but now still maintain a colo on the quiet.
 
 ## Migrating to SD-WAN
 
