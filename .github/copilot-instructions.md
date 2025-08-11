@@ -12,7 +12,7 @@
 - Format content in Markdown.
 - Use contractions (don't, won't, can't, etc.) to maintain a conversational flow.
 - Use first-person singular pronouns (I, my, me) rather than plural.
-- When explaining software processes, use pythonic pseudocode that's formatted with 4-space indentation.
+- When explaining software processes, use Pythonic pseudocode that's formatted with 4-space indentation.
 - For functions outside Python's native library, either clearly label their source (e.g., math.sqrt()) or create self-explanatory function names (e.g., calculate_network_latency()).
 
 ## Emotional Tone
