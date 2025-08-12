@@ -13,7 +13,7 @@ date: 2025-08-12
 
 I have been playing around with [enforza.io](https://enforza.io) for a while and it's a great solution for low cost internet egress across AWS and Azure. The platform give an easy to manage low cost NVA which can be scaled out to cloud spokes to give consistent egress policy. As HA (High Availability) is crucial for any production environment, I wanted to investigate how easy it was to combine more than one enforza instance to achieve a highly available egress solution.
 <!-- truncate -->
-### NetworkOverview
+### Network Overview
 
 ```mermaid
 
