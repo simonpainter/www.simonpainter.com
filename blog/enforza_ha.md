@@ -347,7 +347,7 @@ resource "azurerm_network_interface_backend_address_pool_association" "vm_1_publ
 
 ### Step 7: Virtual Machine Configuration
 
-For the VMs, I'm using Standard_D2s_v3 instances with 2 vCPUs and 8GB RAM, which handles typical lab traffic loads. I deploy the VMs across different availability zones for redundancy. The 30GB disk size is sufficient for the OS and basic logging needs. The installation of the Enforza software is done via a bootstrap script avalable from the enforza dashboard.
+For the VMs, I'm using Standard_D2s_v3 instances with 2 vCPUs and 8GB RAM, which handles typical lab traffic loads. I deploy the VMs across different availability zones for redundancy. The 30GB disk size is sufficient for the OS and basic logging needs. The installation of the Enforza software is done via a bootstrap script available from the enforza dashboard.
 
 ```hcl
 resource "azurerm_linux_virtual_machine" "enforza_vm_1" {
