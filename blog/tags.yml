@@ -153,3 +153,8 @@ terraform:
   label: 'Terraform'
   permalink: '/terraform'
   description: 'Infrastructure as Code with Terraform, including best practices and examples'
+
+sdwan:
+  label: 'SDWAN'
+  permalink: '/sdwan'
+  description: 'Software-Defined Wide Area Networking concepts, implementations, and best practices'
