@@ -8,7 +8,7 @@ const config = {
   tagline: 'Simon Painter - MVP',
   favicon: 'img/favicon.ico',
 
-  url: 'https://www.connectivitymatters.uk',
+  url: 'https://www.simonpainter.com',
   baseUrl: '/',
 
   organizationName: 'simonpainter',
