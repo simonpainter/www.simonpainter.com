@@ -28,23 +28,23 @@ columns 1
     block:TerraformProvider1
     columns 1
     P1["Terraform Provider"]
-	V1["Cisco Meraki"]
-	end
+    V1["Cisco Meraki"]
+    end
     block:TerraformProvider2
     columns 1
     P2["Terraform Provider"]
-	V2["Cisco ACI"]
-	end
+    V2["Cisco ACI"]
+    end
         block:TerraformProvider3
     columns 1
     P3["Terraform Provider"]
-	V3["Juniper Mist"]
-	end
+    V3["Juniper Mist"]
+    end
         block:TerraformProvider4
     columns 1
     P4["Terraform Provider"]
-	V4["Other Vendor Hardware"]
-	end
+    V4["Other Vendor Hardware"]
+    end
   end
 
   block:area
@@ -68,24 +68,24 @@ columns 1
     block:TerraformProvider1
     columns 1
     P1["Terraform Provider"]
-	V1["Vendor Hardware"]
-	end
+    V1["Vendor Hardware"]
+    end
     block:TerraformProvider2
     columns 1
     P2["Terraform Provider"]
-	V2["Vendor Hardware"]
-	end
+    V2["Vendor Hardware"]
+    end
         block:TerraformProvider3
     columns 1
     P3["Terraform Provider"]
-	V3["Vendor Hardware"]
-	end
+    V3["Vendor Hardware"]
+    end
 
             block:TerraformProvider4
     columns 1
     P4["Terraform Provider"]
-	V4["Netbox"]
-	end
+    V4["Netbox"]
+    end
   end
 
   block:area
@@ -145,24 +145,24 @@ columns 2
     block:TerraformProvider1
     columns 1
     P1["Terraform Provider"]
-	V1["Vendor Hardware"]
-	end
+    V1["Vendor Hardware"]
+    end
     block:TerraformProvider2
     columns 1
     P2["Terraform Provider"]
-	V2["Vendor Hardware"]
-	end
+    V2["Vendor Hardware"]
+    end
         block:TerraformProvider3
     columns 1
     P3["Terraform Provider"]
-	V3["Vendor Hardware"]
-	end
+    V3["Vendor Hardware"]
+    end
 
             block:TerraformProvider4
     columns 1
     P4["Terraform Provider"]
-	V4["Netbox"]
-	end
+    V4["Netbox"]
+    end
   end
 space
   block:area
@@ -170,12 +170,11 @@ space
   A1["LAN"]
   A2["SDWAN"]
   A3["Datacentre"]
-  space  
+  space
   end
 end
 
-  style TerraformModules fill:#e1f5fe,stroke:#1976d2,stroke-width:3px
-
+  style TerraformProvider4 fill:#e1f5fe,stroke:#1976d2,stroke-width:3px
 ```
 
 Finally organise your code into feature based modules rather than technology or vendor based configuration and you have a structured repository which can be scaled easily.
