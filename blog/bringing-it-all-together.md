@@ -80,11 +80,7 @@ columns 1
     P3["Terraform Provider"]
 	V3["Vendor Hardware"]
 	end
-        block:TerraformProvider4
-    columns 1
-    P4["Terraform Provider"]
-	V4["Vendor Hardware"]
-	end
+
             block:TerraformProvider4
     columns 1
     P4["Terraform Provider"]
@@ -161,11 +157,7 @@ columns 2
     P3["Terraform Provider"]
 	V3["Vendor Hardware"]
 	end
-        block:TerraformProvider4
-    columns 1
-    P4["Terraform Provider"]
-	V4["Vendor Hardware"]
-	end
+
             block:TerraformProvider4
     columns 1
     P4["Terraform Provider"]
