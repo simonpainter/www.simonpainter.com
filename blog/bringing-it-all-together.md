@@ -152,13 +152,13 @@ columns 2
     P2["Terraform Provider"]
     V2["Vendor Hardware"]
     end
-        block:TerraformProvider3
+    block:TerraformProvider3
     columns 1
     P3["Terraform Provider"]
     V3["Vendor Hardware"]
     end
 
-            block:TerraformProvider4
+    block:TerraformProvider4
     columns 1
     P4["Terraform Provider"]
     V4["Netbox"]
@@ -174,7 +174,7 @@ space
   end
 end
 
-  style TerraformProvider4 fill:#e1f5fe,stroke:#1976d2,stroke-width:3px
+  style TerraformModules fill:#e1f5fe,stroke:#1976d2,stroke-width:3px
 ```
 
 Finally organise your code into feature based modules rather than technology or vendor based configuration and you have a structured repository which can be scaled easily.
