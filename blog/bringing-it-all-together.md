@@ -100,7 +100,7 @@ columns 1
 
 ```
 
-The workflow for physical changes follows similar to config changes - a branch is created with specifics of the physical changes to be made. Implementation teams perform the physical cabling or installation work necessary and merge in any additional detail they need to capture (circuit information, patch panel information and th like) and then merge the finished request back into the main branch when complete. The history of the request and its implementation can be tracked through the git history, providing a clear audit trail of changes made to the physical network.
+The workflow for physical changes follows similar to config changes - a branch is created with specifics of the physical changes to be made. Implementation teams perform the physical cabling or installation work necessary and merge in any additional detail they need to capture (circuit information, patch panel information and the like) and then merge the finished request back into the main branch when complete. The history of the request and its implementation can be tracked through the git history, providing a clear audit trail of changes made to the physical network.
 
 ```mermaid
 
