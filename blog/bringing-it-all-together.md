@@ -178,6 +178,6 @@ end
 
 ```
 
-Finally organise your code into feature based modules rather than technology or vendor based configuration and you have a structured respository which can be scaled easily.
+Finally organise your code into feature based modules rather than technology or vendor based configuration and you have a structured repository which can be scaled easily.
 
 This approach allows for the physical elements of on premise networking while maintaining workflow patterns similar to cloud and cloud networking. It allows for repeatable [modular networking](modular-networking.md) that can be aligned to business functions rather than tech stacks and it provides a clear path for managing change and documentation across the entire stack.
