@@ -88,18 +88,13 @@ const config = {
             position: 'left',
           },
           {
-            href: '/tags/programming',
-            label: 'Programming',
+            href: '/tags/networks',
+            label: 'Networks',
             position: 'left',
           },
           {
             href: '/tags/security',
             label: 'Security',
-            position: 'left',
-          },
-          {
-            href: '/tags/business',
-            label: 'Business',
             position: 'left',
           },
           {
