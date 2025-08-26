@@ -14,7 +14,7 @@ There are a few things going on with ExpressRoute Gateways and they are related 
 <!-- truncate -->
 ### ExpressRoute Basic SKU Public IP Retirement
 
-This one has been on the roadmap for quite a while but for some it will still be a little bit of a surprise. With [just over a month to go](https://azure.microsoft.com/en-gb/updates?id=upgrade-to-standard-sku-public-ip-addresses-in-azure-by-30-september-2025-basic-sku-will-be-retired&wt.mc_id=MVP_461735) you need to have a plan in place to migrate your ExpressRoute Gateway from Basic SKU Public IPs to Standard SKU Public IPs before 30th September 2025.
+This one has been on the roadmap for quite a while but for some it will still be a little bit of a surprise. With [just over a month to go](https://azure.microsoft.com/en-gb/updates?id=upgrade-to-standard-sku-public-ip-addresses-in-azure-by-30-september-2025-basic-sku-will-be-retired?wt.mc_id=MVP_461735) you need to have a plan in place to migrate your ExpressRoute Gateway from Basic SKU Public IPs to Standard SKU Public IPs before 30th September 2025.
 
 There are some excellent documentation resources available to help with this migration process, including [Microsoft's official guidance](https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/public-ip-basic-upgrade-guidance?wt.mc_id=MVP_461735) and it's a great time to make sure you move from a non zonal to a zone redundant configuration.
 
@@ -35,12 +35,12 @@ There are some excellent documentation resources available to help with this mig
 > When you create a public IP address using the Standard public IP SKU with the "No Zone" option
 > When you create a public IP address using the Basic public IP SKU
 >
-> [Source - learn.microsoft.com](https://learn.microsoft.com/en-us/azure/vpn-gateway/about-zone-redundant-vnet-gateways?toc=%2Fazure%2Fexpressroute%2Ftoc.json#pipskus)
+> [Source - learn.microsoft.com](https://learn.microsoft.com/azure/vpn-gateway/about-zone-redundant-vnet-gateways?toc=%2Fazure%2Fexpressroute%2Ftoc.json?wt.mc_id=MVP_461735#pipskus)
 
 ### Wait, but... zonal?
 
-In an effort to make things easier the public IP resource for an [ExpressRoute Gateway is now auto assigned and provisioned under the hood](https://learn.microsoft.com/en-us/azure/expressroute/expressroute-about-virtual-network-gateways#auto-assigned-public-ip). This has a, perhaps unintended, side effect because you no longer have the control to be able to provision all of your ExpressRoute Gateways into one Availability Zone. Most people won't want their ExpressRoute Gateways provisioned into a single Availability Zone but there are legitimate use cases for it and it's a level of control that has been removed [without any notice](https://azure.microsoft.com/en-gb/updates?id=498361).
+In an effort to make things easier the public IP resource for an [ExpressRoute Gateway is now auto assigned and provisioned under the hood](https://learn.microsoft.com/azure/expressroute/expressroute-about-virtual-network-gateways?wt.mc_id=MVP_461735#auto-assigned-public-ip). This has a, perhaps unintended, side effect because you no longer have the control to be able to provision all of your ExpressRoute Gateways into one Availability Zone. Most people won't want their ExpressRoute Gateways provisioned into a single Availability Zone but there are legitimate use cases for it and it's a level of control that has been removed [without any notice](https://azure.microsoft.com/en-gb/updates?id=498361).
 
 ![Zonal Gateways](img/zonal.png)
 
-While you can still achieve [this sort of architecture](https://learn.microsoft.com/en-us/azure/vpn-gateway/about-zone-redundant-vnet-gateways) with VPN Gateways, you can no longer do so with ExpressRoute Gateways.
+While you can still achieve [this sort of architecture](https://learn.microsoft.com/azure/vpn-gateway/about-zone-redundant-vnet-gateways?wt.mc_id=MVP_461735) with VPN Gateways, you can no longer do so with ExpressRoute Gateways.
