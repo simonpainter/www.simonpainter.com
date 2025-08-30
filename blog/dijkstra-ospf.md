@@ -16,7 +16,7 @@ date: 2025-08-30
 ## More than just an interview question
 
 I've sat on both sides of countless technical interviews over my years in networking. There's this familiar dance that happens when discussing OSPF: the candidate confidently states "OSPF uses Dijkstra's algorithm for route calculation," and I'll nod approvingly. But here's the thing - in hundreds of these exchanges, I've never once asked a candidate to explain what that actually means, and no one's ever asked me to explain it either.
-
+<!-- truncate -->
 This mention of Dijkstra has become almost ceremonial in our industry. We repeat it without truly engaging with what it means for our networks. Yet understanding this algorithm isn't just academic - it shapes how OSPF operates, influences our network designs, and explains why certain patterns have become best practices.
 
 When a link fails in your network and OSPF starts recalculating routes, there's computational work happening that many engineers never consider. This processing isn't just theoretical - it's a real factor behind many design decisions, from area sizing to adjacency limits.
