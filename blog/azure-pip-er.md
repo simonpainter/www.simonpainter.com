@@ -35,7 +35,7 @@ There are some excellent documentation resources available to help with this mig
 > When you create a public IP address using the Standard public IP SKU with the "No Zone" option
 > When you create a public IP address using the Basic public IP SKU
 >
-> [Source - learn.microsoft.com](https://learn.microsoft.com/azure/vpn-gateway/about-zone-redundant-vnet-gateways?toc=%2Fazure%2Fexpressroute%2Ftoc.json?wt.mc_id=MVP_461735#pipskus)
+> [Source - learn.microsoft.com](https://learn.microsoft.com/azure/vpn-gateway/about-zone-redundant-vnet-gateways?toc=%2Fazure%2Fexpressroute%2Ftoc.json&wt.mc_id=MVP_461735#pipskus)
 
 ### Wait, but... zonal?
 
