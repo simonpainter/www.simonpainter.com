@@ -11,11 +11,11 @@ date: 2025-06-23
 
 ---
 
-The impending deadline of [Azure IP armageddon](https://azure.microsoft.com/en-gb/updates?id=default-outbound-access-for-vms-in-azure-will-be-retired-transition-to-a-new-method-of-internet-access) is nearly upon us. In September a fairly major shift is taking place in Azure which will see a change to the default behaviour for outbound internet for Azure VMs. The change itself has been fairly well discussed but you can now get ahead of the curve with
+The impending deadline of [Azure IP armageddon](https://azure.microsoft.com/en-gb/updates?id=default-outbound-access-for-vms-in-azure-will-be-retired-transition-to-a-new-method-of-internet-access) is nearly upon us. In March '26 a fairly major shift is taking place in Azure which will see a change to the default behaviour for outbound internet for Azure VMs. The change itself has been fairly well discussed but you can now get ahead of the curve with
 [Azure Private Subnet](https://azure.microsoft.com/en-gb/updates?id=492953) and start building things as they will be after March 2026.
 <!-- truncate -->
 
-OK, hopefully you know this because of all the Y2K style panicky blog posts of the last few months but in September the default behaviour for new vnets will be without default outbound internet access. At present all VMs get a public IP assigned to them for internet egress. You can't use it for inbound connections, you still need a PIP for that, but if you just create a new vnet with a VM, that VM will be able to connect outbound without any further action. This is really handy when you are creating VMs that have a bootstrap script for stuff like running updates or installing software from remote repositories.
+OK, hopefully you know this because of all the Y2K style panicky blog posts of the last few months but in March 2026 the default behaviour for new vnets will be without default outbound internet access. At present all VMs get a public IP assigned to them for internet egress. You can't use it for inbound connections, you still need a PIP for that, but if you just create a new vnet with a VM, that VM will be able to connect outbound without any further action. This is really handy when you are creating VMs that have a bootstrap script for stuff like running updates or installing software from remote repositories.
 
 > Although it's being billed as a security enhancement, and I guess it is, the reason
 > for the change is probably the more mundane desire to reduce public IP address usage.
