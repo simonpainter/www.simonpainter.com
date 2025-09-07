@@ -15,7 +15,7 @@ The impending deadline of [Azure IP armageddon](https://azure.microsoft.com/en-g
 [Azure Private Subnet](https://azure.microsoft.com/en-gb/updates?id=492953) and start building things as they will be after March 2026.
 <!-- truncate -->
 
-OK, hopefully you know this because of all the Y2K style panicky blog posts of the last few months but in September the default behaviour for new vnets will be without default outbound internet access. At present all VMs get a public IP assigned to them for internet egress. You can't use it for inbound connections, you still need a PIP for that, but if you just create a new vnet with a VM that VM will be able to connect outbound without any further action. This is really handy when you are creating VMs that have a bootstrap script for stuff like running updates or installing software from remote respositories.
+OK, hopefully you know this because of all the Y2K style panicky blog posts of the last few months but in September the default behaviour for new vnets will be without default outbound internet access. At present all VMs get a public IP assigned to them for internet egress. You can't use it for inbound connections, you still need a PIP for that, but if you just create a new vnet with a VM that VM will be able to connect outbound without any further action. This is really handy when you are creating VMs that have a bootstrap script for stuff like running updates or installing software from remote repositories.
 
 > Although it's being billed as a security enhancement, and I guess it is, the reason
 > for the change is probably the more mundane desire to reduce public IP address usage.
