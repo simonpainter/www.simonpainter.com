@@ -8,6 +8,7 @@ tags:
   - github-actions
   - docusaurus
   - cloud
+  - automation
 date: 2024-11-17
 
 ---

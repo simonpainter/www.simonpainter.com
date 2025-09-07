@@ -124,6 +124,11 @@ algorithms:
   permalink: '/algorithms'
   description: 'Computational algorithms, efficiency analysis, and practical implementations'
 
+automation:
+  label: 'Automation'
+  permalink: '/automation'
+  description: 'Infrastructure automation, configuration management, and automated deployment strategies'
+
 routing-protocols:
   label: 'Routing Protocols'
   permalink: '/routing-protocols'

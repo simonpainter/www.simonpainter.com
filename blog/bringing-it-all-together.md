@@ -7,6 +7,7 @@ tags:
   - azure
   - networks
   - terraform
+  - automation
 
 date: 2025-08-18
 

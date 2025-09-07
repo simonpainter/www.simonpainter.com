@@ -6,6 +6,7 @@ authors: simonpainter
 tags:
   - terraform
   - networks
+  - automation
 date: 2025-07-31
 
 ---
