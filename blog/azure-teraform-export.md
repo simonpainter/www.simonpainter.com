@@ -27,7 +27,7 @@ az provider show -n Microsoft.AzureTerraform
 
 It's worth noting that if you have more than one subscription you'll need to specify which subscription you want to check.
 
-Assumng you haven't already registered the provider, you can do so with this command:
+Assuming you haven't already registered the provider, you can do so with this command:
 
 ```powershell
 az provider register -n Microsoft.AzureTerraform    
