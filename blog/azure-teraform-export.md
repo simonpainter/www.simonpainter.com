@@ -33,7 +33,7 @@ Assuming you haven't already registered the provider, you can do so with this co
 az provider register -n Microsoft.AzureTerraform    
 ```
 
-When you check back with the show command again you'll see the registraton state change to Registering for a while and then to Registered. I found it took several minutes for the registration to complete but even then it didn't actually work in the portal until the next day.
+When you check back with the show command again you'll see the registration state change to Registering for a while and then to Registered. I found it took several minutes for the registration to complete but even then it didn't actually work in the portal until the next day.
 
 ```powershell
 PS /home/simon> az provider show -n Microsoft.AzureTerraform    
