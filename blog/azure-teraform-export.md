@@ -4,7 +4,7 @@ title: Exporting Azure resources to Terraform code
 authors: simonpainter
 tags:
   - azure
-  - teraform
+  - terraform
   - networks
   - automation
   - cloud
