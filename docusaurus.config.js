@@ -12,7 +12,7 @@ const config = {
   baseUrl: '/',
 
   organizationName: 'simonpainter',
-  projectName: 'my-website',
+  projectName: 'www.simonpainter.com',
 
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
@@ -34,7 +34,7 @@ const config = {
       ({
         docs: false,
         blog: {
-          editUrl: 'https://github.com/simonpainter/my-website/blob/main/',
+          editUrl: 'https://github.com/simonpainter/www.simonpainter.com/blob/main/',
           routeBasePath: '/',
           blogTitle: 'Simon Painter',
           blogDescription: 'Simon Painter - MVP',
