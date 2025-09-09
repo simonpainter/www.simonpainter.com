@@ -43,6 +43,9 @@ const config = {
           blogSidebarCount: 'ALL',
           showReadingTime: true,
           sortPosts: 'descending',
+          feedOptions: {
+            xslt: true,
+          },
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
