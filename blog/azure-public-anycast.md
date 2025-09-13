@@ -135,7 +135,7 @@ graph TD
 
 ```
 
-The diagram above shows the overall architecture - you'll notice that I have represented the Global Load balancer as two separate entities. This is to illustrate the fact that there does not appear to be central dataplane infrastructure for the global Load balancer and each region advertises the anycast IP, the global Load balancer frontend IP, idependently. This means that traffic from a client is routed to the nearest ingress point to the MSFT Azure backbone and then routed to the closest healthy region.
+The diagram above shows the overall architecture - you'll notice that I have represented the Global Load balancer as two separate entities. This is to illustrate the fact that there does not appear to be central dataplane infrastructure for the global Load balancer and each region advertises the anycast IP, the global Load balancer frontend IP, independently. This means that traffic from a client is routed to the nearest ingress point to the MSFT Azure backbone and then routed to the closest healthy region.
 
 Creating the global Load balancer is very similar to creating a regional one. The first difference is that you select global rather than regional in the intial creation screen under tier.
 
@@ -149,13 +149,13 @@ The back end pool allows you to add the regional Load balancer front end configu
 
 ![Image of the global Load balancer backend pool configuration screen](img/lb-global-backend.png)
 
-The Inbound rules are pretty much identical to the regional Load balancer save for the fact that you do not have to specify any health probbes. These are inherited from the regional Load balancers. You can choose to select the floating IP option if you want to, as with a regional Load balancer.
+The Inbound rules are pretty much identical to the regional Load balancer save for the fact that you do not have to specify any health probes. These are inherited from the regional Load balancers. You can choose to select the floating IP option if you want to, as with a regional Load balancer.
 
 > Floating IP allows you to use loopbacks on the application VMs rather than the main interface address to listen for application traffic. This is particularly useful if you need to have multiple web servers all listening on 443 on the same VM, perhaps with SSL certificates for different domains.
 
 ## What were those participating regions again?
 
-When you create a global Load balancer you can use any region to host the resource. However, not all regions will advertise the anycast IP address. The [list of participating regions](https://learn.microsoft.com/en-us/azure/load-balancer/cross-region-overview#participating-regions-in-azure) is fairly long and includes most of the geographical areas where Azure has a presence; there is a notable absence in China, South America and South Africa. If you create a global Load balancer in a non-participating region it will still work but the anycast IP will only be advertised from a participating region. For example a client in South Africa will be routed to the nearest participating region which is likely to be in Europe and then back over the Azure backbone to the nearest which coule be in South Africa.
+When you create a global Load balancer you can use any region to host the resource. However, not all regions will advertise the anycast IP address. The [list of participating regions](https://learn.microsoft.com/en-us/azure/load-balancer/cross-region-overview#participating-regions-in-azure) is fairly long and includes most of the geographical areas where Azure has a presence; there is a notable absence in China, South America and South Africa. If you create a global Load balancer in a non-participating region it will still work but the anycast IP will only be advertised from a participating region. For example a client in South Africa will be routed to the nearest participating region which is likely to be in Europe and then back over the Azure backbone to the nearest which could be in South Africa.
 
 I've covered the [hollow core fibre](microsoft-ignite-2024.md#hollow-core-fibre) that Microsoft is using to connect its regions in a previous post, and the [apparent latency magic around privatelink](azure-latency-1.md) but the important point is that it hot potatoes into the nearest participating Azure region and then uses the low latency, high bandwidth Azure backbone to reach the nearest healthy region.
 
