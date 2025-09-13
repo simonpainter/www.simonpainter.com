@@ -82,7 +82,7 @@ simon@MacBook-Pro my-website %
 
 You can then repeat this in multiple regions. There are no restrictions on the regions you can use and they don't have to be paired regions. In my lab I used UK South and East Asia.
 
-> A note on paired regions. The main reason for using paired regions is that in the unlikley event of a multi region failure Microsoft will prioritise recovery of one region in each pair. This means that if your application is deployed in both of the regions in a pair then at least one of them is likely to be in the first wave of recovery. It's likely that if you are working at the sort of scale that requites global load balancing then you are already using paired regions.
+> A note on paired regions. The main reason for using paired regions is that in the unlikely event of a multi region failure Microsoft will prioritize recovery of one region in each pair. This means that if your application is deployed in both of the regions in a pair then at least one of them is likely to be in the first wave of recovery. It's likely that if you are working at the sort of scale that requites global load balancing then you are already using paired regions.
 
 ## Going Global
 
