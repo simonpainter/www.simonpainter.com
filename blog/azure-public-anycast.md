@@ -82,7 +82,7 @@ simon@MacBook-Pro my-website %
 
 You can then repeat this in multiple regions. There are no restrictions on the regions you can use and they don't have to be paired regions. In my lab I used UK South and East Asia.
 
-> A note on paired regions. The main reason for using paired regions is that in the unlikley event of a multi region failure Microsoft will prioritise recovery of one region in each pair. This means that if your application is deployed in both of the regions in a pair then at least one of them is likely to be in the first wave of recovery. It's likely that if you are working at the sort of scale that requites global load balancing then you are already using paired regions.
+> A note on paired regions. The main reason for using paired regions is that in the unlikely event of a multi region failure Microsoft will prioritize recovery of one region in each pair. This means that if your application is deployed in both of the regions in a pair then at least one of them is likely to be in the first wave of recovery. It's likely that if you are working at the sort of scale that requites global load balancing then you are already using paired regions.
 
 ## Going Global
 
@@ -157,7 +157,7 @@ The Inbound rules are pretty much identical to the regional Load balancer save f
 
 When you create a global Load balancer you can use any region to host the resource. However, not all regions will advertise the anycast IP address. The [list of participating regions](https://learn.microsoft.com/en-us/azure/load-balancer/cross-region-overview#participating-regions-in-azure) is fairly long and includes most of the geographical areas where Azure has a presence; there is a notable absence in China, South America and South Africa. If you create a global Load balancer in a non-participating region it will still work but the anycast IP will only be advertised from a participating region. For example a client in South Africa will be routed to the nearest participating region which is likely to be in Europe and then back over the Azure backbone to the nearest which could be in South Africa.
 
-I've covered the [hollow core fibre](microsoft-ignite-2024.md#hollow-core-fibre) that Microsoft is using to connect its regions in a previous post, and the [apparent latency magic around privatelink](azure-latency-1.md) but the important point is that it hot potatoes into the nearest participating Azure region and then uses the low latency, high bandwidth Azure backbone to reach the nearest healthy region.
+I've covered the [hollow core fibre](microsoft-ignite-2024.md#hollow-core-fibre) that Microsoft is using to connect its regions in a previous post, and the [apparent latency magic around privatelink](azure-latency-1.md) but the important point is that it uses hot potato routing to the nearest participating Azure region and then uses the low latency, high bandwidth Azure backbone to reach the nearest healthy region.
 
 ## A bit of testing
 
