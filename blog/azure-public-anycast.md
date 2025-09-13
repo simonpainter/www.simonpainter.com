@@ -137,7 +137,7 @@ graph TD
 
 The diagram above shows the overall architecture - you'll notice that I have represented the Global Load balancer as two separate entities. This is to illustrate the fact that there does not appear to be central dataplane infrastructure for the global Load balancer and each region advertises the anycast IP, the global Load balancer frontend IP, independently. This means that traffic from a client is routed to the nearest ingress point to the MSFT Azure backbone and then routed to the closest healthy region.
 
-Creating the global Load balancer is very similar to creating a regional one. The first difference is that you select global rather than regional in the intial creation screen under tier.
+Creating the Global Load Balancer is very similar to creating a regional one. The first difference is that you select global rather than regional in the initial creation screen under tier.
 
 ![Image of the global Load balancer creation screen](img/lb-global.png)
 
