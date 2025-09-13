@@ -356,7 +356,7 @@ simon@MacBook-Pro ~ % curl 51.142.0.197
 lab-vm-uksouth-2
 ```
 
-Behavior after failure of **all VMs** in the UKSouth region:
+Behaviour after failure of **all VMs** in the UKSouth region:
 
 ```text
 simon@MacBook-Pro ~ % curl 51.142.0.197
