@@ -335,6 +335,8 @@ simon@MacBook-Pro ~ % curl 51.142.0.197
 
 lab-vm-uksouth-2
 simon@MacBook-Pro ~ % curl 51.142.0.197
+
+lab-vm-uksouth-1
 ```
 
 Behaviour after failure of **a single VM** in the region:
