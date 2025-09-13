@@ -161,7 +161,7 @@ I've covered the [hollow core fibre](microsoft-ignite-2024.md#hollow-core-fibre)
 
 ## A bit of testing
 
-A quick look at a the front end IP for the global Load balancer in a [looking glass tool](https://lg.he.net) showed 23 entries in the BGP table. Given that at time of writing there are 22 participating regions this seems about right. The majority have a next hop in the AS for Azure (8075). It's reasonable to assume that HE peers with MSFT in all of the participating regions.
+A quick look at the front end IP for the Global Load Balancer in a [looking glass tool](https://lg.he.net) showed 23 entries in the BGP table. Given that at time of writing there are 22 participating regions this seems about right. The majority have a next hop in the AS for Azure (8075). It's reasonable to assume that HE peers with MSFT in all of the participating regions.
 
 ```text
 core3.lax2.he.net> show ip bgp routes detail 51.142.0.197 
