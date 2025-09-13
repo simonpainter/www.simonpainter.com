@@ -1,6 +1,6 @@
 ---
 
-title: "Azure Global Load balancer: It's anycast, Jim!"
+title: "Azure Global Load Balancer: It's anycast, Jim!"
 authors: simonpainter
 tags:
   - azure
@@ -11,13 +11,13 @@ date: 2025-09-13
 
 ---
 
-Azure Global Load balancer is often overlooked in favour of Azure Traffic Manager when it comes to global load balancing. Both are very capable options if all you want is to distribute traffic across multiple regions. However, Azure Global Load balancer has a few tricks up its sleeve that make it a more interesting choice in some scenarios. The main one is that it uses Anycast for its frontend IP addresses.
+Azure Global Load Balancer is often overlooked in favour of Azure Traffic Manager when it comes to global load balancing. Both are very capable options if all you want is to distribute traffic across multiple regions. However, Azure Global Load Balancer has a few tricks up its sleeve that make it a more interesting choice in some scenarios. The main one is that it uses Anycast for its frontend IP addresses.
 <!-- truncate -->
 Azure Traffic Manager is a DNS based load balancing solution. You create a Traffic Manager profile and give it a DNS name, for example `myapp.trafficmanager.net`. You then add endpoints to that profile which can be public IPs, Azure App Services, Azure VMs or even external endpoints. When a client looks up the DNS name they get back the IP address of one of the endpoints based on the load balancing method you have chosen. This is great for distributing traffic across multiple regions but it does have some limitations. The main one is that it relies on DNS for load balancing. This means that if an endpoint goes down, clients that have already cached the DNS response will continue to try and connect to the failed endpoint until the DNS cache expires. This can lead to a poor user experience.
 
-Azure Global Load balancer, on the other hand, is a layer 4 load balancer that uses Anycast for its frontend IP addresses. This means that when you create a Global Load balancer, you get a single IP address that is advertised from multiple participating regions. Traffic is routed to the nearest participating region and then once inside the Azure network it can take advantage of Azure's global backbone which uses lower latency [hollow core fibre](microsoft-ignite-2024.md#hollow-core-fibre) to connect to the nearest healthy region.
+Azure Global Load Balancer, on the other hand, is a layer 4 load balancer that uses Anycast for its frontend IP addresses. This means that when you create a Global Load Balancer, you get a single IP address that is advertised from multiple participating regions. Traffic is routed to the nearest participating region and then once inside the Azure network it can take advantage of Azure's global backbone which uses lower latency [hollow core fibre](microsoft-ignite-2024.md#hollow-core-fibre) to connect to the nearest healthy region.
 
-As with the private [anycast solution](anycast-route-server.md) I described in a previous post, this means that you can have a single IP address that is used globally and is resilient to regional failures. If one region goes down, traffic is automatically routed to the next nearest healthy region without any need for DNS changes or client-side caching issues. Although things are fairly opaque I would imagine they work in a similar way with the regional Load balancer healthchecks being used to conditionally inject the anycast IP from that region.
+As with the private [anycast solution](anycast-route-server.md) I described in a previous post, this means that you can have a single IP address that is used globally and is resilient to regional failures. If one region goes down, traffic is automatically routed to the next nearest healthy region without any need for DNS changes or client-side caching issues. Although things are fairly opaque I would imagine they work in a similar way with the Regional Load Balancer healthchecks being used to conditionally inject the anycast IP from that region.
 
 ## Use cases
 
@@ -30,7 +30,7 @@ IoT data ingestion at scale is another compelling use case. Imagine you're runni
 
 ## So let's get into it
 
-To create a Global Load balancer you need to start with a standard public Load balancer in one or more of your regions. Below is a simple example as used in my lab where I have a single region, two VMs in a backend pool and a public frontend IP address. The Load balancer is configured to use a basic health probe on port 80 and a load balancing rule to distribute TCP traffic on port 80 to the backend pool.
+To create a Global Load Balancer you need to start with a standard Public Load Balancer in one or more of your regions. Below is a simple example as used in my lab where I have a single region, two VMs in a backend pool and a public frontend IP address. The Load balancer is configured to use a basic health probe on port 80 and a load balancing rule to distribute TCP traffic on port 80 to the backend pool.
 I typically install a web server on the VMs to act like a basic web application and the line `sudo echo $HOSTNAME > /var/www/html/index.html` is enough to make it easy to see which VM is responding to requests.
 
 ```mermaid
@@ -62,9 +62,9 @@ graph TD
 
 ```
 
-As you create a public Load balancer in the region of your choice you will see the option to make it regional or global.
+As you create a Public Load balancer in the region of your choice you will see the option to make it regional or global.
 
-![Image of the Load balancer creation screen](img/lb-regional.png)
+![Image of the Load Balancer creation screen](img/lb-regional.png)
 
 We're choosing regional and follow through to create a front end configuration with a new public IP address and a back end pool with the two VMs.
 
@@ -86,9 +86,9 @@ You can then repeat this in multiple regions. There are no restrictions on the r
 
 ## Going Global
 
-Once you have your regional instances, each with a separate public IP address on the front end of their regional Load balancers you can create the global Load balancer. You will need to create this in a home region. Although it's a global resource it does need to be created in a specific region. I used UK South as my home region.
+Once you have your regional instances, each with a separate public IP address on the front end of their Regional Load Balancers you can create the global Load Balancer. You will need to create this in a home region. Although it's a global resource it does need to be created in a specific region. I used UK South as my home region.
 
-> The [list of available home regions](https://learn.microsoft.com/en-us/azure/load-balancer/cross-region-overview#home-regions-in-azure) is fairly short but it appears to have little relevance to the operation of the global Load balancer. The [list of participating regions](https://learn.microsoft.com/en-us/azure/load-balancer/cross-region-overview#participating-regions-in-azure) is somewhat longer but we'll get to what that means in a moment.
+> The [list of available home regions](https://learn.microsoft.com/en-us/azure/load-balancer/cross-region-overview#home-regions-in-azure) is fairly short but it appears to have little relevance to the operation of the global Load Balancer. The [list of participating regions](https://learn.microsoft.com/en-us/azure/load-balancer/cross-region-overview#participating-regions-in-azure) is somewhat longer but we'll get to what that means in a moment.
 
 ```mermaid
 
@@ -135,27 +135,27 @@ graph TD
 
 ```
 
-The diagram above shows the overall architecture - you'll notice that I have represented the Global Load balancer as two separate entities. This is to illustrate the fact that there does not appear to be central dataplane infrastructure for the global Load balancer and each region advertises the anycast IP, the global Load balancer frontend IP, independently. This means that traffic from a client is routed to the nearest ingress point to the MSFT Azure backbone and then routed to the closest healthy region.
+The diagram above shows the overall architecture - you'll notice that I have represented the Global Load Balancer as two separate entities. This is to illustrate the fact that there does not appear to be central dataplane infrastructure for the Global Load Balancer and each region advertises the anycast IP, the Global Load Balancer frontend IP, independently. This means that traffic from a client is routed to the nearest ingress point to the MSFT Azure backbone and then routed to the closest healthy region.
 
 Creating the Global Load Balancer is very similar to creating a regional one. The first difference is that you select global rather than regional in the initial creation screen under tier.
 
-![Image of the global Load balancer creation screen](img/lb-global.png)
+![Image of the Global Load Balancer creation screen](img/lb-global.png)
 
 The other big difference is that instead of choosing zonal or zone redundant public IP addresses you choose one in the global tier.
 
 ![Image of the global public IP address creation screen](img/lb-global-pip.png)
 
-The back end pool allows you to add the regional Load balancer front end configurations that you created earlier. You can add public Load balancers from any region.
+The back end pool allows you to add the Regional Load Balancer front end configurations that you created earlier. You can add Public Load Balancers from any region.
 
-![Image of the global Load balancer backend pool configuration screen](img/lb-global-backend.png)
+![Image of the global Load Balancer backend pool configuration screen](img/lb-global-backend.png)
 
-The Inbound rules are pretty much identical to the regional Load balancer save for the fact that you do not have to specify any health probes. These are inherited from the regional Load balancers. You can choose to select the floating IP option if you want to, as with a regional Load balancer.
+The Inbound rules are pretty much identical to the Regional Load Balancer save for the fact that you do not have to specify any health probes. These are inherited from the Regional Load Balancers. You can choose to select the floating IP option if you want to, as with a Regional Load Balancer.
 
 > Floating IP allows you to use loopbacks on the application VMs rather than the main interface address to listen for application traffic. This is particularly useful if you need to have multiple web servers all listening on 443 on the same VM, perhaps with SSL certificates for different domains.
 
 ## What were those participating regions again?
 
-When you create a global Load balancer you can use any region to host the resource. However, not all regions will advertise the anycast IP address. The [list of participating regions](https://learn.microsoft.com/en-us/azure/load-balancer/cross-region-overview#participating-regions-in-azure) is fairly long and includes most of the geographical areas where Azure has a presence; there is a notable absence in China, South America and South Africa. If you create a global Load balancer in a non-participating region it will still work but the anycast IP will only be advertised from a participating region. For example a client in South Africa will be routed to the nearest participating region which is likely to be in Europe and then back over the Azure backbone to the nearest which could be in South Africa.
+When you create a Global Load Balancer you can use any region to host the resource. However, not all regions will advertise the anycast IP address. The [list of participating regions](https://learn.microsoft.com/en-us/azure/load-balancer/cross-region-overview#participating-regions-in-azure) is fairly long and includes most of the geographical areas where Azure has a presence; there is a notable absence in China, South America and South Africa. If you create a Global Load Balancer in a non-participating region it will still work but the anycast IP will only be advertised from a participating region. For example a client in South Africa will be routed to the nearest participating region which is likely to be in Europe and then back over the Azure backbone to the nearest which could be in South Africa.
 
 I've covered the [hollow core fibre](microsoft-ignite-2024.md#hollow-core-fibre) that Microsoft is using to connect its regions in a previous post, and the [apparent latency magic around privatelink](azure-latency-1.md) but the important point is that it uses hot potato routing to the nearest participating Azure region and then uses the low latency, high bandwidth Azure backbone to reach the nearest healthy region.
 
@@ -320,7 +320,7 @@ simon@MacBook-Pro ~ %
 
 ## Failure behaviour
 
-To test the failure behaviour I simply stopped the VMs in the UK South region. This caused the health probe on the regional Load balancer to fail and after a short period of time the global Load balancer also marked that region as unhealthy. The anycast IP was then withdrawn from that region and traffic was routed to the East Asia region.
+To test the failure behaviour I simply stopped the VMs in the UK South region. This caused the health probe on the Regional Load Balancer to fail and after a short period of time the Global Load Balancer also marked that region as unhealthy. The anycast IP was then withdrawn from that region and traffic was routed to the East Asia region.
 
 Behaviour **before failure of any VMs** in the region:
 
