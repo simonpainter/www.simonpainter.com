@@ -1,4 +1,4 @@
----
+lol---
 
 title: "Azure Global Load Balancer: It's anycast, Jim!"
 authors: simonpainter
@@ -291,7 +291,7 @@ RPKI State V: Valid I: Invalid N: Not found ?: Undefined
 
 ## Curling the anycast IP
 
-As I don't have a machine located in every region (OK, I could have spun one up) I used the rather excellent [Perfops CLI](https://perfops.net/cli) which [Zain](https://www.linkedin.com/in/zainkhan123/) introduced me to. This allows you to run curl commands from a variety of locations around the world. The free version is limited to 10 requests per day which is enough for this testing.
+As I don't have a machine located in every region (OK, I could have spun one up) I used the rather excellent [Perfops CLI](https://perfops.net/cli) which [Zain](https://www.linkedin.com/in/zainkhan123/) introduced me to. This allows you to run curl commands from a variety of locations around the world. The free version is limited to 10 requests per hour which is enough for this testing.
 
 ```text
 simon@MacBook-Pro ~ % perfops curl --from "Australia" 51.142.0.197
