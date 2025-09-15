@@ -320,7 +320,7 @@ simon@MacBook-Pro ~ %
 
 ## Map view
 
-Perfops also let's you plot your curl response times in a nice handy map view. This shows pretty much the expected result with latency lower near east asia and europe with slightly higher outside those regions. As this is a curl test it should be representative of the full end to end connection to the server. I have some questions about how you get ~20ms latency from US to UK: is the MSFT backbone really that good?
+Perfops also lets you plot your curl response times in a nice handy map view. This shows pretty much the expected result with latency lower near east asia and europe with slightly higher outside those regions. As this is a curl test it should be representative of the full end to end connection to the server. I have some questions about how you get ~20ms latency from US to UK: is the MSFT backbone really that good?
 
 ![Latency to East Asia and UK South regions from various locations](img/map-latency.png)
 
