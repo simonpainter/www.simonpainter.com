@@ -23,7 +23,7 @@ The Data-Information-Knowledge-Wisdom (DIKW) model gives us a useful way of unde
 
 At the bottom, we have **data** - raw facts like IP addresses, device models, and serial numbers. Moving up, **information** shows relationships and connections. **Knowledge** explains how these relationships serve business purposes. At the top, **wisdom** captures the hard-won insights about why decisions were made and what works in practice. Here's the thing: as you move up the pyramid, documentation quality plummets.
 
-> The DIKW model is used extensively in information science and knowledge management to understand how raw data transforms into actionable wisdom. Most organisations excel at capturing data and information, but struggle turn that into insights that are useful in practice.
+> The DIKW model is used extensively in information science and knowledge management to understand how raw data transforms into actionable wisdom. Most organisations excel at capturing data and information, but struggle to turn that into insights that are useful in practice.
 
 ## The documentation drought
 
