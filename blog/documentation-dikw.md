@@ -12,22 +12,32 @@ date: 2025-09-15
 ---
 
 I've been thinking about why network documentation always feels incomplete. You know the feeling - you've got spreadsheets full of device details, beautiful network diagrams, and configuration backups. But when something breaks at 3am, you're still calling Dave from the pub because he's the only one who knows why VLAN 247 exists.
-<!-- truncate -->
-The problem isn't that we don't document things. It's that we're only capturing the bottom layer of what we actually need.
 
+The problem isn't that we don't document things. It's that we're only capturing the bottom layer of what we actually need.
+<!-- truncate -->
 ## A framework for understanding documentation gaps
 
-The Data-Information-Knowledge-Wisdom (DIKW) model gives us a useful way of understanding why network documentation fails. Think of it as a pyramid where each level builds on the one below:
+The [Data-Information-Knowledge-Wisdom (DIKW) model](https://en.wikipedia.org/wiki/DIKW_pyramid) has been around for decades and attempts to create a hierarchy of understanding from raw data to actionable wisdom and often prediction.
 
 ![DIKW Pyramid](img/dikw-pyramid.png)
 
-At the bottom, we have **data** - raw facts like IP addresses, device models, and serial numbers. Moving up, **information** shows relationships and connections. **Knowledge** explains how these relationships serve business purposes. At the top, **wisdom** captures the hard-won insights about why decisions were made and what works in practice. Here's the thing: as you move up the pyramid, documentation quality plummets.
+At the bottom, we have **data** - raw facts like IP addresses, device models, and serial numbers. Moving up, **information** shows relationships and connections. **Knowledge** explains how these relationships serve business purposes. At the top, **wisdom** captures the hard-won insights about why decisions were made and what works in practice.
 
-> The DIKW model is used extensively in information science and knowledge management to understand how raw data transforms into actionable wisdom. Most organisations excel at capturing data and information, but struggle to turn that into insights that are useful in practice.
+I found a great example on Reddit which works well to illustrate the concept:
+
+> **Data**: Here's data for 500 phone calls to a customer service department. The data includes the call date and the reason for calling.
+>
+> **Information**: There were many more calls on weekends for park maintenance than there were during the week.
+>
+> **Knowledge**: Calls for park maintenance are high on weekends because many more people go to parks on weekends. More people = more maintenance issues found.
+>
+> **Wisdom**: A maintenance crew should visit the park on Fridays and fix issues that they notice. This will reduce call volume, especially on weekends.
+
+Notice how each level builds on the previous one, transforming raw call data into a proactive strategy that prevents problems before they happen. This progression from reactive data collection to predictive wisdom is exactly what's missing in most network documentation. The DIKW model gives us a useful way of understanding why network documentation fails: as you move up the pyramid, documentation quality plummets.
 
 ## The documentation drought
 
-Most organisations are brilliant at the data layer. Our CMDBs are packed with device inventories, our monitoring systems track every metric, and our configuration management tools back up every change.
+Applying the DIKW model to network documentation we find that most organisations are brilliant at the data layer. Our CMDBs are packed with device inventories, our monitoring systems track every metric, and our configuration management tools back up every change.
 
 We're pretty good at the information layer too. Network diagrams show topology, VLAN tables map relationships, and routing tables display connectivity. We can usually work out how things connect. I have been wowed by many a dashboard that pulls live data from network devices to show RAG status of all manner of things - PowerBI has a lot to answer for in this space. But climb higher and things get sparse fast.
 
@@ -37,15 +47,15 @@ And the wisdom layer? That's almost entirely tribal. It's the insights that come
 
 ## The nature of tribal knowledge and wisdom
 
-Before we go further, let's talk about what tribal knowledge and what it means. I use this term to describe the understanding passed down between engineers like an oral tradition - insights, patterns, and contextual knowledge that never make it into formal documentation.
+Before we go further, let's talk about what tribal wisdom is and what it means. I use this term to describe the understanding passed down between engineers like an oral tradition - insights, patterns, and contextual knowledge that never make it into formal documentation.
 
-At the knowledge layer, tribal knowledge includes understanding how your network actually supports business operations. It's knowing that the seemingly redundant connection to the backup data centre isn't just for disaster recovery - it's also the primary path for the batch processing jobs that run every night. This knowledge lives in people's heads because nobody ever documented the full context of how systems interconnect.
+At the knowledge layer, tribal knowledge includes understanding how your network actually supports business operations. This knowledge lives in people's heads because nobody ever documented the full context of how systems interconnect.
 
 But tribal wisdom goes deeper. It's the wisdom held by the senior engineers - the team's elders who've seen multiple generations of technology and organisational change. This is experiential knowledge that comes with stories and context.
 
-It's the senior engineer telling you, "Don't restart BGP on that router during market hours - learned that the hard way in 2008." It's knowing that a particular switch model always shows interface errors two weeks before it fails completely. It's understanding that the monitoring system reports everything as normal, but when you see this specific combination of log entries, the storage array is about to crash.
+It's the senior engineer telling you, "Don't restart BGP on that router during market hours - learned that the hard way in 2008." It's knowing that a particular switch model always shows interface errors two weeks before it fails completely. It's understanding that the monitoring system reports everything as normal, but when you see this specific combination of log entries, then something is about to crash.
 
-This wisdom lives in conversations, in the margins of team meetings, in the knowledge shared during 3am incident calls. It's contextual, experiential, and often comes with war stories about why certain approaches work or fail in your specific environment.
+This wisdom lives in conversations, in the margins of team meetings, in the knowledge shared during 3am incident calls. It's contextual, experiential, and often comes with [war stories](vlan-add.md) about why certain approaches work or fail in your specific environment.
 
 ## The fragility of institutional memory
 
@@ -55,9 +65,7 @@ When experienced engineers leave, retire, or get made redundant, decades of inst
 
 Knowledge transfer sessions try to bridge this gap, but they're fighting human nature. You can't download twenty years of pattern recognition in a few training sessions. The subtle cues that trigger "something's not quite right" in an experienced engineer's mind - those don't transfer easily in formal handovers.
 
-The managed service provider gets the network diagrams, the configuration backups, and the operational procedures. What they don't get is the understanding that this particular router has been unstable since the power outage in 2022, or that the monitoring thresholds were set the way they are because of a specific incident that taught everyone what "normal" actually looks like.
-
-Yet this tribal knowledge and wisdom often contain the most valuable insights about your infrastructure. It's the difference between someone who can follow a runbook and someone who can sense when the runbook isn't going to work this time.
+Yet this tribal knowledge and wisdom often contain the most valuable insights about your infrastructure. It's the difference between someone who can follow a runbook and someone who can write the runbook.
 
 ## When tools become part of the problem
 
@@ -69,12 +77,13 @@ Even when documentation exists, it's in the wrong place at the wrong time. Your 
 
 The context that makes documentation valuable - the connection between decision, implementation, and outcome - gets lost in the tool sprawl.
 
-## The documentation-first alternative
+## Capturing Intent Within Implementation
 
-What if we flipped the script? Instead of documenting after we build, what if we documented our intent before we implement? Documentation-first means capturing the "why" at the moment of decision, when the reasoning is fresh and the alternatives are clear. It means embedding context directly with the technical implementation, not filing it away in a separate system. This isn't just better documentation - it's documentation that lives where it's needed, when it's needed.
+What if we flipped the script? Instead of documenting after we build, what if we captured our intent and reasoning at the moment of decision, when the context is fresh and the alternatives are clear?
+
+This isn't about designing in documents first - it's about embedding the "why" directly with the technical implementation, not filing it away in a separate system. It's documentation that lives where it's needed, when it's needed.
 
 Here's where infrastructure as code becomes powerful beyond just automation. When your network configurations live in code, the comments become a natural place to capture intent alongside implementation.
-
 Instead of having your BGP configuration in one system and your architectural decisions in another, everything lives together:
 
 ```text
@@ -129,24 +138,25 @@ This kills the traditional technical design document. No more writing lengthy do
 
 Instead, documentation evolves continuously with your infrastructure. When you need to understand why something exists, you look at the commit that introduced it. When you need to change something, you update both the implementation and the explanation in the same pull request.
 
-The documentation stays current because it can't drift - it's locked to the same version as the code it describes.
+The documentation stays current because it can't drift - it's locked to the same version as the infrastructure it describes.
 
 ## Where AI helps change the game
 
 AI is where things get really interesting. The wisdom layer has always been the hardest to capture because it's experiential and contextual. But modern AI models can connect directly to your operational systems using protocols like Model Context Protocol (MCP).
 
-Instead of trying to train custom models on your historical data, you can give AI models live access to context in the form of your configuration repositories, historical logs, incident management systems, and monitoring data. When someone's troubleshooting at 3am, instead of calling Dave, they could ask:
+Instead of trying to capture every insight, you can give AI models access to context in the form of your configuration repositories, historical logs, incident management systems, and monitoring data. When someone's troubleshooting at 3am, instead of calling Dave, they could ask:
 
-"The branch office is reporting slow connectivity. Based on our network history, what should I check first?"
+"What does vlan 247 do again? Why was it added?"
 
-The AI could query your systems in real-time and respond with context-aware guidance:
-"Looking at your current configuration and incident history, branch connectivity issues have typically been caused by three patterns: WAN link saturation on the primary path (65% of cases), DNS resolution delays (20%), or switch port errors at the branch (15%). Your monitoring shows the WAN link to that branch is currently at 85% utilisation, and there was a similar pattern before the incident on 2024-02-15. I'd suggest checking interface statistics on the branch router first."
-
-This isn't replacing human expertise - it's amplifying it. The AI becomes a bridge between your live operational data and institutional memory, making tribal knowledge searchable while keeping it current.
+This isn't replacing human expertise - it's amplifying it. The AI becomes a bridge between your live operational data and institutional memory, making our understanding discoverable while keeping it current.
 
 ## Building organisational memory
 
-The real power comes from combining documentation-first practices with AI-augmented wisdom capture. As you document intent and implementation together, the AI learns not just what you did, but why you did it. As you resolve incidents and capture lessons learned, the model builds understanding of what works in your specific context. Over time, you develop genuine organisational memory - not just records of what happened, but understanding of why decisions were made and what their consequences were. This matters because networks aren't just technical systems. They're socio-technical systems where human knowledge, business context, and technical implementation all interweave. The wisdom layer captures those interconnections.
+The real power comes from combining documentation-first practices with AI-augmented wisdom capture. As you document intent and implementation together, the AI has context on not just what you did, but why you did it.
+
+As you resolve incidents and capture lessons learned, the model builds understanding of what works in your specific infrastructure. Over time, you develop genuine organisational memory - not just records of what happened, but understanding of why decisions were made and what their consequences were.
+
+This matters because networks aren't just technical systems. They're socio-technical systems where human knowledge, business context, and technical implementation all interweave. The wisdom layer captures those interconnections.
 
 ## Start where it hurts most
 
