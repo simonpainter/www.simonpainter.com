@@ -121,4 +121,4 @@ The NetBox integration I've built is a proof of concept for this future. It demo
 
 The server is pretty basic at present and proxies a few of the capabilities of the Netbox API. I'll be adding to and extending it as time goes on. Contributions are of course welcome.
 
-The repository can be found at https://github.com/simonpainter/netbox-mcp
+> Since writing this post I have expanded the MCP server capabilities so there are tools across the whole Netbox data model. Documentation of each one is in the [Github repository](https://github.com/simonpainter/netbox-mcp).
