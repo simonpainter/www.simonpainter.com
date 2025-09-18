@@ -16,7 +16,6 @@ I've had some [concerns](mcp-server-document.md) around Model Context Protocol b
 <!-- truncate -->
 > Since writing this blog post I have created an open source Flask implementation of an MCP server for Netbox which you can find on [Github](https://github.com/simonpainter/netbox-mcp). This makes it easier to deploy as a standalone service that multiple users can connect to within your organisation. There is a bit more information in this [follow up blog post](netbox-mcp-server.md)
 
-
 I have been a little busy since Easter but finally found some time today to dive into one of the two AI options that [NetBox released back in March](https://netboxlabs.com/blog/new-ways-use-ai-netbox-open-sourced/). The NetBox local MCP server installation was surprisingly straightforward (at least it is on a MacBook). All told, getting a fresh instance of NetBox with some dummy data and the MCP server up and running took only a couple of hours.
 
 > If you have not used Netbox then shame on you, it's one of the
