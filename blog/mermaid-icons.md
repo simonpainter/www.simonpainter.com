@@ -13,7 +13,7 @@ date: 2025-09-24
 
 I have tried to move to exclusively using Mermaid for diagrams in my blog posts and documentation. It is a great tool for creating diagrams in a text based format that can be version controlled and easily edited. One of the limitations I have found is the lack of custom icons. This has been addressed by using the Iconify library which has a large collection of open source icons. Combined with the architecture-beta diagram type in Mermaid it is possible to create some great looking diagrams that go beyond the basic flow diagrams I have been using until now.
 <!-- truncate -->
-I have added support in my Docusaurus site for one of the icon sets. Unfortuately these icons are not supported in Github and some other markdown renderers so the diagrams will only render correctly on my site. There is an edit button at the bottom of each post so you can see the source and the Github rendered version.
+I have added support in my Docusaurus site for one of the icon sets. Unfortunately these icons are not supported in Github and some other markdown renderers so the diagrams will only render correctly on my site. There is an edit button at the bottom of each post so you can see the source and the Github rendered version.
 
 To get started I needed to add a logo set to my development environment. I chose [the logos collection](https://icon-sets.iconify.design/logos/) which has a good selection of common icons including some AWS icons. To install it in your Docusaurus project run the following command in the root of your project.
 
