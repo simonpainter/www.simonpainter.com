@@ -86,7 +86,7 @@ simon@lab-simon-mip-vm:~$
 
 `dhcp_server_identifier` is set to the magic IP address, this shows that the broadcasts are being captured and handled by a server that reports the magic IP as it's identity. Additionally the `domain_name_servers` is set to the magic IP, so DNS queries are sent there. There are also `classless_static_routes` routes added for `168.63.129.16` and `169.254.169.254` via `10.0.0.1` which ensure that traffic to those IPs isn't caught up in a UDR to go elsewhere.
 
-One important callout is that the handling of DNS queries to this IP address in NSGs. If you create an NSG to block TCP and UDP port 53 to any destination, common if you want to force the use of a custom DNS server appliance, Windows DNS, Infoblox etc are all common in hybrid enterprise environments, then it will not block DNS queries to `168.63.129.16`.
+One important thing to note is how NSGs handle DNS queries to this IP address. If you create an NSG to block TCP and UDP port 53 to any destination, which is common if you want to force the use of a custom DNS server appliance such as Infoblox in a hybrid enterprise environment, the NSG will not block DNS queries to `168.63.129.16`.
 
 ![DNS block](img/dns-block.png)
 
