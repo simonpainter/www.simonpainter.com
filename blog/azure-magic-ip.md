@@ -109,7 +109,7 @@ This has some serious implications for security because DNS data exfiltration is
 
 ![DNS block with tag](img/dns-block-tag.png)
 
-```
+```text
 simon@lab-simon-mip-vm:~$ dig www.simonpainter.com +short @168.63.129.16
 ;; communications error to 168.63.129.16#53: timed out
 ;; communications error to 168.63.129.16#53: timed out
@@ -128,7 +128,7 @@ simon@lab-simon-mip-vm:~$
 
 Another place you will find the magic IP is in your logs if you have an Azure Load Balancer (ALB) in front of your VM. The ALB uses the magic IP to perform health probes on the backend pool members. The default probe is a TCP probe on port 80, but you can change this to HTTP or HTTPS and specify a different port and path. The ALB will use the magic IP to send the probe requests, so you will see this IP address in your web server logs.
 
-```
+```text
 simon@lab-simon-mip-vm:~$ tail /var/log/apache2/access.log 
 168.63.129.16 - - [30/Sep/2025:21:06:07 +0000] "GET / HTTP/1.1" 200 10982 "-" "Load Balancer Agent"
 168.63.129.16 - - [30/Sep/2025:21:06:22 +0000] "GET / HTTP/1.1" 200 10982 "-" "Load Balancer Agent"
@@ -136,7 +136,7 @@ simon@lab-simon-mip-vm:~$ tail /var/log/apache2/access.log
 simon@lab-simon-mip-vm:~$ 
 ```
 
-You normally don't need to do anything special to allow these probes to reach your VM, as the ALB is a first party service and is allowed by default using the service tag `AzureLoadBalancer`. 
+You normally don't need to do anything special to allow these probes to reach your VM, as the ALB is a first party service and is allowed by default using the service tag `AzureLoadBalancer`.
 
 ![Load Balancer Health Probe](img/lb-inbound.png)
 
