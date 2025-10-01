@@ -47,6 +47,8 @@ simon@lab-simon-mip-vm:~$ dig www.simonpainter.com +short @10.0.0.3
 simon@lab-simon-mip-vm:~$ 
 ```
 
+> The `+short` option in dig just means to return the answer only, without any of the additional information. I found it while trying to [find my own IP address](finding-my-ip.md).
+
 ## DNS & DHCP
 
 The DNS queries are actually handled by `168.63.129.16`, and by default that is the DNS server assigned by DHCP to VMs in Azure. You can look at the DHCP lease information on a Linux VM using `dhcpcd --dumplease <interface>` and see that there are a few relevant options.
