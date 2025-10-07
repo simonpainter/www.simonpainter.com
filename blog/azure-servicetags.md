@@ -16,9 +16,9 @@ One of the big problems that network security admins face in cloud environments 
 
 > I had a particularly bad experience with wildcard DNS rules in a corporate environment where DNS queries were egressing
 > through a different path to the application traffic. Fortigate firewalls rely on seeing the DNS query and response to be
-> able to cache the IP for the FQDN rule. If the DNS traffic is going out a different path (e.g. through a proxy) then the
-> firewall never sees the DNS response and can't cache the IP address. This results in failed connections and a very
-> urgent need to change our poorly designed DNS architecture.
+> able to cache the IP for the wildcard FQDN rule. If the DNS traffic is going out a different path, perhaps where there
+> are separate cloud and on prem egress paths, then the firewall never sees the DNS response and can't cache the IP
+> address. This resulted in failed connections and a very urgent need to change our poorly designed DNS architecture.
 
 If you wanted to use IP address based rules you would need to use this list:
 
@@ -60,8 +60,7 @@ If you wanted to use IP address based rules you would need to use this list:
           "2603:1020:706::/48"
 ```
 
-That's great but it's probably going to change next week and unless you keep on top of the list of [Azure IP ranges and Service Tags](https://www.microsoft.com/en-us/download/details.aspx?id=56519) your rules are going to become out of date. 
-This is where Azure Service Tags come in. You can use `Storage.UKSouth` instead in your NSG or Azure Firewall rules and it is kept up to date by Microsoft. You can see the full list of service tags in the [official documentation](https://learn.microsoft.com/en-us/azure/virtual-network/service-tags-overview).
+That's great but it's probably going to change next week, so unless you keep on top of the list of [Azure IP ranges and Service Tags](https://www.microsoft.com/en-us/download/details.aspx?id=56519) your rules are going to become out of date. This is where Azure Service Tags come in. You can use `Storage.UKSouth` instead in your NSG or Azure Firewall rules and it is kept up to date by Microsoft. You can see the full list of service tags in the [official documentation](https://learn.microsoft.com/en-us/azure/virtual-network/service-tags-overview).
 
 But you know what, it's pretty well documented so why am I bothering to write a blog post about it? Because there's a link in the paragraph above which is easy to miss. It's the link to the JSON file that contains the list of IP ranges for all the Azure service tags. You can download it pretty easily with `curl` and then parse it with something like python or jq to get the specific ranges you need. This can then be the basis of some automation to update your firewall rules if you are using something on premise or a third party NVA in Azure that doesn't support service tags.
 
