@@ -63,7 +63,7 @@ The primary reasons for AZ sharding include:
 > Microsoft is a little vague about how far apart their AZs are within a
 > region. In fact, some regions may not have AZs within the definition that we
 > have come to accept it now. I've been told that the physical distance between each
-> AZ is somewhere between 10 miles and 100 miles, but in reality, there are AZs which share 
+> AZ is somewhere between 10 miles and 100 miles, but in reality, there are AZs which share
 > the same campus, even though they don't share power, cooling, connectivity, etc.
 
 While AZ sharding provides important benefits, there are legitimate scenarios where services in different subscriptions need to be co-located in the same physical AZ:
@@ -87,7 +87,7 @@ simon [ ~ ]$ az rest
             --query 'value' |jq -c '[ .[] | select( .name == "uksouth")]'
 ```
 
-The rather verbose response for the above would look something like this. 
+The rather verbose response for the above would look something like this.
 
 ```json
 [{"availabilityZoneMappings":
