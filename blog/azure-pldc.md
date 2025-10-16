@@ -26,7 +26,7 @@ We also had an elegant solution for site to site VPNs where an Azure VPN Gateway
 
 Private Link Direct Connect solves the problem by allowing you to create a private link service which is associated to an IP that can be any private IP either inside or outside of Azure. I tested it with a lab version of both scenarios above and it worked as expected. I'll do a lab build properly but the basic steps are below:
 
-> It's a preview so you it's not available in the portal, or all regions. You need to create it via Terraform or via PS/CLI.
+> It's a preview so it's not available in the portal, or all regions. You need to create it via Terraform or via PS/CLI.
 
 ```terraform
 
