@@ -24,7 +24,7 @@ When Azure Firewall scales out, it can take several minutes for new instances to
 
 ### Scale in
 
-When Azure Firewall scales in, it terminates instances based on its own internal logic. Azure Firewall gradually scales in when the average throughput, CPU consumption, or number of connections is below 20% and the instances are terminated randomly rather than based on load, or even a FILO or FIFO logic. This can lead to situations where long-lived TCP connections are dropped because the [instance handling those connections is terminated](https://learn.microsoft.com/en-us/azure/firewall/firewall-faq#how-does-azure-firewall-handle-vm-instance-shutdowns-during-virtual-machine-scale-set-scale-in--scale-down--or-fleet-software-upgrades). This can be particularly problematic for applications that rely on persistent connections. There is a 45 second drain down period but this is not always sufficient to gracefully handle long lived connections.
+When Azure Firewall scales in, it terminates instances based on its own internal logic. Azure Firewall gradually scales in when the average throughput, CPU consumption, or number of connections is below 20%. The instances are terminated randomly rather than based on load, or even a FILO or FIFO logic. This can lead to situations where long-lived TCP connections are dropped because the [instance handling those connections is terminated](https://learn.microsoft.com/en-us/azure/firewall/firewall-faq#how-does-azure-firewall-handle-vm-instance-shutdowns-during-virtual-machine-scale-set-scale-in--scale-down--or-fleet-software-upgrades). This can be particularly problematic for applications that rely on persistent connections. There is a 45 second drain down period but this is not always sufficient to gracefully handle long lived connections.
 
 ## How does Azure Firewall Prescaling help?
 
@@ -32,7 +32,7 @@ When Azure Firewall scales in, it terminates instances based on its own internal
 
 ## How to use it
 
-Using prescaling introduces a new billing element to Azure Firewall, this makes sense because otherwise we'd all just set it to 50 instances and be done with it!
+Using prescaling introduces a new billing element to Azure Firewall; this makes sense because otherwise we'd all just set it to 50 instances and be done with it!
 
 ![Azure Firewall Prescaling in the Azure Portal](img/prescaling-portal.png)
 
