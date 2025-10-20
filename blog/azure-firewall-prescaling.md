@@ -11,8 +11,11 @@ date: 2025-10-20
 
 ---
 
-One of the weirdest birthday presents I got this year was from Microsoft - Azure Firewall Prescaling. It's a solution to a problem that has been around for a while and one that quite a lot of people didn't even know existed.
-Azure Firewall is a great product, but it's not without its limitations. One of the biggest issues has been around scaling. Azure Firewall can scale up and down based on demand, but this scaling can take time. In high-demand situations, this delay can lead to dropped packets and degraded performance. The scale back in can also cause issues with long lived tcp connections because there has been little control over when the scaling events happen, and which instances are terminated.
+One of the weirdest birthday presents I got this year was from Microsoft - Azure Firewall Prescaling. It's a solution to a problem that's been around for a while. And one that quite a lot of people didn't even know existed.
+
+Azure Firewall is a great product, but it's not without its limitations. One of the biggest issues has been around scaling. Sure, Azure Firewall can scale up and down based on demand. But this scaling can take time. In high-demand situations, this delay can lead to dropped packets and degraded performance.
+
+The scale back in can also cause issues with long-lived TCP connections. Why? Because there's been little control over when the scaling events happen. And which instances are terminated.
 <!-- truncate -->
 ## What's the problem that's being solved?
 
@@ -20,11 +23,17 @@ There are a couple of scenarios where having a bit more control of Azure Firewal
 
 ### Scale out
 
-When Azure Firewall scales out, it can take several minutes for new instances to be provisioned and become operational.  [Azure Firewall scales out when the average throughput and CPU consumption is at 60% or if the number of connections usage is at 80%](https://learn.microsoft.com/en-us/azure/firewall/firewall-performance#total-throughput--for-initial-firewall-deployment); these are defined thresholds and do not account for sudden spikes in traffic. Scale out takes five to seven minutes; during this time, if there is a sudden spike in traffic, the existing instances may become overwhelmed, leading to dropped packets and degraded performance.
+When Azure Firewall scales out, it can take several minutes for new instances to be provisioned and become operational. [Azure Firewall scales out when the average throughput and CPU consumption is at 60% or if the number of connections usage is at 80%](https://learn.microsoft.com/en-us/azure/firewall/firewall-performance#total-throughput--for-initial-firewall-deployment). These are defined thresholds. They don't account for sudden spikes in traffic.
+
+Scale out takes five to seven minutes. During this time, if there's a sudden spike in traffic, the existing instances may become overwhelmed. That leads to dropped packets and degraded performance.
 
 ### Scale in
 
-When Azure Firewall scales in, it terminates instances based on its own internal logic. Azure Firewall gradually scales in when the average throughput, CPU consumption, or number of connections is below 20%. The instances are terminated randomly rather than based on load, or even a FILO or FIFO logic. This can lead to situations where long-lived TCP connections are dropped because the [instance handling those connections is terminated](https://learn.microsoft.com/en-us/azure/firewall/firewall-faq#how-does-azure-firewall-handle-vm-instance-shutdowns-during-virtual-machine-scale-set-scale-in--scale-down--or-fleet-software-upgrades). This can be particularly problematic for applications that rely on persistent connections. There is a 45 second drain down period but this is not always sufficient to gracefully handle long lived connections.
+When Azure Firewall scales in, it terminates instances based on its own internal logic. Azure Firewall gradually scales in when the average throughput, CPU consumption, or number of connections is below 20%.
+
+Here's the problem: the instances are terminated randomly. Not based on load. Not even using FILO or FIFO logic. This can lead to situations where long-lived TCP connections are dropped because the [instance handling those connections is terminated](https://learn.microsoft.com/en-us/azure/firewall/firewall-faq#how-does-azure-firewall-handle-vm-instance-shutdowns-during-virtual-machine-scale-set-scale-in--scale-down--or-fleet-software-upgrades).
+
+This can be particularly problematic for applications that rely on persistent connections. There's a 45-second drain down period. But this isn't always sufficient to gracefully handle long-lived connections.
 
 ## How does Azure Firewall Prescaling help?
 
