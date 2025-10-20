@@ -36,7 +36,7 @@ Using prescaling introduces a new billing element to Azure Firewall; this makes 
 
 ![Azure Firewall Prescaling in the Azure Portal](img/prescaling-portal.png)
 
-Prescaling has been exposed via the Azure Portal and via PowerShell. There is support in ARM and Bicep too, however at the time of writing there is no support in the native Terraform AzureRM provider. There is however support via the AzAPI provider.
+Prescaling has been exposed via the Azure Portal and via PowerShell. There is support in ARM and Bicep, along with the Terraform AzAPI provider, but right now there is no support in the native Terraform AzureRM provider.
 
 Terraform AzAPI snippet to enable prescaling looks something like this:
 
