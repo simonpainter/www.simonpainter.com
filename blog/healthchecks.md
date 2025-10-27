@@ -11,7 +11,7 @@ date: 2025-10-27
 
 ---
 
-I was out for a long walk over the weekend and I have now got a rather nasty blister on my heel. If a health check was configured just to detect the blisters on my feet then I would have been marked as dead already.
+I was out for a long walk over the weekend and I have now got a rather nasty blister on my heel. If you'd configured a health check just to monitor my feet, I'd be marked as dead right now.
 <!-- truncate -->
 The reason I mention this is that health checks, especially in the context of load balancers, failovers, and IPSLA monitors can be a bit binary and either too narrowly or too widely scoped depending on the use case.
 
@@ -46,4 +46,4 @@ We ended up testing if we had received about eight large backbone BGP prefixes f
 
 ## Conclusion
 
-In conclusion, health checks are a critical component of ensuring the reliability and availability of services. The choice between AND and OR health checks depends on the specific requirements of the service being monitored. It's important to consider the scope and the purpose of the health check and to ensure that it provides a meaningful indication of the service's health. For services like Office 365, it's advisable to use multiple health checks to different endpoints to ensure accurate monitoring. For internet reachability, using multiple endpoints, or multiple received routes, and a threshold for failure can provide a more robust indication of link health. Ultimately, the goal is to ensure that health checks are effective in maintaining service availability without being overly sensitive to transient issues.
+Here's what I've learned from watching health checks fail: you need to match them to what you're actually trying to detect. The choice between AND and OR health checks depends on the specific requirements of the service being monitored. It's important to consider the scope and the purpose of the health check and to ensure that it provides a meaningful indication of the service's health. For services like Office 365, it's advisable to use multiple health checks to different endpoints to ensure accurate monitoring. For internet reachability, using multiple endpoints, or multiple received routes, and a threshold for failure can provide a more robust indication of link health. Ultimately, the goal is to ensure that health checks are effective in maintaining service availability without being overly sensitive to transient issues.
