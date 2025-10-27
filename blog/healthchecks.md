@@ -11,7 +11,7 @@ date: 2025-10-27
 
 ---
 
-I was out for a long walk over the weekend and I have not got a rather nasty blister on my heal. If a health check was configured just to detect the blisters on my feet then I would have been marked as dead already.
+I was out for a long walk over the weekend and I have now got a rather nasty blister on my heel. If a health check was configured just to detect the blisters on my feet then I would have been marked as dead already.
 <!-- truncate -->
 The reason I mention this is that health checks, especially in the context of load balancers, failovers, and IPSLA monitors can be a bit binary and either too narrowly or too widely scoped depending on the use case.
 
