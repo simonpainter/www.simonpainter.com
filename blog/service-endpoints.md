@@ -29,7 +29,7 @@ The thing to remember with both is that the traffic is still encrypted using TLS
 
 You can also configure affinity settings for Service Endpoints to ensure that the traffic to the service is either routed via the Microsoft backbone network or via the internet. By default, traffic to the service is routed via the Microsoft backbone network, which provides better performance and security. This will be the right answer for pretty much everyone. However, if you have specific requirements to route traffic via the internet, you can configure the affinity settings accordingly.
 
-There are some reasons why you might choose Service Endpoints or Private Endpoints over just allowing the traffic to go via the internet. One of those is that you might not want any other internet egress for you vnet, or you might use a firewall for the egress and not want to put all your private storage traffic through that and incur the extra processing costs.
+There are some reasons why you might choose Service Endpoints or Private Endpoints over just allowing the traffic to go via the internet. One of those is that you might not want any other internet egress for your VNet, or you might use a firewall for the egress and not want to put all your private storage traffic through that and incur the extra processing costs.
 
 ## So what does it look like?
 
