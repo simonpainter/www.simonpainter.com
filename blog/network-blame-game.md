@@ -5,6 +5,7 @@ tags:
   - opinion
   - business
   - networks
+  - monitoring
 date: 2024-11-17
 
 ---

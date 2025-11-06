@@ -163,3 +163,8 @@ sdwan:
   label: 'SDWAN'
   permalink: '/sdwan'
   description: 'Software-Defined Wide Area Networking concepts, implementations, and best practices'
+
+monitoring:
+  label: 'Monitoring'
+  permalink: '/monitoring'
+  description: 'System and network monitoring techniques, tools, and best practices'
