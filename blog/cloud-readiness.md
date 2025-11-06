@@ -6,6 +6,7 @@ tags:
   - business
   - aws
   - azure
+  - monitoring
 date: 2024-11-17
 
 ---
