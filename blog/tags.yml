@@ -168,3 +168,58 @@ monitoring:
   label: 'Monitoring'
   permalink: '/monitoring'
   description: 'System and network monitoring techniques, tools, and best practices'
+
+load-balancing:
+  label: 'Load Balancing'
+  permalink: '/load-balancing'
+  description: 'Load balancing techniques, implementations, and strategies for distributing traffic'
+
+performance:
+  label: 'Performance'
+  permalink: '/performance'
+  description: 'Performance optimization, latency analysis, and efficiency improvements'
+
+high-availability:
+  label: 'High Availability'
+  permalink: '/high-availability'
+  description: 'High availability architectures, redundancy patterns, and resilience strategies'
+
+disaster-recovery:
+  label: 'Disaster Recovery'
+  permalink: '/disaster-recovery'
+  description: 'Disaster recovery planning, backup strategies, and business continuity'
+
+ipv6:
+  label: 'IPv6'
+  permalink: '/ipv6'
+  description: 'IPv6 protocol, adoption strategies, and implementation guides'
+
+troubleshooting:
+  label: 'Troubleshooting'
+  permalink: '/troubleshooting'
+  description: 'Debugging techniques, problem-solving approaches, and issue resolution'
+
+architecture:
+  label: 'Architecture'
+  permalink: '/architecture'
+  description: 'System design patterns, architectural approaches, and infrastructure design'
+
+cicd:
+  label: 'CI/CD'
+  permalink: '/cicd'
+  description: 'Continuous integration and deployment practices, pipelines, and automation workflows'
+
+career:
+  label: 'Career Development'
+  permalink: '/career'
+  description: 'Professional growth, career insights, and skills development'
+
+documentation:
+  label: 'Documentation'
+  permalink: '/documentation'
+  description: 'Documentation practices, knowledge management, and technical writing'
+
+migration:
+  label: 'Migration'
+  permalink: '/migration'
+  description: 'Migration strategies, platform transitions, and upgrade approaches'
