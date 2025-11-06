@@ -6,6 +6,7 @@ tags:
   - personal
   - azure
   - networks
+  - career
 date: 2025-06-01
 
 ---

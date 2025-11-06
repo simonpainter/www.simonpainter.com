@@ -8,6 +8,7 @@ tags:
   - azure
   - expressroute
   - bgp
+  - ipv6
 date: 2025-01-29
 
 ---

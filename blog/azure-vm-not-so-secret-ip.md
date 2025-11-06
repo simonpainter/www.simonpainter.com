@@ -9,6 +9,7 @@ tags:
   - dns
   - networks
   - cloud
+  - troubleshooting
 date: 2024-11-17
 
 ---

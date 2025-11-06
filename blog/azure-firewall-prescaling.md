@@ -6,6 +6,7 @@ tags:
   - azure
   - cloud
   - networks
+  - performance
 
 date: 2025-10-20
 

@@ -8,6 +8,7 @@ tags:
   - security
   - networks
   - zero-trust
+  - architecture
 date: 2024-11-16
 
 ---

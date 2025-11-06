@@ -6,6 +6,7 @@ tags:
   - personal
   - ai
   - business
+  - career
 date: 2024-11-20
 
 ---

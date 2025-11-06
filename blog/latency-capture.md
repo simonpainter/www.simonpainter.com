@@ -9,6 +9,8 @@ tags:
   - networks
   - cloud
   - bash
+  - performance
+  - troubleshooting
 date: 2025-02-25
 
 ---

@@ -6,6 +6,7 @@ tags:
   - azure
   - networks
   - cloud
+  - ipv6
 date: 2025-10-08
 
 ---

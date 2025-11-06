@@ -5,6 +5,7 @@ authors: simonpainter
 tags:
   - networks
   - ospf
+  - troubleshooting
 date: 2025-05-12
 
 ---

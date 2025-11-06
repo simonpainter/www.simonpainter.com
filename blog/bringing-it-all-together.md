@@ -8,6 +8,7 @@ tags:
   - networks
   - terraform
   - automation
+  - architecture
 
 date: 2025-08-18
 

@@ -6,6 +6,7 @@ tags:
   - cloud
   - azure
   - networks
+  - architecture
 date: 2025-10-16
 
 ---

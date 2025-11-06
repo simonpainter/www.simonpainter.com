@@ -6,6 +6,7 @@ tags:
   - azure
   - networks
   - cloud
+  - load-balancing
 date: 2025-06-08
 
 ---

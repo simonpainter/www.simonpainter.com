@@ -7,6 +7,7 @@ tags:
   - ai
   - business
   - mcp
+  - documentation
 date: 2025-06-25
 
 ---

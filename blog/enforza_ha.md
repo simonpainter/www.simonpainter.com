@@ -7,6 +7,7 @@ tags:
   - security
   - networks
   - enforza
+  - high-availability
 date: 2025-08-12
 
 ---
