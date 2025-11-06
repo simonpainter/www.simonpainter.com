@@ -8,6 +8,8 @@ tags:
   - networks
   - cloud
   - bgp
+  - load-balancing
+  - high-availability
 date: 2024-12-10
 
 ---

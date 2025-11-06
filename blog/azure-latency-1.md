@@ -6,6 +6,8 @@ tags:
   - azure
   - networks
   - cloud
+  - performance
+  - architecture
 date: 2025-03-20
 
 ---

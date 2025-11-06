@@ -7,6 +7,7 @@ tags:
   - terraform
   - networks
   - automation
+  - architecture
 date: 2025-07-31
 
 ---

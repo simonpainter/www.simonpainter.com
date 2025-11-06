@@ -5,6 +5,7 @@ authors: simonpainter
 tags:
   - dhcp
   - powershell
+  - troubleshooting
 date: 2024-11-16
 
 ---

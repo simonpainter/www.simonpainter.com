@@ -7,6 +7,7 @@ tags:
   - github
   - github-actions
   - docusaurus
+  - cicd
 date: 2024-11-17
 
 ---

@@ -9,6 +9,7 @@ tags:
   - docusaurus
   - cloud
   - automation
+  - cicd
 date: 2024-11-17
 
 ---

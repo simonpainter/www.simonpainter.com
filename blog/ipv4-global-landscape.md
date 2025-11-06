@@ -6,6 +6,7 @@ tags:
   - business
   - networks
   - opinion
+  - ipv6
 date: 2025-01-17
 
 ---

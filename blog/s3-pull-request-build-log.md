@@ -6,6 +6,7 @@ tags:
   - aws
   - github
   - github-actions
+  - cicd
 date: 2025-02-24
 
 ---

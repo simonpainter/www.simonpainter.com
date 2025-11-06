@@ -7,6 +7,8 @@ tags:
   - networks
   - cloud
   - anycast
+  - load-balancing
+  - high-availability
 date: 2025-09-13
 
 ---

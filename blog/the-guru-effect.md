@@ -5,6 +5,7 @@ authors: simonpainter
 tags:
   - opinion
   - business
+  - career
 date: 2024-12-25
 
 ---
