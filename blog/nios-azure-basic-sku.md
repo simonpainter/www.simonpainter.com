@@ -1,6 +1,6 @@
 ---
 
-title: "Is this a bug in the Infoblox NIOS Azure Marketplace offering"
+title: "Is this a bug in the Infoblox NIOS Azure Marketplace offering?"
 authors: simonpainter
 tags:
   - networks
