@@ -24,7 +24,7 @@ const config = {
 
   markdown: {
     mermaid: true,
-    hooks:  {
+    hooks: {
         onBrokenMarkdownLinks: 'warn',
       },
   },
