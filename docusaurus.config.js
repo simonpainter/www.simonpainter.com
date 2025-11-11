@@ -15,7 +15,7 @@ const config = {
   projectName: 'www.simonpainter.com',
 
   onBrokenLinks: 'warn',
-  onBrokenMarkdownLinks: 'warn',
+
 
   i18n: {
     defaultLocale: 'en',
@@ -24,6 +24,9 @@ const config = {
 
   markdown: {
     mermaid: true,
+    hooks: {
+        onBrokenMarkdownLinks: 'warn',
+      },
   },
   themes: ['@docusaurus/theme-mermaid'],
   clientModules: [require.resolve('./src/scripts/mermaid_icons.js')],
