@@ -12,6 +12,9 @@ date: 2025-11-11
 
 ---
 
+> Infoblox have reached out to me to say that their engineering team have
+> isolated the issued and are working to fix it.
+
 I wanted to settle down today in a particularly dull meeting and have a go at setting up an Infoblox NIOS instance in Azure using the Azure Marketplace offering. I have used Infoblox in anger before and I know it is a solid product so I was keen to get it up and running in the lab so that I could have a play with the Anycast DNS features with Azure Route Server.
 <!-- truncate -->
 The deployment failed while I was creating the resource with the following error:
