@@ -25,7 +25,7 @@ I created a hub VNet with an Azure Router Server in one subnet and the Infoblox 
 
 ![Subnet Configuration](img/network_interfaces_ipv4_summary.png)
 
-Inside the `RouteServerSubnet` I created the route server. I was then able to configure the BGP peering settings for the Route Server side if the BGP session. Route Server allocates two IPs from the dedicated subnet for peering, these are typically the first two usable IPs in the subnet, in this case `172.17.2.4` and `172.17.2.5`. To create a peering in Azure Route Server you only need to specify the ASN and the peer IP address along with a name. There are far fewer options than you would fine in a traditional router, or in fact in NIOS itself.
+Inside the `RouteServerSubnet` I created the route server. I was then able to configure the BGP peering settings for the Route Server side if the BGP session. Route Server allocates two IPs from the dedicated subnet for peering, these are typically the first two usable IPs in the subnet, in this case `172.17.2.4` and `172.17.2.5`. To create a peering in Azure Route Server you only need to specify the ASN and the peer IP address along with a name. There are far fewer options than you would find in a traditional router, or in fact in NIOS itself.
 
 ![BGP Peer Configuration](img/bgp_peering.png)
 
