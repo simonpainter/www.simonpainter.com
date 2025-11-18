@@ -35,7 +35,7 @@ Next came the configuration of the BGP peer on the Infoblox NIOS side. I have do
 
 ![Anycast IP Address Configuration](img/infoblox_grid_member_properties_bgp_configuration.png)
 
-Once you've created the Anycast IP address(es) you create the two peerings to the Azure Route Server. There are plenty of options in the NIOS BGP configuraion but the only two you need are you ASN (from the private ASN range), the peer IPs for the Router Server and the Microsoft allocated ASN of `65515`. Once the peering is configured you can save and then go to the member DNS properties and enable the DNS listener on the Anycast IP address.
+Once you've created the Anycast IP address(es) you create the two peerings to the Azure Route Server. There are plenty of options in the NIOS BGP configuration but the only two you need are you ASN (from the private ASN range), the peer IPs for the Router Server and the Microsoft allocated ASN of `65515`. Once the peering is configured you can save and then go to the member DNS properties and enable the DNS listener on the Anycast IP address.
 
 ![Additional Anycast IP Address Configuration](img/network_interface_settings_additional_ip_addresses.png)
 
