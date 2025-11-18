@@ -59,7 +59,7 @@ You'll route to the closest healthy instance of your DNS server, this is great w
 
 ### Simplified Configuration
 
-I mentioned earlier using it in a retailer network. Imagine the simplicity of having your multi site and multi region DNS infrastrcuture all reachable via a single IP address. There are numerous examples on the public internet - `8.8.8.8` for Google DNS, `1.1.1.1` for Cloudflare DNS, and so on.
+I mentioned earlier using it in a retailer network. Imagine the simplicity of having your multi site and multi region DNS infrastructure all reachable via a single IP address. There are numerous examples on the public internet - `8.8.8.8` for Google DNS, `1.1.1.1` for Cloudflare DNS, and so on.
 
 ### Migration Strategies
 
