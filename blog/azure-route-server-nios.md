@@ -69,6 +69,8 @@ I mentioned earlier using it in a retailer network. Imagine the simplicity of ha
 
 Having done a few DNS migration strategies over the years the single biggest pain point has been hard coded DNS configuration in applications and devices. Using Anycast DNS allows you to migrate your DNS infrastructure without having to change any client configurations. Simply install and test your new DNS servers and then advertise the Anycast IP from the new servers. Once you're happy everything is working you can decommission the old servers. As it's a /32 IP address you don't need to do much to prioritise the routing path to the new server instead of the old one.
 
-## Conclusion
+## Don't forget IP Forwarding!
+
+Azure by default disallows IP forwarding on VM NICs. As the Infoblox NIOS VM is effectively acting as a router to an internal loopback address you need to enable IP forwarding on the data NIC. You can do this in the Azure Portal by going to the NIC ip configurationsettings and enabling IP forwarding.
 
 Integrating Infoblox NIOS with Azure Route Server is pretty straightforward and opens up some interesting possibilities for Anycast DNS in Azure. If you're already using Infoblox NIOS in your on-premises network then extending that to Azure using Route Server is a great way to provide consistent DNS services across your hybrid environment.
