@@ -45,6 +45,10 @@ I tried verifying the BGP peering as soon as I had saved the peering configurati
 
 ![BGP Summary](img/bgp_summary_nios.png)
 
+You can also see the routes that are being advertised to via BGP by looking at the effective routes in any VMs in the same VNet.
+
+![Effective Routes](img/effective_routes.png)
+
 ## So why Anycast DNS in Azure?
 
 There are a whole host of reasons why you might want to deploy Anycast DNS in Azure. Here's a non exhaustive list of why you might want to consider it:
