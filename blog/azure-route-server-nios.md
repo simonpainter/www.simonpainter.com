@@ -31,7 +31,7 @@ Inside the `RouteServerSubnet` I created the route server. I was then able to co
 
 ## Peering Configuration on Infoblox NIOS
 
-Next came the configuration of the BGP peer on the Infoblox NIOS side. I have done it with Bloxone and the principle is pretty similar. First you create the Anycast IP address or addresses that you want to advertise via BGP. In my case I created one but it's not uncommon to have two more more IPs advertised.
+Next came the configuration of the BGP peer on the Infoblox NIOS side. I have done it with Bloxone and the principle is pretty similar. First you create the Anycast IP address or addresses that you want to advertise via BGP. In my case I created one but it's not uncommon to have two or more IPs advertised.
 
 ![Anycast IP Address Configuration](img/infoblox_grid_member_properties_bgp_configuration.png)
 
