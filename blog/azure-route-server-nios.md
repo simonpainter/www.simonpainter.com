@@ -19,7 +19,7 @@ I read a great post on [LinkedIn](https://www.linkedin.com/pulse/delivering-anyc
 
 ## Lab Setup
 
-First of all I had to get over a [little hurdle](nios-azure-basic-sku.md) with the Infoblox NIOS _pay as you go_ marketplace image. I selected it because I have a tonne of free credits in my Azure account and I didn't have a license for NIOS. As it happens the `set temp_license` command is all it takes to install a [60 day trial license](https://docs.infoblox.com/space/nios90/220168268/set+temp_license) which is ideal for labs and evaluations.
+First of all I had to get over a [little hurdle](nios-azure-basic-sku.md) with the Infoblox NIOS _pay as you go_ marketplace image. I selected it because I have a tonne of free credits in my Azure account and I didn't have a licence for NIOS. As it happens the `set temp_license` command is all it takes to install a [60 day trial license](https://docs.infoblox.com/space/nios90/220168268/set+temp_license) which is ideal for labs and evaluations.
 
 I created a hub VNet with an Azure Router Server in one subnet and the Infoblox NIOS VM straddling another two subnets. The NIOS VM in the marketplace has two NICs, with one for management and one for data. It was the data NIC that has the public IP address assigned to it, and this is the NIC that I connected to for configuration. We'll ignore the management NIC for now.
 
