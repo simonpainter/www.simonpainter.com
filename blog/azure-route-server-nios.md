@@ -51,7 +51,7 @@ There are a whole host of reasons why you might want to deploy Anycast DNS in Az
 
 ### High Availability
 
-This is the most obious one. Azure has some pretty rubbish options for cross region load balancing at the moment so if you want to deploy multiple DNS servers in different regions and you don't want to _code the complexity_ by using many DNS IPs in the client configurations then Anycast allows you to route to a healthy instance automatically.
+This is the most obvious one. Azure has some pretty rubbish options for cross region load balancing at the moment so if you want to deploy multiple DNS servers in different regions and you don't want to _code the complexity_ by using many DNS IPs in the client configurations then Anycast allows you to route to a healthy instance automatically.
 
 ### Performance
 
