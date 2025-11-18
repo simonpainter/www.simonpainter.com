@@ -12,8 +12,7 @@ date: 2025-11-11
 
 ---
 
-> Infoblox have reached out to me to say that their engineering team have
-> isolated the issue and are working to fix it.
+> Infoblox have since resolved this and I have tested it successfully.
 
 I wanted to settle down today in a particularly dull meeting and have a go at setting up an Infoblox NIOS instance in Azure using the Azure Marketplace offering. I have used Infoblox in anger before and I know it is a solid product so I was keen to get it up and running in the lab so that I could have a play with the Anycast DNS features with Azure Route Server.
 <!-- truncate -->
