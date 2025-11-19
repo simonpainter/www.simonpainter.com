@@ -21,7 +21,7 @@ I read a great post on [LinkedIn](https://www.linkedin.com/pulse/delivering-anyc
 
 First of all I had to get over a [little hurdle](nios-azure-basic-sku.md) with the Infoblox NIOS _pay as you go_ marketplace image. I selected it because I have a tonne of free credits in my Azure account and I didn't have a licence for NIOS. As it happens the `set temp_license` command is all it takes to install a [60 day trial license](https://docs.infoblox.com/space/nios90/220168268/set+temp_license) which is ideal for labs and evaluations.
 
-I created a hub VNet with an Azure Router Server in one subnet and the Infoblox NIOS VM straddling another two subnets. The NIOS VM in the marketplace has two NICs, with one for management and one for data. It was the data NIC that has the public IP address assigned to it, and this is the NIC that I connected to for configuration. We'll ignore the management NIC for now.
+I created a hub VNet with an Azure Route Server in one subnet and the Infoblox NIOS VM straddling another two subnets. The NIOS VM in the marketplace has two NICs, with one for management and one for data. It was the data NIC that has the public IP address assigned to it, and this is the NIC that I connected to for configuration. We'll ignore the management NIC for now.
 
 ![Subnet Configuration](img/network_interfaces_ipv4_summary.png)
 
@@ -35,7 +35,7 @@ Next came the configuration of the BGP peer on the Infoblox NIOS side. I have do
 
 ![Anycast IP Address Configuration](img/infoblox_grid_member_properties_bgp_configuration.png)
 
-Once you've created the Anycast IP address(es) you create the two peerings to the Azure Route Server. There are plenty of options in the NIOS BGP configuration but the only two you need are you ASN (from the private ASN range), the peer IPs for the Router Server and the Microsoft allocated ASN of `65515`. Once the peering is configured you can save and then go to the member DNS properties and enable the DNS listener on the Anycast IP address.
+Once you've created the Anycast IP address(es) you create the two peerings to the Azure Route Server. There are plenty of options in the NIOS BGP configuration but the only two you need are you ASN (from the private ASN range), the peer IPs for the Route Server and the Microsoft allocated ASN of `65515`. Once the peering is configured you can save and then go to the member DNS properties and enable the DNS listener on the Anycast IP address.
 
 ![Additional Anycast IP Address Configuration](img/network_interface_settings_additional_ip_addresses.png)
 
@@ -71,6 +71,6 @@ Having done a few DNS migration strategies over the years the single biggest pai
 
 ## Don't forget IP Forwarding!
 
-Azure by default disallows IP forwarding on VM NICs. As the Infoblox NIOS VM is effectively acting as a router to an internal loopback address you need to enable IP forwarding on the data NIC. You can do this in the Azure Portal by going to the NIC ip configurationsettings and enabling IP forwarding.
+Azure by default disallows IP forwarding on VM NICs. As the Infoblox NIOS VM is effectively acting as a router to an internal loopback address you need to enable IP forwarding on the data NIC. You can do this in the Azure Portal by going to the NIC IP configuration settings and enabling IP forwarding.
 
 Integrating Infoblox NIOS with Azure Route Server is pretty straightforward and opens up some interesting possibilities for Anycast DNS in Azure. If you're already using Infoblox NIOS in your on-premises network then extending that to Azure using Route Server is a great way to provide consistent DNS services across your hybrid environment.
