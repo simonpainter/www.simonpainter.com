@@ -2,51 +2,6 @@
 
 Welcome to the repository for my personal website - a place where I share insights, solutions, and discoveries from my journey through cloud networking, infrastructure automation, and everything in between. This site started as my own digital notebook but has grown into a resource for anyone navigating the transition from traditional networking to the cloud.
 
-## Contributing to This Site
-
-I'd love for you to contribute! Whether you've spotted a typo, want to suggest improvements, or have your own insights to share, here's how you can get involved:
-
-### How to Contribute
-
-1. **Fork this repository** - Click the "Fork" button at the top right of this page
-2. **Clone your fork** locally:
-   ```bash
-   git clone https://github.com/your-username/www.simonpainter.com.git
-   cd www.simonpainter.com
-   ```
-3. **Create a new branch** for your changes:
-   ```bash
-   git checkout -b your-feature-branch
-   ```
-4. **Make your changes** - Whether it's fixing content, adding new posts, or improving the site
-5. **Test your changes** locally (see Development section below)
-6. **Commit and push** your changes:
-   ```bash
-   git add .
-   git commit -m "Your descriptive commit message"
-   git push origin your-feature-branch
-   ```
-7. **Create a Pull Request** - Go back to the main repository and click "New Pull Request"
-
-### What You Can Contribute
-
-- **Content improvements** - Fix typos, clarify explanations, or suggest better approaches
-- **New blog posts** - Share your own technical insights (following our content guidelines)
-- **Technical improvements** - Enhance the site's functionality or design
-- **Documentation** - Help improve these contribution guidelines or add missing docs
-
-### Content Guidelines
-
-When writing content for this site, I follow these principles:
-- Use UK English spellings and grammar
-- Keep it conversational - like two friends chatting over coffee
-- Avoid buzzwords and use plain English
-- Use first-person singular (I, my, me) to keep it personal
-- Include practical examples and real-world applications
-- Support claims with specific data when possible
-
-The full content guidelines can be found in `.github/copilot-instructions.md`.
-
 ## About Simon
 
 I'm Simon Painter, a Cloud Network Architect and Microsoft MVP for Cloud and Datacenter Management - On-Premises Networking. With over two decades of experience in enterprise-scale cloud and network infrastructure, I've spent my career helping organisations navigate the shift from traditional networking to cloud-first architectures.
@@ -109,12 +64,10 @@ The site includes automated GitHub Actions that will test your pull request buil
 - `docusaurus.config.js` - Site configuration and navigation
 - `.github/workflows/` - GitHub Actions for testing and deployment
 
-## Questions or Ideas?
+## Contributing
 
-Found something confusing? Have an idea for improvement? Want to contribute but not sure where to start? Feel free to:
+Found something confusing? Have an idea for improvement? Want to contribute but not sure where to start? Check out the [Contributing Guide](CONTRIBUTING.md) for detailed instructions on how to get involved.
 
-- Open an issue to discuss your ideas
-- Start a pull request with your proposed changes
-- Reach out on [LinkedIn](https://www.linkedin.com/in/sipainter/) or [GitHub](https://github.com/simonpainter)
+This site thrives on community input, and every contribution - no matter how small - makes it better for everyone. All contributors are expected to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
 
-This site thrives on community input, and every contribution - no matter how small - makes it better for everyone.
+Feel free to reach out on [LinkedIn](https://www.linkedin.com/in/sipainter/) or [GitHub](https://github.com/simonpainter).
