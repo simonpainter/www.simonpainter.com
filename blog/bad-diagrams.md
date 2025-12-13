@@ -11,7 +11,7 @@ date: 2025-12-13
 
 ---
 
-I recently got drawn into a bit of LinkedIn rage bait: a post with a CCNA level question asking people to identify the broadcast domains in a given diagram. The diagram was simple enough and it was pretty clear what the question was trying to test, an understanding of what a broadcast domain is. The question did, however, elicit a lot of discussion it left enough ambiguity that there was a valid answer for multiple interpretations.
+I recently got drawn into a bit of LinkedIn rage bait: a post with a CCNA level question asking people to identify the broadcast domains in a given diagram. The diagram was simple enough and it was pretty clear what the question was trying to test, an understanding of what a broadcast domain is. The question did, however, elicit a lot of discussion. It left enough ambiguity that there was a valid answer for multiple interpretations.
 <!--truncate-->
 
 The diagram in question is this:
