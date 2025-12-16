@@ -4,7 +4,7 @@ title: Rage Against Bad Network Diagrams
 authors: simonpainter
 tags:
   - networks
-  - education
+  - educational
   - architecture
   - documentation
 date: 2025-12-13
