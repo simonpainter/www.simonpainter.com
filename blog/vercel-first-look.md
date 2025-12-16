@@ -35,7 +35,7 @@ The sign up process is easy enough; you can sign up with GitHub, GitLab, Bitbuck
 
 ## Working out the workflow
 
-I wanted to work out how to connect a datastore but first I had to do the obligatory test of making a code change. I opened the project in vscode and made the obligatory hello world endpoint and committed the change. Once I pushed the change to GitHub it immediately triggered a new deployment in Vercel and as this deployment was on the main branch it updated the production deployment. 17 seconds later I was able to hit refresh and see the new endpoint live in a browser. I tinkered around with this before realiseing that it would be a lot quicker for me to run uvicorn locally so I could see the changes locally and only push when I was happy with the change. This then led to me back to thinking about how to connect a data storage option.
+I wanted to work out how to connect a datastore but first I had to do the obligatory test of making a code change. I opened the project in vscode and made the obligatory hello world endpoint and committed the change. Once I pushed the change to GitHub it immediately triggered a new deployment in Vercel and as this deployment was on the main branch it updated the production deployment. 17 seconds later I was able to hit refresh and see the new endpoint live in a browser. I tinkered around with this before realising that it would be a lot quicker for me to run uvicorn locally so I could see the changes locally and only push when I was happy with the change. This then led to me back to thinking about how to connect a data storage option.
 
 ## Connecting a database
 
