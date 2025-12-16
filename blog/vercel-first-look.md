@@ -52,7 +52,7 @@ redis.set("foo", "bar")
 value = redis.get("foo")
 ```
 
-It's not really that big of a deal and I was able to work it out from the error messages but it did slow me down a bit. Once I had worked out the correct environment variables to use I was able to get the connection working and store and retrieve values from Redis. There is a nice tight integration in the Vercel dashboard to open your table in the Upstash console so you can use the data browser and other tools to manage your data.
+It's not really that big of a deal and I was able to work it out from the error messages but it did slow me down a bit. Once I had worked out that the correct environment variables to use were `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` I was able to get the connection working and store and retrieve values from Upstash Redis. There is a nice tight integration in the Vercel dashboard to open your table in the Upstash console so you can use the data browser and other tools to manage your data.
 
 ## Boiler plate to testing in about an hour
 
