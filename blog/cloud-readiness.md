@@ -31,7 +31,7 @@ This paper details my assessment methodology, giving organisations a tool to eva
 
 ## Executive Summary
 
-Cloud adoption offers both opportunities and challenges for small and medium businesses. While cloud services promise better agility, scaling, and innovation, success requires organizational maturity across several areas. This framework gives you a practical way to assess your cloud readiness and spot areas needing work before you start your cloud journey.
+Cloud adoption offers both opportunities and challenges for small and medium businesses. While cloud services promise better agility, scaling, and innovation, success requires organisational maturity across several areas. This framework gives you a practical way to assess your cloud readiness and spot areas needing work before you start your cloud journey.
 
 Drawing from my experience with both successful and struggling cloud projects, I've identified five critical dimensions of cloud readiness:
 - Technical Skills Maturity
@@ -44,11 +44,11 @@ Each area needs careful assessment for successful cloud adoption.
 
 The framework reveals several key insights. Most importantly, successful cloud adoption requires fundamental changes in how you think about and manage technology investments. Moving from capital-heavy infrastructure investments to consumption-based operational models affects not just tech teams but requires working closely with financial leaders and new approaches to budgeting and cost management.
 
-Security architecture is another critical factor. Successful organizations use cloud adoption to modernize their security approach. I recommend moving from traditional perimeter-based security to zero trust models, aligning security changes with your cloud goals.
+Security architecture is another critical factor. Successful organisations use cloud adoption to modernize their security approach. I recommend moving from traditional perimeter-based security to zero trust models, aligning security changes with your cloud goals.
 
-Operational maturity is particularly vital. Successful organizations show strong architectural governance and can standardize their infrastructure and application patterns. This means shifting from treating infrastructure as unique creations to managing standardized, replaceable components - a change many organizations find challenging but essential for cloud success.
+Operational maturity is particularly vital. Successful organisations show strong architectural governance and can standardize their infrastructure and application patterns. This means shifting from treating infrastructure as unique creations to managing standardized, replaceable components - a change many organisations find challenging but essential for cloud success.
 
-Most importantly, cloud readiness exists on a scale rather than as a yes/no state. You don't need to reach the highest level in all areas before starting your cloud journey, but you should understand your current position and develop plans to address gaps. Some organizations might wisely delay cloud adoption until they develop greater maturity in critical areas, while others might take a step-by-step approach, starting with simpler workloads while building capability for more complex migrations.
+Most importantly, cloud readiness exists on a scale rather than as a yes/no state. You don't need to reach the highest level in all areas before starting your cloud journey, but you should understand your current position and develop plans to address gaps. Some organisations might wisely delay cloud adoption until they develop greater maturity in critical areas, while others might take a step-by-step approach, starting with simpler workloads while building capability for more complex migrations.
 
 For small and medium businesses, this framework offers a practical tool for navigating complex cloud adoption decisions. Through clear descriptions of maturity levels across key areas and focus on observable indicators, it helps you make informed decisions about your cloud readiness and develop appropriate strategies.
 
@@ -60,7 +60,7 @@ The framework works both as an assessment tool and a roadmap for development. By
 
 Cloud adoption presents both opportunities and challenges for small and medium businesses. While cloud computing offers many well-known benefits, the journey requires careful planning and preparation. This framework serves as a blueprint for businesses to assess their cloud readiness across all critical areas.
 
-The framework helps experienced leaders and consultants systematically evaluate an organization's readiness for cloud adoption. More importantly, it provides a structured way to identify gaps and create targeted improvement plans. Through this assessment process, you can develop clear, actionable roadmaps that address specific areas where your cloud readiness falls short.
+The framework helps experienced leaders and consultants systematically evaluate an organisation's readiness for cloud adoption. More importantly, it provides a structured way to identify gaps and create targeted improvement plans. Through this assessment process, you can develop clear, actionable roadmaps that address specific areas where your cloud readiness falls short.
 
 For example, if you identify a significant skills gap through this assessment, the framework helps you understand your options for closing it - whether through strategic hiring, comprehensive training programs, bringing in external consultants, or outsourcing specific technical functions. This practical approach to gap analysis and planning makes the framework especially valuable if you're still on your journey to cloud readiness.
 
