@@ -995,7 +995,7 @@ In 1989, Tim Berners-Lee proposed a solution for a distributed knowledge sharing
 
 #### The Birth at CERN (1989-1991)
 
-Tim Berners-Lee, a British physicist and computer scientist working at CERN (the European Organization for Nuclear Research), identified a critical problem: scientists struggled to share information efficiently across different computer systems. His solution was revolutionary yet elegantly simple.
+Tim Berners-Lee, a British physicist and computer scientist working at CERN (the European Organisation for Nuclear Research), identified a critical problem: scientists struggled to share information efficiently across different computer systems. His solution was revolutionary yet elegantly simple.
 
 In March 1989, Berners-Lee submitted a proposal titled "Information Management: A Proposal" to his supervisors at CERN. By December 1990, he had implemented the first web server (CERN HTTPd), browser (WorldWideWeb, later renamed Nexus), and the initial versions of HTML and HTTP.
 
