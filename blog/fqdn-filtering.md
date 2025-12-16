@@ -91,7 +91,7 @@ If the firewall and user get different answers, connections break even though yo
 
 Some vendors try to fix this with a DNS proxy. All DNS queries go through the firewall, so it sees exactly what users see. This works well in simple networks.
 
-But in big companies, it often falls apart. Large organizations have complex DNS setups. They might have multiple paths to the internet. Different parts of the network might use different DNS servers. Global companies might have internet access in several regions.
+But in big companies, it often falls apart. Large organisations have complex DNS setups. They might have multiple paths to the internet. Different parts of the network might use different DNS servers. Global companies might have internet access in several regions.
 
 Here's a common situation where it fails:
 
