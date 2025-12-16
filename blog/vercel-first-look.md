@@ -27,6 +27,10 @@ Vercel is a cloud platform for deploying your web applications with a focus on p
 > selection of integrations to other providers for databases and other services but the core of the platform is built on
 > AWS.
 
+Vercel is so closely integrated with AWS that they presenteed a recent Customer Keynote at re:Invent 2025. You can watch it here:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/q1yit5YIvKA?si=cxzEXL1DkylmF7MP" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 ## Getting started
 
 I signed up with the Hobby plan. There are basically three plans: Hobby, Pro, and Enterprise. The Enterprise plans is not very transparent as you have to contact Vercel for pricing and I was told it was "a custom plan built out for your unique usage and feature set". The Pro plan is $20 per month per seat and that is a committed spend to usage charges; the free Hobby plan has many of the same features as the Pro plan but with hard ceiling usage limits.
