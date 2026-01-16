@@ -87,10 +87,10 @@ And this bit that that parses the incoming DNS request to extract the pokemon na
 
 ```
 
-There's no error handling and it's a really simple friday night toy example. I put it on a small Azure VM with a public IP and set up the NS records to point to it so I could test it out and then immediately took it all down because the world doesn't need this sort of thing in production!
+There's no error handling and it's a really simple Friday night toy example. I put it on a small Azure VM with a public IP and set up the NS records to point to it so I could test it out and then immediately took it all down because the world doesn't need this sort of thing in production!
 
 ## But why, Simon?
 
 So what's the point? Well we all have our own reasons for doing things but in this case it was a simple demonstration of how ridiculously easy it is to repurpose DNS for other purposes such as data exfiltration or command and control.
 
-That's the thing about DNS - it's the quiet protocol that nobody watches. Most firewalls wave it through without a second glance. Most security teams focus on HTTP traffic while DNS sits there, resolving away, moving data in plain sight. If you're not logging DNS queries, inspecting TXT record payloads, or using a DNS firewall to block suspicious domains, you've got a blind spot. And if a bored network engineer can build a Pokemon type checker over DNS in a few minutes on a friday night, imagine what a motivated attacker is building right now.
+That's the thing about DNS - it's the quiet protocol that nobody watches. Most firewalls wave it through without a second glance. Most security teams focus on HTTP traffic while DNS sits there, resolving away, moving data in plain sight. If you're not logging DNS queries, inspecting TXT record payloads, or using a DNS firewall to block suspicious domains, you've got a blind spot. And if a bored network engineer can build a Pokemon type checker over DNS in a few minutes on a Friday night, imagine what a motivated attacker is building right now.
