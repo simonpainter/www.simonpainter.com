@@ -1,6 +1,6 @@
 ---
 
-title: DNS API Proxy
+title: "DNS as an API Proxy: An Pokemon Type Lookup Example"
 authors: simonpainter
 tags:
   - dns
@@ -88,6 +88,14 @@ And this bit that that parses the incoming DNS request to extract the pokemon na
 ```
 
 There's no error handling and it's a really simple friday night toy example. I put it on a small Azure VM with a public IP and set up the NS records to point to it so I could test it out and then immediately took it all down because the world doesn't need this sort of thing in production!
+
+```bash
+;; QUESTION SECTION:
+;mewtwo.pokemon.api2dns.simonpainter.com. IN TXT
+
+;; ANSWER SECTION:
+mewtwo.pokemon.api2dns.simonpainter.com. 300 IN TXT "psychic"
+```
 
 ## But why, Simon?
 
