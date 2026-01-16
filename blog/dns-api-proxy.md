@@ -1,6 +1,6 @@
 ---
 
-title: "DNS as an API Proxy: An Pokemon Type Lookup Example"
+title: "DNS as an API Proxy: A Pokemon Type Lookup Example"
 authors: simonpainter
 tags:
   - dns
