@@ -23,7 +23,7 @@ Every organisation has standards. They just live in people's heads rather than o
 
 I work with a fella, let's pretend his name is Jeff, and I have nicknamed him *Magic Jeff*. This is because I am forever hearing about some critical process that can't proceed because *Magic Jeff* is busy so he can't do it. Whenever I ask if one of the many other engineers could do the thing I get told that only *Magic Jeff* can do it.
 
-It's not that the other engineers are incapable. They're smart people. The problem is they either don't know how to do the process at all, or they don't know how to do it *the way *Magic Jeff* does it*. And *Magic Jeff's* way has become the de facto standard through years of repetition. Do it differently and you risk breaking something, or at least getting a raised eyebrow from *Magic Jeff* when he reviews your work. So everyone just waits for *Magic Jeff*.
+It's not that the other engineers are incapable. They're smart people. The problem is they either don't know how to do the process at all, or they don't know how to do it *the way Magic Jeff does it*. And *Magic Jeff's* way has become the de facto standard through years of repetition. Do it differently and you risk breaking something, or at least getting a raised eyebrow from *Magic Jeff* when he reviews your work. So everyone just waits for *Magic Jeff*.
 
 In reality I suspect that *Magic Jeff* just wants to preserve his job by not writing things down and so maintaining his position as the only person who can do the critical process. That's a risky strategy because every management consultant I have ever spoken to will tell you to weed out those people first and reward those who document repeatable standardised processes.
 
