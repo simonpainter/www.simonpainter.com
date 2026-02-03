@@ -1,6 +1,6 @@
 ---
 
-title: ZTNA is so much better than VPN
+title: They keep telling us that ZTNA is so much better than VPN
 authors: 
   - simonpainter
 tags:
