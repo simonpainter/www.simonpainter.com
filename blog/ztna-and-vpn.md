@@ -45,7 +45,7 @@ The solution was to move to a delegated model where data owners are responsible 
 
 ## The real differentiator nobody talks about
 
-Firewalls and VPN concentrators were never designed to delegate management control to application owners. But modern ZTNA solutions—with cloud-native architectures and Terraform providers—can make this a reality today.
+Firewalls and VPN concentrators were never designed to delegate management control to application owners. But modern ZTNA solutions, with cloud-native architectures and Terraform providers, can make this a reality today.
 
 Application teams can define their own access policies as code, version-controlled and reviewed alongside their infrastructure. Security teams can set guardrails and audit policies without becoming a bottleneck. This delegation model is the key differentiator for modern ZTNA solutions.
 
