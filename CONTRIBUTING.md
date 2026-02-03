@@ -6,29 +6,39 @@ Thanks for your interest in contributing! Whether you're fixing a typo, improvin
 
 1. **Fork this repository** - Click the "Fork" button at the top right of the page
 2. **Clone your fork** locally:
+
    ```bash
    git clone https://github.com/your-username/www.simonpainter.com.git
    cd www.simonpainter.com
    ```
+
 3. **Install dependencies**:
+
    ```bash
    npm install
    ```
+
 4. **Create a new branch** for your changes:
+
    ```bash
    git checkout -b your-feature-branch
    ```
+
 5. **Make your changes** - Fix content, add new posts, or improve the site
 6. **Test your changes** locally:
+
    ```bash
    npm start
    ```
+
 7. **Commit and push** your changes:
+
    ```bash
    git add .
    git commit -m "Your descriptive commit message"
    git push origin your-feature-branch
    ```
+
 8. **Create a Pull Request** - Go back to the main repository and click "New Pull Request"
 
 ## What You Can Contribute
