@@ -4,8 +4,8 @@ import {themes as prismThemes} from 'prism-react-renderer';
 /** @type {import('@docusaurus/types').Config} */
 const config = {
 
-  title: 'Simon Painter - MVP',
-  tagline: 'Simon Painter - MVP',
+  title: 'Simon Painter',
+  tagline: 'Esoteric musings of a cloud and networking professional',
   favicon: 'img/favicon.ico',
 
   url: 'https://www.simonpainter.com',
@@ -41,7 +41,7 @@ const config = {
           editUrl: 'https://github.com/simonpainter/www.simonpainter.com/blob/main/',
           routeBasePath: '/',
           blogTitle: 'Simon Painter',
-          blogDescription: 'Simon Painter - MVP',
+          blogDescription: 'A collection of articles on cloud, programming, networking, and more',
           postsPerPage: 'ALL',
           blogSidebarTitle: 'All posts',
           blogSidebarCount: 'ALL',
@@ -71,13 +71,17 @@ const config = {
         {name: 'keywords', content: 'blog, tech, cloud, programming, azure, aws, networking, security'},
         {name: 'twitter:card', content: 'summary_large_image'},
         {name: 'og:type', content: 'website'},
-        {name: 'og:title', content: 'Simon Painter - MVP'},
+        {name: 'og:title', content: 'Simon Painter'},
     {name: 'og:description', content: 'A collection of articles on cloud, programming, networking, and more'},
       ],
       navbar: {
         hideOnScroll: false,
-        title: 'Simon Painter - MVP',
-
+        title: 'Simon Painter',
+        logo: {
+          alt: 'Simon Painter Logo',
+          src: 'img/mvp.png',
+          srcDark: 'img/mvp_light.png',
+        },
       items: [
           {
             href: '/tags',
