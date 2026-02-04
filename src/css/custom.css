@@ -53,9 +53,9 @@
 html[data-theme='light'] {
   --ifm-background-color: #ffffff;
   --ifm-background-surface-color: #f8fafc;
-  --ifm-color-content: #1e293b;
-  --ifm-color-content-secondary: #64748b;
-  --ifm-heading-color: #0f172a;
+  --ifm-color-content: #243a5e;
+  --ifm-color-content-secondary: #5b6b86;
+  --ifm-heading-color: #243a5e;
   --ifm-border-color: #e2e8f0;
   --ifm-toc-border-color: #e2e8f0;
   --ifm-navbar-background-color: rgba(255, 255, 255, 0.95);
@@ -274,9 +274,13 @@ pre code {
   font-weight: 600;
 }
 
+.navbar__title {
+  font-size: 1.75rem;
+}
+
 .navbar__logo {
-  height: 24px;
-  margin-right: 0.5rem;
+  height: 48px;
+  margin-left: 0.5rem;
 }
 
 .navbar__link {
