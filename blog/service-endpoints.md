@@ -25,7 +25,7 @@ Service Endpoints, on the other hand, do not bring the service into your VNet. I
 
 The thing to remember with both is that the traffic is still encrypted using TLS, so even though Service Endpoints use the public internet, the data is still secure in transit.
 
-![Routing Affinity for Service Endpoints](img/RoutingAffinity.png)
+![Routing Affinity for Service Endpoints](img/service-endpoints/RoutingAffinity.png)
 
 You can also configure affinity settings for Service Endpoints to ensure that the traffic to the service is either routed via the Microsoft backbone network or via the internet. By default, traffic to the service is routed via the Microsoft backbone network, which provides better performance and security. This will be the right answer for pretty much everyone. However, if you have specific requirements to route traffic via the internet, you can configure the affinity settings accordingly.
 
@@ -35,7 +35,7 @@ There are some reasons why you might choose Service Endpoints or Private Endpoin
 
 Ever since Azure announced that [default internet egress is going away](azure-private-subnet.md), we've all been throwing in firewalls and NAT gateways to ensure we have a valid path for outbound internet traffic. Fortunately Service Endpoints ignore your UDRs for the services they are protecting and insert a route directly into the routing table for the service prefix, pointing it to the Service Endpoint.
 
-![Service Endpoint Routing](img/ServiceEndpointRouting.png)
+![Service Endpoint Routing](img/service-endpoints/ServiceEndpointRouting.png)
 
 It's worth pointing out that these routes are only added in the selected subnets where the Service Endpoint is enabled, they are not transitive inside the VNet and certainly not across peering connections. This means you may have to provision Service Endpoints in multiple subnets if you have workloads in different subnets that need access to the service. This is where Private Endpoints have the advantage because they are available as IPs anywhere in the VNet and across peering connections.
 

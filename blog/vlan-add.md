@@ -12,7 +12,7 @@ date: 2025-06-12
 
 A couple of days ago, I saw a meme targeted at network engineers that mentioned "the VLAN add disaster." I immediately understood what it meant. It feels like such a well-known thing now, enough to warrant a place in a meme, that it's become part of our professional zeitgeist over the last decade in networking.
 <!-- truncate -->
-![Adding a vlan to a trunk](img/vlan-add.png)
+![Adding a vlan to a trunk](img/vlan-add/vlan-add.png)
 
 > For the uninitiated, there's a command to restrict a VLAN-tagged trunk to carry only
 > specific VLANs. The command to restrict it to, say, VLANs 5, 6, 7, and 9 is

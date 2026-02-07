@@ -12,7 +12,7 @@ tags:
 date: 2025-05-09
 
 ---
-![Kayaking near Svalbard](img/svalbard-kayak.jpeg)
+![Kayaking near Svalbard](img/lessons-from-svalbard/svalbard-kayak.jpeg)
 
 The Arctic wind whipped across my face as I looked up at the entrance of what might be humanity's most important insurance policy. It has been a place that has fascinated me since I read a New Scientist article about it many years ago, and there I was, staring at the concrete wedge jutting from the mountainside, its façade glittering with an art installation that catches the summer Arctic sunlight.
 <!-- truncate -->

@@ -44,7 +44,7 @@ This can be particularly problematic for applications that rely on persistent co
 
 Using prescaling introduces a new billing element to Azure Firewall; this makes sense because otherwise we'd all just set it to 50 instances and be done with it!
 
-![Azure Firewall Prescaling in the Azure Portal](img/prescaling-portal.png)
+![Azure Firewall Prescaling in the Azure Portal](img/azure-firewall-prescaling/prescaling-portal.png)
 
 Prescaling has been exposed via the Azure Portal and via PowerShell. There is support in ARM and Bicep, along with the Terraform AzAPI provider, but right now there is no support in the native Terraform AzureRM provider.
 

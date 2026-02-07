@@ -20,7 +20,7 @@ The problem isn't that we don't document things. It's that we're only capturing 
 
 The [Data-Information-Knowledge-Wisdom (DIKW) model](https://en.wikipedia.org/wiki/DIKW_pyramid) has been around for decades and attempts to create a hierarchy of understanding from raw data to actionable wisdom and often prediction.
 
-![DIKW Pyramid](img/dikw-pyramid.png)
+![DIKW Pyramid](img/documentation-dikw/dikw-pyramid.png)
 
 At the bottom, we have **data** - raw facts like IP addresses, device models, and serial numbers. Moving up, **information** shows relationships and connections. **Knowledge** explains how these relationships serve business purposes. At the top, **wisdom** captures the hard-won insights about why decisions were made and what works in practice.
 

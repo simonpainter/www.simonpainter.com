@@ -16,7 +16,7 @@ I recently got drawn into a bit of LinkedIn rage bait: a post with a CCNA level 
 
 The diagram in question is this:
 
-![CCNA Question: How many broadcast domains are shown in this network diagram?](img/1765211061049.jpeg)
+![CCNA Question: How many broadcast domains are shown in this network diagram?](img/bad-diagrams/1765211061049.jpeg)
 
 Let's start with the obvious fact that the question is clearly trying to test knowledge of what a broadcast domain is.
 
