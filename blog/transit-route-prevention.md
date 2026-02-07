@@ -18,13 +18,13 @@ When you have two VNets sharing an ExpressRoute circuit, each with their own Exp
 
 Let me explain with an example: imagine those NVAs are SD-WAN appliances in different regions in a geopolitical space, perhaps two separate US regions. Those regions have distinct ExpressRoute Gateways but share an ExpressRoute circuit. If routes were propagated between these two regions, then traffic from branch offices connected externally to either region would transit via the Microsoft backbone to an office connected via the other region. This is, understandably, not something Microsoft wants to allow.
 
-![SD-WAN Transit Routing](img/anycast-1.png)
+![SD-WAN Transit Routing](img/transit-route-prevention/anycast-1.png)
 
 ### The relevance
 
 Where this becomes relevant to the anycast solution is in topologies where you have more than one hub VNet with a Route Server and an anycast NVA, and they share an ExpressRoute circuit. If you strictly maintain a one ExpressRoute Gateway to one ExpressRoute Circuit mapping, then you won't experience this limitation. However, if you share ExpressRoute Circuits across more than one of your hubs that use Route Server (or by extension more than one Virtual WAN hub), then you'll find that routes learned by one aren't propagated to the other.
 
-![Transit Route Diagram](img/anycast-2.png)
+![Transit Route Diagram](img/transit-route-prevention/anycast-2.png)
 
 Consider the diagram above. Prefixes injected in VNet A won't be received in B. They will, however, be received in VNets C and D, provided the WAN that both ExpressRoute circuits are connected to allows it. Prefixes injected into VNet C will be received into all other VNets. 
 

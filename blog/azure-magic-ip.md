@@ -90,7 +90,7 @@ simon@lab-simon-mip-vm:~$
 
 One important thing to note is how NSGs handle DNS queries to this IP address. If you create an NSG to block TCP and UDP port 53 to any destination, which is common if you want to force the use of a custom DNS server appliance such as Infoblox in a hybrid enterprise environment, the NSG will not block DNS queries to `168.63.129.16`.
 
-![DNS block](img/dns-block.png)
+![DNS block](img/azure-magic-ip/dns-block.png)
 
 ```text
 simon@lab-simon-mip-vm:~$ dig www.simonpainter.com +short @8.8.8.8
@@ -109,7 +109,7 @@ simon@lab-simon-mip-vm:~$
 
 This has some serious implications for security because DNS data exfiltration is a common technique nowadays. If you are relying on an NSG to block DNS queries to external servers, you need to be aware that there is a specific service tag `AzurePlatformDNS` you can use to block DNS queries to the magic IP address.
 
-![DNS block with tag](img/dns-block-tag.png)
+![DNS block with tag](img/azure-magic-ip/dns-block-tag.png)
 
 ```text
 simon@lab-simon-mip-vm:~$ dig www.simonpainter.com +short @168.63.129.16
@@ -140,7 +140,7 @@ simon@lab-simon-mip-vm:~$
 
 You normally don't need to do anything special to allow these probes to reach your VM, as the ALB is a first party service and is allowed by default using the service tag `AzureLoadBalancer`.
 
-![Load Balancer Health Probe](img/lb-inbound.png)
+![Load Balancer Health Probe](img/azure-magic-ip/lb-inbound.png)
 
 ## Azure VM Agent
 

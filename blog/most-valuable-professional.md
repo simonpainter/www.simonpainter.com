@@ -19,7 +19,7 @@ Honestly, this whole thing started pretty selfishly. I began blogging as a digit
 
 But then something happened. I kept adding more content because I figured it might help other people who were going through the same journey I was - transitioning from traditional network engineering and architecture into this whole cloud networking world. Turns out I wasn't wrong about that.
 
-![MVP](img/MVP_Badge.png)
+![MVP](img/most-valuable-professional/MVP_Badge.png)
 
 ## From Network Cables to Cloud Configs
 

@@ -82,7 +82,7 @@ New-AzVirtualNetwork @net
 
 Nothing special here - the subnet has the expected number of hosts available:
 
-![Screen shot of workload subnet with single prefix](img/workload_subnet_1.png)
+![Screen shot of workload subnet with single prefix](img/AllowMultipleAddressPrefixesOnSubnet/workload_subnet_1.png)
 
 You can add your extra IP range as normal if you like, but you can also now add an additional prefix to the existing subnet. Adding the IP range can be done in the GUI if you like, but it will be a Cloud Shell job to add the secondary prefix.
 
@@ -111,7 +111,7 @@ New-AzVirtualNetwork @net
 
 Because the GUI isn't really set up for this preview, you won't see a lot of change, but it's there, and it's very subtle. 
 
-![Screen shot of workload subnet with two prefixes](img/workload_subnet_2.png)
+![Screen shot of workload subnet with two prefixes](img/AllowMultipleAddressPrefixesOnSubnet/workload_subnet_2.png)
 
 Do you see it? The number of hosts is more than what you would expect for a /24. It gets even better if you start spinning up a few VMs. The first one I fired up came up with the expected 10.0.0.4 IP, but the second VM in that same subnet got 10.1.0.4. Before you ask, yes, they could ping each other quite happily.
 

@@ -18,7 +18,7 @@ This one has been on the roadmap for quite a while but for some it will still be
 
 There are some excellent documentation resources available to help with this migration process, including [Microsoft's official guidance](https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/public-ip-basic-upgrade-guidance?wt.mc_id=MVP_461735) and it's a great time to make sure you move from a non zonal to a zone redundant configuration.
 
-![Zone Redundant Configuration](img/zone-redundant.png)
+![Zone Redundant Configuration](img/azure-pip-er/zone-redundant.png)
 
 > **Zone-redundant gateways**
 >
@@ -41,6 +41,6 @@ There are some excellent documentation resources available to help with this mig
 
 In an effort to make things easier the public IP resource for an [ExpressRoute Gateway is now auto assigned and provisioned under the hood](https://learn.microsoft.com/azure/expressroute/expressroute-about-virtual-network-gateways?wt.mc_id=MVP_461735#auto-assigned-public-ip). This has a, perhaps unintended, side effect because you no longer have the control to be able to provision all of your ExpressRoute Gateways into one Availability Zone. Most people won't want their ExpressRoute Gateways provisioned into a single Availability Zone but there are legitimate use cases for it and it's a level of control that has been removed [without any notice](https://azure.microsoft.com/en-gb/updates?id=498361).
 
-![Zonal Gateways](img/zonal.png)
+![Zonal Gateways](img/azure-pip-er/zonal.png)
 
 While you can still achieve [this sort of architecture](https://learn.microsoft.com/azure/vpn-gateway/about-zone-redundant-vnet-gateways?wt.mc_id=MVP_461735) with VPN Gateways, you can no longer do so with ExpressRoute Gateways.

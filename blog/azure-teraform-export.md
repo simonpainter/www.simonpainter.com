@@ -51,6 +51,6 @@ Once the provider is registered you can go to the resource group you want to exp
 
 When you select the option you'll see a screen that looks like this:
 
-![Export to Terraform](img/export-tf.png)
+![Export to Terraform](img/azure-teraform-export/export-tf.png)
 
 You can then download it. It's all in one single main.tf file so you will have to split it up yourself if that's the sort of thing you like doing. It will also include things like ssh keys if you have stored them in Azure and used them for you VMs so you may want to edit those out.
