@@ -12,11 +12,36 @@ date: 2026-02-09
 
 Microsoft have quietly released [Azure Virtual Network Routing Appliance](https://azure.microsoft.com/en-us/updates?id=555944) into public preview in February 2026. This is a new Azure network construct that sits in a hub network to provide high capacity routing between spoke networks. I had a look at why we might need it and if it is something we should be using.
 <!--truncate-->
+
+![Awful diagram](img/azure-virtual-network-appliance/virtual-network-appliance-diagram.png)
+*This is a truly awful diagram, but at the moment it's the only one available on Microsoft Learn*
+
 ## What problem does it solve?
 
 Azure networking is built to look a lot like on-premise networking, even though it's totally different under the hood. This is unlike AWS networking which is built to look like a bunch if developers thought they knew better than everyone else. One of the common anomalies though is that virtual networks in AWS and Azure (VPCs and VNets) can be peered together but they are not transitively peered. This means that if you have a hub and spoke network topology, the spokes cannot talk to each other though the hub unless you explicitly provide the routing mechanism to do so.
 
 > Hub and spoke topologies have grown in popularity in Azure and many organisations are moving to a separate spoke VNet per application to provide better isolation and security.
+
+```mermaid
+
+flowchart LR
+    subgraph "VNet A (Spoke)"
+        A[10.1.0.0/16]
+    end
+    
+    subgraph "VNet B (Hub)"
+        B[10.2.0.0/16]
+    end
+    
+    subgraph "VNet C (Spoke)"
+        C[10.3.0.0/16]
+    end
+    
+    A <-->|"✓ Peered"| B
+    B <-->|"✓ Peered"| C
+    A x-.-x|"✗ No Route"| C
+
+```
 
 Another common anomaly is that [the gateway router for a subnet doesn't actually exist in any real sense](https://blog.cloudtrooper.net/2023/01/21/azure-networking-is-not-like-your-on-onprem-network/). Sure there is a default gateway IP address reserved, and that's what the VM will try to send it's traffic to, but the virtual NIC knows better and holds the routing table itself so that it can send the traffic directly to the destination in another subnet or a peered VNet without needing to go through another gateway.
 
@@ -27,6 +52,7 @@ What this means to the 'trad networker' is that if you want to put in a routing 
 Azure Firewall is a great product, but it's designed to be a firewall, not a router. [It has some limitations](https://learn.microsoft.com/en-us/azure/firewall/firewall-known-issues) in terms of scaling, performance and cost which make it less than ideal for being the core routing mechanism in the hub of your cloud network. Throughput is [limited to 100 Gbps for Premium, 30 Gbps for Standard, 250 Mbps for Basic (preview) SKU](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-firewall-limits) which is not enough for many scaled out topologies, It has a baked in internet egress rule becaue 0.0.0.0 has the NextHopType value set to Internet, and it has some problems with learning a default route via BGP peering from an on premise network. It also has a cost of $1.25 per hour for the Standard SKU and $1.75 per hour for the Premium SKU before you even start with the cost of the data processed through it.
 
 Third party NVAs are a great option, but they can be expensive to license and run, and they require a lot of management overhead to keep them up to date and secure. They also require you to have the expertise to configure and manage them, which can be a challenge for many organisations. As NVAs are essentially just VMs runnng a network operating system they also have the same limitations as other VMs in Azure in terms of throughput and performance. The classic 250,000 active connection limit (due to the way they are counted) has caught a few people out when they have a lot more traffic between spokes than they were expecting.
+
 A lot of cloud first organisations are trying to move away from the need for NVAs in roles that a native cloud construct can do and this architectural purity can butt you up against the limitations of Azure Firewall, so a native routing appliance that can be used in the hub to route traffic between spokes seems like a great addition to the Azure networking portfolio.
 
 ## OK, let's have a look at it then
