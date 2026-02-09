@@ -99,10 +99,10 @@ personal:
   permalink: '/personal'
   description: 'Personal reflections, experiences, and my journey in technology'
 
-powershell:
-  label: 'Powershell'
-  permalink: '/powershell'
-  description: 'PowerShell scripting tutorials and automation solutions'
+scripting:
+  label: 'Scripting'
+  permalink: '/scripting'
+  description: 'Scripting tutorials and techniques using Bash, PowerShell, and other shell languages'
 
 programming:
   label: 'Programming'

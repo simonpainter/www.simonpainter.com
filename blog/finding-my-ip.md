@@ -8,6 +8,7 @@ tags:
   - dns
   - bash
   - networks
+  - scripting
   - troubleshooting
 date: 2024-11-20
 
