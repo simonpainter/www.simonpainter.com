@@ -10,10 +10,11 @@ date: 2026-02-09
 
 ---
 
-Microsoft have quietly released [Azure Virtual Network Routing Appliance](https://azure.microsoft.com/en-us/updates?id=555944) into public preview in February 2026. This is a new Azure network construct that sits in a hub network to provide high capacity routing between spoke networks. I had a look at why we might need it and if it is something we should be using.
+Microsoft have quietly released [Azure Virtual Network Routing Appliance](https://azure.microsoft.com/en-us/updates?id=555944) into public preview in February 2026. This is a new Azure network construct that sits in a hub network to provide high capacity routing between spoke networks. I had a look at why we might need it and if it is something we should be using. There was a bit of a glimpse of the technical details in [Ignite last year](https://ignite.microsoft.com/en-US/sessions/BRK430?source=sessions) but this is the first time we've seen the actual deployment experience.
 <!--truncate-->
 
 ![Awful diagram](img/azure-virtual-network-appliance/virtual-network-appliance-diagram.png)
+
 *This is a truly awful diagram, but at the moment it's the only one available on Microsoft Learn*
 
 ## What problem does it solve?
@@ -67,7 +68,7 @@ As is common with Azure public previews, it can take a while for the registratio
 
 ![Register for the preview](img/azure-virtual-network-appliance/enable_virtual_network_appliance_pending_status.png)
 
-Once you have registered you can create a new virtual network appliance in much the same way you create any other resource in Azure. Select your subscription and resource group, give it a name and select the region you want to deploy in to.
+Once you have registered you can [create a new virtual network appliance](https://learn.microsoft.com/en-us/azure/virtual-network/how-to-create-virtual-network-routing-appliance) in much the same way you create any other resource in Azure. Select your subscription and resource group, give it a name and select the region you want to deploy in to.
 
 Next up comes the capacity. This is where you select the maximum throughput. At the moment there is no charge for the public preview so you may as well select 200Gbps but I expect this will be chargeable when it goes GA.
 <!-- Add a comment here about if the capacity can be changed after deployment or if you have to redeploy to change it. This needs testing as there are no docs.-->
