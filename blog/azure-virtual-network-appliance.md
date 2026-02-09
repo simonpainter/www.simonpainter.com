@@ -56,6 +56,10 @@ Third party NVAs are a great option, but they can be expensive to license and ru
 
 A lot of cloud first organisations are trying to move away from the need for NVAs in roles that a native cloud construct can do and this architectural purity can butt you up against the limitations of Azure Firewall, so a native routing appliance that can be used in the hub to route traffic between spokes seems like a great addition to the Azure networking portfolio.
 
+## How much will this cost?
+
+At the moment, during public preview, there is no charge for the Azure Virtual Network Routing Appliance, but that is likely to change when it goes GA. The pricing model is not yet clear but the presences of selectable capacity levels suggests that there will be different SKUs with different performance characteristics. Ultimately for this to be worthwhile it needs to be cheaper or better than the cost of running a third party NVA or Azure Firewall in the hub, so I would expect it to be priced somewhere between the cost of Azure Firewall and the cost of a basic NVA.
+
 ## OK, let's have a look at it then
 
 As a general rule of thumb, if an Azure service requires a dedicated subnet, then it is likely to be a bunch of managed VMs running a service inside a loadbalancer sandwich. This looks to be the case for the Azure Virtual Network Routing Appliance and some of the choices you make when you deploy it point towards that. What I am interest in is if they have avoided the mistakes they made with Azure Firewall and long lived TCP connections.
@@ -64,7 +68,7 @@ As a general rule of thumb, if an Azure service requires a dedicated subnet, the
 
 As it's a public preview the first place to go, after you have read the [very sparse documentation](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-routing-appliance-overview), is to the Azure portal to [register for the preview](https://portal.azure.com/#view/Microsoft_Azure_Resources/PreviewFeatures.ReactView).
 
-As is common with Azure public previews, it can take a while for the registration to complete.
+As is common with Azure public previews, it can take a while for the registration to complete. I had to fill out a form to get it enabled so it seems to be a fairly private public preview.
 
 ![Register for the preview](img/azure-virtual-network-appliance/enable_virtual_network_appliance_pending_status.png)
 
