@@ -6,6 +6,7 @@ tags:
   - python
   - programming
   - networks
+  - scripting
   - labs
   - routing-protocols
   - bgp

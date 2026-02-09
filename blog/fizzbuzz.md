@@ -8,6 +8,7 @@ tags:
   - python
   - algorithms
   - educational
+  - scripting
 date: 2025-03-04
 
 ---
