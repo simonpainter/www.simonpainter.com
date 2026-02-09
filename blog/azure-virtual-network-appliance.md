@@ -15,7 +15,7 @@ Microsoft have quietly released [Azure Virtual Network Routing Appliance](https:
 
 ![Awful diagram](img/azure-virtual-network-appliance/virtual-network-appliance-diagram.png)
 
-*This is a truly awful diagram, but at the moment it's the only one available on Microsoft Learn*
+This is a *truly awful diagram*, but at the moment it's the only one available on Microsoft Learn
 
 ## What problem does it solve?
 
