@@ -66,7 +66,7 @@ I have a domain I use for family stuff so I decided it would look a bit less ske
 
 My blank and boring form needed some styling so I added a couple of options for CSS stylesheets. This gave me the chance to do a bit of blue/green testing. I created two branches, one called green and one called blue, and made my changes to the CSS in each branch. I then created two new domains (actually subdomains of the main domain) and linked each one to the corresponding Github branch.
 
-![Vercel domain settings showing two domains linked to different branches](img/vercel-domains.png)
+![Vercel domain settings showing two domains linked to different branches](img/vercel-first-look/vercel-domains.png)
 
 This meant both could be viewed live in preview and I could get feedback before merging the one I liked best into main for production deployment. Edge config in Vercel means that you can direct the users to the correct version of the site based on geography, A/B testing, or other criteria so you can maintain multiple versions of the site and switch users between them seamlessly.
 

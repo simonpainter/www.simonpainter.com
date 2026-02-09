@@ -15,7 +15,7 @@ I had another one of those weird problems which made me revisit the [egress IP d
 <!-- truncate -->
 
 You may recall this diagram from last time:
-![What's this all about then?](img/decision-tree-load-balancer-thumb.png)
+![What's this all about then?](img/egress-ip-decision-tree-updated/decision-tree-load-balancer-thumb.png)
 
 It's taken from the [default outbound internet access](https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/default-outbound-access#when-is-default-outbound-access-provided) documentation and describes the order in which egress IPs are selected for outbound internet access. I've previously tested the NAT gateway vs PIP scenario and confirmed that the NAT gateway egress IP takes precedence over a VM's assigned PIP.
 

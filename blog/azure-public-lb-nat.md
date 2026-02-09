@@ -146,7 +146,7 @@ There are some limitations to Azure Public Loadbalancers. The good news is that 
 
 **Port Range Conflicts**: Inbound NAT rules can't overlap with load balancing rules on the same frontend IP and port. You need to plan your port allocations carefully.
 
-![Public Loadbalancer Limits](img/lb-limits.png)
+![Public Loadbalancer Limits](img/azure-public-lb-nat/lb-limits.png)
 
 Here's the bit that catches people out - SNAT port allocation isn't automatic. If you don't configure outbound rules explicitly, Azure gives you a default allocation that's often too small:
 

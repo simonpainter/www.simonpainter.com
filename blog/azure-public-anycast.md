@@ -66,13 +66,13 @@ graph TD
 
 As you create a Public Load balancer in the region of your choice you will see the option to make it regional or global.
 
-![Image of the Load Balancer creation screen](img/lb-regional.png)
+![Image of the Load Balancer creation screen](img/azure-public-anycast/lb-regional.png)
 
 We're choosing regional and follow through to create a front end configuration with a new public IP address and a back end pool with the two VMs.
 
 If you want to test the setup you can use curl from a terminal to hit the front end IP address.  During the setup of the inbound rules I selected no session persistence so the expected behaviour is that the responses alternate between the two VMs.
 
-![Image of the session persistence option](img/lb-session.png)
+![Image of the session persistence option](img/azure-public-anycast/lb-session.png)
 
 ```text
 simon@MacBook-Pro my-website % curl 51.142.0.197  
@@ -141,15 +141,15 @@ The diagram above shows the overall architecture - you'll notice that I have rep
 
 Creating the Global Load Balancer is very similar to creating a regional one. The first difference is that you select global rather than regional in the initial creation screen under tier.
 
-![Image of the Global Load Balancer creation screen](img/lb-global.png)
+![Image of the Global Load Balancer creation screen](img/azure-public-anycast/lb-global.png)
 
 The other big difference is that instead of choosing zonal or zone redundant public IP addresses you choose one in the global tier.
 
-![Image of the global public IP address creation screen](img/lb-global-pip.png)
+![Image of the global public IP address creation screen](img/azure-public-anycast/lb-global-pip.png)
 
 The back end pool allows you to add the Regional Load Balancer front end configurations that you created earlier. You can add Public Load Balancers from any region.
 
-![Image of the global Load Balancer backend pool configuration screen](img/lb-global-backend.png)
+![Image of the global Load Balancer backend pool configuration screen](img/azure-public-anycast/lb-global-backend.png)
 
 The Inbound rules are pretty much identical to the Regional Load Balancer save for the fact that you do not have to specify any health probes. These are inherited from the Regional Load Balancers. You can choose to select the floating IP option if you want to, as with a Regional Load Balancer.
 
@@ -324,7 +324,7 @@ simon@MacBook-Pro ~ %
 
 Perfops also lets you plot your curl response times in a nice handy map view. This shows pretty much the expected result with latency lower near east asia and europe with slightly higher outside those regions. As this is a curl test it should be representative of the full end to end connection to the server. I have some questions about how you get ~20ms latency from US to UK: is the MSFT backbone really that good?
 
-![Latency to East Asia and UK South regions from various locations](img/map-latency.png)
+![Latency to East Asia and UK South regions from various locations](img/azure-public-anycast/map-latency.png)
 
 ## Failure behaviour
 

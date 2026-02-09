@@ -9,6 +9,7 @@ tags:
   - networks
   - zero-trust
   - architecture
+  - firewall
 date: 2024-11-16
 
 ---

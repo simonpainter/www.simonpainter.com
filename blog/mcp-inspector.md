@@ -6,6 +6,7 @@ tags:
   - ai
   - python
   - mcp
+  - scripting
 date: 2025-08-19
 
 ---
@@ -29,6 +30,6 @@ This zero-installation approach makes it easy to get started quickly without wor
 
 There are plenty of CLI options you can investigate but the web interface provides a more user-friendly way to interact with the inspector's features.
 
-![Screenshot of MCP Inspector](img/mcp-inspector.png)
+![Screenshot of MCP Inspector](img/mcp-inspector/mcp-inspector.png)
 
 Open the web interface, click around, see what tools are available. Test them with different inputs. Watch the protocol messages in the logs. That's how I learned my way around MCP - not by reading specs, but by playing with real servers and seeing what happens.

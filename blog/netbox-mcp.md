@@ -8,6 +8,7 @@ tags:
   - python
   - mcp
   - netbox
+  - scripting
 date: 2025-07-17
 
 ---

@@ -6,6 +6,7 @@ tags:
   - azure
   - enforza
   - security
+  - firewall
 date: 2024-11-16
 
 ---

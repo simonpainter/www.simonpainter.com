@@ -7,6 +7,7 @@ tags:
   - security
   - networks
   - educational
+  - firewall
 date: 2025-03-24
 
 ---

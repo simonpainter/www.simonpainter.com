@@ -6,6 +6,7 @@ authors:
 tags:
   - azure
   - bash
+  - scripting
 date: 2025-06-14
 
 ---

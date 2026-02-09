@@ -23,31 +23,31 @@ First of all I had to get over a [little hurdle](nios-azure-basic-sku.md) with t
 
 I created a hub VNet with an Azure Route Server in one subnet and the Infoblox NIOS VM straddling another two subnets. The NIOS VM in the marketplace has two NICs, with one for management and one for data. It was the data NIC that has the public IP address assigned to it, and this is the NIC that I connected to for configuration. We'll ignore the management NIC for now.
 
-![Subnet Configuration](img/network_interfaces_ipv4_summary.png)
+![Subnet Configuration](img/azure-route-server-nios/network_interfaces_ipv4_summary.png)
 
 Inside the `RouteServerSubnet` I created the route server. I was then able to configure the BGP peering settings for the Route Server side if the BGP session. Route Server allocates two IPs from the dedicated subnet for peering, these are typically the first two usable IPs in the subnet, in this case `172.17.2.4` and `172.17.2.5`. To create a peering in Azure Route Server you only need to specify the ASN and the peer IP address along with a name. There are far fewer options than you would find in a traditional router, or in fact in NIOS itself.
 
-![BGP Peer Configuration](img/bgp_peering.png)
+![BGP Peer Configuration](img/azure-route-server-nios/bgp_peering.png)
 
 ## Peering Configuration on Infoblox NIOS
 
 Next came the configuration of the BGP peer on the Infoblox NIOS side. I have done it with Bloxone and the principle is pretty similar. First you create the Anycast IP address or addresses that you want to advertise via BGP. In my case I created one but it's not uncommon to have two or more IPs advertised.
 
-![Anycast IP Address Configuration](img/infoblox_grid_member_properties_bgp_configuration.png)
+![Anycast IP Address Configuration](img/azure-route-server-nios/infoblox_grid_member_properties_bgp_configuration.png)
 
 Once you've created the Anycast IP address(es) you create the two peerings to the Azure Route Server. There are plenty of options in the NIOS BGP configuration but the only two you need are you ASN (from the private ASN range), the peer IPs for the Route Server and the Microsoft allocated ASN of `65515`. Once the peering is configured you can save and then go to the member DNS properties and enable the DNS listener on the Anycast IP address.
 
-![Additional Anycast IP Address Configuration](img/network_interface_settings_additional_ip_addresses.png)
+![Additional Anycast IP Address Configuration](img/azure-route-server-nios/network_interface_settings_additional_ip_addresses.png)
 
 ## Verifying the BGP Peering
 
 I tried verifying the BGP peering as soon as I had saved the peering configuration but the bgpd service didn't appear to start until after I had set the listener for DNS. Once I had done that I was able to see the BGP session with a `show bgp summary` command.
 
-![BGP Summary](img/bgp_summary_nios.png)
+![BGP Summary](img/azure-route-server-nios/bgp_summary_nios.png)
 
 You can also see the routes that are being advertised to via BGP by looking at the effective routes in any VMs in the same VNet.
 
-![Effective Routes](img/effective_routes.png)
+![Effective Routes](img/azure-route-server-nios/effective_routes.png)
 
 ## So why Anycast DNS in Azure?
 

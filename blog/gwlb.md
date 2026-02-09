@@ -6,6 +6,7 @@ tags:
   - security
   - labs
   - load-balancing
+  - firewall
 date: 2024-02-03
 
 ---
@@ -24,7 +25,7 @@ There are essentially two models for using a GWLB in AWS - one arm and two arm. 
 
 The primary advantage of the one arm model is that it supports NVA appliances that are transparent to the traffic flow and don't take part in any routing. This is achieved using a wrapper to transport the traffic to and from the NVA without modifying the source or destination. Let me walk you through the traffic flow for a one arm setup:
 
-> ![One Arm](img/gwlb-1-arm.png)
+> ![One Arm](img/gwlb/gwlb-1-arm.png)
 >
 > *A one arm deployment of GWLB*
 
@@ -44,7 +45,7 @@ When the GWLB receives the processed traffic back from the NVA, it looks at the 
 
 The two arm model is particularly useful for shared internet egress. A Gateway Load Balancer Endpoint in a VPC can be a target for the routing table, which then forwards over GENEVE tunnels to an autoscaling group of NVAs that SNAT the traffic and forward to their internet egress. It might be a cheaper model than using a whole heap of [AWS Firewalls](aws-dns-firewall.md).
 
->![Two Arm](img/gwlb-2-arm.png)
+>![Two Arm](img/gwlb/gwlb-2-arm.png)
 >
 > *A two arm deployment of GWLB*
 

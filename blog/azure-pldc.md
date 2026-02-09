@@ -7,6 +7,7 @@ tags:
   - azure
   - networks
   - architecture
+  - private-link
 date: 2025-10-16
 
 ---
@@ -61,10 +62,10 @@ resource "azurerm_private_link_service" "plsdc" {
 
 Once created you can see constructs like the NIC and the associated IP configurations in the portal.
 
-![GUI IPConfig](img/ipconfig.png)
+![GUI IPConfig](img/azure-pldc/ipconfig.png)
 
 You can also see the PLS itself although there will be some fields in the portal that are blank because they are not available for this type of PLS. Note below that the load balancer field is empty.
 
-![GUI PLDC](img/pldc.png)
+![GUI PLDC](img/azure-pldc/pldc.png)
 
 One thing I noticed while playing around was that it would let me create the PLSDC with a destination IP that is a public IP address but didn't actually work when I tried to connect to it. I assume this is a bug in the preview but it's worth noting that the documentation does say it must be a private IP address.
