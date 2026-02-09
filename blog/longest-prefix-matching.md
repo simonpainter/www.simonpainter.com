@@ -4,6 +4,7 @@ title: "Longest Prefix Matching"
 authors: simonpainter
 tags:
   - networks
+  - educational
 date: 2024-11-17
 
 ---

@@ -7,6 +7,7 @@ tags:
   - security
   - dns
   - cloud
+  - firewall
 date: 2025-01-22
 
 ---

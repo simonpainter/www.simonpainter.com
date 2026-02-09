@@ -6,6 +6,7 @@ tags:
   - security
   - labs
   - load-balancing
+  - firewall
 date: 2024-02-03
 
 ---

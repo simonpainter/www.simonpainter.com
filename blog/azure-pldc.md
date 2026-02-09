@@ -7,6 +7,7 @@ tags:
   - azure
   - networks
   - architecture
+  - private-link
 date: 2025-10-16
 
 ---

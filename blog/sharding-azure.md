@@ -3,6 +3,8 @@ title: Understanding Azure AZ Sharding and Physical Zone Mapping
 authors: simonpainter
 tags:
   - azure
+  - cloud
+  - architecture
 date: 2025-01-08
 
 ---

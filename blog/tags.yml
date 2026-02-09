@@ -219,7 +219,17 @@ documentation:
   permalink: '/documentation'
   description: 'Documentation practices, knowledge management, and technical writing'
 
+firewall:
+  label: 'Firewall'
+  permalink: '/firewall'
+  description: 'Firewall technologies, FQDN filtering, egress security, and WAF implementations'
+
 migration:
   label: 'Migration'
   permalink: '/migration'
   description: 'Migration strategies, platform transitions, and upgrade approaches'
+
+private-link:
+  label: 'Private Link'
+  permalink: '/private-link'
+  description: 'Azure Private Link, Private Endpoints, and secure service connectivity'

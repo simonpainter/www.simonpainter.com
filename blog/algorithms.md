@@ -6,6 +6,7 @@ tags:
   - ai
   - python
   - programming
+  - algorithms
 date: 2024-12-23
 
 ---

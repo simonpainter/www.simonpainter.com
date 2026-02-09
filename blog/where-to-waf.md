@@ -7,6 +7,7 @@ authors:
 tags:
   - azure
   - security
+  - firewall
 date: 2025-01-10
 
 ---
