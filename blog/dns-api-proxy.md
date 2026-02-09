@@ -7,6 +7,7 @@ tags:
   - programming
   - educational
   - python
+  - scripting
 date: 2026-01-16
 
 ---

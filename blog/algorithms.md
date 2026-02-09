@@ -6,6 +6,8 @@ tags:
   - ai
   - python
   - programming
+  - algorithms
+  - scripting
 date: 2024-12-23
 
 ---

@@ -6,6 +6,7 @@ tags:
   - ai
   - python
   - mcp
+  - scripting
 date: 2025-08-19
 
 ---

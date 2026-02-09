@@ -10,6 +10,7 @@ tags:
   - cloud
   - bash
   - performance
+  - scripting
   - troubleshooting
 date: 2025-02-25
 

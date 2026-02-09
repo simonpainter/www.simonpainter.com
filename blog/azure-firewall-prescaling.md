@@ -7,6 +7,7 @@ tags:
   - cloud
   - networks
   - performance
+  - firewall
 
 date: 2025-10-20
 

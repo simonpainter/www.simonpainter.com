@@ -4,7 +4,7 @@ title: "Finding dead DHCP scopes"
 authors: simonpainter
 tags:
   - dhcp
-  - powershell
+  - scripting
   - troubleshooting
 date: 2024-11-16
 

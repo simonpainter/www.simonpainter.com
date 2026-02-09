@@ -4,6 +4,8 @@ title: Cloud networking news from Ignite 2024
 authors: simonpainter
 tags:
   - azure
+  - networks
+  - cloud
 date: 2024-11-17
 
 ---
