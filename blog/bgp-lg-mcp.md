@@ -40,6 +40,26 @@ The [Route Views Project](http://www.routeviews.org/) at the University of Orego
 
 I built an [MCP server](https://github.com/simonpainter/bgp-lg-mcp) that wraps these seven public route servers into the Model Context Protocol. The architecture is straightforward: the server connects to route servers via telnet (the protocol they expect), executes BGP commands, and returns the results in a format Claude can work with.
 
+```mermaid
+flowchart LR
+    A["Claude Desktop<br/>(User Interface)"] -->|"Natural language<br/>query"| B["Claude LLM<br/>(AI Model)"]
+    B -->|"Tool call:<br/>route_lookup"| C["BGP MCP Server<br/>(Python)"]
+    C -->|"Telnet:<br/>show ip bgp"| D["Remote Route Server<br/>(BGP Speaker)"]
+    D -->|"BGP data"| C
+    C -->|"Structured<br/>response"| B
+    B -->|"Interpreted<br/>answer"| A
+```
+
+Here's how each component works:
+
+> **Claude Desktop**: The user interface where you ask questions in natural language
+>
+> **Claude LLM**: The AI model that understands your question and decides which tools to call
+>
+> **BGP MCP Server**: The bridge that implements the MCP protocol and manages connections to remote route servers
+>
+> **Remote Route Server**: A public BGP looking glass that responds to telnet commands with live routing data
+
 The server exposes three tools:
 
 **`route_lookup`** - Query BGP routes for a specific IP address or subnet. You can ask Claude "What's the AS path to 1.1.1.1?" and it will query a route server and show you the result.
