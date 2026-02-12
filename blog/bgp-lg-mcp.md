@@ -29,7 +29,7 @@ This is a perfect problem for MCP. You have a data source, live BGP routing info
 
 BGP (Border Gateway Protocol) is the routing protocol that powers the internet. It allows autonomous systems (networks) to exchange routing information with each other. A looking glass is a window into what a particular BGP speaker sees—the routes it has learned, the AS paths to reach them, and the BGP neighbors it's connected to.
 
-The [Route Views Project](http://www.routeviews.org/) at the University of Oregon maintains seven public route servers scattered around the world. They're free to use, always available, and updated in real time from live BGP feeds. They're invaluable for:
+The [Route Views Project](https://www.routeviews.org/) at the University of Oregon maintains seven public route servers scattered around the world. They're free to use, always available, and updated in real time from live BGP feeds. They're invaluable for:
 
 - Verifying that your prefix announcements are reaching the internet
 - Troubleshooting why traffic isn't reaching your network
