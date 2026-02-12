@@ -72,34 +72,6 @@ The server exposes three tools:
 
 The implementation handles a lot of the annoying details: validation to ensure you're only querying public IPs (no private addresses leaking into telnet sessions), timeout management for slow connections, and a simple JSON configuration system so you can add new servers or disable ones that are down.
 
-```python
-def get_mcp_tools():
-    """Return MCP tool definitions"""
-    return [
-        {
-            "name": "route_lookup",
-            "description": "Query BGP routes for an IP address or subnet",
-            "inputSchema": {
-                "type": "object",
-                "properties": {
-                    "destination": {"type": "string", "description": "IPv4/IPv6 address or CIDR subnet"},
-                    "server": {"type": "string", "description": "Route server to query (default: RouteViews Linx)"}
-                }
-            }
-        },
-        {
-            "name": "bgp_summary",
-            "description": "Get BGP summary statistics from a route server",
-            "inputSchema": {
-                "type": "object",
-                "properties": {
-                    "server": {"type": "string", "description": "Route server to query"}
-                }
-            }
-        }
-    ]
-```
-
 ## Why This Matters
 
 The deeper pattern here is about making expert knowledge accessible to AI assistants. BGP is esoteric. Most people working in cloud or infrastructure will never need to understand it deeply. But when you do need that knowledge—when you're debugging why a prefix isn't reaching certain regions, or validating that your provider has properly announced your address space—you need it to be accurate and real-time.
