@@ -42,14 +42,14 @@ I built an [MCP server](https://github.com/simonpainter/bgp-lg-mcp) that wraps t
 
 ```mermaid
 flowchart LR
-    A["Claude Desktop<br/>(Client)"] -->|"Natural language<br/>query"| B["Claude LLM<br/>(AI Model)"]
-    B -->|"Tool call<br/>request"| A
-    A -->|"Tool call:<br/>route_lookup"| C["BGP MCP Server<br/>(Python)"]
-    C -->|"Telnet:<br/>show ip bgp"| D["Remote Route Server<br/>(BGP Speaker)"]
-    D -->|"BGP data"| C
-    C -->|"Structured<br/>response"| A
-    A -->|"Tool result"| B
-    B -->|"Interpreted<br/>answer"| A
+    A["Claude Desktop<br/>(Client)"] -->|"1. Natural language<br/>query"| B["Claude LLM<br/>(AI Model)"]
+    B -->|"2. Tool call<br/>request"| A
+    A -->|"3. Tool call:<br/>route_lookup"| C["BGP MCP Server<br/>(Python)"]
+    C -->|"4. Telnet:<br/>show ip bgp"| D["Remote Route Server<br/>(BGP Speaker)"]
+    D -->|"5. BGP data"| C
+    C -->|"6. Structured<br/>response"| A
+    A -->|"7. Tool result"| B
+    B -->|"8. Interpreted<br/>answer"| A
 ```
 
 Here's how each component works:
