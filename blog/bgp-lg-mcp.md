@@ -19,7 +19,7 @@ I was having a chat with a long-time friend [Adam Sharif](https://www.linkedin.c
 
 If you're a network engineer, you will know what a BGP route server is. If you're not, this post isn't for you. But the gist is: BGP route servers are public services that let you see live routing information from the internet. They're essential for troubleshooting and understanding how traffic flows across the global internet.
 
-When you're troubleshooting routing issues or trying to verify how traffic flows to a particular destination, you often need to query a BGP route server. The internet has plenty of these services, maintained by universities and network operators as public goods. They are presented via web interfaces or command line sessions over telent or ssh. They're free to use, updated in real time, and provide a window into global internet BGP.
+When you're troubleshooting routing issues or trying to verify how traffic flows to a particular destination, you often need to query a BGP route server. The internet has plenty of these services, maintained by universities and network operators as public goods. They are presented via web interfaces or command line sessions over telnet or ssh. They're free to use, updated in real time, and provide a window into global internet BGP.
 
 The thing is, now that we're all lazy and used to asking an AI everything I though what if I could just ask "What's the AS path to 8.8.8.0/24?" rather than logging in and typing the command "show ip bgp 8.8.8.0/24" and figuring out what the results mean.
 
