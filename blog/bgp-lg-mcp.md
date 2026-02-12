@@ -12,7 +12,7 @@ date: 2026-02-12
 
 ---
 
-I was having a chat with a long time friend [Adam Sharif](https://www.linkedin.com/in/adamsharif/) about AI and in the conversation I mentioned that I had been meaning to write a BGP route server MCP proxy for a while. Cue A-Team style musical montage and another evening lost to an ADHD hyperfocus session.
+I was having a chat with a long-time friend [Adam Sharif](https://www.linkedin.com/in/adamsharif/) about AI and in the conversation I mentioned that I had been meaning to write a BGP route server MCP proxy for a while. Cue A-Team style musical montage and another evening lost to an ADHD hyperfocus session.
 <!-- truncate -->
 
 ## The Problem
