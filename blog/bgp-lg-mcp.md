@@ -21,7 +21,7 @@ If you're a network engineer, you will know what a BGP route server is. If you'r
 
 When you're troubleshooting routing issues or trying to verify how traffic flows to a particular destination, you often need to query a BGP route server. The internet has plenty of these services, maintained by universities and network operators as public goods. They are presented via web interfaces or command line sessions over telent or ssh. They're free to use, updated in real time, and provide a window into global internet BGP.
 
-The thing is, now that we're all lazy and used to asking an AI everything I though what if I could just ask "What's the AS path to 8.8.8.0/24?" rather than logging in and typing the command "show ip bgp 8.8.8.8/24" and figuring out what the results mean.
+The thing is, now that we're all lazy and used to asking an AI everything I though what if I could just ask "What's the AS path to 8.8.8.0/24?" rather than logging in and typing the command "show ip bgp 8.8.8.0/24" and figuring out what the results mean.
 
 This is a perfect problem for MCP. You have a data source, live BGP routing information from public route servers, and you want an AI assistant to be able to query it naturally as part of a larger conversation about network behaviour.
 
