@@ -8,12 +8,11 @@ tags:
   - python
   - mcp
   - bgp
-  - routing
 date: 2026-02-12
 
 ---
 
-I was having a chat with a long time friend [Adam Sharif](https://www.linkedin.com/in/adamsharif/) about AI and in the conversation I mentioned that I had been meaning to write a BGP route server MCP proxy for a while. Cue A-Team style musical montage and another evening lost to an ADHC hyperfocus session.
+I was having a chat with a long time friend [Adam Sharif](https://www.linkedin.com/in/adamsharif/) about AI and in the conversation I mentioned that I had been meaning to write a BGP route server MCP proxy for a while. Cue A-Team style musical montage and another evening lost to an ADHD hyperfocus session.
 <!-- truncate -->
 
 ## The Problem
@@ -105,9 +104,9 @@ def get_mcp_tools():
 
 The deeper pattern here is about making expert knowledge accessible to AI assistants. BGP is esoteric. Most people working in cloud or infrastructure will never need to understand it deeply. But when you do need that knowledge—when you're debugging why a prefix isn't reaching certain regions, or validating that your provider has properly announced your address space—you need it to be accurate and real-time.
 
-This MCP server lets Claude help you with those questions. You can ask in natural language. Claude handles the tool calls. You get back interpreted, summarized results instead of raw terminal output.
+This MCP server lets Claude help you with those questions. You can ask in natural language. Claude handles the tool calls. You get back interpreted, summarised results instead of raw terminal output.
 
-This is the promise of MCP: taking specialized knowledge sources and making them accessible through conversational AI. It's not about replacing the network engineer who understands BGP deeply—it's about making that knowledge available to people who need it occasionally and don't want to become experts.
+This is the promise of MCP: taking specialised knowledge sources and making them accessible through conversational AI. It's not about replacing the network engineer who understands BGP deeply—it's about making that knowledge available to people who need it occasionally and don't want to become experts.
 
 ## What's Next
 
