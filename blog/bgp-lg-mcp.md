@@ -25,7 +25,7 @@ The thing is, now that we're all lazy and used to asking an AI everything I thou
 
 This is a perfect problem for MCP. You have a data source, live BGP routing information from public route servers, and you want an AI assistant to be able to query it naturally as part of a larger conversation about network behaviour.
 
-##What Is a BGP Looking Glass?
+## What Is a BGP Looking Glass?
 
 BGP (Border Gateway Protocol) is the routing protocol that powers the internet. It allows autonomous systems (networks) to exchange routing information with each other. A looking glass is a window into what a particular BGP speaker sees—the routes it has learned, the AS paths to reach them, and the BGP neighbors it's connected to.
 
