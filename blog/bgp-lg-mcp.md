@@ -42,17 +42,19 @@ I built an [MCP server](https://github.com/simonpainter/bgp-lg-mcp) that wraps t
 
 ```mermaid
 flowchart LR
-    A["Claude Desktop<br/>(User Interface)"] -->|"Natural language<br/>query"| B["Claude LLM<br/>(AI Model)"]
-    B -->|"Tool call:<br/>route_lookup"| C["BGP MCP Server<br/>(Python)"]
+    A["Claude Desktop<br/>(Client)"] -->|"Natural language<br/>query"| B["Claude LLM<br/>(AI Model)"]
+    B -->|"Tool call<br/>request"| A
+    A -->|"Tool call:<br/>route_lookup"| C["BGP MCP Server<br/>(Python)"]
     C -->|"Telnet:<br/>show ip bgp"| D["Remote Route Server<br/>(BGP Speaker)"]
     D -->|"BGP data"| C
-    C -->|"Structured<br/>response"| B
+    C -->|"Structured<br/>response"| A
+    A -->|"Tool result"| B
     B -->|"Interpreted<br/>answer"| A
 ```
 
 Here's how each component works:
 
-> **Claude Desktop**: The user interface where you ask questions in natural language
+> **Claude Desktop**: The client that manages the MCP connection and executes tool calls based on the LLM's requests
 >
 > **Claude LLM**: The AI model that understands your question and decides which tools to call
 >
