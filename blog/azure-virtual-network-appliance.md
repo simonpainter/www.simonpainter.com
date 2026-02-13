@@ -264,7 +264,19 @@ flowchart TB
     style OnPrem fill:#95a5a6,color:#fff
 ```
 
+I like this option because you also reduce the chance of traffic inadvertently going through the firewall asymetrically. This is a big problem when you are manually configuring UDRs because if you miss one you end up with one of those really irritating to troubleshoot problems that the SRE team won't thank you for.
 
+Next up is capacity. I started with the 100Gbps option and created a few VMs to throw some traffic through it. Latency and throughput were all very consistent. It's going to take me a bit longer to build out some tests at scale but it's looking good so far. I will update this post with more details on the performance testing when I have it. I also want to know if the appliance scales out or not and how it handles long lived TCP connections but that will also require some more testing.
 
+At the moment, because it's in preview, there is very little in the portal to show you about the appliance and nothing exposed in metrics.
 
+![No metrics yet](img/azure-virtual-network-appliance/azure_monitor_metric_selection_error.png)
 
+Getting metrics exposed would be really good, and I am sure it'll be coming soon. Pretty much the only thing exposed in the Azure portal is the IP address of the appliance which you need to know to set up the routing.
+
+![IP address of the appliance](img/azure-virtual-network-appliance/network_configuration_details_100_gbps_ip_10_0_1_4.png)
+
+## Conclusion
+
+This is a bit of a weird public preview. I had to keep checking back on the [Azure Updates](https://azure.microsoft.com/en-us/updates?id=555944) page to make sure it was a public preview and not a private preview. The documentation is very sparse and the portal experience is very basic. To enable the public preview you have to be approved by the product group and they have limited capacity in the small group of regions where this is available. All of this would be more typical in a private preview, but maybe it is technically a public preview because anyone can apply to be part of it.
+All that aside it's a really exciting product for Cloud Network Engineers and Architects because it satisfies the need for high capacity spoke to spoke routing in a native Azure construct. I've been in plenty of places where the cloud team had strong objection to using third party NVAs in the hub because of the support and management overhead and the additional licensing costs. I'm going to be watching this closely.
