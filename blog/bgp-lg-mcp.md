@@ -66,7 +66,7 @@ The server exposes three tools:
 
 **`route_lookup`** - Query BGP routes for a specific IP address or subnet. You can ask Claude "What's the AS path to 1.1.1.1?" and it will query a route server and show you the result.
 
-**`bgp_summary`** - Get statistics about a route server itself—how many BGP neighbors it has, how many routes it's learned, whether all its sessions are healthy.
+**`bgp_summary`** - Get statistics about a route server itself—how many BGP neighbours it has, how many routes it's learned, whether all its sessions are healthy.
 
 **`list_servers`** - See which route servers are available and which ones respond quickly.
 
