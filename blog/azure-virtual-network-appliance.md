@@ -72,7 +72,7 @@ As is common with Azure public previews, it can take a while for the registratio
 
 ![Register for the preview](img/azure-virtual-network-appliance/enable_virtual_network_appliance_pending_status.png)
 
-Once you have registered you can [create a new virtual network appliance](https://learn.microsoft.com/en-us/azure/virtual-network/how-to-create-virtual-network-routing-appliance) in much the same way you create any other resource in Azure. Select your subscription and resource group, give it a name and select the region you want to deploy in to.
+Once you have registered you can [create a new virtual network appliance](https://learn.microsoft.com/en-us/azure/virtual-network/how-to-create-virtual-network-routing-appliance) in much the same way you create any other resource in Azure. Select your subscription and resource group, give it a name and select the region you want to deploy into.
 
 Next up comes the capacity. This is where you select the maximum throughput. At the moment there is no charge for the public preview so you may as well select 200Gbps but I expect this will be chargeable when it goes GA. From what I can see there is no option to change the throughput after deployment so you would need to get it right first time or be prepared to have a disruptive redeployment if you need to change it later on.
 
