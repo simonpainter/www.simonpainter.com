@@ -264,7 +264,7 @@ flowchart TB
     style OnPrem fill:#95a5a6,color:#fff
 ```
 
-I like this option because you also reduce the chance of traffic inadvertently going through the firewall asymetrically. This is a big problem when you are manually configuring UDRs because if you miss one you end up with one of those really irritating to troubleshoot problems that the SRE team won't thank you for.
+I like this option because you also reduce the chance of traffic inadvertently going through the firewall asymmetrically. This is a big problem when you are manually configuring UDRs because if you miss one you end up with one of those really irritating to troubleshoot problems that the SRE team won't thank you for.
 
 Next up is capacity. I started with the 100Gbps option and created a few VMs to throw some traffic through it. Latency and throughput were all very consistent. It's going to take me a bit longer to build out some tests at scale but it's looking good so far. I will update this post with more details on the performance testing when I have it. I also want to know if the appliance scales out or not and how it handles long lived TCP connections but that will also require some more testing.
 
