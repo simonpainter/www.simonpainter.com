@@ -1,6 +1,6 @@
 ---
 
-title: Public preview of Azure Virtual Network Appliance
+title: Public preview of Azure Virtual Network Routing Appliance
 authors: simonpainter
 tags:
   - azure
