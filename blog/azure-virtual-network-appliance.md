@@ -62,7 +62,7 @@ At the moment, during public preview, there is no charge for the Azure Virtual N
 
 ## OK, let's have a look at it then
 
-As a general rule of thumb, if an Azure service requires a dedicated subnet, then it is likely to be a bunch of managed VMs running a service inside a loadbalancer sandwich. This looks to be the case for the Azure Virtual Network Routing Appliance and some of the choices you make when you deploy it point towards that. What I am interest in is if they have avoided the mistakes they made with Azure Firewall and long lived TCP connections.
+As a general rule of thumb, if an Azure service requires a dedicated subnet, then it is likely to be a bunch of managed VMs running a service inside a load balancer sandwich. This looks to be the case for the Azure Virtual Network Routing Appliance and some of the choices you make when you deploy it point towards that. What I am interested in is if they have avoided the mistakes they made with Azure Firewall and long lived TCP connections.
 
 > Azure Firewall has a problem with long lived TCP connections because it scales in and out by creating and destroying instances. When it scales in there is a non-deterministic process to drain the connections and then terminate a random instance which can lead to dropped connections.
 
