@@ -205,7 +205,7 @@ flowchart TB
     style OnPrem fill:#95a5a6,color:#fff
 ```
 
-The halfway house is to have RFC1918 routes going to the appliance, which sorts out what goes on premise and what goes to another spoke, and then have the default route going to your egress solution. This is a bit more work to set up and manage but it does give you the best of both worlds in terms of control and simplicity. Separating cloud from on premise routes in the AVNA should be fairly straghtforward because all the spoke routes will be learned in the hub automagically and everything else in 10/8 can go to your gateway.
+The halfway house is to have RFC1918 routes going to the appliance, which sorts out what goes on premise and what goes to another spoke, and then have the default route going to your egress solution. This is a bit more work to set up and manage but it does give you the best of both worlds in terms of control and simplicity. Separating cloud from on premise routes in the AVNA should be fairly straightforward because all the spoke routes will be learned in the hub automagically and everything else in 10/8 can go to your gateway.
 
 ```mermaid
 flowchart TB
