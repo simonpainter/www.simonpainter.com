@@ -44,7 +44,7 @@ flowchart LR
 
 ```
 
-Another common anomaly is that [the gateway router for a subnet doesn't actually exist in any real sense](https://blog.cloudtrooper.net/2023/01/21/azure-networking-is-not-like-your-on-onprem-network/). Sure there is a default gateway IP address reserved, and that's what the VM will try to send it's traffic to, but the virtual NIC knows better and holds the routing table itself so that it can send the traffic directly to the destination in another subnet or a peered VNet without needing to go through another gateway.
+Another common anomaly is that [the gateway router for a subnet doesn't actually exist in any real sense](https://blog.cloudtrooper.net/2023/01/21/azure-networking-is-not-like-your-on-onprem-network/). Sure there is a default gateway IP address reserved, and that's what the VM will try to send its traffic to, but the virtual NIC knows better and holds the routing table itself so that it can send the traffic directly to the destination in another subnet or a peered VNet without needing to go through another gateway.
 
 What this means to the 'trad networker' is that if you want to put in a routing table entry from one spoke to another, via the hub, the hub itself cannot be the next hop. You need to have some kind of appliance in the hub that can route the traffic between the spokes. This is a problem commonly solved with a third party NVA or a good old Azure Firewall, but there are some limitations to both of those.
 
