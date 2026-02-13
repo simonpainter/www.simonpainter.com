@@ -58,7 +58,7 @@ A lot of cloud first organisations are trying to move away from the need for NVA
 
 ## How much will this cost?
 
-At the moment, during public preview, there is no charge for the Azure Virtual Network Routing Appliance, but that is likely to change when it goes GA. The pricing model is not yet clear but the presences of selectable capacity levels suggests that there will be different SKUs with different performance characteristics. Ultimately for this to be worthwhile it needs to be cheaper or better than the cost of running a third party NVA or Azure Firewall in the hub, so I would expect it to be priced somewhere between the cost of Azure Firewall and the cost of a basic NVA.
+At the moment, during public preview, there is no charge for the Azure Virtual Network Routing Appliance, but that is likely to change when it goes GA. The pricing model is not yet clear but the presence of selectable capacity levels suggests that there will be different SKUs with different performance characteristics. Ultimately for this to be worthwhile it needs to be cheaper or better than the cost of running a third party NVA or Azure Firewall in the hub, so I would expect it to be priced somewhere between the cost of Azure Firewall and the cost of a basic NVA.
 
 ## OK, let's have a look at it then
 
