@@ -74,8 +74,7 @@ As is common with Azure public previews, it can take a while for the registratio
 
 Once you have registered you can [create a new virtual network appliance](https://learn.microsoft.com/en-us/azure/virtual-network/how-to-create-virtual-network-routing-appliance) in much the same way you create any other resource in Azure. Select your subscription and resource group, give it a name and select the region you want to deploy in to.
 
-Next up comes the capacity. This is where you select the maximum throughput. At the moment there is no charge for the public preview so you may as well select 200Gbps but I expect this will be chargeable when it goes GA.
-<!-- Add a comment here about if the capacity can be changed after deployment or if you have to redeploy to change it. This needs testing as there are no docs.-->
+Next up comes the capacity. This is where you select the maximum throughput. At the moment there is no charge for the public preview so you may as well select 200Gbps but I expect this will be chargeable when it goes GA. From what I can see there is no option to change the throughput after deployment so you would need to get it right first time or be prepared to have a disruptive redeployment if you need to change it later on.
 
 ![Select the capacity](img/azure-virtual-network-appliance/azure_network_capacity_selection_screenshot.png)
 
@@ -87,6 +86,185 @@ It's not entirely clear if the subnet size will be selectable with the same gran
 
 ![Subnet size selection](img/azure-virtual-network-appliance/address_range_table_summary.png)
 
-There are a few more configuration options, to select an NSG and Route table for the appliance subnet.
+There are a few more configuration options, to select an NSG and Route table for the appliance subnet. If you want complex filtering rules then you're not going to be using this appliance, you're going to be using a third party NVA or Azure Firewall, but if you just need some basic L4 filtering then you can use NSGs for that. This is really for spokes that are in the same security zone and just need NSGs for least privilege access between them.
 
-<!-- This is about as far as I can get until the preview is available to me-->
+Like any other NVA, or indeed an Azure Firewall, you need to make sure your spoke subnets have a route to the appliance. This leads to a couple of architectural options, especially if you have got on premise connectivity and also depending on how your internet egress is set up. If this is for internal traffic between spokes then you can either have spoke based routes pointing on premise traffic to your hub gateway, egress traffic to your NAT gateway or firewall, and everything in the cloud IP space to the appliance. This can be typically achieved with a single route table shared across all the spokes, unless you have spoke based egress. Depending on how complicated your IP schema is (and complicated here is a euphemism for "badly planned") you may have a lot of routes in that route table and making updates to it could be a pain.
+
+```mermaid
+flowchart TB
+    subgraph Hub["Hub VNet"]
+        FW["Azure Firewall"]
+        GW["VPN/ER Gateway"]
+        AVNA["Virtual Network<br/>Appliance"]
+        subgraph AVNART["AVNA Route Table"]
+            AVNART1["Learned Routes<br/>to Spokes"]
+        end
+    end
+    
+    AVNA -.-> AVNART
+    
+    subgraph SpokeA["Spoke A VNet"]
+        subgraph SubnetA1["Workload Subnet A"]
+            VMA["VMs"]
+        end
+        subgraph RTA["Route Table"]
+            direction LR
+            RTA1["Default Route<br/>(Firewall)"]
+            RTA2["On Premise Prefixes<br/>(Gateway)"]
+            RTA3["Cloud Prefixes<br/>(AVNA)"]
+        end
+    end
+    
+    subgraph SpokeB["Spoke B VNet"]
+        subgraph SubnetB1["Workload Subnet B"]
+            VMB["VMs"]
+        end
+        subgraph RTB["Route Table"]
+            direction LR
+            RTB1["Default Route<br/>(Firewall)"]
+            RTB2["On Premise Prefixes<br/>(Gateway)"]
+            RTB3["Cloud Prefixes<br/>(AVNA)"]
+        end
+    end
+    
+    SubnetA1 -.-> RTA
+    SubnetB1 -.-> RTB
+    
+    RTA1 --> FW
+    RTA2 --> GW
+    RTA3 --> AVNA
+    RTB1 --> FW
+    RTB2 --> GW
+    RTB3 --> AVNA
+    
+    FW -->|"Internet<br/>Egress"| Internet((Internet))
+    GW -->|"ExpressRoute/<br/>VPN"| OnPrem((On-Premise))
+    
+    style FW fill:#e74c3c,color:#fff
+    style GW fill:#9b59b6,color:#fff
+    style AVNA fill:#3498db,color:#fff
+    style VMA fill:#27ae60,color:#fff
+    style VMB fill:#27ae60,color:#fff
+    style Internet fill:#95a5a6,color:#fff
+    style OnPrem fill:#95a5a6,color:#fff
+```
+
+Alternatively you can direct all traffic to the appliance using an explicit default route and then have the appliance route on premise traffic via the gateway and egress traffic via the NAT gateway or firewall. Given the capacity of the appliance and the fact that it's designed to be a routing appliance, I would be tempted to go with the second option and direct all traffic to the appliance and let it route on premise and egress traffic as needed. This would simplify the routing configuration in the spokes and make it easier to manage. The cost is that you lose granular control of the spoke routing but anything that enforces the principle of spokes being cookie cutter and not having bespoke routing is a good thing in my book.
+
+```mermaid
+flowchart TB
+    subgraph Hub["Hub VNet"]
+        FW["Azure Firewall"]
+        GW["VPN/ER Gateway"]
+        AVNA["Virtual Network<br/>Appliance"]
+        subgraph AVNART["AVNA Route Table"]
+            direction LR
+            AVNART1["Default Route<br/>(Firewall)"]
+            AVNART2["On Premise Prefixes/RFC1918<br/>(Gateway)"]
+            AVNART3["Learned Routes<br/>to Spokes"]
+        end
+    end
+    
+    subgraph SpokeA["Spoke A VNet"]
+        subgraph SubnetA1["Workload Subnet A"]
+            VMA["VMs"]
+        end
+        subgraph RTA["Route Table"]
+            RTA1["Default Route<br/>(AVNA)"]
+        end
+    end
+    
+    subgraph SpokeB["Spoke B VNet"]
+        subgraph SubnetB1["Workload Subnet B"]
+            VMB["VMs"]
+        end
+        subgraph RTB["Route Table"]
+            RTB1["Default Route<br/>(AVNA)"]
+        end
+    end
+    
+    SubnetA1 -.-> RTA
+    SubnetB1 -.-> RTB
+    
+    RTA1 --> AVNA
+    RTB1 --> AVNA
+    
+    AVNA -.-> AVNART
+    AVNART1 --> FW
+    AVNART2 --> GW
+    
+    FW -->|"Internet<br/>Egress"| Internet((Internet))
+    GW -->|"ExpressRoute/<br/>VPN"| OnPrem((On-Premise))
+    
+    style FW fill:#e74c3c,color:#fff
+    style GW fill:#9b59b6,color:#fff
+    style AVNA fill:#3498db,color:#fff
+    style VMA fill:#27ae60,color:#fff
+    style VMB fill:#27ae60,color:#fff
+    style Internet fill:#95a5a6,color:#fff
+    style OnPrem fill:#95a5a6,color:#fff
+```
+
+The halfway house is to have RFC1918 routes going to the appliance, which sorts out what goes on premise and what goes to another spoke, and then have the default route going to your egress solution. This is a bit more work to set up and manage but it does give you the best of both worlds in terms of control and simplicity. Separating cloud from on premise routes in the AVNA should be fairly straghtforward because all the spoke routes will be learned in the hub automagically and everything else in 10/8 can go to your gateway.
+
+```mermaid
+flowchart TB
+    subgraph Hub["Hub VNet"]
+        FW["Azure Firewall"]
+        GW["VPN/ER Gateway"]
+        AVNA["Virtual Network<br/>Appliance"]
+        subgraph AVNART["AVNA Route Table"]
+            AVNART1["On Premise Prefixes<br/>(Gateway)"]
+            AVNART2["Learned Routes<br/>to Spokes"]
+        end
+    end
+    
+    subgraph SpokeA["Spoke A VNet"]
+        subgraph SubnetA1["Workload Subnet A"]
+            VMA["VMs"]
+        end
+        subgraph RTA["Route Table"]
+            direction LR
+            RTA1["Default Route<br/>(Firewall)"]
+            RTA2["RFC1918 Prefixes<br/>(AVNA)"]
+        end
+    end
+    
+    subgraph SpokeB["Spoke B VNet"]
+        subgraph SubnetB1["Workload Subnet B"]
+            VMB["VMs"]
+        end
+        subgraph RTB["Route Table"]
+            direction LR
+            RTB1["Default Route<br/>(Firewall)"]
+            RTB2["RFC1918 Prefixes<br/>(AVNA)"]
+        end
+    end
+    
+    SubnetA1 -.-> RTA
+    SubnetB1 -.-> RTB
+    
+    RTA1 --> FW
+    RTA2 --> AVNA
+    RTB1 --> FW
+    RTB2 --> AVNA
+    
+    AVNA -.-> AVNART
+    AVNART1 --> GW
+    
+    FW -->|"Internet<br/>Egress"| Internet((Internet))
+    GW -->|"ExpressRoute/<br/>VPN"| OnPrem((On-Premise))
+    
+    style FW fill:#e74c3c,color:#fff
+    style GW fill:#9b59b6,color:#fff
+    style AVNA fill:#3498db,color:#fff
+    style VMA fill:#27ae60,color:#fff
+    style VMB fill:#27ae60,color:#fff
+    style Internet fill:#95a5a6,color:#fff
+    style OnPrem fill:#95a5a6,color:#fff
+```
+
+
+
+
+
