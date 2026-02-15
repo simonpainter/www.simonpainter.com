@@ -21,7 +21,7 @@ This is a *truly awful diagram*, but at the moment it's the only one available o
 
 Azure networking is built to look a lot like on-premise networking, even though it's totally different under the hood. This is unlike AWS networking which is built to look like a bunch of developers thought they knew better than everyone else. One of the common anomalies though is that virtual networks in AWS and Azure (VPCs and VNets) can be peered together but they are not transitively peered. This means that if you have a hub and spoke network topology, the spokes cannot talk to each other through the hub unless you explicitly provide the routing mechanism to do so.
 
-> Hub and spoke topologies have grown in popularity in Azure and many organisations are moving to a separate spoke VNet per application to provide better isolation and security.
+> Hub and spoke topologies have grown in popularity in Azure and many organisations are moving to a [separate spoke VNet per application](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/design-principles) to provide better isolation and security.
 
 ```mermaid
 
