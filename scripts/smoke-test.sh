@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BASE_URL=${BASE_URL:-"https://www.simonpainter.com.s3-website.eu-west-2.amazonaws.com"}
+# Note: S3 *website* endpoints are typically HTTP-only (no TLS), so default to http.
+BASE_URL=${BASE_URL:-"http://www.simonpainter.com.s3-website.eu-west-2.amazonaws.com"}
 
 fail() { echo "FAIL: $*" >&2; exit 1; }
 
@@ -38,9 +39,10 @@ echo "Smoke test BASE_URL=$BASE_URL"
 PAGES=(
   "/"
   "/azure-virtual-network-appliance/"
-  "/blog/"
+  "/tags/" # ensure at least one listing page works
   "/sitemap.xml"
-  "/robots.txt"
+  "/rss.xml"
+  "/atom.xml"
 )
 
 for p in "${PAGES[@]}"; do
@@ -53,7 +55,7 @@ for p in "${PAGES[@]}"; do
 HOME_HTML=$(retry 6 curl_body "$BASE_URL/" || true)
 [[ -n "$HOME_HTML" ]] || fail "empty homepage body"
 
-echo "$HOME_HTML" | grep -qi "Simon Painter" || fail "homepage does not contain expected marker 'Simon Painter'"
+echo "$HOME_HTML" | grep -Eqi "<title[^>]*>[^<]*Simon Painter|content="Simon Painter"" || fail "homepage does not contain expected title/og:title marker for Simon Painter"
 
 # Asset sanity: pick first CSS/JS with a root-relative href/src and ensure it 200s.
 ASSET=$(echo "$HOME_HTML" | tr '"' '\n' | grep -E '^/(assets|css|js)/.+\.(css|js)$' | head -n 1 || true)
