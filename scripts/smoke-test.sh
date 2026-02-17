@@ -52,18 +52,22 @@ for p in "${PAGES[@]}"; do
  done
 
 # Content sanity on homepage
-HOME_HTML=$(retry 6 curl_body "$BASE_URL/" || true)
-[[ -n "$HOME_HTML" ]] || fail "empty homepage body"
+TMP_HOME=$(mktemp)
+retry 6 bash -c "curl -fsSL --max-time 20 '$BASE_URL/' > '$TMP_HOME'" || fail "empty/unreachable homepage"
 
-echo "$HOME_HTML" | grep -Eqi '<title[^>]*>[^<]*Simon Painter|content="Simon Painter"' || fail "homepage does not contain expected title/og:title marker for Simon Painter"
+# Title/metadata marker
+grep -Eqi '<title[^>]*>[^<]*Simon Painter|content="Simon Painter"' "$TMP_HOME" \
+  || fail "homepage does not contain expected title/og:title marker for Simon Painter"
 
 # Asset sanity: pick first CSS/JS with a root-relative href/src and ensure it 200s.
-ASSET=$(echo "$HOME_HTML" | tr '"' '\n' | grep -E '^/(assets|css|js)/.+\.(css|js)$' | head -n 1 || true)
+ASSET=$(tr '"' '\n' < "$TMP_HOME" | grep -E '^/(assets|css|js)/.+\.(css|js)$' | head -n 1 || true)
 if [[ -n "$ASSET" ]]; then
   echo "Asset check: $ASSET"
   retry 6 curl_ok "$BASE_URL$ASSET" || fail "asset fetch failed: $ASSET"
 else
   echo "WARN: couldn't auto-detect an asset URL from homepage HTML"
 fi
+
+rm -f "$TMP_HOME"
 
 echo "OK: smoke tests passed"
