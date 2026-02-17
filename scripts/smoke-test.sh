@@ -55,7 +55,7 @@ for p in "${PAGES[@]}"; do
 HOME_HTML=$(retry 6 curl_body "$BASE_URL/" || true)
 [[ -n "$HOME_HTML" ]] || fail "empty homepage body"
 
-echo "$HOME_HTML" | grep -Eqi "<title[^>]*>[^<]*Simon Painter|content="Simon Painter"" || fail "homepage does not contain expected title/og:title marker for Simon Painter"
+echo "$HOME_HTML" | grep -Eqi '<title[^>]*>[^<]*Simon Painter|content="Simon Painter"' || fail "homepage does not contain expected title/og:title marker for Simon Painter"
 
 # Asset sanity: pick first CSS/JS with a root-relative href/src and ensure it 200s.
 ASSET=$(echo "$HOME_HTML" | tr '"' '\n' | grep -E '^/(assets|css|js)/.+\.(css|js)$' | head -n 1 || true)
