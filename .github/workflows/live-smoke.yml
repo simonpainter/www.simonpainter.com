@@ -1,8 +1,6 @@
-name: Live site smoke test (post-merge)
+name: Live site smoke test (manual)
 
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch: {}
 
 jobs:
@@ -15,6 +13,6 @@ jobs:
 
       - name: Smoke test live site
         env:
-          BASE_URL: https://www.simonpainter.com.s3-website.eu-west-2.amazonaws.com
+          BASE_URL: http://www.simonpainter.com.s3-website.eu-west-2.amazonaws.com
         run: |
           bash scripts/smoke-test.sh
