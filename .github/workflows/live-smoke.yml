@@ -1,0 +1,20 @@
+name: Live site smoke test (post-merge)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Smoke test live site
+        env:
+          BASE_URL: https://www.simonpainter.com.s3-website.eu-west-2.amazonaws.com
+        run: |
+          bash scripts/smoke-test.sh
