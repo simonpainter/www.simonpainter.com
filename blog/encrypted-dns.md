@@ -18,7 +18,7 @@ date: 2026-02-23
 
 In February 2026, [Microsoft quietly dropped a public preview of DNS over HTTPS (DoH)](https://techcommunity.microsoft.com/blog/networkingblog/secure-dns-with-doh-public-preview-for-windows-dns-server/4493935) support in the Windows Server DNS service. It's available in [Windows Server 2025 with the KB5075899](https://support.microsoft.com/en-gb/topic/february-10-2026-kb5075899-os-build-26100-32370-ffae9df3-05c5-439c-9087-e034985c1b2e) update, and the announcement was understated: a few PowerShell commands, a certificate requirement, and an event ID to watch for in the DNS Server logs. The implications for enterprise network architects are anything but quiet, though.
 <!-- truncate -->
-This isn't Microsoft's first encrypted DNS move. Back in[November 2019, the Windows Core Networking team announced their intention to adopt DoH in the Windows DNS client](https://techcommunity.microsoft.com/blog/networkingblog/windows-will-improve-user-privacy-with-dns-over-https/1014229). They described their reasoning with characteristic idealism: *"We have to treat privacy as a human right. We have to have end-to-end cybersecurity built into technology."* They acknowledged DNS over TLS (DoT) as a future possibility but prioritised DoH, citing the ability to reuse existing HTTPS infrastructure. That client-side work eventually shipped. Now, five years later, the server-side has followed.
+This isn't Microsoft's first encrypted DNS move. Back in [November 2019, the Windows Core Networking team announced their intention to adopt DoH in the Windows DNS client](https://techcommunity.microsoft.com/blog/networkingblog/windows-will-improve-user-privacy-with-dns-over-https/1014229). They described their reasoning with characteristic idealism: *"We have to treat privacy as a human right. We have to have end-to-end cybersecurity built into technology."* They acknowledged DNS over TLS (DoT) as a future possibility but prioritised DoH, citing the ability to reuse existing HTTPS infrastructure. That client-side work eventually shipped. Now, five years later, the server-side has followed.
 
 The choice to implement DoH and only DoH tells you everything about how Microsoft frames this problem. Privacy as a feature, encrypted DNS as a natural extension of HTTPS, and a preference for the path of least resistance. For end-user privacy advocates, this is progress. For enterprise network and security teams, it opens a set of problems that will take some time to fully work through.
 
@@ -30,11 +30,11 @@ To understand why, we need to go back to basics.
 
 Before looking at how encryption changes DNS, it's worth understanding exactly what a DNS message looks like at the packet level. The differences between DoH and DoT are about what wraps the message, not the message itself. And the message hasn't changed much since 1987.
 
-I once wrote a [very basic Python DNS packet parser](https://github.com/simonpainter/pyDNS) just so I could really understand the protocol. It's one of my favourite protocols for its elegance and simplicity because it is so fundamental to how netoworks work and is therefore extremely well designed and optimised.
+I once wrote a [very basic Python DNS packet parser](https://github.com/simonpainter/pyDNS) just so I could really understand the protocol. It's one of my favourite protocols for its elegance and simplicity because it is so fundamental to how networks work and is therefore extremely well designed and optimised.
 
 ### The DNS message format
 
-A DNS message follows a binary format defined in [RFC 1035](https://datatracker.ietf.org/doc/html/rfc1035). It has a fixed 12-byte header followed by variable-length sections. It's worth pointing out that the fixed size limit of a 512 byte UDP DNS packet reduces the chance of fragementation significantly and also reduces the chance of the UDP datagrams getting dropped. The header fields are all fixed-size integers, and the sections are sequences of records that can vary in length. Most importantly there is no size field in the header because the message is expected to be read in its entirety from the single UDP datagram.
+A DNS message follows a binary format defined in [RFC 1035](https://datatracker.ietf.org/doc/html/rfc1035). It has a fixed 12-byte header followed by variable-length sections. It's worth pointing out that the fixed size limit of a 512 byte UDP DNS packet reduces the chance of fragmentation significantly and also reduces the chance of the UDP datagrams getting dropped. The header fields are all fixed-size integers, and the sections are sequences of records that can vary in length. Most importantly there is no size field in the header because the message is expected to be read in its entirety from the single UDP datagram.
 
 The request and the response both follow the same format, the difference is in the flags that are present and the QR field.
 
@@ -99,7 +99,7 @@ Each question has three fields.
 
 That last one, QTYPE 65, will come back to haunt us in the security section.
 
-> OK, I can't skip past the `AAAA` record without pointing out that the name is a bit of an insider joke. The fixed size of the reponses (for a 32 bit - 4 byte IPv4 address) meant that it would have been impractical to reuse the A record with a 128 bit (16 byte) IPv6 address; there would just be too many implementations that would break. Instead a new record type was created with a different QTYPE value. The name `AAAA` is a playful way to indicate it's 4 times the size of an A record while also being a valid DNS label.
+> OK, I can't skip past the `AAAA` record without pointing out that the name is a bit of an insider joke. The fixed size of the responses (for a 32 bit - 4 byte IPv4 address) meant that it would have been impractical to reuse the A record with a 128 bit (16 byte) IPv6 address; there would just be too many implementations that would break. Instead a new record type was created with a different QTYPE value. The name `AAAA` is a playful way to indicate it's 4 times the size of an A record while also being a valid DNS label.
 
 **QCLASS** is a 16-bit integer for the class. It's almost universally `1` (IN, for Internet). The others are historical curiosities.
 
@@ -316,7 +316,7 @@ The CLI makes this explicit. `show doh-status` and `show dns-over-tls-status` ar
 
 ## The FortiGate problem: when wildcard FQDNs go dark
 
-There's a consequence of encrypted DNS that goes beyond governance and monitoring, and it's operationally concrete for organisations using FortiGate at their perimeter. Wildcard FQDN objects silently stop working. This is not unique to Fortigate but it has caused me endless hassle in the last few years so I want to explain it in detail.
+There's a consequence of encrypted DNS that goes beyond governance and monitoring, and it's operationally concrete for organisations using FortiGate at their perimeter. Wildcard FQDN objects silently stop working. This is not unique to FortiGate but it has caused me endless hassle in the last few years so I want to explain it in detail.
 
 ### How wildcard FQDN objects actually work
 
