@@ -126,7 +126,6 @@ AA BB        <- Transaction ID (random, e.g. 0xAABB)
 
 > Note that each section of the message is contiguous with no padding. The elements that are not fixed length, like the domain name `www.example.com` in this case, are encoded with length prefixes to indicate their size. `3www7example3com0` with a single byte for each length and a zero byte for the root label.
 
-
 ### DNS over UDP: the default
 
 By default, DNS runs over UDP on port 53. The message goes straight into a UDP datagram payload with no additional framing. As previously mentioned, UDP datagrams carry their own length; no prefix is needed. The resolver sends the query, sets a timer, and either gets a response or retries. Simple and fast.
