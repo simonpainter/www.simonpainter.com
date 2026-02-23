@@ -1,6 +1,6 @@
 ---
 
-title: "Encrypted DNS: Microsoft's DNS over HTTPS public preview"
+title: "Encrypted DNS: What Microsoft's DNS over HTTPS public preview means for you"
 authors: simonpainter
 tags:
   - dns
