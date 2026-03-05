@@ -46,6 +46,7 @@
     "node": ">=18.0"
   },
   "overrides": {
-    "minimatch": ">=10.2.2"
+    "minimatch": ">=10.2.3",
+    "serialize-javascript": "7.0.3"
   }
 }
