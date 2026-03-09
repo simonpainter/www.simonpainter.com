@@ -1,6 +1,6 @@
 ---
 
-title: "SVCB and HTTPS Records in DNS: Service Binding and Modern DNS Discovery"
+title: "DNS Service Binding (SVCB) and HTTPS Records: A Practical Guide"
 authors: simonpainter
 tags:
   - dns
@@ -12,29 +12,27 @@ date: 2026-03-09
 
 ---
 
-## DNS Service Binding (SVCB) and HTTPS Records: A Practical Guide
-
-In my previous post on [encrypted DNS](/blog/encrypted-dns), I mentioned SVCB and HTTPS records as the mechanism by which browsers and operating systems auto-discover and upgrade to encrypted DNS (DoH) endpoints without explicit user configuration. I got several follow-up questions asking what these records actually are, how they work, what problems they solve—and what new problems they create.
+In my previous post on [encrypted DNS](/blog/encrypted-dns), I mentioned SVCB and HTTPS records as the mechanism by which browsers and operating systems can auto-discover and upgrade to encrypted DNS (DoH) endpoints without explicit user configuration. I got several follow-up questions asking what these records actually are, how they work, what problems they solve, and what new problems they create.
 
 This is a deep dive into both. I'll explain the mechanics, show you how they work with real examples you can test, walk through their legitimate use cases, and then discuss the operational challenges they present—especially for organisations trying to maintain control over encrypted DNS at their perimeter.
 
-SVCB and HTTPS records are fundamentally different from the DNS records you're used to. They're not just another way to publish an A record. They're a service metadata layer that lets DNS tell clients which endpoints to use, which protocols those endpoints support, and how to connect to them. That flexibility is powerful. It's also why they've become a vector for unexpected behaviour in networks trying to enforce encrypted DNS policies.
+I make no secret of the fact that I love DNS. I think it's one of the most fascinatingly simple yet powerful protocols in the internet stack. The strength of DNS is its flexibility to [do things that the original designers never imagined](dns-api-proxy.md), while its biggest weakness is its flexibility to do things that the original designers never imagined. SVCB and HTTPS records are a perfect example of both sides of that coin.
+
+SVCB and HTTPS records are fundamentally different from the DNS records you're used to. They're not just another way to signpost from a domain to a server IP address. They're a service metadata layer that lets DNS tell clients which endpoints to use, which protocols those endpoints support, and how to connect to them. That flexibility is powerful. It's also why they've become a vector for unexpected behaviour in networks trying to enforce encrypted DNS policies.
 
 Let's start with what they are and how they work.
-
-
-## The Problem
-
 <!-- truncate -->
+## The Problem
 
 Before RFC 9460 (November 2023), connecting to HTTPS services was surprisingly inefficient. Here's what happened:
 
-Your browser would connect on HTTP/2, the server would respond with an Alt-Svc header saying "hey, I also support HTTP/3", and the browser would then open a new connection. That's multiple round trips when one should have done the job. It's like asking someone directions while driving, getting told about a faster route, and having to go all the way back to take it.
+Many sites still serve HTTP on port 80 and redirect to HTTPS. So your browser makes an HTTP request, gets a 301 redirect to `https://example.com`, then opens a TLS connection on port 443. That's already two round trips before any data flows.
+
+Then the browser connects on HTTP/2, the server responds with an Alt-Svc header saying "hey, I also support HTTP/3", and the browser opens a new connection on QUIC. That's a third round trip. Multiple negotiations when one should have done the job. It's like asking someone directions while driving, getting told about a faster route, and having to go all the way back to take it.
 
 Zone apex caused another headache. You couldn't use CNAME at `example.com`—only subdomains worked. This meant delegating your whole domain to a CDN was complicated. You had to either break your email routing or use hacky workarounds. SVCB fixed this.
 
-SVCB and HTTPS records let you send all the connection details in a single DNS query. Clients learn which protocols you support, which endpoint to use, even the IP addresses. No Alt-Svc negotiations. No multiple lookups. Just the information they need, straight away.
-
+SVCB and HTTPS records let you send all the connection details in a single DNS query. Clients learn which protocols you support, which endpoint to use, even the IP addresses. No HTTP redirects. No Alt-Svc negotiations. No multiple lookups. Just the information they need, straight away.
 
 ## How They Work
 
@@ -100,7 +98,6 @@ example.com. IN HTTPS 3 cdn-apac.fastly.net. alpn="h3,h2"
 
 Clients try priority 1 first, then 2, then 3. All endpoint info arrives in one query.
 
-
 ## What You Can Actually Do With These
 
 ### Serving Your Apex Domain From a CDN
@@ -120,7 +117,7 @@ Your DNS query returns the CDN endpoint *and* your mail configuration. Everythin
 **Why SVCB AliasMode wins over CNAME at the apex:**
 
 | Aspect | CNAME | SVCB AliasMode |
-|--------|-------|----------------|
+| ------ | ----- | -------------- |
 | Works at apex (`example.com`) | ✗ No | ✓ Yes |
 | Allows other records at same level | ✗ No (CNAME excludes everything else) | ✓ Yes (MX, TXT, SPF, etc. coexist) |
 | Single DNS lookup | ✗ No (client must follow to target) | ✓ Yes (client gets endpoint directly) |
@@ -212,7 +209,6 @@ example.com. IN HTTPS 1 . ech="<base64-key>"
 
 News organisations in restrictive countries, healthcare providers managing sensitive data, financial services—they all use this. Your network can't inspect what your clients are accessing.
 
-
 ## Real Examples You Can Test
 
 ### Cloudflare's Public Resolver
@@ -262,7 +258,6 @@ Returns:
 ```
 
 That `.` means "use cloudflare.com itself" (not a different endpoint). The browser learns upfront that Cloudflare supports HTTP/3, the IPv4 addresses are already resolved, and it can connect immediately.
-
 
 ## Setting This Up
 
@@ -324,7 +319,6 @@ dig -t 65 example.com @9.9.9.9
 
 All should return the same thing (allowing for TTL differences).
 
-
 ## A Concrete Example: Multi-CDN Deployment
 
 Let's say you're operating a global service. Here's what your zone could look like:
@@ -371,7 +365,6 @@ graph TB
     M --> N["Upgrade to DoH/DoT<br/>Automatic"]
 ```
 
-
 ## Monitoring and Validation
 
 ### Verify Your Records Are Published
@@ -396,7 +389,6 @@ Both should work. If HTTP/3 fails, remove `h3` from your `alpn` parameter.
 ### Track Adoption
 
 Monitor your HTTP/3 traffic ratio over time. Most analytics providers show this. When you publish HTTPS records with `alpn="h3,h2"`, you'll typically see HTTP/3 adoption climb from 0% to 20–50% within a few weeks on modern clients.
-
 
 ## Enterprise and CSP Use Cases
 
@@ -455,7 +447,6 @@ If RRSIG appears, you're protected.
 
 **Backward compatibility is built in.** Old clients simply ignore these records and fall back to standard connections. No breaking changes. No legacy client pain.
 
-
 ## Getting Started
 
 1. Update your `dig` to version 9.20+ if needed.
@@ -466,7 +457,6 @@ If RRSIG appears, you're protected.
 6. For enterprise use, plan your geographic failover strategy and encrypted DNS endpoints.
 
 It's straightforward, benefits are real (latency improvements, simpler operations, automatic encryption), and the risk is zero.
-
 
 ## The Operational Challenges: Problems SVCB Creates
 
@@ -530,19 +520,20 @@ No single layer is sufficient. SVCB records are just one part of a larger proble
 This depends on your security posture and threat model:
 
 **Block SVCB/HTTPS records if:**
+
 - You're required by compliance to inspect all DNS (healthcare, finance, government)
 - You operate a zero-trust network where DNS is part of the trust chain
 - Your threat intelligence depends on seeing DNS traffic unencrypted
 - You have explicit policy that all DNS must route through your resolver
 
 **Allow SVCB/HTTPS records if:**
+
 - You trust your users to manage their own privacy
 - Your security model doesn't depend on DNS visibility
 - You're trying to encourage encrypted DNS adoption as a general principle
 - You can monitor encrypted traffic patterns anyway (throughput, timing, destination IPs)
 
 Both are defensible. The key is making the decision consciously, understanding the trade-offs, and implementing the mitigation layers that choice requires.
-
 
 ## Resources
 
@@ -554,7 +545,3 @@ Both are defensible. The key is making the decision consciously, understanding t
 - [APNIC Research on DDR Deployment](https://blog.apnic.net/2025/09/02/discovering-the-discovery-of-designated-resolvers/)
 - [Google Toolbox Dig Tool](https://toolbox.googleapps.com/apps/dig/#SVCB/) – Query SVCB records from your browser
 - [nslookup.io SVCB Checker](https://www.nslookup.io/domains/fluxteam.net/dns-records/svcb/) – Visual SVCB record lookup
-
-
-**Last updated:** March 2026
-
