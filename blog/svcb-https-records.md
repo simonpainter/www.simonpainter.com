@@ -12,7 +12,7 @@ date: 2026-03-09
 
 ---
 
-In my previous post on [encrypted DNS](encrypted-dns), I mentioned SVCB and HTTPS records together. For encrypted DNS discovery specifically, it is SVCB, used with the DNS-server mapping in RFC 9461 and DDR in RFC 9462, that lets supporting clients discover encrypted resolver transports without a manually entered DoH URL. I got several follow-up questions asking what these records actually are, how they work, what problems they solve, and what new problems they create.
+In my previous post on [encrypted DNS](encrypted-dns.md), I mentioned SVCB and HTTPS records together. For encrypted DNS discovery specifically, it is SVCB, used with the DNS-server mapping in RFC 9461 and DDR in RFC 9462, that lets supporting clients discover encrypted resolver transports without a manually entered DoH URL. I got several follow-up questions asking what these records actually are, how they work, what problems they solve, and what new problems they create.
 
 This is a deep dive into both. I'll explain the mechanics, show you how they work with real examples you can test, walk through their legitimate use cases, and then discuss the operational challenges they present, especially for organisations trying to maintain control over encrypted DNS at their perimeter.
 
@@ -180,7 +180,7 @@ Clients typically try the lowest priority first and can fail over if it is unava
 
 ### Automatic DNS Encryption Discovery
 
-This is where things get interesting for enterprise security. As I covered in the [encrypted DNS post](encrypted-dns) and mentioned at the start of this post, SVCB records are the key to encrypted DNS discovery. When a client initially knows only a plaintext resolver IP, it can query `_dns.resolver.arpa` for SVCB records to learn about encrypted transports and parameters. This means you need to be careful if you want to maintain control over encrypted DNS at your network perimater, but it also means that supporting clients can discover DoH and DoT without a manually entered DoH URL. In practice you want to publish your own path to your own resolver when you come to support DoH or DoT, but also block other domain specific SVCB records to prevent auto-discovery of external DoH endpoints.
+This is where things get interesting for enterprise security. As I covered in the [encrypted DNS post](encrypted-dns.md) and mentioned at the start of this post, SVCB records are the key to encrypted DNS discovery. When a client initially knows only a plaintext resolver IP, it can query `_dns.resolver.arpa` for SVCB records to learn about encrypted transports and parameters. This means you need to be careful if you want to maintain control over encrypted DNS at your network perimater, but it also means that supporting clients can discover DoH and DoT without a manually entered DoH URL. In practice you want to publish your own path to your own resolver when you come to support DoH or DoT, but also block other domain specific SVCB records to prevent auto-discovery of external DoH endpoints.
 
 To test this, and assuming you have a recent version of dig, here is a special query every client can make:
 
