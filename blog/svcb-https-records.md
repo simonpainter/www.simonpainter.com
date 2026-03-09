@@ -225,6 +225,8 @@ netsh dns add interface name="Ethernet" ddr=yes ddrfallback=no
 
 Once enabled, the only plaintext DNS traffic on port 53 should be the DDR SVCB queries themselves. All other queries go over the discovered DoH connection. Set `ddrfallback=yes` if you want Windows to fall back to plaintext when DDR fails. Quad9 (`9.9.9.9`), OpenDNS (`146.112.41.2`), and Cloudflare (`1.1.1.1`) all support DDR discovery on their resolvers.
 
+**A significant gap on the server side:** Windows DNS Server does not support SVCB or HTTPS record types, so you cannot use it to publish `_dns.resolver.arpa` records for your own internal resolver. If you are running a Windows DNS infrastructure and want to offer DDR to your clients, the most elegant workaround is to create a conditional forwarder for `resolver.arpa` pointing at a BIND instance that serves the SVCB records. Not ideal, but it works until Microsoft adds SVCB support to the server side.
+
 If the resolver name is already known, you would publish something like this:
 
 ```dns
