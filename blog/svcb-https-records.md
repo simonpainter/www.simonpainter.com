@@ -391,7 +391,7 @@ graph TB
 
 ### Track Adoption
 
-Monitor your HTTP/3 traffic ratio over time. Most analytics providers show this. When you publish HTTPS records with `alpn="h3,h2"`, you may see HTTP/3 adoption climb noticeably on clients that honor the records.
+Monitor your HTTP/3 traffic ratio over time. Most analytics providers show this. When you publish HTTPS records with `alpn="h3,h2"`, you may see HTTP/3 adoption climb noticeably on clients that honour the records.
 
 ## Enterprise and CSP Use Cases
 
