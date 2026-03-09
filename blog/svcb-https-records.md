@@ -425,7 +425,7 @@ With hints, supporting clients can often skip steps 2 and 3. The hints are advis
 
 ### Encrypted DNS Discovery for Enterprise Networks
 
-Organizations requiring encrypted DNS can use SVCB for resolver-name discovery when the resolver name is already known through DNR, manual configuration, or device management:
+Organisations requiring encrypted DNS can use SVCB for resolver-name discovery when the resolver name is already known through DNR, manual configuration, or device management:
 
 ```dns
 _dns.resolver.company.example.com. IN SVCB 1 resolver1.company.example.com. alpn="dot" port=853
