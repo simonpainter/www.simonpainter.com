@@ -14,11 +14,13 @@ date: 2026-03-09
 
 ## DNS Service Binding (SVCB) and HTTPS Records: A Practical Guide
 
-I'm going to walk you through SVCB and HTTPS DNS records, and why you should care about them. These aren't just shiny new standards—they solve real problems I've encountered managing network infrastructure at scale.
+In my previous post on [encrypted DNS](/blog/encrypted-dns), I mentioned SVCB and HTTPS records as the mechanism by which browsers and operating systems auto-discover and upgrade to encrypted DNS (DoH) endpoints without explicit user configuration. I got several follow-up questions asking what these records actually are, how they work, what problems they solve—and what new problems they create.
 
-If you've ever wrestled with CDN delegation at your apex domain, or watched clients waste milliseconds negotiating protocols, you'll recognise the pain points these records address. I'll show you how they work, then we'll test them together with actual commands you can run right now.
+This is a deep dive into both. I'll explain the mechanics, show you how they work with real examples you can test, walk through their legitimate use cases, and then discuss the operational challenges they present—especially for organisations trying to maintain control over encrypted DNS at their perimeter.
 
-**Good news on adoption:** Major DNS providers now support SVCB and HTTPS records. AWS Route 53, Cloudflare, DNSimple, Akamai, and Google Cloud DNS all have full support as of 2024. Modern clients (iOS 17+, macOS 13+, Windows 11, Chrome, Firefox) understand these records. You're not betting on something experimental—you're adopting what's already widely deployed.
+SVCB and HTTPS records are fundamentally different from the DNS records you're used to. They're not just another way to publish an A record. They're a service metadata layer that lets DNS tell clients which endpoints to use, which protocols those endpoints support, and how to connect to them. That flexibility is powerful. It's also why they've become a vector for unexpected behaviour in networks trying to enforce encrypted DNS policies.
+
+Let's start with what they are and how they work.
 
 ---
 
@@ -60,7 +62,7 @@ The HTTPS record type works exactly the same way but without the underscore pref
 
 SVCB records use a specific naming convention when you need service-specific configuration. The format is:
 
-```
+```dns
 _service._proto.example.com
 ```
 
@@ -227,7 +229,7 @@ dig _dns.resolver.arpa SVCB @1.1.1.1 +short
 
 I ran this and got:
 
-```
+```text
 1 one.one.one.one. alpn="h2,h3" port=443 ipv4hint=1.1.1.1,1.0.0.1 ipv6hint=2606:4700:4700::1111,2606:4700:4700::1001 key7="/dns-query{?dns}"
 2 one.one.one.one. alpn="dot" port=853 ipv4hint=1.1.1.1,1.0.0.1 ipv6hint=2606:4700:4700::1111,2606:4700:4700::1001
 ```
@@ -244,7 +246,7 @@ dig _dns.dns.google SVCB @8.8.8.8 +short
 
 Output:
 
-```
+```text
 1 dns.google. alpn="dot"
 2 dns.google. alpn="h2,h3" key7="/dns-query{?dns}"
 ```
@@ -259,7 +261,7 @@ dig -t 65 cloudflare.com @1.1.1.1 +short
 
 Returns:
 
-```
+```text
 1 . alpn="h3,h2" ipv4hint=104.16.132.229,104.16.133.229 ipv6hint=2606:4700::6810:84e5
 ```
 
@@ -426,6 +428,7 @@ example.com. IN HTTPS 1 . alpn="h3,h2" ipv4hint=104.16.132.229,104.16.133.229 ip
 ```
 
 Without hints, a client must:
+
 1. Query for HTTPS record (learns endpoint: `cloudflare.com`)
 2. Query for A record (learns IPv4)
 3. Query for AAAA record (learns IPv6)
@@ -472,6 +475,83 @@ If RRSIG appears, you're protected.
 6. For enterprise use, plan your geographic failover strategy and encrypted DNS endpoints.
 
 It's straightforward, benefits are real (latency improvements, simpler operations, automatic encryption), and the risk is zero.
+
+---
+
+## The Operational Challenges: Problems SVCB Creates
+
+For most organisations, SVCB and HTTPS records are unambiguously good. But there's a significant operational class where they present real problems: organisations trying to maintain control over encrypted DNS at their network perimeter.
+
+### Auto-Discovery of Unauthorized DoH Endpoints
+
+Recall from the encrypted DNS post: browsers and operating systems can query `_dns.resolver.arpa` to ask "where's your encrypted DNS endpoint?" SVCB records provide the answer. A client that gets a plaintext resolver from DHCP can automatically discover and upgrade to DoH without any administrative configuration—and without notification to the network team.
+
+This happens transparently. The user doesn't see it. The administrator doesn't see it. Traffic analytics show HTTPS on port 443, which is so common it's invisible. Your carefully-planned encrypted DNS perimeter control quietly stops working.
+
+From a network security and compliance perspective, this is a problem. Your organisation decides all internal DNS should flow through your resolver with all the visibility and threat intelligence that entails. SVCB records defeat that decision at the protocol level.
+
+### The RFC 9460 Design Decision
+
+This behaviour is intentional. RFC 9460 was explicitly designed to allow clients to discover and upgrade to encrypted DNS without administrative configuration. The working group's stated goal was to make encrypted DNS the default, not something IT departments enable selectively.
+
+This is a reasonable security goal—encrypted DNS is more private than plaintext. But it conflicts directly with the security goal of network administrators who want to *inspect* DNS for threats.
+
+### Blocking SVCB Records as Defence
+
+The standard mitigation is what I mentioned in the encrypted DNS post: block SVCB and HTTPS record types at your internal resolver. Infoblox Advanced DNS Protection (ADP) does this by default with four blocking rules:
+
+- DNS HTTPS record (Rule ID 130502880)
+- DNS HTTPS record TCP (Rule ID 130506000)  
+- DNS SVCB record (Rule ID 130502870)
+- DNS SVCB record TCP (Rule ID 130505900)
+
+If clients never receive SVCB responses, they can't discover external DoH endpoints. They can't auto-upgrade. Your resolver remains the path of least resistance.
+
+But this isn't a complete solution. It addresses auto-discovery but not clients with hardcoded DoH endpoints. A browser with `https://1.1.1.1/dns-query` baked in will use it regardless of SVCB records. Blocking SVCB is structural defence against auto-discovery, not perimeter defence.
+
+### The Wider Problem: Protocol Layering
+
+SVCB records expose a deeper tension in network architecture: what layer owns DNS policy?
+
+**DNS layer perspective:** SVCB records are just DNS records. They're published by domain owners. Blocking them feels like censoring published information.
+
+**Network perimeter perspective:** SVCB records are a bypass mechanism. They're infrastructure that circumvents network policy. Blocking them feels like basic access control.
+
+Both perspectives are technically correct. They're in direct conflict.
+
+An organisation enforcing encrypted DNS at the perimeter—blocking port 853, blocking known DoH provider IPs, filtering SNI on port 443—is implementing a deliberate security policy. SVCB records are a vector for that policy to be circumvented.
+
+Conversely, a user who wants privacy is entitled to it. Blocking SVCB records to prevent privacy-seeking behaviour is ethically arguable.
+
+### Practical Mitigation Beyond Record Blocking
+
+Blocking SVCB records at the resolver helps. But complete control requires multiple layers:
+
+1. **Block the record types** (SVCB/HTTPS) at your internal resolver to prevent auto-discovery
+2. **Block known DoH provider IPs** via threat intelligence feeds (Infoblox `Public_DOH_IP` feed, for example)
+3. **Filter SNI on port 443 egress** to block known DoH provider domains even if clients hardcode them
+4. **Monitor DNS analytics** for queries to known resolver infrastructure
+5. **Monitor HTTP traffic** to port 443 for `POST /dns-query` patterns (DoH requests to unauthorized endpoints)
+
+No single layer is sufficient. SVCB records are just one part of a larger problem.
+
+### When to Block, When to Allow
+
+This depends on your security posture and threat model:
+
+**Block SVCB/HTTPS records if:**
+- You're required by compliance to inspect all DNS (healthcare, finance, government)
+- You operate a zero-trust network where DNS is part of the trust chain
+- Your threat intelligence depends on seeing DNS traffic unencrypted
+- You have explicit policy that all DNS must route through your resolver
+
+**Allow SVCB/HTTPS records if:**
+- You trust your users to manage their own privacy
+- Your security model doesn't depend on DNS visibility
+- You're trying to encourage encrypted DNS adoption as a general principle
+- You can monitor encrypted traffic patterns anyway (throughput, timing, destination IPs)
+
+Both are defensible. The key is making the decision consciously, understanding the trade-offs, and implementing the mitigation layers that choice requires.
 
 ---
 
