@@ -22,7 +22,6 @@ SVCB and HTTPS records are fundamentally different from the DNS records you're u
 
 Let's start with what they are and how they work.
 
----
 
 ## The Problem
 
@@ -36,7 +35,6 @@ Zone apex caused another headache. You couldn't use CNAME at `example.com`—onl
 
 SVCB and HTTPS records let you send all the connection details in a single DNS query. Clients learn which protocols you support, which endpoint to use, even the IP addresses. No Alt-Svc negotiations. No multiple lookups. Just the information they need, straight away.
 
----
 
 ## How They Work
 
@@ -102,7 +100,6 @@ example.com. IN HTTPS 3 cdn-apac.fastly.net. alpn="h3,h2"
 
 Clients try priority 1 first, then 2, then 3. All endpoint info arrives in one query.
 
----
 
 ## What You Can Actually Do With These
 
@@ -215,7 +212,6 @@ example.com. IN HTTPS 1 . ech="<base64-key>"
 
 News organisations in restrictive countries, healthcare providers managing sensitive data, financial services—they all use this. Your network can't inspect what your clients are accessing.
 
----
 
 ## Real Examples You Can Test
 
@@ -267,7 +263,6 @@ Returns:
 
 That `.` means "use cloudflare.com itself" (not a different endpoint). The browser learns upfront that Cloudflare supports HTTP/3, the IPv4 addresses are already resolved, and it can connect immediately.
 
----
 
 ## Setting This Up
 
@@ -329,7 +324,6 @@ dig -t 65 example.com @9.9.9.9
 
 All should return the same thing (allowing for TTL differences).
 
----
 
 ## A Concrete Example: Multi-CDN Deployment
 
@@ -377,7 +371,6 @@ graph TB
     M --> N["Upgrade to DoH/DoT<br/>Automatic"]
 ```
 
----
 
 ## Monitoring and Validation
 
@@ -404,7 +397,6 @@ Both should work. If HTTP/3 fails, remove `h3` from your `alpn` parameter.
 
 Monitor your HTTP/3 traffic ratio over time. Most analytics providers show this. When you publish HTTPS records with `alpn="h3,h2"`, you'll typically see HTTP/3 adoption climb from 0% to 20–50% within a few weeks on modern clients.
 
----
 
 ## Enterprise and CSP Use Cases
 
@@ -463,7 +455,6 @@ If RRSIG appears, you're protected.
 
 **Backward compatibility is built in.** Old clients simply ignore these records and fall back to standard connections. No breaking changes. No legacy client pain.
 
----
 
 ## Getting Started
 
@@ -476,7 +467,6 @@ If RRSIG appears, you're protected.
 
 It's straightforward, benefits are real (latency improvements, simpler operations, automatic encryption), and the risk is zero.
 
----
 
 ## The Operational Challenges: Problems SVCB Creates
 
@@ -553,7 +543,6 @@ This depends on your security posture and threat model:
 
 Both are defensible. The key is making the decision consciously, understanding the trade-offs, and implementing the mitigation layers that choice requires.
 
----
 
 ## Resources
 
@@ -566,6 +555,6 @@ Both are defensible. The key is making the decision consciously, understanding t
 - [Google Toolbox Dig Tool](https://toolbox.googleapps.com/apps/dig/#SVCB/) – Query SVCB records from your browser
 - [nslookup.io SVCB Checker](https://www.nslookup.io/domains/fluxteam.net/dns-records/svcb/) – Visual SVCB record lookup
 
----
 
 **Last updated:** March 2026
+
