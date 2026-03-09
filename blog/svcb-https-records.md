@@ -296,7 +296,7 @@ That `.` means "use cloudflare.com itself" (not a different endpoint). The brows
 
 ## Setting this up for your domain
 
-If you're using CloudFlare in proxied mode they are probably already publishing HTTPS records for you. If you want to set this up for your own domain, here are the steps:
+If you're using Cloudflare in proxied mode they are probably already publishing HTTPS records for you. If you want to set this up for your own domain, here are the steps:
 
 > Make sure you have a recent version of `dig` that supports SVCB and HTTPS record types. Older versions ignore it completely, but you can still test with online tools or your browser's developer tools.
 
