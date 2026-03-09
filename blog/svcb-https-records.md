@@ -263,7 +263,7 @@ I ran this and got:
 2 one.one.one.one. alpn="dot" port=853 ipv4hint=1.1.1.1,1.0.0.1 ipv6hint=2606:4700:4700::1111,2606:4700:4700::1001
 ```
 
-What's happening here: priority 1 says "use DoH with HTTP/2 or HTTP/3". The `ipv4hint` and `ipv6hint` parameters can help clients avoid some follow-up address lookups when they honor them. Priority 2 offers DoT (DNS over TLS) as an alternative.
+What's happening here: priority 1 says "use DoH with HTTP/2 or HTTP/3". The `ipv4hint` and `ipv6hint` parameters can help clients avoid some follow-up address lookups when they honour them. Priority 2 offers DoT (DNS over TLS) as an alternative.
 
 ### Google's DNS
 
