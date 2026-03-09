@@ -12,9 +12,9 @@ date: 2026-03-09
 
 ---
 
-In my previous post on [encrypted DNS](/blog/encrypted-dns), I mentioned SVCB and HTTPS records as the mechanism by which browsers and operating systems can auto-discover and upgrade to encrypted DNS (DoH) endpoints without explicit user configuration. I got several follow-up questions asking what these records actually are, how they work, what problems they solve, and what new problems they create.
+In my previous post on [encrypted DNS](encrypted-dns), I mentioned SVCB and HTTPS records together. For encrypted DNS discovery specifically, it is SVCB, used with the DNS-server mapping in RFC 9461 and DDR in RFC 9462, that lets supporting clients discover encrypted resolver transports without a manually entered DoH URL. I got several follow-up questions asking what these records actually are, how they work, what problems they solve, and what new problems they create.
 
-This is a deep dive into both. I'll explain the mechanics, show you how they work with real examples you can test, walk through their legitimate use cases, and then discuss the operational challenges they present—especially for organisations trying to maintain control over encrypted DNS at their perimeter.
+This is a deep dive into both. I'll explain the mechanics, show you how they work with real examples you can test, walk through their legitimate use cases, and then discuss the operational challenges they present, especially for organisations trying to maintain control over encrypted DNS at their perimeter.
 
 I make no secret of the fact that I love DNS. I think it's one of the most fascinatingly simple yet powerful protocols in the internet stack. The strength of DNS is its flexibility to [do things that the original designers never imagined](dns-api-proxy.md), while its biggest weakness is its flexibility to do things that the original designers never imagined. SVCB and HTTPS records are a perfect example of both sides of that coin.
 
@@ -28,65 +28,74 @@ Before RFC 9460 (November 2023), connecting to HTTPS services was surprisingly i
 
 Many sites still serve HTTP on port 80 and redirect to HTTPS. So your browser makes an HTTP request, gets a 301 redirect to `https://example.com`, then opens a TLS connection on port 443. That's already two round trips before any data flows.
 
-Then the browser connects on HTTP/2, the server responds with an Alt-Svc header saying "hey, I also support HTTP/3", and the browser opens a new connection on QUIC. That's a third round trip. Multiple negotiations when one should have done the job. It's like asking someone directions while driving, getting told about a faster route, and having to go all the way back to take it.
+Then the browser connects on HTTP/2, the server responds with an Alt-Svc header saying "hey, I also support HTTP/3", and the browser opens a new connection on QUIC. That's a third round trip. Multiple negotiations when one should have done the job.
 
-Zone apex caused another headache. You couldn't use CNAME at `example.com`—only subdomains worked. This meant delegating your whole domain to a CDN was complicated. You had to either break your email routing or use hacky workarounds. SVCB fixed this.
+Zone apex caused another headache. You couldn't use CNAME at `example.com`, only subdomains worked. This meant delegating your whole domain to a CDN was complicated. You had to either break your email routing or use hacky workarounds. The SVCB/HTTPS family fixed this for participating clients.
 
-SVCB and HTTPS records let you send all the connection details in a single DNS query. Clients learn which protocols you support, which endpoint to use, even the IP addresses. No HTTP redirects. No Alt-Svc negotiations. No multiple lookups. Just the information they need, straight away.
+SVCB and HTTPS records let you move a lot of that connection metadata into DNS. Capable clients can learn supported protocols, preferred endpoints, and sometimes address hints before they connect. That can reduce redirects, avoid the Alt-Svc dance, and cut down on some follow-up lookups, but it does not magically eliminate every extra query in every implementation.
 
 ## How They Work
 
 ### The Basic Structure
 
-A SVCB record looks like this:
+A generic SVCB record looks like this:
 
 ```dns
-_service._proto.example.com. 3600 IN SVCB 1 endpoint.cdn.net. alpn="h3,h2" port=443
+_dns.resolver.example.com. 3600 IN SVCB 1 resolver.example.com. alpn="h2,h3" dohpath="/dns-query{?dns}"
 ```
 
 Three key parts:
 
-**Priority** (the `1` here) tells clients which record to try first. Lower numbers win. Priority 0 is special—it means "use this as an alias" (we'll get to that).
+**Priority** (the `1` here) tells clients which record to try first. Lower numbers win. Priority 0 is special: it means "use this as an alias" (we'll get to that).
 
-**Endpoint** (the `endpoint.cdn.net` part) is where the service actually lives.
+**Endpoint** (the `resolver.example.com` part) is where the service actually lives.
 
-**Parameters** (the `alpn="h3,h2"` bit) tell clients what protocols the endpoint supports. Here, HTTP/3 and HTTP/2.
+**Parameters** (the `alpn="h2,h3"` and `dohpath="/dns-query{?dns}"` bits) tell clients what protocols the endpoint supports and, for DoH, which URI template to use.
 
-The HTTPS record type works exactly the same way but without the underscore prefix nonsense. `example.com IN HTTPS 1 . alpn="h3,h2"` is cleaner than the SVCB equivalent.
-
-### Understanding Prefix Labels and Service Names
-
-SVCB records use a specific naming convention when you need service-specific configuration. The format is:
-
-```dns
-_service._proto.example.com
-```
-
-**Examples:**
-
-- `_dns.resolver.example.com` – SVCB records for your DNS resolver (special use case for encrypted DNS discovery)
-- `_mta.example.com` – Mail server configuration (not commonly used yet, but valid)
-- `_443._https.example.com` – HTTPS on port 443 (though the plain HTTPS record type is preferred)
-
-The underscore prefix prevents conflicts with other records. A client looking for `_dns.resolver.example.com` won't accidentally match your mail server at `dns.resolver.example.com`. This service-awareness means you can have multiple protocols or services on the same domain without ambiguity.
-
-**For your main web service**, you don't use prefix labels. Just use the HTTPS record at your apex:
+The important relationship is this: SVCB is the generic mechanism, while HTTPS is the SVCB-compatible RR type specialized for HTTPS origins. Because HTTPS already implies the `https` scheme, web clients query the origin name directly:
 
 ```dns
 example.com. IN HTTPS 1 . alpn="h3,h2"
 ```
 
-The HTTPS record type is the exception—it doesn't require underscores because it's so common. SVCB records for other services use the underscore convention.
+> Two useful bits of shorthand: RR type 65 is `HTTPS`, so `dig HTTPS example.com` is the readable way to query it. And in DNS-server SVCB records, `key7` is the parameter code for `dohpath`.
+
+Generic SVCB is service-agnostic, so its owner name comes from the protocol mapping for that service, usually with underscored labels such as `_dns.resolver.example.com.`
+
+### Understanding Prefix Labels and Service Names
+
+SVCB query names come from the protocol mapping for the service you are describing. A common pattern is an underscored scheme label, and sometimes an extra port prefix for non-default ports:
+
+```dns
+_<scheme>.<name>
+_<port>._<scheme>.<name>
+```
+
+**Examples:**
+
+- `_dns.resolver.example.com` - SVCB records for a resolver named `resolver.example.com`
+- `_9953._dns.dns1.example.com` - a DNS service on non-default port 9953
+- `_8443._https.example.com` - HTTPS on non-default port 8443
+
+The underscore prefix prevents conflicts with ordinary hostnames. A client looking for `_dns.resolver.example.com` will not accidentally match `resolver.example.com` itself. This service-awareness means you can describe different protocols cleanly without overloading the base hostname.
+
+**For your main web service on the default HTTPS port**, you do not use prefix labels. Just use the HTTPS record at your origin name:
+
+```dns
+example.com. IN HTTPS 1 . alpn="h3,h2"
+```
+
+The HTTPS RR type is the specialized web variant, so it avoids the underscore label for ordinary `https://example.com` origins. If you are describing some other service, or HTTPS on a non-default port, the mapping-defined underscored name comes back into play.
 
 ### Two Operating Modes
 
-**AliasMode** uses priority 0 and works like CNAME but only for a specific service. You can point your apex to a CDN endpoint:
+**AliasMode** uses priority 0 and works like CNAME but only for the RR type being queried. For a web origin at the apex, that means `HTTPS 0`:
 
 ```dns
-example.com. IN SVCB 0 cdn.example.net.
+example.com. IN HTTPS 0 svc.example.net.
 ```
 
-The clever part? You can have this *and* keep your MX records for email. CNAME wouldn't let you do that.
+The clever part? You can publish this *and* keep your MX records for email. Web clients query `HTTPS`; mail clients query `MX`. CNAME would not let those coexist at the same owner name.
 
 **ServiceMode** uses priority 1 or higher and describes a specific endpoint with its parameters. You can have multiple ServiceMode records:
 
@@ -96,35 +105,50 @@ example.com. IN HTTPS 2 cdn-us.akamai.com. alpn="h3,h2"
 example.com. IN HTTPS 3 cdn-apac.fastly.net. alpn="h3,h2"
 ```
 
-Clients try priority 1 first, then 2, then 3. All endpoint info arrives in one query.
+Clients prefer priority 1 first, then 2, then 3. The service metadata arrives up front, although clients may still need follow-up address lookups depending on the target names and resolver behavior.
+
+## Browser Support and Practical Reality
+
+Browser support is real, but it is not uniform.
+
+- Safari on Apple platforms has historically been the most complete early implementation. In practice, Apple system networking has supported HTTPS RR processing since the iOS 14 and macOS 11 era, including direct use of HTTPS metadata for web connections.
+- Chromium-based browsers such as Chrome and Edge have rolled support out gradually since the Chrome 96 timeframe. HTTPS-RR-driven upgrade and HTTP/3 behavior exist, but exact behavior has changed across releases, experiments, and platforms.
+- Firefox has been more limited and conservative. You should not assume HTTPS-RR-driven `http` to `https` upgrade or direct HTTP/3 selection is active for every Firefox user.
+
+The practical rule is simple: publish HTTPS records as an optimization layer, not as the only mechanism keeping your site secure or fast.
+
+- Keep ordinary `301` or `308` redirects from `http` to `https`.
+- Keep HSTS if you already use it.
+- Keep Alt-Svc where it still helps older or slower-moving clients learn about HTTP/3.
+- Keep working A/AAAA fallback for clients that ignore HTTPS records entirely.
 
 ## What You Can Actually Do With These
 
 ### Serving Your Apex Domain From a CDN
 
-This was a painful problem before SVCB. You want to delegate your apex domain to a CDN, but you still need mail servers. CNAME won't work at the apex.
+This was a painful problem before SVCB and HTTPS. You want to delegate your apex domain to a CDN, but you still need mail servers. CNAME will not work at the apex.
 
-With SVCB AliasMode:
+With HTTPS AliasMode:
 
 ```dns
-example.com. IN SVCB 0 cdn.provider.net.
+example.com. IN HTTPS 0 cdn.provider.net.
 example.com. IN MX 10 mail.example.com.
 example.com. IN TXT "v=spf1 include:_spf.provider.net ~all"
 ```
 
-Your DNS query returns the CDN endpoint *and* your mail configuration. Everything works. No workarounds needed.
+Now web clients that understand HTTPS records can follow the web alias, while mail and SPF lookups still use the MX and TXT records at the same owner name.
 
-**Why SVCB AliasMode wins over CNAME at the apex:**
+**Why HTTPS AliasMode wins over CNAME at the apex:**
 
-| Aspect | CNAME | SVCB AliasMode |
-| ------ | ----- | -------------- |
+| Aspect | CNAME | HTTPS AliasMode |
+| ------ | ----- | --------------- |
 | Works at apex (`example.com`) | ✗ No | ✓ Yes |
 | Allows other records at same level | ✗ No (CNAME excludes everything else) | ✓ Yes (MX, TXT, SPF, etc. coexist) |
-| Single DNS lookup | ✗ No (client must follow to target) | ✓ Yes (client gets endpoint directly) |
-| Service-specific | ✗ No (affects entire domain) | ✓ Yes (only affects one service) |
+| Service-specific | ✗ No (affects entire domain) | ✓ Yes (only HTTPS lookups follow it) |
+| Often still needs follow-up address lookups | ✓ Yes | ✓ Yes |
 | Standards status | ✓ Since 1987 | ✓ RFC 9460 (2023) |
 
-Before SVCB, operators had to use workarounds: either put the apex on their own servers and proxy to the CDN, or use brand-new subdomains. SVCB AliasMode makes the simple approach work correctly.
+Before HTTPS AliasMode, operators had to use workarounds: either put the apex on their own servers and proxy to the CDN, or move the site to a subdomain. HTTPS AliasMode makes the web part work correctly, although legacy clients still need ordinary A/AAAA fallback.
 
 ### Making HTTP/3 Work Better
 
@@ -138,13 +162,13 @@ New way: Your HTTPS record says it upfront:
 example.com. IN HTTPS 1 . alpn="h3,h2"
 ```
 
-Clients see this in DNS and connect directly on HTTP/3. No Alt-Svc dance. No wasted milliseconds. Data from real deployments shows this shaves 50–100ms off initial connections on average.
+Clients that support it can see this in DNS and attempt HTTP/3 immediately instead of waiting to learn about it from Alt-Svc after the first connection.
 
-### Geographic Load Balancing Without BGP
+### Multi-Endpoint Failover Without BGP
 
-Imagine you're operating a global service with presence across multiple regions. You use Cloudflare for Europe, Akamai for North America, and Fastly for Asia-Pacific. Traditionally you'd use GeoDNS or BGP to direct traffic.
+Imagine you're operating a global service across multiple providers. You use one CDN as the preferred endpoint and another as a fallback. Traditionally you might reach for GeoDNS or BGP-heavy solutions.
 
-With SVCB, you publish all endpoints at once:
+With HTTPS, you can publish multiple endpoints in operator-preference order:
 
 ```dns
 example.com. IN HTTPS 1 cdn-eu.cloudflare.net. alpn="h3,h2"
@@ -152,13 +176,13 @@ example.com. IN HTTPS 2 cdn-us.akamai.com. alpn="h3,h2"
 example.com. IN HTTPS 3 cdn-apac.fastly.net. alpn="h3,h2"
 ```
 
-Modern clients try priority 1 first and automatically failover if it's unavailable. Smart clients can even choose based on geography. No extra DNS queries. No routing table complexity. The CDN endpoint details are right there in DNS.
+Clients typically try the lowest priority first and can fail over if it is unavailable. That makes the record set useful for multi-endpoint failover and delegated service metadata. It is not a magic replacement for GeoDNS, though: geography comes from how those target names resolve and where those services live, not from `SvcPriority` itself.
 
 ### Automatic DNS Encryption Discovery
 
-This is where things get interesting for enterprise security. Your network forces all DNS through encrypted channels (DoH or DoT) for privacy. But how do clients discover where the encrypted resolver lives?
+This is where things get interesting for enterprise security. As I covered in the [encrypted DNS post](encrypted-dns) and mentioned at the start of this post, SVCB records are the key to encrypted DNS discovery. When a client initially knows only a plaintext resolver IP, it can query `_dns.resolver.arpa` for SVCB records to learn about encrypted transports and parameters. This means you need to be careful if you want to maintain control over encrypted DNS at your network perimater, but it also means that supporting clients can discover DoH and DoT without a manually entered DoH URL. In practice you want to publish your own path to your own resolver when you come to support DoH or DoT, but also block other domain specific SVCB records to prevent auto-discovery of external DoH endpoints.
 
-SVCB records to the rescue. There's a special query every client can make:
+To test this, and assuming you have a recent version of dig, here is a special query every client can make:
 
 ```bash
 dig _dns.resolver.arpa SVCB @1.1.1.1
@@ -171,43 +195,54 @@ _dns.resolver.arpa. 300 IN SVCB 1 one.one.one.one. alpn="h2,h3" port=443 key7="/
 _dns.resolver.arpa. 300 IN SVCB 2 one.one.one.one. alpn="dot" port=853
 ```
 
-Translation: "Use DoH at `one.one.one.one:443` (priority 1) or DoT at port 853 (priority 2)."
+> Try it yourself, the above is slightly simplified because Cloudflare also includes `ipv4hint` and `ipv6hint` parameters, but the key point is the same.
+
+Translation: priority 1 advertises a DoH-capable endpoint using HTTP/2 or HTTP/3, and priority 2 advertises DoT.
 
 **Understanding the `dohpath` parameter (key7):**
 
 The `key7="/dns-query{?dns}"` part is the DoH path template. It tells clients how to construct a DoH request:
 
-- `{?dns}` is a placeholder for the DNS query (in wire format, base64-encoded)
-- A client would construct: `https://one.one.one.one/dns-query?dns=<base64-encoded-query>`
+- `{?dns}` is a placeholder for the DNS query in wire format, base64url-encoded
+- In resolver-name discovery, a client would construct a URI like `https://resolver.example/dns-query?dns=<base64url-query>`
 
 Different providers use different paths:
 
 - Cloudflare: `/dns-query{?dns}`
 - Google: `/dns-query{?dns}`
-- Custom resolvers: `/resolve`, `/lookup`, or just `/` depending on implementation
+- Custom resolvers: `/resolve{?dns}`, `/query{?dns}`, or another template that still contains the required `dns` variable
 
-This template approach means your SVCB record is portable across different DoH implementations without extra configuration.
+For IP-bootstrap DDR via `_dns.resolver.arpa`, there is one subtlety from RFC 9462: the client starts from the resolver IP it already knows. The SVCB data tells it which encrypted transports, ports, authentication names, and DoH path template are valid, but the bootstrap context still matters.
 
-For your own domain, you'd do:
+**The bootstrap trust problem:** The SVCB response arrives over plaintext DNS, so it cannot be trusted blindly. Before upgrading, the client must verify that the advertised DoH/DoT server actually controls the original resolver IP. It does this by checking the TLS certificate: the certificate presented by the encrypted endpoint must include the original plaintext resolver IP as a Subject Alternative Name (SAN). If it does not match, the client refuses to upgrade. This prevents an attacker on the plaintext path from redirecting DNS to a rogue encrypted resolver.
 
-```dns
-_dns.resolver.example.com. IN SVCB 1 doh.example.com. alpn="h3,h2" port=443 key7="/dns-query{?dns}"
-_dns.resolver.example.com. IN SVCB 2 dot.example.com. alpn="dot" port=853
+**Windows DDR support:** Microsoft co-authored the DDR specification and shipped support in Windows 11 and Windows Server 2022. You can enable it with:
+
+```bash
+netsh dns add global doh=yes ddr=yes
+netsh dns add interface name="Ethernet" ddr=yes ddrfallback=no
 ```
 
-Now all DNS queries automatically encrypt. Zero manual configuration. This is particularly valuable for organizations managing security policies.
+Once enabled, the only plaintext DNS traffic on port 53 should be the DDR SVCB queries themselves. All other queries go over the discovered DoH connection. Set `ddrfallback=yes` if you want Windows to fall back to plaintext when DDR fails. Quad9 (`9.9.9.9`), OpenDNS (`146.112.41.2`), and Cloudflare (`1.1.1.1`) all support DDR discovery on their resolvers.
 
-### Hiding Your Domain From Network Inspection
-
-This is more advanced, but worth understanding. Encrypted Client Hello (ECH) hides the domain name from network observers during the TLS handshake. It stops censorious networks from seeing which websites you're visiting.
-
-HTTPS records can distribute the encryption key:
+If the resolver name is already known, you would publish something like this:
 
 ```dns
-example.com. IN HTTPS 1 . ech="<base64-key>"
+_dns.resolver.example.com. IN SVCB 1 resolver.example.com. alpn="h2,h3" dohpath="/dns-query{?dns}"
+_dns.resolver.example.com. IN SVCB 2 resolver.example.com. alpn="dot"
 ```
 
-News organisations in restrictive countries, healthcare providers managing sensitive data, financial services—they all use this. Your network can't inspect what your clients are accessing.
+With a supporting client and the right DDR validation model, that can move a device from plaintext bootstrap DNS to an encrypted resolver without a manually entered DoH URL. Powerful, but not unconditional or universal.
+
+### Carrying More Than Protocol Hints
+
+SVCB and HTTPS are not only about ALPN and ports. The design is meant to carry richer connection metadata, which is why these records matter to browser and CDN teams.
+
+One example is [Encrypted Client Hello (ECH)](https://blog.cloudflare.com/encrypted-client-hello/), which aims to hide more of the TLS handshake metadata from passive observers. That sits slightly outside the core RFCs this post is focused on, so I am not going deep on the exact parameter definitions here.
+
+> I have touched on SNI headers in the past and how they leak metadata, sometimes in a useful way like with firewall FQDN filtering without TLS inspection. [ECH](https://blog.cloudflare.com/encrypted-client-hello/) is an alternative to ESNI that encrypts the SNI and other handshake metadata, but it also requires clients to learn about ECH support through some out-of-band mechanism. SVCB and HTTPS records are a natural fit for that discovery, and some providers are already using them to advertise ECH support.
+
+The important architectural point is that HTTPS records are a delivery mechanism for connection policy, not just a shortcut to HTTP/3. Once a client trusts that RRset, DNS can influence much more than which transport gets tried first.
 
 ## Real Examples You Can Test
 
@@ -226,9 +261,7 @@ I ran this and got:
 2 one.one.one.one. alpn="dot" port=853 ipv4hint=1.1.1.1,1.0.0.1 ipv6hint=2606:4700:4700::1111,2606:4700:4700::1001
 ```
 
-What's happening here: Priority 1 says "use DoH with HTTP/2 or HTTP/3". The `ipv4hint` and `ipv6hint` parameters let clients connect without extra DNS lookups. Priority 2 offers DoT (DNS over TLS) as a backup.
-
-Notice Cloudflare prefers DoH because it works through HTTP proxies. Smart choice for a public resolver.
+What's happening here: priority 1 says "use DoH with HTTP/2 or HTTP/3". The `ipv4hint` and `ipv6hint` parameters can help clients avoid some follow-up address lookups when they honor them. Priority 2 offers DoT (DNS over TLS) as an alternative.
 
 ### Google's DNS
 
@@ -243,12 +276,12 @@ Output:
 2 dns.google. alpn="h2,h3" key7="/dns-query{?dns}"
 ```
 
-Google prioritises DoT (TLS on port 853) because it's lower latency for dedicated DNS clients. Different trade-off, same result: clients know exactly how to encrypt their queries.
+Google's RRset gives DoT priority 1 and DoH priority 2. The priorities express the operator's preference; the client still has to support the advertised transports.
 
-### HTTP Records in the Wild
+### HTTPS Records in the Wild
 
 ```bash
-dig -t 65 cloudflare.com @1.1.1.1 +short
+dig HTTPS cloudflare.com @1.1.1.1 +short
 ```
 
 Returns:
@@ -257,30 +290,17 @@ Returns:
 1 . alpn="h3,h2" ipv4hint=104.16.132.229,104.16.133.229 ipv6hint=2606:4700::6810:84e5
 ```
 
-That `.` means "use cloudflare.com itself" (not a different endpoint). The browser learns upfront that Cloudflare supports HTTP/3, the IPv4 addresses are already resolved, and it can connect immediately.
+That `.` means "use cloudflare.com itself" (not a different endpoint). The browser learns upfront that Cloudflare advertises HTTP/3. The address hints may let some clients skip follow-up address lookups, but they are still advisory.
 
-## Setting This Up
+## Setting this up for your domain
 
-### Check Your dig Version
+If you're using CloudFlare in proxied mode they are probably already publishing HTTPS records for you. If you want to set this up for your own domain, here are the steps:
 
-You need dig 9.20 or newer for SVCB support. Older versions don't understand the record type.
-
-```bash
-dig -v
-```
-
-If you're on macOS with Homebrew and have an old version:
-
-```bash
-brew install bind
-alias dig=/opt/homebrew/opt/bind/bin/dig
-```
-
-Then reload your shell and you're good.
+> Make sure you have a recent version of `dig` that supports SVCB and HTTPS record types. Older versions ignore it completely, but you can still test with online tools or your browser's developer tools.
 
 ### Add Records to Your DNS
 
-Most DNS providers now support SVCB and HTTPS records. Cloudflare, AWS Route 53, DNSimple, Akamai, Google Cloud DNS—they all have it. Check your provider's UI or API.
+Most DNS providers now support SVCB and HTTPS records. Cloudflare, AWS Route 53, DNSimple, Akamai, and Google Cloud DNS all have it. Check your provider's UI or API.
 
 For a basic HTTP/3-enabled domain:
 
@@ -288,23 +308,23 @@ For a basic HTTP/3-enabled domain:
 example.com. 3600 IN HTTPS 1 . alpn="h3,h2"
 ```
 
-Add IP hints to save clients from extra lookups:
+If you are using a separate target name, you can add address hints so capable clients may skip some follow-up address lookups:
 
 ```dns
-example.com. 3600 IN HTTPS 1 . alpn="h3,h2" ipv4hint=104.16.132.229
+example.com. 3600 IN HTTPS 1 svc.example.net. alpn="h3,h2" ipv4hint=203.0.113.10 ipv6hint=2001:db8::10
 ```
 
 ### Test It
 
 ```bash
-dig -t 65 example.com +short
+dig HTTPS example.com +short
 ```
 
 You should get your record back. If nothing appears, check that your provider supports the record type or wait for DNS caching to clear.
 
 If you don't have `dig` installed locally, use these browser-based tools instead:
 
-- [Google Toolbox Dig](https://toolbox.googleapps.com/apps/dig/#SVCB/) – Enter your domain name and query type SVCB
+- [Google Toolbox Dig](https://toolbox.googleapps.com/apps/dig/#SVCB/) – Enter your domain name and query type SVCB or HTTPS
 - [nslookup.io](https://www.nslookup.io/) – Visual interface for checking SVCB records
 
 ### Verify with Different Resolvers
@@ -312,151 +332,132 @@ If you don't have `dig` installed locally, use these browser-based tools instead
 Query different resolvers to ensure consistency:
 
 ```bash
-dig -t 65 example.com @8.8.8.8
-dig -t 65 example.com @1.1.1.1
-dig -t 65 example.com @9.9.9.9
+dig HTTPS example.com @8.8.8.8
+dig HTTPS example.com @1.1.1.1
+dig HTTPS example.com @9.9.9.9
 ```
 
 All should return the same thing (allowing for TTL differences).
 
-## A Concrete Example: Multi-CDN Deployment
+## Another Concrete Example: Apex Alias with Multiple Endpoints
 
-Let's say you're operating a global service. Here's what your zone could look like:
+Let's say you're operating a public website at the apex, want to delegate the web service cleanly, and still keep mail records at the same owner name. Here's what your zone could look like:
 
 ```dns
-; Apex alias to primary CDN
-example.com. IN SVCB 0 cdn.primary-provider.net.
+; HTTPS alias for the web service at the apex
+example.com. IN HTTPS 0 svc.example.net.
 
-; Geographic failover
-example.com. IN HTTPS 1 cdn-eu.cloudflare.net. alpn="h3,h2"
-example.com. IN HTTPS 2 cdn-us.akamai.com. alpn="h3,h2"
-example.com. IN HTTPS 3 cdn-apac.fastly.net. alpn="h3,h2"
+; Service metadata lives on the delegated name
+svc.example.net. IN HTTPS 1 cdn-primary.provider.net. alpn="h3,h2"
+svc.example.net. IN HTTPS 2 cdn-backup.provider.net. alpn="h3,h2"
 
-; Email still works alongside the SVCB alias
+; Legacy fallback for clients that ignore HTTPS records
+example.com. IN A 192.0.2.10
+example.com. IN AAAA 2001:db8::10
+
+; Email still works because HTTPS aliasing is RR-type-specific
 example.com. IN MX 10 mail.example.com.
 example.com. IN MX 20 mail-backup.example.com.
 
-; Encrypted DNS for internal clients
-_dns.resolver.example.com. IN SVCB 1 doh.example.com. alpn="h3,h2" port=443 key7="/dns-query{?dns}"
-_dns.resolver.example.com. IN SVCB 2 dot.example.com. alpn="dot" port=853
+; Resolver-name discovery for clients that already know the resolver name
+_dns.resolver.company.example.com. IN SVCB 1 resolver.company.example.com. alpn="h2,h3" dohpath="/dns-query{?dns}"
+_dns.resolver.company.example.com. IN SVCB 2 resolver.company.example.com. alpn="dot"
 ```
 
 What this gives you:
 
-Your apex is aliased to a primary CDN without breaking email. Clients across different regions try geographically-optimised endpoints. All clients automatically discover and upgrade to encrypted DNS. No configuration complexity. No manual resolver setup needed.
+Your web origin can delegate HTTPS service metadata without sacrificing MX records. Supporting clients prefer the primary CDN metadata and can fall back to the secondary. Legacy clients still have ordinary A/AAAA fallback. The resolver-name SVCB records are separate: they help clients that already know `resolver.company.example.com` discover DoH and DoT.
 
-This is simpler than BGP-based load balancing, more flexible than GeoDNS, and works across all modern clients (iOS 17+, macOS 13+, Windows 11, modern browsers, etc.).
+This is simpler than trying to fake apex aliasing with CNAMEs, but it still needs realistic deployment hygiene: fallback A/AAAA for legacy clients, ordinary HTTPS redirects and HSTS for browsers that ignore HTTPS RRs, and a clear distinction between resolver-name discovery and `_dns.resolver.arpa` bootstrap DDR.
 
 ```mermaid
 graph TB
-    A["example.com"] --> B["SVCB Alias to Primary CDN"]
-    A --> C["HTTPS Priority 1<br/>cdn-eu.cloudflare.net"]
-    A --> D["HTTPS Priority 2<br/>cdn-us.akamai.com"]
-    A --> E["HTTPS Priority 3<br/>cdn-apac.fastly.net"]
-    A --> F["MX Records<br/>for email"]
+    A["example.com HTTPS 0"] --> B["svc.example.net"]
+    B --> C["HTTPS Priority 1<br/>cdn-primary.provider.net"]
+    B --> D["HTTPS Priority 2<br/>cdn-backup.provider.net"]
+    A --> E["MX Records<br/>for email"]
+    A --> F["A/AAAA fallback<br/>for legacy clients"]
     
-    C --> G["EU Clients<br/>Low latency"]
-    D --> H["US Clients<br/>Failover"]
-    E --> I["APAC Clients<br/>Failover"]
-    F --> J["Mail Routing<br/>No conflicts"]
+    C --> G["Preferred endpoint"]
+    D --> H["Fallback endpoint"]
+    E --> I["Mail Routing<br/>No conflicts"]
+    F --> J["Old clients still connect"]
     
-    K["Client Devices"] -->|Query DNS| L["_dns.resolver.arpa"]
-    L --> M["Learn encrypted<br/>resolver config"]
-    M --> N["Upgrade to DoH/DoT<br/>Automatic"]
+    K["Managed clients"] -->|Known resolver name| L["_dns.resolver.company.example.com"]
+    L --> M["Learn DoH/DoT metadata"]
 ```
-
-## Monitoring and Validation
-
-### Verify Your Records Are Published
-
-```bash
-dig -t 65 example.com +dnssec
-```
-
-Look for RRSIG records in the response. That confirms DNSSEC is signing your HTTPS records.
-
-### Test HTTP/3 Connectivity
-
-Once your records are live, test that your service actually supports what you advertised:
-
-```bash
-curl --http3 https://example.com -v
-curl --http2 https://example.com -v
-```
-
-Both should work. If HTTP/3 fails, remove `h3` from your `alpn` parameter.
 
 ### Track Adoption
 
-Monitor your HTTP/3 traffic ratio over time. Most analytics providers show this. When you publish HTTPS records with `alpn="h3,h2"`, you'll typically see HTTP/3 adoption climb from 0% to 20–50% within a few weeks on modern clients.
+Monitor your HTTP/3 traffic ratio over time. Most analytics providers show this. When you publish HTTPS records with `alpn="h3,h2"`, you may see HTTP/3 adoption climb noticeably on clients that honor the records.
 
 ## Enterprise and CSP Use Cases
 
 ### Service Providers and Operational Benefits
 
-From a service provider perspective, SVCB records reduce DNS Mean Time To Recovery (MTTR) during incidents. If your primary CDN endpoint fails, clients can instantly failover to a secondary without waiting for DNS TTL expiration. Your SVCB records define the priority order:
+From a service provider perspective, SVCB and HTTPS records can reduce recovery time during incidents. If your primary endpoint fails, participating clients already know about the secondary and can fall back without waiting for the next DNS publishing cycle. Your records define the preference order:
 
 ```dns
 example.com. IN HTTPS 1 cdn-primary.provider.net. alpn="h3,h2"
 example.com. IN HTTPS 2 cdn-backup.provider.net. alpn="h3,h2"
 ```
 
-Most clients try priority 1, but immediately failover when that endpoint is unreachable. Some sophisticated clients (modern iOS, macOS, browsers) are even smarter—they probe multiple priorities in parallel, choosing the fastest responding endpoint.
+Most clients try priority 1 first and can fail over when that endpoint is unreachable. Some implementations may even probe more than one option in parallel, but you should treat that as an implementation detail rather than a universal guarantee.
 
 ### DNS Traffic Optimization for CSPs
 
-ISPs and managed security providers benefit from `ipv4hint` and `ipv6hint` parameters. These address hints eliminate additional DNS lookups:
+ISPs and managed security providers can benefit from `ipv4hint` and `ipv6hint` parameters when the target name is separate from the owner name. These hints can reduce follow-up address lookups for clients that honor them:
 
 ```dns
-example.com. IN HTTPS 1 . alpn="h3,h2" ipv4hint=104.16.132.229,104.16.133.229 ipv6hint=2606:4700::6810:84e5
+example.com. IN HTTPS 1 svc.example.net. alpn="h3,h2" ipv4hint=203.0.113.10,203.0.113.11 ipv6hint=2001:db8::10
 ```
 
 Without hints, a client must:
 
-1. Query for HTTPS record (learns endpoint: `cloudflare.com`)
+1. Query for HTTPS record (learns endpoint: `svc.example.net`)
 2. Query for A record (learns IPv4)
 3. Query for AAAA record (learns IPv6)
 4. Connect
 
-With hints, one query gives you everything. For DNS providers handling millions of queries daily, this reduces resolver load by ~66% for that domain. At scale, this translates to reduced infrastructure costs and faster client connections.
+With hints, supporting clients can often skip steps 2 and 3. The hints are advisory rather than mandatory, but they can still reduce resolver load and shave time off connection setup.
 
 ### Encrypted DNS Discovery for Enterprise Networks
 
-Organizations requiring encrypted DNS can deploy DDR (Discovery of Designated Resolvers) using SVCB:
+Organizations requiring encrypted DNS can use SVCB for resolver-name discovery when the resolver name is already known through DNR, manual configuration, or device management:
 
 ```dns
 _dns.resolver.company.example.com. IN SVCB 1 resolver1.company.example.com. alpn="dot" port=853
-_dns.resolver.company.example.com. IN SVCB 2 resolver2.company.example.com. alpn="doh" port=443 key7="/dns-query{?dns}"
+_dns.resolver.company.example.com. IN SVCB 2 resolver1.company.example.com. alpn="h2,h3" dohpath="/dns-query{?dns}"
 ```
 
-Employee devices on corporate networks query the plaintext resolver provided by DHCP, but immediately upgrade to encrypted DNS by checking `_dns.resolver.arpa`. No VPN needed. No manual configuration. Compliance teams get encrypted DNS by default. This is particularly valuable for healthcare and financial organizations managing sensitive data.
+That is different from `_dns.resolver.arpa`, which is the bootstrap DDR query used when the client initially knows only a plaintext resolver IP. In both cases, supporting clients can discover encrypted transports without a hardcoded DoH URL, but automatic use still depends on client behavior and validation rules.
 
 ## Standards and Safety
 
 ### What You Need to Know
 
-SVCB (RFC 9460) and HTTPS (RFC 9110) are standardised at the IETF. Adoption is strong among infrastructure providers and modern operating systems.
+SVCB and HTTPS are standardized in RFC 9460. RFC 9461 defines the DNS-server mapping including `dohpath`, and RFC 9462 defines DDR. Adoption is strong among infrastructure providers, but client behavior still varies.
 
-**DNSSEC matters.** Always sign your SVCB/HTTPS records with DNSSEC to prevent DNS spoofing. Check your records:
+**DNSSEC matters.** Signing SVCB and HTTPS records helps protect clients from tampering and downgrade attacks. Check your records:
 
 ```bash
-dig -t 65 example.com +dnssec | grep RRSIG
+dig HTTPS example.com +dnssec
 ```
 
-If RRSIG appears, you're protected.
+If `RRSIG` appears, signatures are published. If you query a validating resolver and see the `ad` flag, validation succeeded for that response.
 
 **Backward compatibility is built in.** Old clients simply ignore these records and fall back to standard connections. No breaking changes. No legacy client pain.
 
 ## Getting Started
 
-1. Update your `dig` to version 9.20+ if needed.
+1. Use a recent `dig` if you want clean SVCB/HTTPS formatting.
 2. Test Cloudflare's and Google's resolvers to understand the format.
 3. Add HTTPS records to your domain (start simple: `alpn="h3,h2"`).
-4. Test with `dig -t 65 yourdomain.com @8.8.8.8`.
-5. Verify clients can connect normally (no alt-svc needed).
-6. For enterprise use, plan your geographic failover strategy and encrypted DNS endpoints.
+4. Test with `dig HTTPS yourdomain.com @8.8.8.8`.
+5. Verify clients can connect normally, and keep redirects/HSTS for clients that ignore HTTPS records.
+6. For enterprise use, distinguish `_dns.resolver.arpa` bootstrap discovery from `_dns.<resolver-name>` discovery.
 
-It's straightforward, benefits are real (latency improvements, simpler operations, automatic encryption), and the risk is zero.
+Start simple, validate with real clients, and treat these records as an optimization layer rather than a magic replacement for every existing control.
 
 ## The Operational Challenges: Problems SVCB Creates
 
@@ -464,17 +465,17 @@ For most organisations, SVCB and HTTPS records are unambiguously good. But there
 
 ### Auto-Discovery of Unauthorized DoH Endpoints
 
-Recall from the encrypted DNS post: browsers and operating systems can query `_dns.resolver.arpa` to ask "where's your encrypted DNS endpoint?" SVCB records provide the answer. A client that gets a plaintext resolver from DHCP can automatically discover and upgrade to DoH without any administrative configuration—and without notification to the network team.
+Recall from the encrypted DNS post: supporting browsers and operating systems can query `_dns.resolver.arpa` to ask "where's your encrypted DNS endpoint?" SVCB records provide the answer. A client that gets a plaintext resolver from DHCP may then discover encrypted transports and, if its validation rules are satisfied, upgrade without an administrator explicitly entering a DoH URL.
 
-This happens transparently. The user doesn't see it. The administrator doesn't see it. Traffic analytics show HTTPS on port 443, which is so common it's invisible. Your carefully-planned encrypted DNS perimeter control quietly stops working.
+When clients implement it, this can happen transparently. The user usually does not see it. The administrator may not see it either. Traffic analytics show HTTPS on port 443, which is so common it can disappear into the background. Your carefully planned encrypted DNS perimeter control can quietly stop working.
 
-From a network security and compliance perspective, this is a problem. Your organisation decides all internal DNS should flow through your resolver with all the visibility and threat intelligence that entails. SVCB records defeat that decision at the protocol level.
+From a network security and compliance perspective, this is a problem. Your organisation decides all internal DNS should flow through your resolver with all the visibility and threat intelligence that entails. SVCB-based discovery can undermine that decision at the protocol level.
 
-### The RFC 9460 Design Decision
+### The DDR Design Decision
 
-This behaviour is intentional. RFC 9460 was explicitly designed to allow clients to discover and upgrade to encrypted DNS without administrative configuration. The working group's stated goal was to make encrypted DNS the default, not something IT departments enable selectively.
+This behaviour is intentional. RFC 9461 and RFC 9462 explicitly define how DNS clients can learn encrypted resolver transports and parameters without manual endpoint configuration. The goal is to make encrypted DNS easier to discover and deploy, not something that only works after hand-entering a DoH URL.
 
-This is a reasonable security goal—encrypted DNS is more private than plaintext. But it conflicts directly with the security goal of network administrators who want to *inspect* DNS for threats.
+This is a reasonable security goal, because encrypted DNS is more private than plaintext. But it conflicts directly with the security goal of network administrators who want to *inspect* DNS for threats.
 
 ### Blocking SVCB Records as Defence
 
@@ -499,7 +500,7 @@ SVCB records expose a deeper tension in network architecture: what layer owns DN
 
 Both perspectives are technically correct. They're in direct conflict.
 
-An organisation enforcing encrypted DNS at the perimeter—blocking port 853, blocking known DoH provider IPs, filtering SNI on port 443—is implementing a deliberate security policy. SVCB records are a vector for that policy to be circumvented.
+An organisation enforcing encrypted DNS at the perimeter, blocking port 853, blocking known DoH provider IPs, and filtering SNI on port 443, is implementing a deliberate security policy. SVCB records are a vector for that policy to be circumvented.
 
 Conversely, a user who wants privacy is entitled to it. Blocking SVCB records to prevent privacy-seeking behaviour is ethically arguable.
 
@@ -511,7 +512,7 @@ Blocking SVCB records at the resolver helps. But complete control requires multi
 2. **Block known DoH provider IPs** via threat intelligence feeds (Infoblox `Public_DOH_IP` feed, for example)
 3. **Filter SNI on port 443 egress** to block known DoH provider domains even if clients hardcode them
 4. **Monitor DNS analytics** for queries to known resolver infrastructure
-5. **Monitor HTTP traffic** to port 443 for `POST /dns-query` patterns (DoH requests to unauthorized endpoints)
+5. **Monitor HTTP traffic** to port 443 for DoH patterns such as `GET` or `POST` requests to known DoH paths
 
 No single layer is sufficient. SVCB records are just one part of a larger problem.
 
@@ -543,5 +544,6 @@ Both are defensible. The key is making the decision consciously, understanding t
 - [ISC BIND SVCB Documentation](https://kb.isc.org/docs/svcb-and-https-resource-records-what-are-they)
 - [dnsdist SVCB Configuration](https://www.dnsdist.org/reference/svc.html)
 - [APNIC Research on DDR Deployment](https://blog.apnic.net/2025/09/02/discovering-the-discovery-of-designated-resolvers/)
+- [Microsoft: Making DoH Discoverable with DDR](https://techcommunity.microsoft.com/blog/networkingblog/making-doh-discoverable-introducing-ddr/2887289) – Windows DDR implementation and TLS validation
 - [Google Toolbox Dig Tool](https://toolbox.googleapps.com/apps/dig/#SVCB/) – Query SVCB records from your browser
 - [nslookup.io SVCB Checker](https://www.nslookup.io/domains/fluxteam.net/dns-records/svcb/) – Visual SVCB record lookup
