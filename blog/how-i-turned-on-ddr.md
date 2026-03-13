@@ -156,7 +156,7 @@ The client will then attempt to connect to the DoH server using the information 
 
 ## Testing
 
-One of the easiest way to test is to keep using that pcap and look for https or tls traffic to the DoH/DoT server. Alternatively you can use soemthign like the [Cloudflare test page](https://one.one.one.one/help/) which will look something like this:
+One of the easiest ways to test is to keep using that pcap and look for https or tls traffic to the DoH/DoT server. Alternatively, you can use something like the [Cloudflare test page](https://one.one.one.one/help/) which will look something like this:
 
 ![Cloudflare test page showing DoH and DoT support](img/how-i-turned-on-ddr/cloudflare_debug_information_dns_settings_connectivity_summary.png)
 
