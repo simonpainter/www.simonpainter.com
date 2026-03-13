@@ -45,7 +45,7 @@ netsh dns add global doh=yes ddr=yes
 Then you enable it on the interface you want to use it on:
 
 ```powershell
-netsh dns add interface name=”<interface-name>” ddr=yes ddrfallback=no
+netsh dns add interface name="<interface-name>" ddr=yes ddrfallback=no
 ```
 
 You still need to make sure your DNS server supports DDR, or switch to one that does.
