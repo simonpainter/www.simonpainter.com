@@ -13,8 +13,10 @@ date: 2026-03-12
 ---
 
 I went down the rabbit hole of [encrypted DNS](encrypted-dns.md) a little while ago, mainly prompted by the recent [preview of DNS over HTTPS (DoH) in Windows DNS Server](https://techcommunity.microsoft.com/blog/networkingblog/secure-dns-with-doh-public-preview-for-windows-dns-server/4493935), and that led me to the wonders of [SVCB and HTTPS records in DNS](svcb-https-records.md) which have some practical applications including DNS Discovery and Redirection (DDR).
-<!-- truncate -->
+
 First things first, a recap of what DDR is and the mechanism. DDR is a mechanism that allows a DNS resolver to discover and redirect to an alternative DNS resolver that supports encrypted DNS protocols like DoH or DoT. This is done through the use of SVCB (Service Binding) records in DNS, which can provide information about the capabilities of a DNS resolver and how to connect to it securely.
+
+<!-- truncate -->
 
 ## Let's start with macOS
 
