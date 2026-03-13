@@ -32,7 +32,7 @@ That command sets a simple integer flag to enable DDR (1 for on, 0 for off). Onc
 sudo killall -9 mDNSResponder
 ```
 
-If you aren't already using a DNS resolve that supprorts DDR, you can [change your DNS resolver to one that does](https://support.apple.com/en-gb/guide/mac-help/mh14127/mac), such as Cloudflare.
+If you aren't already using a DNS resolver that supports DDR, you can [change your DNS resolver to one that does](https://support.apple.com/en-gb/guide/mac-help/mh14127/mac), such as Cloudflare.
 
 ## OK, now Windows
 
