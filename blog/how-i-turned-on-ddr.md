@@ -64,7 +64,7 @@ If you happen to be running a packet capture while you do this you'll see an imm
 _dns.resolver.arpa: type SVCB, class IN
 ```
 
- The DNS resolver will respond with the SVCB record that contains information about the alternative DNS resolver that supports DoH or DoT. An SVCB record has a priority value, which indicates the order of preference. Cloudflare responds with DoH as the preferred option, and DoT as the fallback whereas Quad9 responds with DoT as the preferred option, and DoH as the fallback.
+The DNS resolver will respond with the SVCB record that contains information about the alternative DNS resolver that supports DoH or DoT. An SVCB record has a priority value, which indicates the order of preference. Cloudflare responds with DoH as the preferred option, and DoT as the fallback whereas Quad9 responds with DoT as the preferred option, and DoH as the fallback.
 
 Here's an example of the DNS question and response for DDR when using Cloudflare as the DNS resolver:
 
