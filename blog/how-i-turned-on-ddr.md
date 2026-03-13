@@ -20,7 +20,7 @@ First things first, a recap of what DDR is and the mechanism. DDR is a mechanism
 
 ## Let's start with macOS
 
-Turning on DoH and DoT is a surprisingly irritating process on macOS if you do it manually, but surprisingly easy if you use DDR. The only ways I have found to configure it directly include downloading additional networking profiles, using third party tools, or configuring it in specific applications like browsers.
+Turning on DoH and DoT can be surprisingly irritating processes on macOS if you do it manually, but surprisingly easy if you use DDR. The only ways I have found to configure it directly include downloading additional networking profiles, using third party tools, or configuring it in specific applications like browsers.
 
 Turning on DDR, and then using a DNS resolver that supports both DDR and DoH/DoT is a far easier path in macOS. To turn on DDR, run the following command in your terminal:
 
