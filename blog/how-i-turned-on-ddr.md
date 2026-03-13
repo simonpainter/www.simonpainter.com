@@ -26,7 +26,7 @@ Turning on DDR, and then using a DNS resolver that supports both DDR and DoH/DoT
 sudo defaults write /Library/Preferences/com.apple.networkd enable_ddr -int 1
 ```
 
-That is a simple boolean value to enable DDR. Once you have done that, restart your network service by running:
+That command sets a simple integer flag to enable DDR (1 for on, 0 for off). Once you have done that, restart your network service by running:
 
 ```bash
 sudo killall -9 mDNSResponder
