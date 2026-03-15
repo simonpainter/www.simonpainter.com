@@ -150,7 +150,7 @@ flowchart LR
   %% Provider distributes customer routes inside the VPN routing domain.
 ```
 
-Why this matters for the cloud journey: this is the closest mental model to DX/ER peering.
+Why this matters for the cloud journey: this is the closest mental model to Direct Connect/ExpressRoute peering.
 
 ### Pattern B (sidebar): CE–CE peering over MPLS (customer edges peer with each other)
 
@@ -231,8 +231,8 @@ flowchart LR
   end
 
   subgraph Cloud[Cloud Providers]
-    AZ[Azure ER Peer]:::cloud
-    AWS[AWS DX Peer]:::cloud
+    AZ[Azure ExpressRoute Peer]:::cloud
+    AWS[AWS Direct Connect Peer]:::cloud
   end
 
   Core --> Sites
@@ -587,7 +587,7 @@ Rather than duplicating provider tables here, I’ve [written up a comparison](c
 
 ### Practical advice
 
-Start with the provider’s documentation for the specific connection type (DX public or private VIF, and ER private or Microsoft peering). Implement communities in code and policy with the same discipline as firewall rules, including version control, review, explicit intent, and testing. Prefer communities over “clever” AS_PATH games when the provider supports the behaviour you need.
+Start with the provider’s documentation for the specific connection type (Direct Connect public or private VIF, and ExpressRoute private or Microsoft peering). Implement communities in code and policy with the same discipline as firewall rules, including version control, review, explicit intent, and testing. Prefer communities over “clever” AS_PATH games when the provider supports the behaviour you need.
 
 :::note Prove your resiliency, don’t just design it
 BGP failover only matters if you’ve tested it. AWS provides guidance and tooling for deliberately failing over Direct Connect virtual interfaces, which makes it easier to run proper game-days.
@@ -633,8 +633,8 @@ flowchart LR
   end
 
   subgraph Clouds[Cloud peers]
-    AZ[Azure ER peer]:::cloud
-    AWS[AWS DX peer]:::cloud
+    AZ[Azure ExpressRoute peer]:::cloud
+    AWS[AWS Direct Connect peer]:::cloud
   end
 
   Core -- iBGP / internal --> E1
@@ -820,7 +820,7 @@ protocols {
 
 The same principle applies to **public cloud public-peering** models:
 
-- **DX public VIF** and **ER Microsoft peering** are _not_ a place you want to accidentally become transit.
+- **Direct Connect public VIF** and **ExpressRoute Microsoft peering** are _not_ a place you want to accidentally become transit.
 - If you’re receiving public prefixes from the provider, be deliberate about what you export back.
 
 On the other hand, in some **private multi-cloud CNF** designs, you might _deliberately_ act as a transit:
@@ -885,11 +885,11 @@ If it doesn’t, you’ll end up doing some kind of clear/reset; just do it inte
 
 This post is intentionally vendor-neutral, but cloud connectivity has a few “cloud-shaped” differences that are worth keeping in mind.
 
-### What’s different for DX/ER vs MPLS peering
+### What’s different for Direct Connect/ExpressRoute vs MPLS peering
 
 Some practical differences you’ll feel are that you’re peering to a cloud service, not a human-run PE router, so behaviours are documented but you don’t get to ring the NOC and ask them to tweak a knob “just this once”. Route limits are also real, with hard limits on prefixes and routes in some cloud constructs, which makes filtering, summarisation, and intentional route design more important.
 
-Public peering options exist too, and they come with sharp edges. DX public VIF and ER Microsoft peering can be great for predictable paths to public services, but they’re also where you really don’t want to accidentally export something that turns you into transit.
+Public peering options exist too, and they come with sharp edges. Direct Connect public VIF and ExpressRoute Microsoft peering can be great for predictable paths to public services, but they’re also where you really don’t want to accidentally export something that turns you into transit.
 
 Finally, availability patterns are “product-shaped”. You’ll often have multiple BGP sessions per circuit, dual circuits, and region and site diversity patterns. The BGP controls are the same, but the constraints around them are not.
 
