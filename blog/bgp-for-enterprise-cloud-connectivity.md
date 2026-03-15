@@ -223,6 +223,18 @@ When a router has multiple routes to the same destination prefix, it picks a “
 
 In practice, for enterprise connectivity, you can think in three buckets: things you set internally to steer your outbound (for example, LOCAL_PREF), things you can signal to a neighbour to influence inbound (for example, MED and AS_PATH), and tie-breakers, where BGP picks something stable when your policy doesn’t decide.
 
+> Sidebar: the BGP path selection algorithm (and where it actually applies)
+>
+> It’s easy to read a “BGP best path” list and assume BGP is making a global routing decision across your whole table. It isn’t.
+>
+> The important nuance is that the BGP path selection algorithm only runs when you have multiple candidate paths for the same prefix, and it’s effectively comparing like-for-like. Longest Prefix Match (LPM) happens first, which means the “BGP decision process” is, in practice, mostly about choosing between routes of the same prefix length.
+>
+> That’s one of the reasons providers often enforce a minimum, maximum, or fixed acceptable prefix length in their routing policy. They’re trying to keep the routing domain sane, and they’re also trying to avoid customers using more-specific prefixes as a cheap trick to bypass policy and traffic engineering.
+>
+> If you want the rationale for why prefix length wins before any BGP attribute, and why we shouldn’t abuse it, this post is the best explanation I’ve written: https://www.simonpainter.com/longest-prefix-matching/
+>
+> Vendor note: the exact tie-break order differs slightly between implementations, and there are knobs to change it. Junos has a good write-up here, including its default MED comparison behaviour and the options that alter it: https://www.juniper.net/documentation/us/en/software/junos/vpn-l2/bgp/topics/concept/routing-protocols-address-representation.html
+
 ### The three attributes you’ll use constantly
 
 The three attributes you’ll use constantly are LOCAL_PREF, which is your strongest tool for choosing the outbound exit inside your AS, AS_PATH, which is one of the few levers that naturally propagates beyond your first-hop peer, and MED, which is a hint to a neighbour, with limits.
