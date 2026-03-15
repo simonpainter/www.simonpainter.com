@@ -169,32 +169,6 @@ Why this matters for the cloud journey: this is the closest mental model to DX/E
 > - the provider is **not** doing your inter-site route exchange for you; _your BGP_ is.
 >
 > This pattern is conceptually closer to “running your own WAN overlay” than to classic managed MPLS L3VPN routing.
->
-> ```mermaid
-> %%{init: {'theme':'neutral','flowchart':{'curve':'basis'},'themeVariables':{'fontFamily':'Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial'}}}%%
-> flowchart LR
->   classDef enterprise fill:#E8F1FF,stroke:#2F6FED,stroke-width:1px,color:#0B1F44;
->   classDef provider fill:#FFF3E0,stroke:#F59E0B,stroke-width:1px,color:#3B2F00;
->   classDef edge fill:#F3E8FF,stroke:#8B5CF6,stroke-width:1px,color:#2E1065;
->
->   subgraph SiteA[Site A]
->     CE1[CE Router]:::edge
->   end
->
->   subgraph Provider[Provider MPLS Underlay]
->     MPLS[(Transport only)]:::provider
->   end
->
->   subgraph SiteB[Site B]
->     CE2[CE Router]:::edge
->   end
->
->   CE1 -- BGP adjacency --> CE2
->   CE1 -. IP reachability via underlay .- MPLS
->   CE2 -. IP reachability via underlay .- MPLS
->
->   %% Customer CEs run the control plane; provider provides reachability.
-> ```
 
 ### ASNs in MPLS enterprise designs
 
