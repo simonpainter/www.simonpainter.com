@@ -710,6 +710,14 @@ That’s rarely desirable, and it can also become expensive fast.
 
 The fix is boring and effective: strict import filters (what you accept), and strict export filters (what you advertise).
 
+Import filtering is more than just prefix-lists. In real designs you will often also filter based on AS_PATH and communities. You might explicitly exclude routes with certain ASNs in the path, you might import only routes sourced from a specific ASN (to avoid your peer becoming an accidental transit), and you might use communities as the selection key, for example AWS regional indicators.
+
+> Sidebar: regional route filtering to keep control of latency
+>
+> At a large fintech I worked at we had ExpressRoute and Direct Connect in many regions. We deliberately imported only the cloud routes that were relevant to each region, because we wanted inter-region traffic to stay on our own low-latency network, not to wander across a hyperscaler backbone just because it was reachable.
+>
+> This is where communities become genuinely useful, not for “clever traffic engineering”, but as a clean mechanism to scope what you import.
+
 ### Example: dual-provider internet peering (don’t become transit)
 
 In this pattern you receive routes from two upstreams, but you only ever advertise your own prefixes, and optionally a default or a small set of aggregates you explicitly intend to originate.
