@@ -583,7 +583,102 @@ Assumption for the examples in this post:
 ## 11) Safety rails (the section that saves outages)
 
 ### Prefix-lists / route filtering
-(TODO)
+
+If you take only one operational lesson from BGP, take this:
+
+- **BGP doesn’t make you a transit network. Your policies do.**
+
+The most common way enterprises accidentally become transit is simple:
+- you learn routes from provider A,
+- you learn routes from provider B,
+- and you mistakenly export A’s routes to B (and/or vice versa).
+
+That’s rarely desirable.
+It can also become expensive fast.
+
+The fix is boring and effective:
+- strict **import filters** (what you accept)
+- strict **export filters** (what you advertise)
+
+#### Example: dual-provider internet peering (don’t become transit)
+
+In this pattern you receive routes from two upstreams, but you only ever advertise:
+- your own prefixes, and
+- (optionally) a default or a small set of aggregates you explicitly intend to originate.
+
+**IOS-XE (illustrative)**
+```ios
+ip prefix-list MY-PREFIXES seq 10 permit 203.0.113.0/24
+!
+route-map EXPORT-ONLY-MY-PREFIXES permit 10
+ match ip address prefix-list MY-PREFIXES
+!
+route-map EXPORT-ONLY-MY-PREFIXES deny 100
+!
+router bgp 65001
+ neighbor 198.51.100.1 remote-as 64510
+ neighbor 198.51.100.2 remote-as 64520
+!
+ neighbor 198.51.100.1 route-map EXPORT-ONLY-MY-PREFIXES out
+ neighbor 198.51.100.2 route-map EXPORT-ONLY-MY-PREFIXES out
+```
+
+**JunOS (illustrative)**
+```junos
+policy-options {
+  prefix-list MY-PREFIXES {
+    203.0.113.0/24;
+  }
+  policy-statement EXPORT-ONLY-MY-PREFIXES {
+    term ALLOW-MINE {
+      from prefix-list MY-PREFIXES;
+      then accept;
+    }
+    term DENY-REST {
+      then reject;
+    }
+  }
+}
+protocols {
+  bgp {
+    group ISP-A {
+      type external;
+      peer-as 64510;
+      export EXPORT-ONLY-MY-PREFIXES;
+      neighbor 198.51.100.1;
+    }
+    group ISP-B {
+      type external;
+      peer-as 64520;
+      export EXPORT-ONLY-MY-PREFIXES;
+      neighbor 198.51.100.2;
+    }
+  }
+}
+```
+
+The same principle applies to **public cloud public-peering** models:
+- **DX public VIF** and **ER Microsoft peering** are *not* a place you want to accidentally become transit.
+- If you’re receiving public prefixes from the provider, be deliberate about what you export back.
+
+On the other hand, in some **private multi-cloud CNF** designs, you might *deliberately* act as a transit:
+- e.g., allow private traffic from Cloud A to reach Cloud B via your exchange routers.
+- That’s a valid architecture — but only if you do it intentionally and keep it isolated from public-routing domains.
+
+> Sidebar: RPSL (Routing Policy Specification Language)
+>
+> In the public internet, routing policy is often described using RPSL objects (route/route6, aut-num, etc.), which are then used to build prefix filters.
+> It’s one of the reasons “who should accept what from whom” can be automated at scale.
+>
+> If you’ve never bumped into it before: https://en.wikipedia.org/wiki/Routing_Policy_Specification_Language
+
+> Sidebar: how Azure prevents some transit scenarios
+>
+> Microsoft actively prevents certain transit-routing behaviours in the backbone (for good reasons).
+> If you’re using Route Server + ExpressRoute in multi-hub designs, this can show up as “routes learned in one place aren’t propagated to another” when a shared circuit is involved.
+>
+> I wrote up the behaviour and the design implications here:
+> https://www.simonpainter.com/transit-route-prevention/
 
 ### Max-prefix
 (TODO)
