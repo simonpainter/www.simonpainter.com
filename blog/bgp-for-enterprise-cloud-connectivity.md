@@ -32,14 +32,53 @@ BGP is also **policy-first**. It’s designed for environments where “best” 
 
 ## 2) eBGP vs iBGP (what matters at the cloud edge)
 
+There are two flavours of BGP in day-to-day designs:
+
+- **eBGP** (external BGP): between different autonomous systems.
+- **iBGP** (internal BGP): between routers *inside* the same autonomous system.
+
+If you’ve only ever "touched BGP" at an MPLS edge, you’ve almost certainly only seen **eBGP**.
+Cloud connectivity tends to drag iBGP into the conversation because you suddenly have **multiple edges** (two routers, two sites, two CNFs, two clouds) and you need consistent policy and predictable failover.
+
 ### eBGP
-(TODO: definition + why eBGP is what you typically run to providers/cloud)
+
+eBGP is what you run between your network and someone else’s.
+
+In enterprise cloud connectivity that usually means:
+- your router in a CNF peering with an **ExpressRoute** MSEE or **Direct Connect** router,
+- your router peering with an ISP,
+- your router peering with a managed MPLS provider PE.
+
+The important enterprise mental model is: **eBGP is where the AS boundary is real**.
+Across that boundary you can exchange routes, and you can *influence* the other side, but you don’t get to enforce how they do their internal routing.
 
 ### iBGP
-(TODO: definition + why iBGP design suddenly matters once you have multiple edges/CNFs)
+
+iBGP is what you run when you have multiple routers in **the same ASN** that need to share BGP-learned routes with each other.
+
+In the simplest cloud edge, you might not need iBGP at all (one router, one peering).
+As soon as you add redundancy, iBGP becomes the clean way to make your edge behave like a single logical system:
+
+- Two edge routers in the same site (active/active)
+- Two CNFs (diverse meet-me rooms)
+- Two provider circuits (separate peers)
+- Two clouds (Azure + AWS)
+
+You *can* avoid iBGP by doing weird things (like re-advertising routes between eBGP peers and hoping loop prevention doesn’t bite you), but iBGP is usually the right tool.
+
+> Note: this is where people start hearing about route reflectors.
+>
+> You don’t need them in a small design, but once you have “lots of BGP speakers”, full-mesh iBGP becomes annoying because iBGP requires every router to peer with every other router (or you introduce route reflection/confederations).
 
 ### Why you care
-(TODO)
+
+Because **your operational knobs behave differently depending on where you are**:
+
+- **LOCAL_PREF** is your best “pick the outbound exit” tool, but it’s **only meaningful inside your AS**.
+- **MED** is, at best, a **hint to a neighbour** and typically only compared in narrow conditions.
+- **AS_PATH prepending** is crude, but it’s one of the few signals that naturally propagates beyond your first-hop peer.
+
+If you understand the eBGP/iBGP boundary, the rest of BGP becomes much less mysterious.
 
 ## 3) Where enterprise engineers have seen BGP before: MPLS WAN patterns
 
