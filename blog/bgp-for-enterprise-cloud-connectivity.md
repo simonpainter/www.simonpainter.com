@@ -108,21 +108,21 @@ This is the “textbook” model.
 
 Why this matters for the cloud journey: this is the closest mental model to DX/ER peering.
 
-#### Pattern B: CE–CE peering over MPLS (customer edges peer with each other)
+#### Pattern B (sidebar): CE–CE peering over MPLS (customer edges peer with each other)
 
-This is **not the typical MPLS model** — most MPLS WANs are built as a many-to-many L3VPN where you peer to the provider and the provider does the route distribution.
-
-That said, I *have* seen real-world deployments where the MPLS network is treated as **a transport underlay**, and the **customer edge routers form BGP adjacencies with each other** (directly or via some kind of rendezvous).
-
-What it looks like from the customer’s point of view:
-- Site A CE has BGP neighbours that are *other customer CEs*.
-- The provider ASN may not appear in the AS_PATH (because the provider isn’t acting as a BGP hop in your control plane).
-
-What has to be true for it to work:
-- The provider must provide **IP reachability between CEs** (it’s effectively giving you a routed point-to-point / any-to-any service), and
-- the provider is **not** doing your inter-site route exchange for you — *your BGP* is.
-
-This pattern is conceptually closer to “running your own WAN overlay” than to classic managed MPLS L3VPN routing.
+> This is **not the typical MPLS model** — most MPLS WANs are built as a many-to-many L3VPN where you peer to the provider and the provider does the route distribution.
+>
+> That said, I *have* seen real-world deployments where the MPLS network is treated as **a transport underlay**, and the **customer edge routers form BGP adjacencies with each other**.
+>
+> What it looks like from the customer’s point of view:
+> - Site A CE has BGP neighbours that are *other customer CEs*.
+> - The provider ASN may not appear in the AS_PATH (because the provider isn’t acting as a BGP hop in your control plane).
+>
+> What has to be true for it to work:
+> - The provider must provide **IP reachability between CEs** (it’s effectively giving you a routed any-to-any service), and
+> - the provider is **not** doing your inter-site route exchange for you — *your BGP* is.
+>
+> This pattern is conceptually closer to “running your own WAN overlay” than to classic managed MPLS L3VPN routing.
 
 ### ASNs in MPLS enterprise designs
 
