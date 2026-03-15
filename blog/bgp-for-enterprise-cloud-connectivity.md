@@ -150,7 +150,67 @@ This exact idea shows up again in cloud connectivity designs when you’re decid
 
 ## 4) Peering relationships in enterprise cloud connectivity
 
-(TODO: on-prem edge ↔ exchange/provider ↔ cloud; private vs public ASN realities)
+If you strip away the product names, enterprise cloud connectivity is mostly just this:
+
+- you have some internal prefixes on one side (data centres, campus, branch sites)
+- you have some cloud prefixes on the other side (VNets/VPCs and their attached services)
+- and you use BGP to exchange routes between them over a private transport
+
+The transport could be:
+- MPLS / SD-WAN underlay
+- ExpressRoute / Direct Connect
+- a cloud exchange in a CNF (where you’ve got your own routers and L2 handoff to the peers)
+
+### What’s actually peering with what?
+
+In the model we’re using for this post:
+
+- Your routers sit in one (or two) CNFs.
+- You have L2 to each provider peer.
+- You run **eBGP** to:
+  - Azure (ExpressRoute private peering)
+  - AWS (Direct Connect private VIF)
+  - optionally your WAN provider(s) if you’re also aggregating MPLS/SD-WAN there.
+
+On the enterprise side, you then need to decide how those routes get back into the rest of your network:
+- iBGP to a core pair / route reflectors, or
+- redistribution into an IGP (with all the caveats that implies).
+
+### Private ASN vs public ASN (enterprise reality)
+
+This tends to confuse people because “ASN” sounds like an ISP thing.
+
+- **Private ASNs** are extremely common in enterprise designs.
+  - They’re fine as long as you understand where they are allowed to appear.
+- **Public ASNs** are usually only needed when you need to present a stable identity across the wider internet routing domain.
+  - Most enterprises don’t need that for private connectivity to cloud.
+
+The pragmatic rule: use a private ASN unless you have a reason not to.
+
+### One ASN everywhere vs multiple ASNs
+
+This is where your MPLS experience is directly relevant.
+
+- **One ASN everywhere** (single enterprise ASN) can be clean.
+  - It pairs naturally with iBGP inside your network.
+  - But you need to design around loop prevention when routes traverse boundaries.
+
+- **Multiple ASNs** (per site / per edge) can be operationally convenient.
+  - It makes eBGP loop-prevention “just work” because each edge is a distinct AS.
+  - It does, however, complicate how far certain attributes can help you (we’ll come back to this in the CNF section).
+
+### A note on “influence vs control”
+
+Anything that crosses an AS boundary is, by definition, a negotiation.
+
+You can usually control your own side completely.
+You can often influence your peer.
+But you rarely control what happens **beyond** your peer.
+
+That’s why a lot of BGP guidance boils down to:
+- keep your intent simple,
+- apply safety rails,
+- and don’t rely on a single knob (especially for inbound) unless you’ve validated the provider behaviour.
 
 ## 5) Route advertisement basics (what you advertise and why)
 
