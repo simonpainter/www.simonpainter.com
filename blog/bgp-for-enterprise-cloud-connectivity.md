@@ -414,17 +414,92 @@ A few practical notes:
 
 ## 8) Influencing inbound traffic (enterprise reality)
 
+Inbound is where BGP stops feeling like “routing” and starts feeling like diplomacy.
+
+Outbound is easy: you choose which exit you use.
+Inbound is harder because you’re asking someone else (your peer) to choose a path *towards you*.
+
+That’s why you’ll often see enterprise designs that are:
+- **active/passive** (make the path obvious), or
+- heavily **provider-specific** (because the cleanest inbound levers are often communities).
+
 ### Why inbound is harder
-(TODO: you’re asking someone else to choose differently)
 
-### AS_PATH prepending
-(TODO)
+There are three reasons inbound traffic engineering is fundamentally more limited:
 
-### MED (when it’s honoured, and why it doesn’t travel)
-(TODO)
+1) **The decision happens somewhere else.**
+   Your router doesn’t pick the inbound path. The upstream network does.
+
+2) **BGP is policy-based.**
+   The upstream might prefer “their cheapest exit” or “their preferred region” over your hints.
+
+3) **Some attributes don’t travel.**
+   The two attributes people most want to use (LOCAL_PREF and MED) often don’t help beyond the first hop.
+
+So your inbound strategy usually falls into one of these buckets:
+- use a provider-supported knob (communities)
+- use a crude but portable signal (AS_PATH)
+- accept that “good enough” beats “perfect”
+
+### MED (when it’s honoured, and why it doesn’t travel far)
+
+MED (Multi-Exit Discriminator) is designed for a very specific situation:
+
+> “Dear neighbour AS, *if you have multiple ways to reach me*, here’s the one I’d like you to prefer.”
+
+In enterprise connectivity, MED is attractive because it’s conceptually neat:
+- you can tag routes advertised on circuit A with a lower MED (more preferred)
+- and tag routes advertised on circuit B with a higher MED (less preferred)
+
+But there are limitations you should assume unless you’ve validated the provider behaviour:
+
+- **MED is only meaningful to your direct neighbour.** It’s not a downstream steering mechanism.
+- Many networks only compare MEDs when the candidate paths are learned from **the same neighbouring AS**.
+  - If you’re multi-homed to different upstream ASNs, MED usually won’t help.
+- The neighbour can ignore MED completely, or override it with their own policy.
+
+So the safe enterprise posture is:
+- **use MED when you have two links to the same provider AS and you know they honour it**
+- don’t build a fragile design that depends on it without a test
+
+### AS_PATH prepending (crude, but it propagates)
+
+AS_PATH prepending is the hammer people reach for because it has one key property:
+
+- **AS_PATH travels.**
+
+If you make one path “look longer” by adding extra copies of your ASN, that signal can influence decisions not just in your direct neighbour, but further upstream.
+
+That said, it’s still not magic:
+- some networks have local policy that dominates AS_PATH length
+- once LOCAL_PREF or a community-based preference is set in the upstream, AS_PATH length might not matter
+
+A practical way to think about prepend:
+- it’s good for “prefer this circuit most of the time”, not “pin every prefix to a specific link forever”.
+
+### Putting it together: two links to the same provider
+
+This is the classic enterprise ask:
+
+- Outbound: prefer circuit A, keep B as backup (LOCAL_PREF)
+- Inbound: encourage the provider to send traffic to you via circuit A
+
+A pragmatic ordering is:
+
+1) If you have a provider-supported inbound knob (often communities): use that.
+2) If you’re dual-connected to the *same* provider AS and they honour MED: MED can work cleanly.
+3) If you need a portable signal that propagates: prepend on the less-preferred circuit.
+
+> Sidebar: there is no guarantee of perfect symmetry.
+>
+> Even when you do everything “right”, you can end up with a symmetric *intent* but asymmetric *reality*.
+> Failures, maintenance, hot-potato routing and upstream policy all get a vote.
 
 ### Communities (conceptual)
+
 BGP communities are one of the most useful “provider-supported knobs”, but they’re still *influence*, not control.
+
+They’re often the cleanest way to do inbound steering because the provider can map a community to an explicit internal policy (for example, changing local preference on their side).
 
 I’ve written a more detailed comparison of how Azure and AWS use communities here:
 https://www.simonpainter.com/community-comparison/
