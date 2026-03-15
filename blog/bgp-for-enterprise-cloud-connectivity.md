@@ -83,10 +83,7 @@ That’s fine, but it can leave you with some slightly warped assumptions, becau
 
 ### Managed CEs (you might never have seen the BGP config)
 
-Plenty of enterprises buy **managed CE routers**. In that model:
-- the provider owns the config,
-- you may only see a handoff (LAN interface / VLAN),
-- and you might never touch BGP at all.
+Plenty of enterprises buy **managed CE routers**. In that model the provider owns the config, you may only see a handoff (LAN interface or VLAN), and you might never touch BGP at all.
 
 Mechanically, BGP is still often involved somewhere, but it’s just **not your problem** until the day you add cloud connectivity, and suddenly it is.
 
@@ -96,11 +93,7 @@ There are a few common ways MPLS WAN providers present routing. The exact implem
 
 #### Pattern A: PE/CE eBGP (provider AS visible)
 
-This is the “textbook” model.
-
-- Your CE runs **eBGP to the provider PE**.
-- The provider PE is in **the provider’s ASN**, so you see the provider AS in the AS_PATH (or at least you *can*).
-- Your routes are imported into the provider’s MPLS VPN routing domain and distributed to other sites.
+This is the “textbook” model. Your CE runs eBGP to the provider PE. The provider PE is in the provider’s ASN, so you see the provider AS in the AS_PATH (or at least you can). Your routes are imported into the provider’s MPLS VPN routing domain and distributed to other sites.
 
 Why this matters for the cloud journey: this is the closest mental model to DX/ER peering.
 
@@ -325,17 +318,13 @@ protocols {
 }
 ```
 
-A few practical notes:
-- In real configs you’ll almost always include **explicit route filters** (prefix-lists) alongside these policies.
-- If you want active/active, LOCAL_PREF can still be used; you just set them equal, and rely on other mechanisms (or ECMP capability) to load-share.
+A few practical notes: in real configs you’ll almost always include explicit route filters (prefix-lists) alongside these policies. If you want active/active, LOCAL_PREF can still be used; you just set them equal, and rely on other mechanisms (or ECMP capability) to load-share.
 
 ## TODO: diagrams
-- Add **Mermaid diagrams** for each architectural example/pattern in this post (MPLS patterns, dual circuits, CNF designs, etc.).
+Add Mermaid diagrams for each architectural example or pattern in this post (MPLS patterns, dual circuits, CNF designs, and so on).
 
 ## TODO: style pass
-- Replace em dashes (the long dash character) with commas or semicolons where appropriate.
-- Reduce **bulleted lists**; prefer prose paragraphs (comma-separated lists where it reads well).
-- Use the **Oxford comma** in all comma-separated lists.
+Replace em dashes (the long dash character) with commas or semicolons where appropriate. Reduce bulleted lists, and prefer prose paragraphs (comma-separated lists where it reads well). Use the Oxford comma in all comma-separated lists.
 
 ## 8) Influencing inbound traffic (enterprise reality)
 
@@ -494,25 +483,17 @@ This is also where it becomes crucial to separate what you want for outbound (ea
 
 If you take only one operational lesson from BGP, take this:
 
-- **BGP doesn’t make you a transit network. Your policies do.**
+**BGP doesn’t make you a transit network. Your policies do.**
 
-The most common way enterprises accidentally become transit is simple:
-- you learn routes from provider A,
-- you learn routes from provider B,
-- and you mistakenly export A’s routes to B (and/or vice versa).
+The most common way enterprises accidentally become transit is simple. You learn routes from provider A, you learn routes from provider B, and you mistakenly export A’s routes to B (and/or vice versa).
 
-That’s rarely desirable.
-It can also become expensive fast.
+That’s rarely desirable, and it can also become expensive fast.
 
-The fix is boring and effective:
-- strict **import filters** (what you accept)
-- strict **export filters** (what you advertise)
+The fix is boring and effective: strict import filters (what you accept), and strict export filters (what you advertise).
 
 #### Example: dual-provider internet peering (don’t become transit)
 
-In this pattern you receive routes from two upstreams, but you only ever advertise:
-- your own prefixes, and
-- (optionally) a default or a small set of aggregates you explicitly intend to originate.
+In this pattern you receive routes from two upstreams, but you only ever advertise your own prefixes, and optionally a default or a small set of aggregates you explicitly intend to originate.
 
 **IOS-XE (illustrative)**
 ```ios
@@ -610,20 +591,11 @@ If you’re peering with an upstream that can legitimately send you huge tables 
 
 ### Route refresh / soft reconfig basics
 
-Modern BGP gives you ways to change policy without bouncing the session.
-This matters operationally because:
-- bouncing a session can cause unnecessary convergence churn
-- and on some designs it can cause traffic loss while paths re-learn
+Modern BGP gives you ways to change policy without bouncing the session. This matters operationally because bouncing a session can cause unnecessary convergence churn, and on some designs it can cause traffic loss while paths re-learn.
 
-Two concepts you’ll see:
+Two concepts you’ll see are Route Refresh, a capability where you can ask a neighbour to resend routes after you change policy, and soft reconfiguration, which keeps enough state to re-evaluate routes against new policy without a hard reset.
 
-- **Route Refresh**: a capability where you can ask a neighbour to resend routes after you change policy.
-- **Soft reconfiguration**: keeping enough state to re-evaluate routes against new policy without a hard reset.
-
-The exact commands differ (IOS-XE vs JunOS), but the operational goal is the same:
-- change filter/policy
-- refresh routes
-- confirm the new bestpaths
+The exact commands differ (IOS-XE versus JunOS), but the operational goal is the same: change filter or policy, refresh routes, and confirm the new bestpaths.
 
 If your platform supports route refresh, use it.
 If it doesn’t, you’ll end up doing some kind of clear/reset; just do it intentionally, and during a safe window.
@@ -634,22 +606,11 @@ This post is intentionally vendor-neutral, but cloud connectivity has a few “c
 
 ### What’s different for DX/ER vs MPLS peering
 
-Some practical differences you’ll feel:
+Some practical differences you’ll feel are that you’re peering to a cloud service, not a human-run PE router, so behaviours are documented but you don’t get to ring the NOC and ask them to tweak a knob “just this once”. Route limits are also real, with hard limits on prefixes and routes in some cloud constructs, which makes filtering, summarisation, and intentional route design more important.
 
-- **You’re peering to a cloud service, not a human-run PE router.**
-  - behaviours are documented, but you don’t get to ring the NOC and ask them to tweak a knob “just this once”.
+Public peering options exist too, and they come with sharp edges. DX public VIF and ER Microsoft peering can be great for predictable paths to public services, but they’re also where you really don’t want to accidentally export something that turns you into transit.
 
-- **Route limits are real.**
-  - there are hard limits on prefixes and routes in some cloud constructs.
-  - this makes filtering/summarisation and intentional route design more important.
-
-- **Public peering options exist (and come with sharp edges).**
-  - DX public VIF / ER Microsoft peering can be great for predictable paths to public services.
-  - they’re also where you really don’t want to accidentally export something that turns you into transit.
-
-- **Availability patterns are “product-shaped”.**
-  - you’ll often have multiple BGP sessions per circuit, dual circuits, and region/site diversity patterns.
-  - the BGP knobs are the same; the constraints around them are not.
+Finally, availability patterns are “product-shaped”. You’ll often have multiple BGP sessions per circuit, dual circuits, and region and site diversity patterns. The BGP knobs are the same, but the constraints around them are not.
 
 ### Route Server (brief pointer)
 
@@ -662,10 +623,6 @@ https://www.simonpainter.com/transit-route-prevention/
 
 BGP can look intimidating because the internet uses it, and the internet is huge.
 
-But enterprise cloud connectivity only needs a subset:
-- understand the eBGP vs iBGP boundary
-- know which attributes are useful in practice (LOCAL_PREF, AS_PATH, MED)
-- use communities when the provider documents them
-- and put safety rails around import/export so you don’t leak routes or accidentally become transit
+But enterprise cloud connectivity only needs a subset. Understand the eBGP versus iBGP boundary, know which attributes are useful in practice (LOCAL_PREF, AS_PATH, and MED), use communities when the provider documents them, and put safety rails around import and export so you don’t leak routes, or accidentally become transit.
 
 If you get those right, you’ll be able to design hybrid multi-cloud connectivity that behaves predictably, and when it doesn’t, you’ll know where to look.
