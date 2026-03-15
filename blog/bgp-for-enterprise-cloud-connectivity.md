@@ -158,6 +158,32 @@ Why this matters for the cloud journey: this is the closest mental model to DX/E
 > - the provider is **not** doing your inter-site route exchange for you; *your BGP* is.
 >
 > This pattern is conceptually closer to “running your own WAN overlay” than to classic managed MPLS L3VPN routing.
+>
+> ```mermaid
+> %%{init: {'theme':'neutral','flowchart':{'curve':'basis'},'themeVariables':{'fontFamily':'Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial'}}}%%
+> flowchart LR
+>   classDef enterprise fill:#E8F1FF,stroke:#2F6FED,stroke-width:1px,color:#0B1F44;
+>   classDef provider fill:#FFF3E0,stroke:#F59E0B,stroke-width:1px,color:#3B2F00;
+>   classDef edge fill:#F3E8FF,stroke:#8B5CF6,stroke-width:1px,color:#2E1065;
+>
+>   subgraph SiteA[Site A]
+>     CE1[CE Router]:::edge
+>   end
+>
+>   subgraph Provider[Provider MPLS Underlay]
+>     MPLS[(Transport only)]:::provider
+>   end
+>
+>   subgraph SiteB[Site B]
+>     CE2[CE Router]:::edge
+>   end
+>
+>   CE1 -- BGP adjacency --> CE2
+>   CE1 -. IP reachability via underlay .- MPLS
+>   CE2 -. IP reachability via underlay .- MPLS
+>
+>   %% Customer CEs run the control plane; provider provides reachability.
+> ```
 
 ### ASNs in MPLS enterprise designs
 
@@ -429,10 +455,9 @@ protocols {
 
 A few practical notes: in real configs you’ll almost always include explicit route filters (prefix-lists) alongside these policies. If you want active/active, LOCAL_PREF can still be used; you just set them equal, and rely on other mechanisms (or ECMP capability) to load-share.
 
-## TODO: diagrams
-Add Mermaid diagrams for each architectural example or pattern in this post (MPLS patterns, dual circuits, CNF designs, and so on).
+## Diagrams
 
-Style pass notes: em dashes removed, bulleted lists reduced, Oxford comma used where it reads naturally. Remaining work is mostly diagrams and final polish.
+This post includes Mermaid diagrams for the key architectural patterns. If I’ve missed an example you care about, it’s usually a sign I should diagram it out.
 
 ## 8) Influencing inbound traffic (enterprise reality)
 
@@ -638,6 +663,39 @@ The key mental model is that if the decision is happening inside one of your ASN
 
 This is also where it becomes crucial to separate what you want for outbound (easy), what you want for inbound (hard), and what your failure mode is (the thing that makes the design real).
 
+```mermaid
+%%{init: {'theme':'neutral','flowchart':{'curve':'basis'},'themeVariables':{'fontFamily':'Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial'}}}%%
+flowchart LR
+  classDef enterprise fill:#E8F1FF,stroke:#2F6FED,stroke-width:1px,color:#0B1F44;
+  classDef cloud fill:#E7F8EF,stroke:#10B981,stroke-width:1px,color:#05361F;
+  classDef edge fill:#F3E8FF,stroke:#8B5CF6,stroke-width:1px,color:#2E1065;
+
+  subgraph CNF_A[CNF A, ASN 65001]
+    A[Edge router A]:::edge
+  end
+
+  subgraph CNF_B[CNF B, ASN 65002]
+    B[Edge router B]:::edge
+  end
+
+  subgraph Cloud[Remote ASN]
+    C[Cloud or provider peers]:::cloud
+  end
+
+  subgraph Enterprise[Downstream enterprise]
+    D[Core and sites]:::enterprise
+  end
+
+  A -- eBGP --> C
+  B -- eBGP --> C
+
+  A -- iBGP / internal policy --> D
+  B -- iBGP / internal policy --> D
+
+  %% LOCAL_PREF is AS-local, so it helps inside 65001 or 65002, but does not automatically steer the other.
+  %% AS_PATH and provider-supported communities are the tools that can travel beyond the edge.
+```
+
 ## 11) Safety rails (the section that saves outages)
 
 ### Prefix-lists / route filtering
@@ -655,6 +713,32 @@ The fix is boring and effective: strict import filters (what you accept), and st
 #### Example: dual-provider internet peering (don’t become transit)
 
 In this pattern you receive routes from two upstreams, but you only ever advertise your own prefixes, and optionally a default or a small set of aggregates you explicitly intend to originate.
+
+```mermaid
+%%{init: {'theme':'neutral','flowchart':{'curve':'basis'},'themeVariables':{'fontFamily':'Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial'}}}%%
+flowchart LR
+  classDef enterprise fill:#E8F1FF,stroke:#2F6FED,stroke-width:1px,color:#0B1F44;
+  classDef provider fill:#FFF3E0,stroke:#F59E0B,stroke-width:1px,color:#3B2F00;
+  classDef edge fill:#F3E8FF,stroke:#8B5CF6,stroke-width:1px,color:#2E1065;
+
+  subgraph Upstreams[Upstreams]
+    ISP_A[ISP A]:::provider
+    ISP_B[ISP B]:::provider
+  end
+
+  Edge[Your edge router]:::edge
+  Pref[Your public prefixes]:::enterprise
+
+  ISP_A -- full routes --> Edge
+  ISP_B -- full routes --> Edge
+
+  Edge -- export: only your prefixes --> ISP_A
+  Edge -- export: only your prefixes --> ISP_B
+
+  Pref --> Edge
+
+  %% Without export filtering you can accidentally become transit (A <-> you <-> B).
+```
 
 **IOS-XE (illustrative)**
 ```ios
