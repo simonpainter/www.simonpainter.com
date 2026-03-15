@@ -23,7 +23,7 @@ So this post is an explainer of the key BGP concepts that an enterprise network 
 
 <!--truncate-->
 
-## 1) What BGP is (in one page)
+## What BGP is (in one page)
 
 BGP is a *path-vector* routing protocol. You don’t “discover the best path” by calculating the shortest path through a topology (like you do with link-state protocols). Instead, you **learn candidate paths** via advertisements, then you **select** between them using a predictable decision process.
 
@@ -36,7 +36,7 @@ BGP is also **policy-first**. It’s designed for environments where “best” 
 > If you want the deeper reasoning: I wrote about OSPF scaling constraints and why BGP scales differently here:
 > https://www.simonpainter.com/dijkstra-ospf/
 
-## 2) eBGP vs iBGP (what matters at the cloud edge)
+## eBGP vs iBGP (what matters at the cloud edge)
 
 There are two flavours of BGP in day-to-day designs:
 
@@ -90,7 +90,7 @@ Because **your operational knobs behave differently depending on where you are**
 
 If you understand the eBGP/iBGP boundary, the rest of BGP becomes much less mysterious.
 
-## 3) Where enterprise engineers have seen BGP before: MPLS WAN patterns
+## Where enterprise engineers have seen BGP before: MPLS WAN patterns
 
 For a lot of enterprise folks, “BGP experience” starts and ends with *an MPLS circuit*.
 That’s fine, but it can leave you with some slightly warped assumptions, because MPLS providers can make BGP look like anything from “a normal eBGP peer” to “a magic ethernet cable between sites”.
@@ -105,7 +105,7 @@ Mechanically, BGP is still often involved somewhere, but it’s just **not your 
 
 There are a few common ways MPLS WAN providers present routing. The exact implementation varies (VRFs, MP-BGP in the core, route targets, etc.), but the *customer-visible* behaviours are pretty consistent.
 
-#### Pattern A: PE/CE eBGP (provider AS visible)
+### Pattern A: PE/CE eBGP (provider AS visible)
 
 This is the “textbook” model. Your CE runs eBGP to the provider PE. The provider PE is in the provider’s ASN, so you see the provider AS in the AS_PATH (or at least you can). Your routes are imported into the provider’s MPLS VPN routing domain and distributed to other sites.
 
@@ -143,7 +143,7 @@ flowchart LR
 
 Why this matters for the cloud journey: this is the closest mental model to DX/ER peering.
 
-#### Pattern B (sidebar): CE–CE peering over MPLS (customer edges peer with each other)
+### Pattern B (sidebar): CE–CE peering over MPLS (customer edges peer with each other)
 
 > This is **not the typical MPLS model**; most MPLS WANs are built as a many-to-many L3VPN where you peer to the provider, and the provider does the route distribution.
 >
@@ -187,7 +187,7 @@ Why this matters for the cloud journey: this is the closest mental model to DX/E
 
 ### ASNs in MPLS enterprise designs
 
-#### Per-site ASNs
+### Per-site ASNs
 
 A very common enterprise pattern is:
 - each site has its own private ASN, or
@@ -195,7 +195,7 @@ A very common enterprise pattern is:
 
 It’s convenient because it keeps the eBGP loop-prevention behaviour simple: every site is “a different AS”, so re-advertisement between sites doesn’t trip over “I see myself in the AS_PATH”.
 
-#### Single ASN across all sites (and why private-AS stripping matters)
+### Single ASN across all sites (and why private-AS stripping matters)
 
 It’s equally valid to run **the same ASN at every site**.
 
@@ -209,7 +209,7 @@ So if you run “single ASN everywhere” using a private ASN, the provider typi
 
 This exact idea shows up again in cloud connectivity designs when you’re deciding whether to use one ASN globally, or split ASNs per edge/site.
 
-## 4) Peering relationships in enterprise cloud connectivity
+## Peering relationships in enterprise cloud connectivity
 
 If you strip away the product names, enterprise cloud connectivity is mostly just this: you have internal prefixes on one side (data centres, campus, and branch sites), you have cloud prefixes on the other (VNets or VPCs, and whatever services sit behind them), and you use BGP to exchange routes between the two over some private transport.
 
@@ -275,7 +275,7 @@ Anything that crosses an AS boundary is, by definition, a negotiation. You can u
 
 That’s why a lot of BGP guidance boils down to keeping your intent simple, applying safety rails, and not relying on a single knob (especially for inbound) unless you’ve validated the provider behaviour.
 
-## 5) Route advertisement basics (what you advertise and why)
+## Route advertisement basics (what you advertise and why)
 
 This is where most real-world BGP outages come from.
 Not because someone misunderstood the BGP decision process, but because someone advertised (or accepted) more routes than they intended.
@@ -315,7 +315,7 @@ Default routes are a great tool when used intentionally. In small branch designs
 
 If you use defaults, treat them like any other route. Filter them explicitly, set their preference intentionally, and test the failure mode (what happens when the preferred exit disappears?).
 
-## 6) BGP path selection (the bits you actually use)
+## BGP path selection (the bits you actually use)
 
 BGP path selection looks intimidating until you realise two things:
 1) most of the decision process only matters when you have multiple candidate routes to the *same* prefix, and
@@ -367,7 +367,7 @@ These come up constantly in enterprise cloud/WAN designs:
 
 We’ll work through these explicitly as we go.
 
-## 7) Influencing outbound traffic (enterprise reality)
+## Influencing outbound traffic (enterprise reality)
 
 Outbound is the part you *actually* control.
 If you’re deciding which circuit you want to use to *leave your network*, BGP gives you a few options, but in enterprise designs **LOCAL_PREF** is the one you’ll use constantly.
@@ -459,7 +459,7 @@ A few practical notes: in real configs you’ll almost always include explicit r
 
 This post includes Mermaid diagrams for the key architectural patterns. If I’ve missed an example you care about, it’s usually a sign I should diagram it out.
 
-## 8) Influencing inbound traffic (enterprise reality)
+## Influencing inbound traffic (enterprise reality)
 
 Inbound is where BGP stops feeling like “routing” and starts feeling like diplomacy.
 
@@ -548,7 +548,7 @@ They’re often the cleanest way to do inbound steering because the provider can
 I’ve written a more detailed comparison of how Azure and AWS use communities here:
 https://www.simonpainter.com/community-comparison/
 
-## 9) Communities (the provider-supported knobs)
+## Communities (the provider-supported knobs)
 
 BGP communities are just tags.
 That sounds underwhelming, but it’s exactly why they’re powerful.
@@ -584,7 +584,7 @@ https://www.simonpainter.com/community-comparison/
 
 Start with the provider’s documentation for the specific connection type (DX public or private VIF, and ER private or Microsoft peering). Implement communities in code and policy with the same discipline as firewall rules, including version control, review, explicit intent, and testing. Prefer communities over “clever” AS_PATH games when the provider supports the behaviour you need.
 
-## 10) Cloud exchange / carrier neutral facility (CNF) patterns
+## Cloud exchange / carrier neutral facility (CNF) patterns
 
 A cloud exchange is typically a **carrier neutral facility (CNF)** where you can aggregate cloud provider connectivity (ExpressRoute and Direct Connect), and WAN connectivity (MPLS and SD-WAN).
 
@@ -639,7 +639,7 @@ As we mentioned earlier, active/passive is often dictated by the southbound arch
 
 There are two common ways enterprises structure ASNs at the edge.
 
-#### Option A: single ASN across both CNFs (one enterprise AS)
+### Option A: single ASN across both CNFs (one enterprise AS)
 
 This is the “clean BGP” model. Both CNF routers are in the same ASN, you run eBGP to each cloud or provider peer, and you run iBGP between your CNF routers (and usually to the rest of your core).
 
@@ -647,7 +647,7 @@ It’s nice because LOCAL_PREF works exactly how you expect for choosing your ou
 
 The trade-off is that you’re now in iBGP design land (full mesh versus route reflection, and so on).
 
-#### Option B: dual private ASNs (one per CNF)
+### Option B: dual private ASNs (one per CNF)
 
 This is an operationally popular model in enterprises because it feels like “two edges”. CNF A might be ASN 65001, CNF B might be ASN 65002, each CNF peers to the cloud or provider ASN, and somewhere downstream you have to reconnect those worlds (often another BGP hop inside your enterprise).
 
@@ -696,7 +696,7 @@ flowchart LR
   %% AS_PATH and provider-supported communities are the tools that can travel beyond the edge.
 ```
 
-## 11) Safety rails (the section that saves outages)
+## Safety rails (the section that saves outages)
 
 ### Prefix-lists / route filtering
 
@@ -710,7 +710,7 @@ That’s rarely desirable, and it can also become expensive fast.
 
 The fix is boring and effective: strict import filters (what you accept), and strict export filters (what you advertise).
 
-#### Example: dual-provider internet peering (don’t become transit)
+### Example: dual-provider internet peering (don’t become transit)
 
 In this pattern you receive routes from two upstreams, but you only ever advertise your own prefixes, and optionally a default or a small set of aggregates you explicitly intend to originate.
 
@@ -847,7 +847,7 @@ The exact commands differ (IOS-XE versus JunOS), but the operational goal is the
 If your platform supports route refresh, use it.
 If it doesn’t, you’ll end up doing some kind of clear/reset; just do it intentionally, and during a safe window.
 
-## 12) Cloud specifics (light touch)
+## Cloud specifics (light touch)
 
 This post is intentionally vendor-neutral, but cloud connectivity has a few “cloud-shaped” differences that are worth keeping in mind.
 
