@@ -344,9 +344,7 @@ Inbound is where BGP stops feeling like “routing” and starts feeling like di
 Outbound is easy: you choose which exit you use.
 Inbound is harder because you’re asking someone else (your peer) to choose a path *towards you*.
 
-That’s why you’ll often see enterprise designs that are:
-- **active/passive** (make the path obvious), or
-- heavily **provider-specific** (because the cleanest inbound levers are often communities).
+That’s why you’ll often see enterprise designs that are either active/passive (make the path obvious), or heavily provider-specific, because the cleanest inbound levers are often communities.
 
 ### Why inbound is harder
 
@@ -361,10 +359,7 @@ There are three reasons inbound traffic engineering is fundamentally more limite
 3) **Some attributes don’t travel.**
    The two attributes people most want to use (LOCAL_PREF and MED) often don’t help beyond the first hop.
 
-So your inbound strategy usually falls into one of these buckets:
-- use a provider-supported knob (communities)
-- use a crude but portable signal (AS_PATH)
-- accept that “good enough” beats “perfect”
+So your inbound strategy usually falls into one of these buckets: use a provider-supported knob (communities), use a crude but portable signal (AS_PATH), or accept that “good enough” beats “perfect”.
 
 ### MED (when it’s honoured, and why it doesn’t travel far)
 
@@ -372,20 +367,11 @@ MED (Multi-Exit Discriminator) is designed for a very specific situation:
 
 > “Dear neighbour AS, *if you have multiple ways to reach me*, here’s the one I’d like you to prefer.”
 
-In enterprise connectivity, MED is attractive because it’s conceptually neat:
-- you can tag routes advertised on circuit A with a lower MED (more preferred)
-- and tag routes advertised on circuit B with a higher MED (less preferred)
+In enterprise connectivity, MED is attractive because it’s conceptually neat. You can tag routes advertised on circuit A with a lower MED (more preferred), and tag routes advertised on circuit B with a higher MED (less preferred).
 
-But there are limitations you should assume unless you’ve validated the provider behaviour:
+But there are limitations you should assume unless you’ve validated the provider behaviour. MED is only meaningful to your direct neighbour, so it’s not a downstream steering mechanism. Many networks only compare MEDs when the candidate paths are learned from the same neighbouring AS, so if you’re multi-homed to different upstream ASNs, MED usually won’t help. The neighbour can also ignore MED completely, or override it with their own policy.
 
-- **MED is only meaningful to your direct neighbour.** It’s not a downstream steering mechanism.
-- Many networks only compare MEDs when the candidate paths are learned from **the same neighbouring AS**.
-  - If you’re multi-homed to different upstream ASNs, MED usually won’t help.
-- The neighbour can ignore MED completely, or override it with their own policy.
-
-So the safe enterprise posture is:
-- **use MED when you have two links to the same provider AS and you know they honour it**
-- don’t build a fragile design that depends on it without a test
+So the safe enterprise posture is simple: use MED when you have two links to the same provider AS, and you know they honour it, and don’t build a fragile design that depends on it without a test.
 
 ### AS_PATH prepending (crude, but it propagates)
 
@@ -395,20 +381,13 @@ AS_PATH prepending is the hammer people reach for because it has one key propert
 
 If you make one path “look longer” by adding extra copies of your ASN, that signal can influence decisions not just in your direct neighbour, but further upstream.
 
-That said, it’s still not magic:
-- some networks have local policy that dominates AS_PATH length
-- once LOCAL_PREF or a community-based preference is set in the upstream, AS_PATH length might not matter
+That said, it’s still not magic. Some networks have local policy that dominates AS_PATH length, and once LOCAL_PREF or a community-based preference is set in the upstream, AS_PATH length might not matter.
 
-A practical way to think about prepend:
-- it’s good for “prefer this circuit most of the time”, not “pin every prefix to a specific link forever”.
+A practical way to think about prepend is that it’s good for “prefer this circuit most of the time”, not “pin every prefix to a specific link forever”.
 
 ### Putting it together: two links to the same provider
 
-This is the classic enterprise ask:
-
-- Outbound: prefer circuit A, keep B as backup (LOCAL_PREF)
-- Inbound: encourage the provider to send traffic to you via circuit A
-
+This is the classic enterprise ask. Outbound is “prefer circuit A, keep B as backup” (LOCAL_PREF), and inbound is “encourage the provider to send traffic to you via circuit A”.
 A pragmatic ordering is:
 
 1) If you have a provider-supported inbound knob (often communities): use that.
@@ -437,9 +416,7 @@ That sounds underwhelming, but it’s exactly why they’re powerful.
 A community is a value (traditionally a 32-bit `X:Y` format, and in modern networks often *large communities*) that a router can attach to a route.
 The receiving network can then match on that tag and apply policy.
 
-In other words:
-- **you tag routes with intent**
-- **your peer maps that tag to behaviour**
+In other words, you tag routes with intent, and your peer maps that tag to behaviour.
 
 That’s why communities are often the cleanest inbound influence mechanism.
 You’re not trying to “beat” someone else’s decision process; you’re asking them to apply a documented policy.
@@ -449,25 +426,11 @@ You’re not trying to “beat” someone else’s decision process; you’re as
 Communities don’t override the fact that BGP crosses administrative boundaries.
 The peer still decides what they honour.
 
-Treat communities as:
-- a supported API into your provider’s policy, not
-- a guaranteed steering mechanism.
+Treat communities as a supported API into your provider’s policy, not a guaranteed steering mechanism.
 
 ### Common community categories you’ll encounter
 
-The exact values are provider-specific, but the *themes* repeat:
-
-- **Scope / propagation control**
-  - e.g., `NO_EXPORT` (RFC 1997) or “don’t advertise this beyond region X”.
-
-- **Preference / traffic engineering**
-  - “prefer this path more/less” (often implemented as a local preference change on the provider side).
-
-- **Blackholing** (in some designs)
-  - “discard traffic to this prefix at the edge” (useful for DDoS response when supported).
-
-- **Service / region classification**
-  - especially for public-cloud public prefixes (filter by service, region, sovereign cloud, etc.).
+The exact values are provider-specific, but the themes repeat. You’ll see communities used for scope and propagation control (for example, NO_EXPORT (RFC 1997), or “don’t advertise this beyond region X”), preference and traffic engineering (“prefer this path more or less”, often implemented as a local preference change on the provider side), blackholing in some designs (“discard traffic to this prefix at the edge”), and service or region classification, especially for public-cloud public prefixes.
 
 ### AWS vs Azure: don’t assume they work the same
 
@@ -479,36 +442,21 @@ https://www.simonpainter.com/community-comparison/
 
 ### Practical advice
 
-- Start with the provider’s documentation for the specific connection type (DX public/private VIF; ER private/Microsoft peering).
-- Implement communities in code/policy with the same discipline as firewall rules:
-  - version control,
-  - review,
-  - explicit intent,
-  - and testing.
-- Prefer communities over “clever” AS_PATH games when the provider supports the behaviour you need.
+Start with the provider’s documentation for the specific connection type (DX public or private VIF, and ER private or Microsoft peering). Implement communities in code and policy with the same discipline as firewall rules, including version control, review, explicit intent, and testing. Prefer communities over “clever” AS_PATH games when the provider supports the behaviour you need.
 
 ## 10) Cloud exchange / carrier neutral facility (CNF) patterns
 
-A cloud exchange is typically a **carrier neutral facility (CNF)** where you can aggregate:
-- cloud provider connectivity (ExpressRoute / Direct Connect)
-- WAN connectivity (MPLS / SD-WAN)
+A cloud exchange is typically a **carrier neutral facility (CNF)** where you can aggregate cloud provider connectivity (ExpressRoute and Direct Connect), and WAN connectivity (MPLS and SD-WAN).
 
 In practice, a CNF is where enterprise networking starts to look a little bit like “real internet engineering”… except you’re doing it inside a building with cross-connects.
 
-Assumption for the examples in this post:
-- you host **your own routers** in the exchange, and
-- the exchange provides **L2** to each cloud peer (so you run BGP directly with the cloud/provider routers).
+The assumption for the examples in this post is that you host your own routers in the exchange, and the exchange provides L2 to each cloud peer, so you run BGP directly with the cloud and provider routers.
 
 ### Two-CNF diversity (why it’s common)
 
-A common pattern is to use **two CNFs** for physical and geographic diversity:
-- separate meet-me rooms
-- separate fibre paths
-- separate power domains / blast radius
+A common pattern is to use two CNFs for physical and geographic diversity, for example separate meet-me rooms, separate fibre paths, and separate power domains and blast radius.
 
-You then decide whether the design is:
-- **active/active northbound** (both CNFs have cloud peers up), or
-- **active/passive** (one CNF is preferred, the other is failover)
+You then decide whether the design is active/active northbound (both CNFs have cloud peers up), or active/passive (one CNF is preferred, and the other is failover).
 
 As we mentioned earlier, active/passive is often dictated by the southbound architecture (stateful firewalls, NAT, or policy constraints that require symmetric flow).
 
@@ -518,62 +466,27 @@ There are two common ways enterprises structure ASNs at the edge.
 
 #### Option A: single ASN across both CNFs (one enterprise AS)
 
-This is the “clean BGP” model.
+This is the “clean BGP” model. Both CNF routers are in the same ASN, you run eBGP to each cloud or provider peer, and you run iBGP between your CNF routers (and usually to the rest of your core).
 
-- Both CNF routers are in the same ASN.
-- You run eBGP to each cloud/provider peer.
-- You run iBGP between your CNF routers (and usually to the rest of your core).
+It’s nice because LOCAL_PREF works exactly how you expect for choosing your outbound exit, you can express “prefer CNF A for outbound, keep CNF B as backup” without AS_PATH games, and it tends to be easier to build deterministic failover.
 
-Why it’s nice:
-- **LOCAL_PREF works exactly how you expect** for choosing your outbound exit.
-- You can express “prefer CNF A for outbound, keep CNF B as backup” without AS_PATH games.
-- It tends to be easier to build deterministic failover.
-
-The trade-off:
-- you’re now in “iBGP design land” (full mesh vs route reflection, etc.).
+The trade-off is that you’re now in iBGP design land (full mesh versus route reflection, and so on).
 
 #### Option B: dual private ASNs (one per CNF)
 
-This is an operationally popular model in enterprises because it feels like “two edges”.
+This is an operationally popular model in enterprises because it feels like “two edges”. CNF A might be ASN 65001, CNF B might be ASN 65002, each CNF peers to the cloud or provider ASN, and somewhere downstream you have to reconnect those worlds (often another BGP hop inside your enterprise).
 
-- CNF A is ASN 65001.
-- CNF B is ASN 65002.
-- Each CNF peers to the cloud/provider ASN.
-- Somewhere downstream you have to reconnect those worlds (often another BGP hop inside your enterprise).
+People do it because it keeps the edges conceptually independent, and eBGP loop prevention can simplify some designs.
 
-Why people do it:
-- it keeps the edges conceptually independent
-- eBGP loop prevention can simplify some designs
-
-But it comes with important limitations for end-to-end traffic engineering:
-
-- **LOCAL_PREF is not transitive.**
-  - It’s your internal preference inside one ASN.
-  - If CNF A and CNF B are different ASNs, LOCAL_PREF you set in one doesn’t automatically help the other.
-
-- **MED is not a downstream steering tool.**
-  - Even when honoured, it’s a hint to your neighbour and typically scoped to comparisons within the same neighbour AS.
-
-- **AS_PATH does propagate.**
-  - That’s why prepend often becomes the “portable lever” in dual-AS edge designs.
+But it comes with important limitations for end-to-end traffic engineering. LOCAL_PREF is not transitive, so it is your internal preference inside one ASN, and if CNF A and CNF B are different ASNs, LOCAL_PREF you set in one doesn’t automatically help the other. MED is not a downstream steering tool either, so even when honoured it is a hint to your neighbour, and typically scoped to comparisons within the same neighbour AS. AS_PATH does propagate, which is why prepend often becomes the portable lever in dual-AS edge designs.
 
 ### Putting it together: “two private ASNs to one remote ASN”
 
-This is the scenario you called out earlier:
+This is the scenario you called out earlier. You have two edge ASNs, one per CNF, both peer to a single remote ASN (provider or cloud), and you want downstream parts of your enterprise (and sometimes other connected networks) to follow the right end-to-end path.
 
-- you have two edge ASNs (one per CNF)
-- both peer to a single remote ASN (provider/cloud)
-- you want downstream parts of *your* enterprise (and sometimes other connected networks) to follow the right end-to-end path
+The key mental model is that if the decision is happening inside one of your ASNs, LOCAL_PREF is king. If the decision is happening outside your AS, AS_PATH and provider-supported communities are the tools that can travel.
 
-The key mental model:
-
-- if the decision is happening **inside one of your ASNs**, LOCAL_PREF is king.
-- if the decision is happening **outside your AS**, AS_PATH and provider-supported communities are the tools that can travel.
-
-This is also where it becomes crucial to separate:
-- “what do I want for outbound?” (easy)
-- “what do I want for inbound?” (hard)
-- “what is my failure mode?” (the thing that makes the design real)
+This is also where it becomes crucial to separate what you want for outbound (easy), what you want for inbound (hard), and what your failure mode is (the thing that makes the design real).
 
 ## 11) Safety rails (the section that saves outages)
 
