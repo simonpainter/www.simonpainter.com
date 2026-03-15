@@ -1,5 +1,8 @@
 ---
 title: "BGP for Enterprise Cloud Connectivity"
+
+> **BGP** (Border Gateway Protocol): the routing protocol we use to exchange prefixes and policy between autonomous systems, and sometimes between large internal domains.
+
 authors: simonpainter
 tags:
   - networks
@@ -51,12 +54,20 @@ eBGP is what you run between your network and someone else’s.
 
 In enterprise cloud connectivity that usually means your router in a CNF peering with an **ExpressRoute** MSEE or **Direct Connect** router, your router peering with an ISP, or your router peering with a managed MPLS provider PE.
 
+> **MSEE** (Microsoft Enterprise Edge): Microsoft’s routers on the ExpressRoute edge that you peer with.
+
+> **PE** (Provider Edge): the provider’s edge router, facing customer circuits.
+
+> **CNF** (carrier neutral facility): a colocation site where you can cross-connect to multiple carriers, cloud on-ramps, and exchanges.
+
 The important enterprise mental model is: **eBGP is where the AS boundary is real**.
 Across that boundary you can exchange routes, and you can _influence_ the other side, but you don’t get to enforce how they do their internal routing.
 
 ### iBGP
 
 iBGP is what you run when you have multiple routers in **the same ASN** that need to share BGP-learned routes with each other.
+
+> **ASN** (Autonomous System Number): the numeric identifier for an autonomous system, used in BGP for policy and loop prevention.
 
 In the simplest cloud edge, you might not need iBGP at all (one router, one peering).
 As soon as you add redundancy, iBGP becomes the clean way to make your edge behave like a single logical system:
@@ -92,6 +103,8 @@ BGP is often taught as “pick one best path”, which is true for what it adver
 
 Most platforms can install multiple equal-cost BGP paths for the same prefix (multipath) and then forward over them using ECMP. Whether paths are considered “equal enough” depends on the platform and config, but the important point is that multipath is an explicit design choice.
 
+> **ECMP** (equal-cost multipath): using multiple next-hops for the same prefix when they’re considered equally good.
+
 This matters in cloud connectivity because active/active circuit pairs often rely on it. ExpressRoute in particular is commonly delivered as redundant circuit pairs, and many designs expect to use both links in steady state. Without multipath, you can easily end up with “one link hot, one link cold”, even though you paid for both.
 
 If you need symmetric flows through stateful appliances, you might still choose active/passive, but if you are aiming for active/active, make sure you understand how your platform handles eBGP multipath, iBGP multipath, and the tie-breaks that decide which paths qualify.
@@ -108,11 +121,15 @@ That’s fine, but it can leave you with some slightly warped assumptions, becau
 
 Plenty of enterprises buy **managed CE routers**. In that model the provider owns the config, you may only see a handoff (LAN interface or VLAN), and you might never touch BGP at all.
 
+> **CE** (Customer Edge): your router at the edge of the provider network.
+
 Mechanically, BGP is still often involved somewhere, but it’s just **not your problem** until the day you add cloud connectivity, and suddenly it is.
 
 ### Common MPLS patterns (abstract mechanics)
 
 There are a few common ways MPLS WAN providers present routing. The exact implementation varies (VRFs, MP-BGP in the core, route targets, etc.), but the _customer-visible_ behaviours are pretty consistent.
+
+> **MP-BGP** (Multiprotocol BGP): BGP extensions for carrying multiple address families (like IPv4 and IPv6).
 
 ### Pattern A: PE/CE eBGP (provider AS visible)
 
@@ -204,7 +221,11 @@ That transport could be an MPLS or SD-WAN underlay, ExpressRoute or Direct Conne
 :::note BGP inside AWS constructs (it’s not just a hybrid edge protocol)
 BGP is no longer only about Direct Connect at the edge. AWS now has constructs where BGP drives changes inside the VPC routing domain.
 
+> **VPC** (Virtual Private Cloud): AWS’s private IP network construct, roughly analogous to a virtual network.
+
 A good example is Amazon VPC Route Server, which can use BGP to influence route tables (including IGW route tables) for patterns like floating IP failover, or steering traffic through active/standby inspection appliances.
+
+> **IGW** (Internet Gateway): the AWS VPC component that provides internet connectivity for public subnets.
 
 Useful starting point: [Dynamic Routing Using Amazon VPC Route Server](https://aws.amazon.com/blogs/networking-and-content-delivery/dynamic-routing-using-amazon-vpc-route-server/)
 :::
@@ -212,6 +233,8 @@ Useful starting point: [Dynamic Routing Using Amazon VPC Route Server](https://a
 ### What’s actually peering with what?
 
 In the model we’re using for this post, your routers sit in one (or two) CNFs, you have L2 to each provider peer, and you run eBGP to Azure (ExpressRoute private peering), AWS (Direct Connect private VIF), and optionally your WAN provider(s) if you’re also aggregating MPLS or SD-WAN there.
+
+> **VIF** (virtual interface): an AWS Direct Connect construct that represents a BGP-enabled L3 interface over a physical connection.
 
 ```mermaid
 %%{init: {'theme':'neutral','flowchart':{'curve':'basis'},'themeVariables':{'fontFamily':'Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial'}}}%%
@@ -255,6 +278,8 @@ Microsoft Learn content about ExpressRoute often talks about “peerings” and 
 Each peering (Private peering, and Microsoft peering) is delivered via a pair of independent eBGP sessions. If you exceed prefix limits, the default behaviour is for the BGP session to be terminated, which is a hard failure mode and a good reason to monitor prefix counts.
 
 Microsoft-side BGP timers are fixed (keepalive and hold), so fast failover is normally achieved with BFD, which is enabled by default on Microsoft’s side, but must be configured on your CPE.
+
+> **BFD** (Bidirectional Forwarding Detection): a fast failure-detection mechanism often used to speed up BGP convergence.
 
 Filtering is primarily your responsibility on the on-prem edge. Azure UDRs are static and not part of BGP advertisement. On Microsoft peering specifically, “no routes” is often explained by a missing route filter.
 
