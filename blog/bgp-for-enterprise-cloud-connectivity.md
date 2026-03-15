@@ -483,9 +483,7 @@ protocols {
 
 A few practical notes: in real configs you’ll almost always include explicit route filters (prefix-lists) alongside these policies. If you want active/active, LOCAL_PREF can still be used; you just set them equal, and rely on other mechanisms (or ECMP capability) to load-share.
 
-## Diagrams
-
-This post includes Mermaid diagrams for the key architectural patterns. If I’ve missed an example you care about, it’s usually a sign I should diagram it out.
+Outbound is the easy part. Inbound is where things get interesting.
 
 ## Influencing inbound traffic (enterprise reality)
 
