@@ -191,20 +191,11 @@ Practically, that means explicit prefix-lists for what you originate, route poli
 
 ### Private routes vs public routes (both exist in the cloud world)
 
-Most people start with **private** connectivity:
-- you advertise RFC1918 (or your internal private space) towards the cloud,
-- you receive cloud private prefixes back,
-- and you use that for VNet/VPC reachability.
+Most people start with private connectivity. You advertise RFC1918 (or your internal private space) towards the cloud, you receive cloud private prefixes back, and you use that for VNet or VPC reachability.
 
-But both Azure and AWS also have **public peering-style** options where you can exchange **public routes** over the dedicated circuit:
+But both Azure and AWS also have public peering-style options where you can exchange public routes over the dedicated circuit. In Azure that is ExpressRoute Microsoft peering, and in AWS that is a Direct Connect public VIF.
 
-- **Azure ExpressRoute**: *Microsoft peering* (public services over the Microsoft backbone)
-- **AWS Direct Connect**: *public VIF* (public AWS services over the DX)
-
-Why you’d do it:
-- predictable latency and jitter vs the internet
-- avoid hairpinning through generic internet egress
-- improve the path to cloud SaaS / public endpoints where it matters
+Why you’d do it is straightforward: you get predictable latency and jitter versus the internet, you avoid hairpinning through generic internet egress, and you can improve the path to cloud SaaS and public endpoints where it matters.
 
 > Sidebar: public peering doesn’t magically make the services private.
 >
@@ -213,32 +204,17 @@ Why you’d do it:
 
 ### Summarisation (and the sharp edges)
 
-Summarisation is attractive because it:
-- reduces route table size
-- can make failover faster/cleaner
-- and is easier to reason about
+Summarisation is attractive because it reduces route table size, it can make failover faster and cleaner, and it is easier to reason about.
 
-But it has sharp edges:
-- you can accidentally blackhole traffic if you summarise a block that isn’t fully reachable in all failure modes
-- you can lose useful specificity for traffic engineering (more-specifics win)
+But it has sharp edges. You can accidentally blackhole traffic if you summarise a block that isn’t fully reachable in all failure modes, and you can lose useful specificity for traffic engineering because more-specifics win.
 
-A pragmatic approach is:
-- summarise where it’s *structurally true* (e.g., you really do own that block end-to-end),
-- keep de-aggregation for the cases where you need it deliberately (and document why).
+A pragmatic approach is to summarise where it’s structurally true (for example, where you really do own that block end-to-end), and to keep de-aggregation for the cases where you need it deliberately, and document why.
 
 ### Defaults
 
-Default routes are a great tool when used intentionally.
+Default routes are a great tool when used intentionally. In small branch designs, a default can be exactly what you want, “send everything to the core”. At a cloud edge, a default can be dangerous if it causes accidental internet breakout where you didn’t intend it, or asymmetric paths that make troubleshooting miserable.
 
-- In small branch designs, a default can be exactly what you want: “send everything to the core.”
-- At a cloud edge, a default can be dangerous if it causes:
-  - accidental internet breakout where you didn’t intend it, or
-  - asymmetric paths that make troubleshooting miserable.
-
-If you use defaults, treat them like any other route:
-- filter them explicitly
-- set their preference intentionally
-- test the failure mode (what happens when the preferred exit disappears?)
+If you use defaults, treat them like any other route. Filter them explicitly, set their preference intentionally, and test the failure mode (what happens when the preferred exit disappears?).
 
 ## 6) BGP path selection (the bits you actually use)
 
@@ -252,19 +228,13 @@ We’ll keep this vendor-neutral and focus on the knobs you’ll actually touch 
 
 When a router has multiple routes to the same destination prefix, it picks a “best” path by comparing attributes in a consistent order.
 
-In practice, for enterprise connectivity, you can think in three buckets:
-
-- **Things you set internally to steer *your outbound*** (e.g., LOCAL_PREF)
-- **Things you can signal to a neighbour to *influence inbound*** (e.g., MED, AS_PATH)
-- **Tie-breakers** (where BGP picks something stable when your policy doesn’t decide)
+In practice, for enterprise connectivity, you can think in three buckets: things you set internally to steer your outbound (for example, LOCAL_PREF), things you can signal to a neighbour to influence inbound (for example, MED and AS_PATH), and tie-breakers, where BGP picks something stable when your policy doesn’t decide.
 
 ### The three attributes you’ll use constantly
 
-- **LOCAL_PREF**: your strongest tool for choosing the outbound exit *inside your AS*.
-- **AS_PATH**: one of the few levers that naturally propagates beyond your first-hop peer.
-- **MED**: a hint to a neighbour, with limits.
+The three attributes you’ll use constantly are LOCAL_PREF, which is your strongest tool for choosing the outbound exit inside your AS, AS_PATH, which is one of the few levers that naturally propagates beyond your first-hop peer, and MED, which is a hint to a neighbour, with limits.
 
-> We’ll go deeper on how to use each of these in Sections 7 and 8.
+We’ll go deeper on how to use each of these in Sections 7 and 8.
 
 ### Real-world scenarios we’ll map onto these knobs
 
@@ -294,10 +264,7 @@ If you’re deciding which circuit you want to use to *leave your network*, BGP 
 LOCAL_PREF is an attribute you set **inside your AS** to express preference for one exit over another.
 Higher LOCAL_PREF wins.
 
-It’s popular for three reasons:
-- it’s deterministic
-- it’s simple to reason about
-- it doesn’t require you to play games with AS_PATH length
+It’s popular for three reasons: it’s deterministic, it’s simple to reason about, and it doesn’t require you to play games with AS_PATH length.
 
 > Sidebar: ECMP vs active/passive is often dictated by security appliances.
 >
@@ -307,15 +274,9 @@ It’s popular for three reasons:
 
 ### Pattern: prefer exit A, keep exit B as backup
 
-This is the bread-and-butter enterprise requirement.
+This is the bread-and-butter enterprise requirement. You learn the same (or overlapping) routes from two upstreams or two circuits, you want all outbound traffic to prefer circuit A, and if A fails you want traffic to move to B.
 
-- You learn the same (or overlapping) routes from two upstreams / two circuits.
-- You want all outbound traffic to prefer circuit A.
-- If A fails, you want traffic to move to B.
-
-Mechanically, you do this by:
-- matching the routes you learn from neighbour A and setting a higher LOCAL_PREF,
-- leaving neighbour B at a lower LOCAL_PREF.
+Mechanically, you do this by matching the routes you learn from neighbour A and setting a higher LOCAL_PREF, and leaving neighbour B at a lower LOCAL_PREF.
 
 ### IOS-XE example (set LOCAL_PREF higher for routes learned from preferred peer)
 
