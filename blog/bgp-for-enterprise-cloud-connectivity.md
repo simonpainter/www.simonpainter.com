@@ -794,12 +794,42 @@ If it doesn’t, you’ll end up doing some kind of clear/reset — just do it i
 
 ## 12) Cloud specifics (light touch)
 
+This post is intentionally vendor-neutral, but cloud connectivity has a few “cloud-shaped” differences that are worth keeping in mind.
+
 ### What’s different for DX/ER vs MPLS peering
-(TODO)
+
+Some practical differences you’ll feel:
+
+- **You’re peering to a cloud service, not a human-run PE router.**
+  - behaviours are documented, but you don’t get to ring the NOC and ask them to tweak a knob “just this once”.
+
+- **Route limits are real.**
+  - there are hard limits on prefixes and routes in some cloud constructs.
+  - this makes filtering/summarisation and intentional route design more important.
+
+- **Public peering options exist (and come with sharp edges).**
+  - DX public VIF / ER Microsoft peering can be great for predictable paths to public services.
+  - they’re also where you really don’t want to accidentally export something that turns you into transit.
+
+- **Availability patterns are “product-shaped”.**
+  - you’ll often have multiple BGP sessions per circuit, dual circuits, and region/site diversity patterns.
+  - the BGP knobs are the same; the constraints around them are not.
 
 ### Route Server (brief pointer)
-(TODO: link to existing posts)
+
+If you’re using managed route distribution services (like Azure Route Server), you’ll run into platform constraints that exist specifically to prevent certain transit patterns.
+
+I’ve written up one of the key behaviours and its design implications here:
+https://www.simonpainter.com/transit-route-prevention/
 
 ## Conclusion
 
-(TODO)
+BGP can look intimidating because the internet uses it, and the internet is huge.
+
+But enterprise cloud connectivity only needs a subset:
+- understand the eBGP vs iBGP boundary
+- know which attributes are useful in practice (LOCAL_PREF, AS_PATH, MED)
+- use communities when the provider documents them
+- and put safety rails around import/export so you don’t leak routes or accidentally become transit
+
+If you get those right, you’ll be able to design hybrid multi-cloud connectivity that behaves predictably — and when it doesn’t, you’ll know where to look.
