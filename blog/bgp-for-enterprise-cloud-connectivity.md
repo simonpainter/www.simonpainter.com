@@ -418,6 +418,9 @@ A few practical notes:
 ## TODO: diagrams
 - Add **Mermaid diagrams** for each architectural example/pattern in this post (MPLS patterns, dual circuits, CNF designs, etc.).
 
+## TODO: style pass
+- Replace **em dashes (—)** with commas or semicolons where appropriate.
+
 ## 8) Influencing inbound traffic (enterprise reality)
 
 Inbound is where BGP stops feeling like “routing” and starts feeling like diplomacy.
