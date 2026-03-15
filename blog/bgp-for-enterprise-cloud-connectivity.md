@@ -473,26 +473,10 @@ This post includes Mermaid diagrams for the key architectural patterns. If I’v
 
 ## TODO (new topics to incorporate)
 
-- Consider a short section or sidebar on **BGP inside AWS constructs**, for example Amazon **VPC Route Server** driving VPC route table and IGW route table changes for dynamic routing patterns (floating IP failover, and firewall insertion).
-- Consider a short section on **AWS Cloud WAN Connect** in an enterprise WAN framing, including the MP-BGP/IPv6 nuance, ECMP, and the “GRE versus tunnel-less” design choice.
+- Add a short section or sidebar on **BGP inside AWS constructs**, for example Amazon **VPC Route Server** driving VPC route table and IGW route table changes for dynamic routing patterns (floating IP failover, and firewall insertion).
+- Add a short section on **AWS Cloud WAN Connect** in an enterprise WAN framing, including the MP-BGP/IPv6 nuance, ECMP, and the “GRE versus tunnel-less” design choice.
 - Add an operational section or sidebar on **proving resiliency**, including AWS **Direct Connect failover testing** and the idea of regular game-days.
 - Add an optional routing security sidebar: AWS’s posture on **RPKI/ROV** as context, and what that implies for enterprise expectations and internal hygiene.
-
-- Add a short sidebar on **AWS Route Server vs Azure Route Server**, to head off naming confusion and emphasise the transitive versus non-transitive difference (and why this matters for appliance failover and routing design): https://www.simonpainter.com/aws-route-server/
-- Optionally add a callout that AWS Route Server is primarily active/passive NVA failover orchestration in a single VPC, while Azure Route Server is closer to “BGP as a Service”, and point readers to the post above for the deeper comparison.
-
-- Add an **ExpressRoute BGP essentials** callout that makes the BGP behaviour explicit (because the Microsoft Learn module underplays it), covering:
-  - each ExpressRoute peering is delivered via **a pair of independent eBGP sessions** (redundant);
-  - **prefix limit exceed** behavior (session termination) and why monitoring matters;
-  - fixed Microsoft-side **BGP timers** (keepalive/hold) and the recommendation to use **BFD** for faster failover;
-  - the boundary that route filtering is primarily an **on-prem edge** responsibility, and Azure UDRs are not dynamic/BGP;
-  - Microsoft peering specifics: no routes until a **route filter** is attached.
-
-Reference docs to cite:
-- https://learn.microsoft.com/en-us/azure/expressroute/expressroute-circuit-peerings
-- https://learn.microsoft.com/en-us/azure/expressroute/expressroute-faqs
-- https://learn.microsoft.com/en-us/azure/expressroute/design-architecture-for-resiliency
-- https://learn.microsoft.com/en-us/azure/troubleshoot/azure/expressroute/expressroute-troubleshooting-network-performance
 
 ## Influencing inbound traffic (enterprise reality)
 
@@ -848,6 +832,14 @@ On the other hand, in some **private multi-cloud CNF** designs, you might *delib
 > It’s one of the reasons “who should accept what from whom” can be automated at scale.
 >
 > If you’ve never bumped into it before: https://en.wikipedia.org/wiki/Routing_Policy_Specification_Language
+>
+> Sidebar: a quick note on RPKI and route validation
+>
+> RPKI is the mechanism that lets prefix holders publish cryptographic Route Origin Authorisations (ROAs), and lets networks validate whether a route announcement is likely to be legitimate.
+>
+> Even if your enterprise BGP is mostly “private”, the upstreams you depend on operate in the public routing system, and the industry is increasingly treating RPKI-invalid routes as something to drop, not just something to log.
+>
+> AWS has a good high-level write-up of what they’re doing here, which is useful context: https://aws.amazon.com/blogs/networking-and-content-delivery/how-aws-is-helping-to-secure-internet-routing/
 
 > Sidebar: how Azure prevents some transit scenarios
 >
@@ -908,6 +900,16 @@ If you’re using managed route distribution services (like Azure Route Server),
 
 I’ve written up one of the key behaviours and its design implications here:
 https://www.simonpainter.com/transit-route-prevention/
+
+> Sidebar: AWS Route Server versus Azure Route Server
+>
+> AWS Route Server and Azure Route Server sound like the same thing, but they aren’t.
+>
+> Azure Route Server is closer to “BGP as a Service”, it peers using standard BGP and can support transitive routing patterns that feel familiar to enterprise network engineers.
+>
+> AWS Route Server is a more specialised tool, it is primarily about orchestrating active/passive appliance failover by manipulating specific route tables, and it is deliberately non-transitive.
+>
+> If you want the deeper comparison (and the philosophy behind the difference), I wrote it up here: https://www.simonpainter.com/aws-route-server/
 
 ## Conclusion
 
