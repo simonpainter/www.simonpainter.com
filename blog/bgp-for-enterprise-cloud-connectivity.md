@@ -1,8 +1,6 @@
 ---
 title: "BGP for Enterprise Cloud Connectivity"
 
-> **BGP** (Border Gateway Protocol): the routing protocol we use to exchange prefixes and policy between autonomous systems, and sometimes between large internal domains.
-
 authors: simonpainter
 tags:
   - networks
@@ -55,9 +53,9 @@ eBGP is what you run between your network and someone else’s.
 In enterprise cloud connectivity that usually means your router in a CNF peering with an **ExpressRoute** MSEE or **Direct Connect** router, your router peering with an ISP, or your router peering with a managed MPLS provider PE.
 
 > **MSEE** (Microsoft Enterprise Edge): Microsoft’s routers on the ExpressRoute edge that you peer with.
-
-> **PE** (Provider Edge): the provider’s edge router, facing customer circuits.
-
+>
+>**PE** (Provider Edge): the provider’s edge router, facing customer circuits.
+>
 > **CNF** (carrier neutral facility): a colocation site where you can cross-connect to multiple carriers, cloud on-ramps, and exchanges.
 
 The important enterprise mental model is: **eBGP is where the AS boundary is real**.
