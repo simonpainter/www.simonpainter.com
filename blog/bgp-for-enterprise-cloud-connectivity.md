@@ -234,6 +234,8 @@ In practice, for enterprise connectivity, you can think in three buckets: things
 > If you want the rationale for why prefix length wins before any BGP attribute, and why we shouldn’t abuse it, this post is the best explanation I’ve written: https://www.simonpainter.com/longest-prefix-matching/
 >
 > Vendor note: the exact tie-break order differs slightly between implementations, and there are knobs to change it. Junos has a good write-up here, including its default MED comparison behaviour and the options that alter it: https://www.juniper.net/documentation/us/en/software/junos/vpn-l2/bgp/topics/concept/routing-protocols-address-representation.html
+>
+> Cisco has a canonical write-up too (and it’s a good reminder that Cisco has router-local attributes like WEIGHT that don’t exist everywhere): https://www.cisco.com/c/en/us/support/docs/ip/border-gateway-protocol-bgp/13753-25.html
 
 ### The three attributes you’ll use constantly
 
