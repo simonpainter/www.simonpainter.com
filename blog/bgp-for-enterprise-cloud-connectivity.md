@@ -146,67 +146,35 @@ This exact idea shows up again in cloud connectivity designs when you’re decid
 
 ## 4) Peering relationships in enterprise cloud connectivity
 
-If you strip away the product names, enterprise cloud connectivity is mostly just this:
+If you strip away the product names, enterprise cloud connectivity is mostly just this: you have internal prefixes on one side (data centres, campus, and branch sites), you have cloud prefixes on the other (VNets or VPCs, and whatever services sit behind them), and you use BGP to exchange routes between the two over some private transport.
 
-- you have some internal prefixes on one side (data centres, campus, branch sites)
-- you have some cloud prefixes on the other side (VNets/VPCs and their attached services)
-- and you use BGP to exchange routes between them over a private transport
-
-The transport could be:
-- MPLS / SD-WAN underlay
-- ExpressRoute / Direct Connect
-- a cloud exchange in a CNF (where you’ve got your own routers and L2 handoff to the peers)
+That transport could be an MPLS or SD-WAN underlay, ExpressRoute or Direct Connect, or a cloud exchange in a CNF (where you have your own routers, and an L2 handoff to the peers).
 
 ### What’s actually peering with what?
 
-In the model we’re using for this post:
+In the model we’re using for this post, your routers sit in one (or two) CNFs, you have L2 to each provider peer, and you run eBGP to Azure (ExpressRoute private peering), AWS (Direct Connect private VIF), and optionally your WAN provider(s) if you’re also aggregating MPLS or SD-WAN there.
 
-- Your routers sit in one (or two) CNFs.
-- You have L2 to each provider peer.
-- You run **eBGP** to:
-  - Azure (ExpressRoute private peering)
-  - AWS (Direct Connect private VIF)
-  - optionally your WAN provider(s) if you’re also aggregating MPLS/SD-WAN there.
-
-On the enterprise side, you then need to decide how those routes get back into the rest of your network:
-- iBGP to a core pair / route reflectors, or
-- redistribution into an IGP (with all the caveats that implies).
+On the enterprise side, you then need to decide how those routes get back into the rest of your network. That usually means iBGP to a core pair or route reflectors, or redistribution into an IGP (with all the caveats that implies).
 
 ### Private ASN vs public ASN (enterprise reality)
 
 This tends to confuse people because “ASN” sounds like an ISP thing.
 
-- **Private ASNs** are extremely common in enterprise designs.
-  - They’re fine as long as you understand where they are allowed to appear.
-- **Public ASNs** are usually only needed when you need to present a stable identity across the wider internet routing domain.
-  - Most enterprises don’t need that for private connectivity to cloud.
+Private ASNs are extremely common in enterprise designs, and they’re fine as long as you understand where they are allowed to appear. Public ASNs are usually only needed when you need to present a stable identity across the wider internet routing domain, which most enterprises do not need for private connectivity to cloud.
 
-The pragmatic rule: use a private ASN unless you have a reason not to.
+The pragmatic rule is simple: use a private ASN unless you have a reason not to.
 
 ### One ASN everywhere vs multiple ASNs
 
 This is where your MPLS experience is directly relevant.
 
-- **One ASN everywhere** (single enterprise ASN) can be clean.
-  - It pairs naturally with iBGP inside your network.
-  - But you need to design around loop prevention when routes traverse boundaries.
-
-- **Multiple ASNs** (per site / per edge) can be operationally convenient.
-  - It makes eBGP loop-prevention “just work” because each edge is a distinct AS.
-  - It does, however, complicate how far certain attributes can help you (we’ll come back to this in the CNF section).
+A single enterprise ASN everywhere can be clean because it pairs naturally with iBGP inside your network, but you need to design around loop prevention when routes traverse boundaries. Multiple ASNs (per site, or per edge) can be operationally convenient because it makes eBGP loop prevention “just work” at the cost of complicating how far certain attributes can help you, which we’ll come back to in the CNF section.
 
 ### A note on “influence vs control”
 
-Anything that crosses an AS boundary is, by definition, a negotiation.
+Anything that crosses an AS boundary is, by definition, a negotiation. You can usually control your own side completely, you can often influence your peer, but you rarely control what happens beyond your peer.
 
-You can usually control your own side completely.
-You can often influence your peer.
-But you rarely control what happens **beyond** your peer.
-
-That’s why a lot of BGP guidance boils down to:
-- keep your intent simple,
-- apply safety rails,
-- and don’t rely on a single knob (especially for inbound) unless you’ve validated the provider behaviour.
+That’s why a lot of BGP guidance boils down to keeping your intent simple, applying safety rails, and not relying on a single knob (especially for inbound) unless you’ve validated the provider behaviour.
 
 ## 5) Route advertisement basics (what you advertise and why)
 
@@ -215,16 +183,11 @@ Not because someone misunderstood the BGP decision process, but because someone 
 
 ### “Less is more”
 
-At an enterprise edge, you almost always want to:
-- advertise **only the prefixes you genuinely own and intend to be reachable**, and
-- accept **only the prefixes you actually need**.
+At an enterprise edge, you almost always want to advertise only the prefixes you genuinely own and intend to be reachable, and to accept only the prefixes you actually need.
 
 Everything else is just future-you doing incident response.
 
-Practically that means:
-- explicit prefix-lists for what you originate
-- route-policy that rejects “surprises” by default
-- max-prefix limits (we’ll cover these in the safety rails section)
+Practically, that means explicit prefix-lists for what you originate, route policy that rejects surprises by default, and max-prefix limits (we’ll cover those in the safety rails section).
 
 ### Private routes vs public routes (both exist in the cloud world)
 
