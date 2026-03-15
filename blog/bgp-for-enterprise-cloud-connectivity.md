@@ -11,9 +11,15 @@ date: 2026-03-15
 draft: true
 ---
 
-BGP is the control plane that makes Direct Connect and ExpressRoute work.
+I used to joke that the cloud networking exams — AZ-700 for Azure, and AWS Advanced Networking — were mostly just *“BGP in a GUI”*.
 
-If you only ever touched BGP at an MPLS edge, you can still run successful cloud connectivity — but you need a better mental model of **what BGP is doing**, **how attributes affect path selection**, and **which knobs actually influence inbound vs outbound**.
+It’s not really true. Both exams cover a lot more than that: security, load balancers, DNS, design patterns… the works.
+
+But the joke exists for a reason: as soon as you get into hybrid connectivity and multi-cloud architecture, **BGP is everywhere**.
+
+And it’s not fair to assume that every enterprise network engineer has spent years living in BGP. Plenty of excellent network engineers can build entire careers with only a light touch of it (often just “peer to the MPLS provider and move on”).
+
+So this post is an explainer of the key BGP concepts that an enterprise network engineer needs to feel comfortable designing and operating **hybrid, multi-cloud connectivity** — where BGP plays its vital role.
 
 <!--truncate-->
 
