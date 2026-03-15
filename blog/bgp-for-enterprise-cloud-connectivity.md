@@ -50,10 +50,7 @@ Cloud connectivity tends to drag iBGP into the conversation because you suddenly
 
 eBGP is what you run between your network and someone else’s.
 
-In enterprise cloud connectivity that usually means:
-- your router in a CNF peering with an **ExpressRoute** MSEE or **Direct Connect** router,
-- your router peering with an ISP,
-- your router peering with a managed MPLS provider PE.
+In enterprise cloud connectivity that usually means your router in a CNF peering with an **ExpressRoute** MSEE or **Direct Connect** router, your router peering with an ISP, or your router peering with a managed MPLS provider PE.
 
 The important enterprise mental model is: **eBGP is where the AS boundary is real**.
 Across that boundary you can exchange routes, and you can *influence* the other side, but you don’t get to enforce how they do their internal routing.
@@ -65,10 +62,7 @@ iBGP is what you run when you have multiple routers in **the same ASN** that nee
 In the simplest cloud edge, you might not need iBGP at all (one router, one peering).
 As soon as you add redundancy, iBGP becomes the clean way to make your edge behave like a single logical system:
 
-- Two edge routers in the same site (active/active)
-- Two CNFs (diverse meet-me rooms)
-- Two provider circuits (separate peers)
-- Two clouds (Azure + AWS)
+Typical triggers are two edge routers in the same site (active/active), two CNFs (diverse meet-me rooms), two provider circuits (separate peers), or two clouds (Azure and AWS).
 
 You *can* avoid iBGP by doing weird things (like re-advertising routes between eBGP peers and hoping loop prevention doesn’t bite you), but iBGP is usually the right tool.
 
@@ -78,11 +72,7 @@ You *can* avoid iBGP by doing weird things (like re-advertising routes between e
 
 ### Why you care
 
-Because **your operational knobs behave differently depending on where you are**:
-
-- **LOCAL_PREF** is your best “pick the outbound exit” tool, but it’s **only meaningful inside your AS**.
-- **MED** is, at best, a **hint to a neighbour** and typically only compared in narrow conditions.
-- **AS_PATH prepending** is crude, but it’s one of the few signals that naturally propagates beyond your first-hop peer.
+Because **your operational knobs behave differently depending on where you are**. LOCAL_PREF is your best “pick the outbound exit” tool, but it’s only meaningful inside your AS. MED is, at best, a hint to a neighbour, and it is typically only compared in narrow conditions. AS_PATH prepending is crude, but it’s one of the few signals that naturally propagates beyond your first-hop peer.
 
 If you understand the eBGP/iBGP boundary, the rest of BGP becomes much less mysterious.
 
