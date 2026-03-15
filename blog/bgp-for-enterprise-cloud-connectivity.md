@@ -225,7 +225,47 @@ That’s why a lot of BGP guidance boils down to:
 
 ## 6) BGP path selection (the bits you actually use)
 
-(TODO: high-level decision flow — keep it practical and focus on attributes we’ll touch later)
+BGP path selection looks intimidating until you realise two things:
+1) most of the decision process only matters when you have multiple candidate routes to the *same* prefix, and
+2) in enterprise designs you tend to use a small handful of attributes deliberately.
+
+We’ll keep this vendor-neutral and focus on the knobs you’ll actually touch at a cloud/WAN edge.
+
+### The simplified mental model
+
+When a router has multiple routes to the same destination prefix, it picks a “best” path by comparing attributes in a consistent order.
+
+In practice, for enterprise connectivity, you can think in three buckets:
+
+- **Things you set internally to steer *your outbound*** (e.g., LOCAL_PREF)
+- **Things you can signal to a neighbour to *influence inbound*** (e.g., MED, AS_PATH)
+- **Tie-breakers** (where BGP picks something stable when your policy doesn’t decide)
+
+### The three attributes you’ll use constantly
+
+- **LOCAL_PREF**: your strongest tool for choosing the outbound exit *inside your AS*.
+- **AS_PATH**: one of the few levers that naturally propagates beyond your first-hop peer.
+- **MED**: a hint to a neighbour, with limits.
+
+> We’ll go deeper on how to use each of these in Sections 7 and 8.
+
+### Real-world scenarios we’ll map onto these knobs
+
+These come up constantly in enterprise cloud/WAN designs:
+
+1) **Single ASN, multiple upstream ASNs, and you want to override path selection**
+   - e.g., your preferred route has a longer AS_PATH, but you still want to send traffic that way.
+   - Typical solution: **LOCAL_PREF**.
+
+2) **Two links to the same provider and you want symmetric preference**
+   - Outbound: **LOCAL_PREF**.
+   - Inbound: **MED** (when honoured) or **AS_PATH prepending** (blunt but portable).
+
+3) **Two private ASNs (two edges) peered to a single remote ASN, and you want end-to-end path control**
+   - The tricky bit: LOCAL_PREF and MED don’t travel “downstream”.
+   - The portable lever: AS_PATH signals (and, where supported, community-based knobs).
+
+We’ll work through these explicitly as we go.
 
 ## 7) Influencing outbound traffic (enterprise reality)
 
