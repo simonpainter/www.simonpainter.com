@@ -574,17 +574,87 @@ A cloud exchange is typically a **carrier neutral facility (CNF)** where you can
 - cloud provider connectivity (ExpressRoute / Direct Connect)
 - WAN connectivity (MPLS / SD-WAN)
 
+In practice, a CNF is where enterprise networking starts to look a little bit like “real internet engineering”… except you’re doing it inside a building with cross-connects.
+
 Assumption for the examples in this post:
 - you host **your own routers** in the exchange, and
 - the exchange provides **L2** to each cloud peer (so you run BGP directly with the cloud/provider routers).
 
-### Two-CNF diversity and ASN choices
+### Two-CNF diversity (why it’s common)
 
-#### Option A: single ASN across both CNFs
-(TODO: explain path selection options)
+A common pattern is to use **two CNFs** for physical and geographic diversity:
+- separate meet-me rooms
+- separate fibre paths
+- separate power domains / blast radius
+
+You then decide whether the design is:
+- **active/active northbound** (both CNFs have cloud peers up), or
+- **active/passive** (one CNF is preferred, the other is failover)
+
+As we mentioned earlier, active/passive is often dictated by the southbound architecture (stateful firewalls, NAT, or policy constraints that require symmetric flow).
+
+### ASN design choices at the CNF
+
+There are two common ways enterprises structure ASNs at the edge.
+
+#### Option A: single ASN across both CNFs (one enterprise AS)
+
+This is the “clean BGP” model.
+
+- Both CNF routers are in the same ASN.
+- You run eBGP to each cloud/provider peer.
+- You run iBGP between your CNF routers (and usually to the rest of your core).
+
+Why it’s nice:
+- **LOCAL_PREF works exactly how you expect** for choosing your outbound exit.
+- You can express “prefer CNF A for outbound, keep CNF B as backup” without AS_PATH games.
+- It tends to be easier to build deterministic failover.
+
+The trade-off:
+- you’re now in “iBGP design land” (full mesh vs route reflection, etc.).
 
 #### Option B: dual private ASNs (one per CNF)
-(TODO: explain why LOCAL_PREF and MED are AS-local / limited; why prepend is downstream-visible)
+
+This is an operationally popular model in enterprises because it feels like “two edges”.
+
+- CNF A is ASN 65001.
+- CNF B is ASN 65002.
+- Each CNF peers to the cloud/provider ASN.
+- Somewhere downstream you have to reconnect those worlds (often another BGP hop inside your enterprise).
+
+Why people do it:
+- it keeps the edges conceptually independent
+- eBGP loop prevention can simplify some designs
+
+But it comes with important limitations for end-to-end traffic engineering:
+
+- **LOCAL_PREF is not transitive.**
+  - It’s your internal preference inside one ASN.
+  - If CNF A and CNF B are different ASNs, LOCAL_PREF you set in one doesn’t automatically help the other.
+
+- **MED is not a downstream steering tool.**
+  - Even when honoured, it’s a hint to your neighbour and typically scoped to comparisons within the same neighbour AS.
+
+- **AS_PATH does propagate.**
+  - That’s why prepend often becomes the “portable lever” in dual-AS edge designs.
+
+### Putting it together: “two private ASNs to one remote ASN”
+
+This is the scenario you called out earlier:
+
+- you have two edge ASNs (one per CNF)
+- both peer to a single remote ASN (provider/cloud)
+- you want downstream parts of *your* enterprise (and sometimes other connected networks) to follow the right end-to-end path
+
+The key mental model:
+
+- if the decision is happening **inside one of your ASNs**, LOCAL_PREF is king.
+- if the decision is happening **outside your AS**, AS_PATH and provider-supported communities are the tools that can travel.
+
+This is also where it becomes crucial to separate:
+- “what do I want for outbound?” (easy)
+- “what do I want for inbound?” (hard)
+- “what is my failure mode?” (the thing that makes the design real)
 
 ## 11) Safety rails (the section that saves outages)
 
