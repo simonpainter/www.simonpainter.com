@@ -109,6 +109,33 @@ There are a few common ways MPLS WAN providers present routing. The exact implem
 
 This is the “textbook” model. Your CE runs eBGP to the provider PE. The provider PE is in the provider’s ASN, so you see the provider AS in the AS_PATH (or at least you can). Your routes are imported into the provider’s MPLS VPN routing domain and distributed to other sites.
 
+```mermaid
+flowchart LR
+  subgraph SiteA[Site A]
+    CE1[CE Router]
+    LAN1[LAN prefixes]
+    LAN1 --> CE1
+  end
+
+  subgraph Provider[Provider MPLS Core]
+    PE1[PE Router]
+    MPLS[(MPLS / L3VPN Core)]
+    PE2[PE Router]
+  end
+
+  subgraph SiteB[Site B]
+    CE2[CE Router]
+    LAN2[LAN prefixes]
+    CE2 --> LAN2
+  end
+
+  CE1 -- eBGP (PE/CE) --> PE1
+  PE1 --> MPLS --> PE2
+  PE2 -- eBGP (PE/CE) --> CE2
+
+  %% provider distributes customer routes inside the VPN routing domain
+```
+
 Why this matters for the cloud journey: this is the closest mental model to DX/ER peering.
 
 #### Pattern B (sidebar): CE–CE peering over MPLS (customer edges peer with each other)
@@ -160,6 +187,35 @@ That transport could be an MPLS or SD-WAN underlay, ExpressRoute or Direct Conne
 ### What’s actually peering with what?
 
 In the model we’re using for this post, your routers sit in one (or two) CNFs, you have L2 to each provider peer, and you run eBGP to Azure (ExpressRoute private peering), AWS (Direct Connect private VIF), and optionally your WAN provider(s) if you’re also aggregating MPLS or SD-WAN there.
+
+```mermaid
+flowchart TB
+  subgraph CNF[Cloud Exchange / CNF]
+    ER1[Edge Router A]
+    ER2[Edge Router B]
+  end
+
+  subgraph Cloud[Cloud Providers]
+    AZ[Azure ER Peer]
+    AWS[AWS DX Peer]
+  end
+
+  subgraph Enterprise[Enterprise Network]
+    Core[Core / RR / IGP]
+    Sites[DCs, campuses, branches]
+  end
+
+  ER1 -- eBGP --> AZ
+  ER1 -- eBGP --> AWS
+  ER2 -- eBGP --> AZ
+  ER2 -- eBGP --> AWS
+
+  ER1 -- iBGP / redistribute --> Core
+  ER2 -- iBGP / redistribute --> Core
+  Core --> Sites
+
+  %% CNF provides L2 handoff to the cloud peers
+```
 
 On the enterprise side, you then need to decide how those routes get back into the rest of your network. That usually means iBGP to a core pair or route reflectors, or redistribution into an IGP (with all the caveats that implies).
 
@@ -297,6 +353,16 @@ It’s popular for three reasons: it’s deterministic, it’s simple to reason 
 
 This is the bread-and-butter enterprise requirement. You learn the same (or overlapping) routes from two upstreams or two circuits, you want all outbound traffic to prefer circuit A, and if A fails you want traffic to move to B.
 
+```mermaid
+flowchart LR
+  LAN[Enterprise prefixes] --> R[Your Router]
+  R -- eBGP --> ISP1[Provider / Cloud Peer A]
+  R -- eBGP --> ISP2[Provider / Cloud Peer B]
+
+  %% Outbound: set higher LOCAL_PREF on routes learned via A
+  %% Failover: when A withdraws, B remains
+```
+
 Mechanically, you do this by matching the routes you learn from neighbour A and setting a higher LOCAL_PREF, and leaving neighbour B at a lower LOCAL_PREF.
 
 ### IOS-XE example (set LOCAL_PREF higher for routes learned from preferred peer)
@@ -351,8 +417,7 @@ A few practical notes: in real configs you’ll almost always include explicit r
 ## TODO: diagrams
 Add Mermaid diagrams for each architectural example or pattern in this post (MPLS patterns, dual circuits, CNF designs, and so on).
 
-## TODO: style pass
-Replace em dashes (the long dash character) with commas or semicolons where appropriate. Reduce bulleted lists, and prefer prose paragraphs (comma-separated lists where it reads well). Use the Oxford comma in all comma-separated lists.
+Style pass notes: em dashes removed, bulleted lists reduced, Oxford comma used where it reads naturally. Remaining work is mostly diagrams and final polish.
 
 ## 8) Influencing inbound traffic (enterprise reality)
 
@@ -405,6 +470,19 @@ A practical way to think about prepend is that it’s good for “prefer this ci
 ### Putting it together: two links to the same provider
 
 This is the classic enterprise ask. Outbound is “prefer circuit A, keep B as backup” (LOCAL_PREF), and inbound is “encourage the provider to send traffic to you via circuit A”.
+
+```mermaid
+flowchart LR
+  Internet[(Users / Internet)] --> P[Provider AS]
+  P -->|Link A| CE1[Your Edge]
+  P -->|Link B| CE2[Your Edge]
+
+  CE1 --> LAN[Your prefixes]
+  CE2 --> LAN
+
+  %% Inbound: provider decides path towards you
+  %% Tools: communities (cleanest), MED (if honoured), AS_PATH prepend (portable)
+```
 A pragmatic ordering is:
 
 1) If you have a provider-supported inbound knob (often communities): use that.
@@ -472,6 +550,36 @@ The assumption for the examples in this post is that you host your own routers i
 ### Two-CNF diversity (why it’s common)
 
 A common pattern is to use two CNFs for physical and geographic diversity, for example separate meet-me rooms, separate fibre paths, and separate power domains and blast radius.
+
+```mermaid
+flowchart TB
+  subgraph CNF1[CNF 1]
+    E1[Edge Router]
+  end
+
+  subgraph CNF2[CNF 2]
+    E2[Edge Router]
+  end
+
+  subgraph Clouds[Cloud peers]
+    AZ[Azure ER Peer]
+    AWS[AWS DX Peer]
+  end
+
+  subgraph Ent[Enterprise]
+    Core[Core / RR]
+  end
+
+  E1 -- eBGP --> AZ
+  E1 -- eBGP --> AWS
+  E2 -- eBGP --> AZ
+  E2 -- eBGP --> AWS
+
+  E1 -- iBGP / internal --> Core
+  E2 -- iBGP / internal --> Core
+
+  %% Two CNFs give physical diversity, BGP policy decides preference and failover
+```
 
 You then decide whether the design is active/active northbound (both CNFs have cloud peers up), or active/passive (one CNF is preferred, and the other is failover).
 
