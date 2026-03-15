@@ -757,10 +757,40 @@ On the other hand, in some **private multi-cloud CNF** designs, you might *delib
 > https://www.simonpainter.com/transit-route-prevention/
 
 ### Max-prefix
-(TODO)
+
+Max-prefix is your seatbelt.
+
+It limits how many routes you’re willing to accept from a neighbour.
+If you expected “a few hundred prefixes” and you suddenly receive “the full internet”, max-prefix can stop that mistake becoming a widespread outage.
+
+A pragmatic enterprise approach is:
+- set max-prefix on every eBGP peer
+- set the threshold based on what you *expect* (plus headroom)
+- decide the failure mode:
+  - warn-only (log) vs
+  - hard-teardown (drop the session)
+
+> If you’re peering with an upstream that can legitimately send you huge tables (e.g., full routes), max-prefix is still useful — you just size it appropriately.
 
 ### Route refresh / soft reconfig basics
-(TODO)
+
+Modern BGP gives you ways to change policy without bouncing the session.
+This matters operationally because:
+- bouncing a session can cause unnecessary convergence churn
+- and on some designs it can cause traffic loss while paths re-learn
+
+Two concepts you’ll see:
+
+- **Route Refresh**: a capability where you can ask a neighbour to resend routes after you change policy.
+- **Soft reconfiguration**: keeping enough state to re-evaluate routes against new policy without a hard reset.
+
+The exact commands differ (IOS-XE vs JunOS), but the operational goal is the same:
+- change filter/policy
+- refresh routes
+- confirm the new bestpaths
+
+If your platform supports route refresh, use it.
+If it doesn’t, you’ll end up doing some kind of clear/reset — just do it intentionally and during a safe window.
 
 ## 12) Cloud specifics (light touch)
 
