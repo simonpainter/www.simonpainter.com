@@ -255,6 +255,18 @@ flowchart LR
 
 On the enterprise side, you then need to decide how those routes get back into the rest of your network. That usually means iBGP to a core pair or route reflectors, or redistribution into an IGP (with all the caveats that implies).
 
+> ExpressRoute BGP essentials
+>
+> Microsoft Learn content about ExpressRoute often talks about “peerings” and “routing domains” without emphasising the mechanism. ExpressRoute is, in practice, delivered via redundant eBGP sessions.
+>
+> Each peering (Private peering, and Microsoft peering) is delivered via a pair of independent eBGP sessions. If you exceed prefix limits, the default behaviour is for the BGP session to be terminated, which is a hard failure mode and a good reason to monitor prefix counts.
+>
+> Microsoft-side BGP timers are fixed (keepalive and hold), so fast failover is normally achieved with BFD, which is enabled by default on Microsoft’s side, but must be configured on your CPE.
+>
+> Filtering is primarily your responsibility on the on-prem edge. Azure UDRs are static and not part of BGP advertisement. On Microsoft peering specifically, “no routes” is often explained by a missing route filter.
+>
+> References: circuit peerings and BGP behaviour (<https://learn.microsoft.com/en-us/azure/expressroute/expressroute-circuit-peerings>), ExpressRoute FAQs (<https://learn.microsoft.com/en-us/azure/expressroute/expressroute-faqs>), resiliency guidance (<https://learn.microsoft.com/en-us/azure/expressroute/design-architecture-for-resiliency>), and troubleshooting performance (<https://learn.microsoft.com/en-us/troubleshoot/azure/expressroute/expressroute-troubleshooting-network-performance>).
+
 ### Private ASN vs public ASN (enterprise reality)
 
 This tends to confuse people because “ASN” sounds like an ISP thing.
