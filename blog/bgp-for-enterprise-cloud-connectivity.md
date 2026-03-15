@@ -71,7 +71,7 @@ You don’t need them in a small design, but once you have “lots of BGP speake
 
 ### Why you care
 
-Because **your operational knobs behave differently depending on where you are**. LOCAL_PREF is your best “pick the outbound exit” tool, but it’s only meaningful inside your AS. MED is, at best, a hint to a neighbour, and it is typically only compared in narrow conditions. AS_PATH prepending is crude, but it’s one of the few signals that naturally propagates beyond your first-hop peer.
+Because **your operational controls behave differently depending on where you are**. LOCAL_PREF is your best “pick the outbound exit” tool, but it’s only meaningful inside your AS. MED is, at best, a hint to a neighbour, and it is typically only compared in narrow conditions. AS_PATH prepending is crude, but it’s one of the few signals that naturally propagates beyond your first-hop peer.
 
 :::note iBGP, eBGP, and where they sit in the route selection hierarchy
 There are two different “selection” processes people conflate.
@@ -346,7 +346,7 @@ BGP path selection looks intimidating until you realise two things:
 1. most of the decision process only matters when you have multiple candidate routes to the _same_ prefix, and
 2. in enterprise designs you tend to use a small handful of attributes deliberately.
 
-We’ll keep this vendor-neutral and focus on the knobs you’ll actually touch at a cloud/WAN edge.
+We’ll keep this vendor-neutral and focus on the tools you’ll actually use at a cloud and WAN edge.
 
 ### The simplified mental model
 
@@ -363,7 +363,7 @@ That’s one of the reasons providers often enforce a minimum, maximum, or fixed
 
 If you want the rationale for why prefix length wins before any BGP attribute, and why we shouldn’t abuse it, this post is my attempt to explain: [Longest Prefix Matching](https://www.simonpainter.com/longest-prefix-matching/).
 
-Vendor note: the exact tie-break order differs slightly between implementations, and there are knobs to change it. Junos has a good write-up here, including its default MED comparison behaviour and the options that alter it: [Junos BGP Documentation](https://www.juniper.net/documentation/us/en/software/junos/vpn-l2/bgp/topics/concept/routing-protocols-address-representation.html)
+Vendor note: the exact tie-break order differs slightly between implementations, and there are settings that can change it. Junos has a good write-up here, including its default MED comparison behaviour and the options that alter it: [Junos BGP Documentation](https://www.juniper.net/documentation/us/en/software/junos/vpn-l2/bgp/topics/concept/routing-protocols-address-representation.html)
 
 Cisco has a canonical write-up too (and it’s a good reminder that Cisco has router-local attributes like WEIGHT that don’t exist everywhere): [Cisco BGP Documentation](https://www.cisco.com/c/en/us/support/docs/ip/border-gateway-protocol-bgp/13753-25.html)
 :::
@@ -374,7 +374,7 @@ The three attributes you’ll use constantly are LOCAL_PREF, which is your stron
 
 I’ll go deeper on how to use each of these in [Steering outbound traffic](#steering-outbound-traffic) and [Influencing inbound traffic](#influencing-inbound-traffic).
 
-### Real-world scenarios we’ll map onto these knobs
+### Real-world scenarios we’ll map onto these tools
 
 These come up constantly in enterprise cloud/WAN designs:
 
@@ -390,7 +390,7 @@ These come up constantly in enterprise cloud/WAN designs:
 
 3. **Two private ASNs (two edges) peered to a single remote ASN, and you want end-to-end path control**
    - The tricky bit: LOCAL_PREF and MED don’t travel “downstream”.
-   - The portable lever: AS_PATH signals (and, where supported, community-based knobs).
+   - The portable lever: AS_PATH signals (and, where supported, community-based controls).
 
 We’ll work through these explicitly as we go.
 
@@ -567,7 +567,7 @@ Failures, maintenance, hot-potato routing and upstream policy all get a vote.
 
 ### Communities (conceptual)
 
-BGP communities are one of the most useful “provider-supported knobs”, but they’re still _influence_, not control.
+BGP communities are one of the most useful “provider-supported tools”, but they’re still _influence_, not control.
 
 They’re often the cleanest way to do inbound steering because the provider can map a community to an explicit internal policy (for example, changing local preference on their side).
 
@@ -899,7 +899,7 @@ Some practical differences you’ll feel are that you’re peering to a cloud se
 
 Public peering options exist too, and they come with sharp edges. DX public VIF and ER Microsoft peering can be great for predictable paths to public services, but they’re also where you really don’t want to accidentally export something that turns you into transit.
 
-Finally, availability patterns are “product-shaped”. You’ll often have multiple BGP sessions per circuit, dual circuits, and region and site diversity patterns. The BGP knobs are the same, but the constraints around them are not.
+Finally, availability patterns are “product-shaped”. You’ll often have multiple BGP sessions per circuit, dual circuits, and region and site diversity patterns. The BGP controls are the same, but the constraints around them are not.
 
 :::note BGP inside AWS constructs (it’s not just a hybrid edge protocol)
 BGP is no longer only about Direct Connect at the edge. AWS now has constructs where BGP drives changes inside the VPC routing domain.
