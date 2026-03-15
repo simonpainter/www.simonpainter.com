@@ -466,6 +466,9 @@ This post includes Mermaid diagrams for the key architectural patterns. If I’v
 - Add an operational section or sidebar on **proving resiliency**, including AWS **Direct Connect failover testing** and the idea of regular game-days.
 - Add an optional routing security sidebar: AWS’s posture on **RPKI/ROV** as context, and what that implies for enterprise expectations and internal hygiene.
 
+- Add a short sidebar on **AWS Route Server vs Azure Route Server**, to head off naming confusion and emphasise the transitive versus non-transitive difference (and why this matters for appliance failover and routing design): https://www.simonpainter.com/aws-route-server/
+- Optionally add a callout that AWS Route Server is primarily active/passive NVA failover orchestration in a single VPC, while Azure Route Server is closer to “BGP as a Service”, and point readers to the post above for the deeper comparison.
+
 ## Influencing inbound traffic (enterprise reality)
 
 Inbound is where BGP stops feeling like “routing” and starts feeling like diplomacy.
