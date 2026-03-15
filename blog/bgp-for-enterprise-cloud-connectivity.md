@@ -74,6 +74,20 @@ You *can* avoid iBGP by doing weird things (like re-advertising routes between e
 
 Because **your operational knobs behave differently depending on where you are**. LOCAL_PREF is your best “pick the outbound exit” tool, but it’s only meaningful inside your AS. MED is, at best, a hint to a neighbour, and it is typically only compared in narrow conditions. AS_PATH prepending is crude, but it’s one of the few signals that naturally propagates beyond your first-hop peer.
 
+> Sidebar: iBGP, eBGP, and where they sit in the route selection hierarchy
+>
+> There are two different “selection” processes people conflate.
+>
+> One is the BGP best-path algorithm, which chooses one BGP path over another.
+>
+> The other is the router’s global route selection behaviour, where different protocols all claim they can reach the same destination prefix, and the router has to choose which one makes it into the forwarding table.
+>
+> On Cisco platforms, the default administrative distances reflect a common design assumption: BGP speakers are at the edge. eBGP-learned routes are therefore treated as a strong signal for external reachability, while iBGP-learned routes are treated as much less preferable than IGP-learned routes.
+>
+> The rationale is pragmatic. If you’ve already learned the route from the IGP, it’s often “closer” and more efficient to follow that IGP path than to follow an iBGP hop-count that might simply be reflecting policy, or topology you don’t want to traverse.
+>
+> The punchline is that if you redistribute between protocols, or if you run BGP deep in the network, you should understand how administrative distance interacts with BGP, and consider whether you need to tune it for your design.
+
 If you understand the eBGP/iBGP boundary, the rest of BGP becomes much less mysterious.
 
 ## 3) Where enterprise engineers have seen BGP before: MPLS WAN patterns
