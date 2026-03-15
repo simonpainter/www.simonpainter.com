@@ -11,7 +11,7 @@ date: 2026-03-15
 draft: true
 ---
 
-I used to joke that the cloud networking exams — AZ-700 for Azure, and AWS Advanced Networking — were mostly just *“BGP in a GUI”*.
+I used to joke that the cloud networking exams, AZ-700 for Azure, and AWS Advanced Networking, were mostly just *“BGP in a GUI”*.
 
 It’s not really true. Both exams cover a lot more than that: security, load balancers, DNS, design patterns… the works.
 
@@ -19,7 +19,7 @@ But the joke exists for a reason: as soon as you get into hybrid connectivity an
 
 And it’s not fair to assume that every enterprise network engineer has spent years living in BGP. Plenty of excellent network engineers can build entire careers with only a light touch of it (often just “peer to the MPLS provider and move on”).
 
-So this post is an explainer of the key BGP concepts that an enterprise network engineer needs to feel comfortable designing and operating **hybrid, multi-cloud connectivity** — where BGP plays its vital role.
+So this post is an explainer of the key BGP concepts that an enterprise network engineer needs to feel comfortable designing and operating **hybrid, multi-cloud connectivity**, where BGP plays its vital role.
 
 <!--truncate-->
 
@@ -89,7 +89,7 @@ If you understand the eBGP/iBGP boundary, the rest of BGP becomes much less myst
 ## 3) Where enterprise engineers have seen BGP before: MPLS WAN patterns
 
 For a lot of enterprise folks, “BGP experience” starts and ends with *an MPLS circuit*.
-That’s fine — but it can leave you with some slightly warped assumptions, because MPLS providers can make BGP look like anything from “a normal eBGP peer” to “a magic ethernet cable between sites”.
+That’s fine, but it can leave you with some slightly warped assumptions, because MPLS providers can make BGP look like anything from “a normal eBGP peer” to “a magic ethernet cable between sites”.
 
 ### Managed CEs (you might never have seen the BGP config)
 
@@ -98,7 +98,7 @@ Plenty of enterprises buy **managed CE routers**. In that model:
 - you may only see a handoff (LAN interface / VLAN),
 - and you might never touch BGP at all.
 
-Mechanically, BGP is still often involved somewhere — it’s just **not your problem** until the day you add cloud connectivity and suddenly it is.
+Mechanically, BGP is still often involved somewhere, but it’s just **not your problem** until the day you add cloud connectivity, and suddenly it is.
 
 ### Common MPLS patterns (abstract mechanics)
 
@@ -116,7 +116,7 @@ Why this matters for the cloud journey: this is the closest mental model to DX/E
 
 #### Pattern B (sidebar): CE–CE peering over MPLS (customer edges peer with each other)
 
-> This is **not the typical MPLS model** — most MPLS WANs are built as a many-to-many L3VPN where you peer to the provider and the provider does the route distribution.
+> This is **not the typical MPLS model**; most MPLS WANs are built as a many-to-many L3VPN where you peer to the provider, and the provider does the route distribution.
 >
 > That said, I *have* seen real-world deployments where the MPLS network is treated as **a transport underlay**, and the **customer edge routers form BGP adjacencies with each other**.
 >
@@ -126,7 +126,7 @@ Why this matters for the cloud journey: this is the closest mental model to DX/E
 >
 > What has to be true for it to work:
 > - The provider must provide **IP reachability between CEs** (it’s effectively giving you a routed any-to-any service), and
-> - the provider is **not** doing your inter-site route exchange for you — *your BGP* is.
+> - the provider is **not** doing your inter-site route exchange for you; *your BGP* is.
 >
 > This pattern is conceptually closer to “running your own WAN overlay” than to classic managed MPLS L3VPN routing.
 
@@ -148,7 +148,7 @@ But you need to understand one hard rule:
 
 - If site A advertises a prefix to the WAN, and that route is later presented to site B *with the same ASN still in the AS_PATH*, then **site B will drop it**.
 
-That’s not a bug — that’s BGP doing loop prevention: *“I won’t accept a route that already contains my ASN.”*
+That’s not a bug; that’s BGP doing loop prevention: *“I won’t accept a route that already contains my ASN.”*
 
 So if you run “single ASN everywhere” using a private ASN, the provider typically has to do **private-AS removal/stripping** between sites.
 
@@ -221,7 +221,7 @@ That’s why a lot of BGP guidance boils down to:
 ## 5) Route advertisement basics (what you advertise and why)
 
 This is where most real-world BGP outages come from.
-Not because someone misunderstood the BGP decision process — but because someone advertised (or accepted) more routes than they intended.
+Not because someone misunderstood the BGP decision process, but because someone advertised (or accepted) more routes than they intended.
 
 ### “Less is more”
 
@@ -334,7 +334,7 @@ We’ll work through these explicitly as we go.
 ## 7) Influencing outbound traffic (enterprise reality)
 
 Outbound is the part you *actually* control.
-If you’re deciding which circuit you want to use to *leave your network*, BGP gives you a few options — but in enterprise designs **LOCAL_PREF** is the one you’ll use constantly.
+If you’re deciding which circuit you want to use to *leave your network*, BGP gives you a few options, but in enterprise designs **LOCAL_PREF** is the one you’ll use constantly.
 
 ### LOCAL_PREF (the clean internal lever)
 
@@ -350,7 +350,7 @@ It’s popular for three reasons:
 >
 > ECMP (active/active) has real value, but plenty of real networks have stateful firewalls or NAT devices that **aren’t clustered**.
 > Those designs often require **symmetric paths** (same in and out) to avoid breaking sessions.
-> In that world, active/passive circuits aren’t a failure of imagination — they’re a pragmatic requirement.
+> In that world, active/passive circuits aren’t a failure of imagination; they’re a pragmatic requirement.
 
 ### Pattern: prefer exit A, keep exit B as backup
 
@@ -413,13 +413,13 @@ protocols {
 
 A few practical notes:
 - In real configs you’ll almost always include **explicit route filters** (prefix-lists) alongside these policies.
-- If you want active/active, LOCAL_PREF can still be used — you just set them equal and rely on other mechanisms (or ECMP capability) to load-share.
+- If you want active/active, LOCAL_PREF can still be used; you just set them equal, and rely on other mechanisms (or ECMP capability) to load-share.
 
 ## TODO: diagrams
 - Add **Mermaid diagrams** for each architectural example/pattern in this post (MPLS patterns, dual circuits, CNF designs, etc.).
 
 ## TODO: style pass
-- Replace **em dashes (—)** with commas or semicolons where appropriate.
+- Replace em dashes (the long dash character) with commas or semicolons where appropriate.
 - Reduce **bulleted lists**; prefer prose paragraphs (comma-separated lists where it reads well).
 - Use the **Oxford comma** in all comma-separated lists.
 
@@ -744,7 +744,7 @@ The same principle applies to **public cloud public-peering** models:
 
 On the other hand, in some **private multi-cloud CNF** designs, you might *deliberately* act as a transit:
 - e.g., allow private traffic from Cloud A to reach Cloud B via your exchange routers.
-- That’s a valid architecture — but only if you do it intentionally and keep it isolated from public-routing domains.
+- That’s a valid architecture, but only if you do it intentionally, and keep it isolated from public-routing domains.
 
 > Sidebar: RPSL (Routing Policy Specification Language)
 >
@@ -775,7 +775,7 @@ A pragmatic enterprise approach is:
   - warn-only (log) vs
   - hard-teardown (drop the session)
 
-> If you’re peering with an upstream that can legitimately send you huge tables (e.g., full routes), max-prefix is still useful — you just size it appropriately.
+> If you’re peering with an upstream that can legitimately send you huge tables (e.g., full routes), max-prefix is still useful; you just size it appropriately.
 
 ### Route refresh / soft reconfig basics
 
@@ -795,7 +795,7 @@ The exact commands differ (IOS-XE vs JunOS), but the operational goal is the sam
 - confirm the new bestpaths
 
 If your platform supports route refresh, use it.
-If it doesn’t, you’ll end up doing some kind of clear/reset — just do it intentionally and during a safe window.
+If it doesn’t, you’ll end up doing some kind of clear/reset; just do it intentionally, and during a safe window.
 
 ## 12) Cloud specifics (light touch)
 
@@ -837,4 +837,4 @@ But enterprise cloud connectivity only needs a subset:
 - use communities when the provider documents them
 - and put safety rails around import/export so you don’t leak routes or accidentally become transit
 
-If you get those right, you’ll be able to design hybrid multi-cloud connectivity that behaves predictably — and when it doesn’t, you’ll know where to look.
+If you get those right, you’ll be able to design hybrid multi-cloud connectivity that behaves predictably, and when it doesn’t, you’ll know where to look.
