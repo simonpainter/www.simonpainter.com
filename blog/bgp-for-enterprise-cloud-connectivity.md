@@ -21,21 +21,7 @@ And it’s not fair to assume that every enterprise network engineer has spent y
 
 So this post is an explainer of the key BGP concepts that an enterprise network engineer needs to feel comfortable designing and operating **hybrid, multi-cloud connectivity**, where BGP plays its vital role.
 
-<!--truncate-->## On this page
-
-- [What BGP is](#what-bgp-is)
-- [eBGP and iBGP at the cloud edge](#ebgp-and-ibgp-at-the-cloud-edge)
-- [BGP in MPLS WANs](#bgp-in-mpls-wans)
-- [How cloud peerings fit together](#how-cloud-peerings-fit-together)
-- [What to advertise (and what not to)](#what-to-advertise-and-what-not-to)
-- [How BGP picks a path](#how-bgp-picks-a-path)
-- [Steering outbound traffic](#steering-outbound-traffic)
-- [Influencing inbound traffic](#influencing-inbound-traffic)
-- [BGP communities](#bgp-communities)
-- [Cloud exchange (CNF) patterns](#cloud-exchange-cnf-patterns)
-- [Safety rails](#safety-rails)
-- [Cloud-specific gotchas](#cloud-specific-gotchas)
-- [Wrapping up](#wrapping-up)
+<!--truncate-->
 
 ## What BGP is
 
