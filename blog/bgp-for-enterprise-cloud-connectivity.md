@@ -746,7 +746,9 @@ A pragmatic enterprise approach is to set max-prefix on every eBGP peer, to size
 >
 > The extra sting is that BT don’t necessarily auto-timeout and recover quickly. Even after you fix the policy, you may need to raise a priority support ticket to get the peering reset.
 >
-> The lesson is simple, and painfully memorable: max-prefix is there to save you, but your filters are what stop you needing the ticket in the first place.
+> The lesson is simple, and painfully memorable. BT are protecting themselves aggressively from customers accidentally, or deliberately, advertising too many routes and filling up router memory.
+>
+> A core principle of BGP is that it’s typically at your perimeter, so you should not trust the motives or capabilities of a peer. Always apply your own import policy, export policy, and limits to protect yourself.
 
 If you’re peering with an upstream that can legitimately send you huge tables (e.g., full routes), max-prefix is still useful; you just size it appropriately.
 
