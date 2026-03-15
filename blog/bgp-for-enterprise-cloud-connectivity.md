@@ -420,6 +420,7 @@ A few practical notes:
 
 ## TODO: style pass
 - Replace **em dashes (—)** with commas or semicolons where appropriate.
+- Reduce **bulleted lists**; prefer prose paragraphs (comma-separated lists where it reads well).
 
 ## 8) Influencing inbound traffic (enterprise reality)
 
