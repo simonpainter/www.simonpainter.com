@@ -82,24 +82,71 @@ If you understand the eBGP/iBGP boundary, the rest of BGP becomes much less myst
 
 ## 3) Where enterprise engineers have seen BGP before: MPLS WAN patterns
 
+For a lot of enterprise folks, “BGP experience” starts and ends with *an MPLS circuit*.
+That’s fine — but it can leave you with some slightly warped assumptions, because MPLS providers can make BGP look like anything from “a normal eBGP peer” to “a magic ethernet cable between sites”.
+
 ### Managed CEs (you might never have seen the BGP config)
-(TODO)
 
-### Common MPLS patterns
+Plenty of enterprises buy **managed CE routers**. In that model:
+- the provider owns the config,
+- you may only see a handoff (LAN interface / VLAN),
+- and you might never touch BGP at all.
 
-#### PE/CE eBGP (provider AS visible)
-(TODO)
+Mechanically, BGP is still often involved somewhere — it’s just **not your problem** until the day you add cloud connectivity and suddenly it is.
 
-#### CE–CE style eBGP (provider AS not visible)
-(TODO: explain the concept and what it implies; provider carries/redistributes customer routes internally)
+### Common MPLS patterns (abstract mechanics)
+
+There are a few common ways MPLS WAN providers present routing. The exact implementation varies (VRFs, MP-BGP in the core, route targets, etc.), but the *customer-visible* behaviours are pretty consistent.
+
+#### Pattern A: PE/CE eBGP (provider AS visible)
+
+This is the “textbook” model.
+
+- Your CE runs **eBGP to the provider PE**.
+- The provider PE is in **the provider’s ASN**, so you see the provider AS in the AS_PATH (or at least you *can*).
+- Your routes are imported into the provider’s MPLS VPN routing domain and distributed to other sites.
+
+Why this matters for the cloud journey: this is the closest mental model to DX/ER peering.
+
+#### Pattern B: CE–CE peering over MPLS (customer edges peer with each other)
+
+You called this out explicitly, and yes — I’ve seen this in the wild too.
+
+In this design, the provider network is treated as **a transport underlay**, and the **customer edge routers form BGP adjacencies with each other** (directly or via some kind of rendezvous).
+
+What it looks like from the customer’s point of view:
+- Site A CE has BGP neighbours that are *other customer CEs*.
+- The provider ASN may not appear in the AS_PATH (because the provider isn’t acting as a BGP hop in your control plane).
+
+What has to be true for it to work:
+- The provider must provide **IP reachability between CEs** (it’s effectively giving you a routed point-to-point / any-to-any service), and
+- the provider is **not** doing your inter-site route exchange for you — *your BGP* is.
+
+This pattern is conceptually closer to “running your own WAN overlay” than to classic managed MPLS L3VPN routing.
 
 ### ASNs in MPLS enterprise designs
 
 #### Per-site ASNs
-(TODO)
+
+A very common enterprise pattern is:
+- each site has its own private ASN, or
+- sites are grouped into a small pool of private ASNs.
+
+It’s convenient because it keeps the eBGP loop-prevention behaviour simple: every site is “a different AS”, so re-advertisement between sites doesn’t trip over “I see myself in the AS_PATH”.
 
 #### Single ASN across all sites (and why private-AS stripping matters)
-(TODO: explain why a route from site A reaches site B, gets dropped if B sees its own AS in AS_PATH)
+
+It’s equally valid to run **the same ASN at every site**.
+
+But you need to understand one hard rule:
+
+- If site A advertises a prefix to the WAN, and that route is later presented to site B *with the same ASN still in the AS_PATH*, then **site B will drop it**.
+
+That’s not a bug — that’s BGP doing loop prevention: *“I won’t accept a route that already contains my ASN.”*
+
+So if you run “single ASN everywhere” using a private ASN, the provider typically has to do **private-AS removal/stripping** between sites.
+
+This exact idea shows up again in cloud connectivity designs when you’re deciding whether to use one ASN globally, or split ASNs per edge/site.
 
 ## 4) Peering relationships in enterprise cloud connectivity
 
