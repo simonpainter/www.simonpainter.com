@@ -29,12 +29,12 @@ BGP is a _path-vector_ routing protocol. You don’t “discover the best path�
 
 BGP is also **policy-first**. It’s designed for environments where “best” isn’t purely a function of link cost; it’s driven by _business relationships_, _operational preferences_, and _intent_.
 
-> Sidebar: “BGP isn’t an IGP”… except when it is.
->
-> In most enterprise networks, BGP isn’t used as an IGP. But at very large scale (I’ve seen this first-hand at Walmart), some organisations do run BGP internally because the scaling and operational trade-offs can work out better than running a giant link-state domain.
->
-> If you want the deeper reasoning: I wrote about OSPF scaling constraints and why BGP scales differently here:
-> https://www.simonpainter.com/dijkstra-ospf/
+:::note “BGP isn’t an IGP”… except when it is.
+In most enterprise networks, BGP isn’t used as an IGP. But at very large scale (I’ve seen this first-hand at Walmart), some organisations do run BGP internally because the scaling and operational trade-offs can work out better than running a giant link-state domain.
+
+If you want the deeper reasoning: I wrote about OSPF scaling constraints and why BGP scales differently here:
+https://www.simonpainter.com/dijkstra-ospf/
+:::
 
 ## eBGP and iBGP at the cloud edge
 
@@ -66,37 +66,37 @@ Typical triggers are two edge routers in the same site (active/active), two CNFs
 
 You _can_ avoid iBGP by doing weird things (like re-advertising routes between eBGP peers and hoping loop prevention doesn’t bite you), but iBGP is usually the right tool.
 
-> Note: this is where people start hearing about route reflectors.
->
-> You don’t need them in a small design, but once you have “lots of BGP speakers”, full-mesh iBGP becomes annoying because iBGP requires every router to peer with every other router (or you introduce route reflection/confederations).
+:::note this is where people start hearing about route reflectors.
+You don’t need them in a small design, but once you have “lots of BGP speakers”, full-mesh iBGP becomes annoying because iBGP requires every router to peer with every other router (or you introduce route reflection/confederations).
+:::
 
 ### Why you care
 
 Because **your operational knobs behave differently depending on where you are**. LOCAL_PREF is your best “pick the outbound exit” tool, but it’s only meaningful inside your AS. MED is, at best, a hint to a neighbour, and it is typically only compared in narrow conditions. AS_PATH prepending is crude, but it’s one of the few signals that naturally propagates beyond your first-hop peer.
 
-> Sidebar: iBGP, eBGP, and where they sit in the route selection hierarchy
->
-> There are two different “selection” processes people conflate.
->
-> One is the BGP best-path algorithm, which chooses one BGP path over another.
->
-> The other is the router’s global route selection behaviour, where different protocols all claim they can reach the same destination prefix, and the router has to choose which one makes it into the forwarding table.
->
-> On Cisco platforms, the default administrative distances reflect a common design assumption: BGP speakers are at the edge. eBGP-learned routes are therefore treated as a strong signal for external reachability, while iBGP-learned routes are treated as much less preferable than IGP-learned routes.
->
-> The rationale is pragmatic. If you’ve already learned the route from the IGP, it’s often “closer” and more efficient to follow that IGP path than to follow an iBGP hop-count that might simply be reflecting policy, or topology you don’t want to traverse.
->
-> The punchline is that if you redistribute between protocols, or if you run BGP deep in the network, you should understand how administrative distance interacts with BGP, and consider whether you need to tune it for your design.
->
-> Sidebar: iBGP and eBGP multipath (and why you suddenly care in cloud)
->
-> BGP is often taught as “pick one best path”, which is true for what it advertises, but not always true for what it forwards.
->
-> Most platforms can install multiple equal-cost BGP paths for the same prefix (multipath) and then forward over them using ECMP. Whether paths are considered “equal enough” depends on the platform and config, but the important point is that multipath is an explicit design choice.
->
-> This matters in cloud connectivity because active/active circuit pairs often rely on it. ExpressRoute in particular is commonly delivered as redundant circuit pairs, and many designs expect to use both links in steady state. Without multipath, you can easily end up with “one link hot, one link cold”, even though you paid for both.
->
-> If you need symmetric flows through stateful appliances, you might still choose active/passive, but if you are aiming for active/active, make sure you understand how your platform handles eBGP multipath, iBGP multipath, and the tie-breaks that decide which paths qualify.
+:::note iBGP, eBGP, and where they sit in the route selection hierarchy
+There are two different “selection” processes people conflate.
+
+One is the BGP best-path algorithm, which chooses one BGP path over another.
+
+The other is the router’s global route selection behaviour, where different protocols all claim they can reach the same destination prefix, and the router has to choose which one makes it into the forwarding table.
+
+On Cisco platforms, the default administrative distances reflect a common design assumption: BGP speakers are at the edge. eBGP-learned routes are therefore treated as a strong signal for external reachability, while iBGP-learned routes are treated as much less preferable than IGP-learned routes.
+
+The rationale is pragmatic. If you’ve already learned the route from the IGP, it’s often “closer” and more efficient to follow that IGP path than to follow an iBGP hop-count that might simply be reflecting policy, or topology you don’t want to traverse.
+
+The punchline is that if you redistribute between protocols, or if you run BGP deep in the network, you should understand how administrative distance interacts with BGP, and consider whether you need to tune it for your design.
+
+Sidebar: iBGP and eBGP multipath (and why you suddenly care in cloud)
+
+BGP is often taught as “pick one best path”, which is true for what it advertises, but not always true for what it forwards.
+
+Most platforms can install multiple equal-cost BGP paths for the same prefix (multipath) and then forward over them using ECMP. Whether paths are considered “equal enough” depends on the platform and config, but the important point is that multipath is an explicit design choice.
+
+This matters in cloud connectivity because active/active circuit pairs often rely on it. ExpressRoute in particular is commonly delivered as redundant circuit pairs, and many designs expect to use both links in steady state. Without multipath, you can easily end up with “one link hot, one link cold”, even though you paid for both.
+
+If you need symmetric flows through stateful appliances, you might still choose active/passive, but if you are aiming for active/active, make sure you understand how your platform handles eBGP multipath, iBGP multipath, and the tie-breaks that decide which paths qualify.
+:::
 
 If you understand the eBGP/iBGP boundary, the rest of BGP becomes much less mysterious.
 
@@ -268,17 +268,17 @@ flowchart LR
 
 On the enterprise side, you then need to decide how those routes get back into the rest of your network. That usually means iBGP to a core pair or route reflectors, or redistribution into an IGP (with all the caveats that implies).
 
-> ExpressRoute BGP essentials
->
-> Microsoft Learn content about ExpressRoute often talks about “peerings” and “routing domains” without emphasising the mechanism. ExpressRoute is, in practice, delivered via redundant eBGP sessions.
->
-> Each peering (Private peering, and Microsoft peering) is delivered via a pair of independent eBGP sessions. If you exceed prefix limits, the default behaviour is for the BGP session to be terminated, which is a hard failure mode and a good reason to monitor prefix counts.
->
-> Microsoft-side BGP timers are fixed (keepalive and hold), so fast failover is normally achieved with BFD, which is enabled by default on Microsoft’s side, but must be configured on your CPE.
->
-> Filtering is primarily your responsibility on the on-prem edge. Azure UDRs are static and not part of BGP advertisement. On Microsoft peering specifically, “no routes” is often explained by a missing route filter.
->
-> References: circuit peerings and BGP behaviour (<https://learn.microsoft.com/en-us/azure/expressroute/expressroute-circuit-peerings>), ExpressRoute FAQs (<https://learn.microsoft.com/en-us/azure/expressroute/expressroute-faqs>), resiliency guidance (<https://learn.microsoft.com/en-us/azure/expressroute/design-architecture-for-resiliency>), and troubleshooting performance (<https://learn.microsoft.com/en-us/troubleshoot/azure/expressroute/expressroute-troubleshooting-network-performance>).
+:::warning ExpressRoute BGP essentials
+Microsoft Learn content about ExpressRoute often talks about “peerings” and “routing domains” without emphasising the mechanism. ExpressRoute is, in practice, delivered via redundant eBGP sessions.
+
+Each peering (Private peering, and Microsoft peering) is delivered via a pair of independent eBGP sessions. If you exceed prefix limits, the default behaviour is for the BGP session to be terminated, which is a hard failure mode and a good reason to monitor prefix counts.
+
+Microsoft-side BGP timers are fixed (keepalive and hold), so fast failover is normally achieved with BFD, which is enabled by default on Microsoft’s side, but must be configured on your CPE.
+
+Filtering is primarily your responsibility on the on-prem edge. Azure UDRs are static and not part of BGP advertisement. On Microsoft peering specifically, “no routes” is often explained by a missing route filter.
+
+References: circuit peerings and BGP behaviour (<https://learn.microsoft.com/en-us/azure/expressroute/expressroute-circuit-peerings>), ExpressRoute FAQs (<https://learn.microsoft.com/en-us/azure/expressroute/expressroute-faqs>), resiliency guidance (<https://learn.microsoft.com/en-us/azure/expressroute/design-architecture-for-resiliency>), and troubleshooting performance (<https://learn.microsoft.com/en-us/troubleshoot/azure/expressroute/expressroute-troubleshooting-network-performance>).
+:::
 
 ### Private ASN vs public ASN (enterprise reality)
 
@@ -321,10 +321,10 @@ But both Azure and AWS also have public peering-style options where you can exch
 
 Why you’d do it is straightforward: you get predictable latency and jitter versus the internet, you avoid hairpinning through generic internet egress, and you can improve the path to cloud SaaS and public endpoints where it matters.
 
-> Sidebar: public peering doesn’t magically make the services private.
->
-> You’re still reaching public IPs. You’re just reaching them over a different transport.
-> The security model (identity, TLS, authz) still matters.
+:::note public peering doesn’t magically make the services private.
+You’re still reaching public IPs. You’re just reaching them over a different transport.
+The security model (identity, TLS, authz) still matters.
+:::
 
 ### Summarisation (and the sharp edges)
 
@@ -355,19 +355,19 @@ When a router has multiple routes to the same destination prefix, it picks a “
 
 In practice, for enterprise connectivity, you can think in three buckets: things you set internally to steer your outbound (for example, LOCAL_PREF), things you can signal to a neighbour to influence inbound (for example, MED and AS_PATH), and tie-breakers, where BGP picks something stable when your policy doesn’t decide.
 
-> Sidebar: the BGP path selection algorithm (and where it actually applies)
->
-> It’s easy to read a “BGP best path” list and assume BGP is making a global routing decision across your whole table. It isn’t.
->
-> The important nuance is that the BGP path selection algorithm only runs when you have multiple candidate paths for the same prefix, and it’s effectively comparing like-for-like. Longest Prefix Match (LPM) happens first, which means the “BGP decision process” is, in practice, mostly about choosing between routes of the same prefix length.
->
-> That’s one of the reasons providers often enforce a minimum, maximum, or fixed acceptable prefix length in their routing policy. They’re trying to keep the routing domain sane, and they’re also trying to avoid customers using more-specific prefixes as a cheap trick to bypass policy and traffic engineering.
->
-> If you want the rationale for why prefix length wins before any BGP attribute, and why we shouldn’t abuse it, this post is the best explanation I’ve written: https://www.simonpainter.com/longest-prefix-matching/
->
-> Vendor note: the exact tie-break order differs slightly between implementations, and there are knobs to change it. Junos has a good write-up here, including its default MED comparison behaviour and the options that alter it: https://www.juniper.net/documentation/us/en/software/junos/vpn-l2/bgp/topics/concept/routing-protocols-address-representation.html
->
-> Cisco has a canonical write-up too (and it’s a good reminder that Cisco has router-local attributes like WEIGHT that don’t exist everywhere): https://www.cisco.com/c/en/us/support/docs/ip/border-gateway-protocol-bgp/13753-25.html
+:::note the BGP path selection algorithm (and where it actually applies)
+It’s easy to read a “BGP best path” list and assume BGP is making a global routing decision across your whole table. It isn’t.
+
+The important nuance is that the BGP path selection algorithm only runs when you have multiple candidate paths for the same prefix, and it’s effectively comparing like-for-like. Longest Prefix Match (LPM) happens first, which means the “BGP decision process” is, in practice, mostly about choosing between routes of the same prefix length.
+
+That’s one of the reasons providers often enforce a minimum, maximum, or fixed acceptable prefix length in their routing policy. They’re trying to keep the routing domain sane, and they’re also trying to avoid customers using more-specific prefixes as a cheap trick to bypass policy and traffic engineering.
+
+If you want the rationale for why prefix length wins before any BGP attribute, and why we shouldn’t abuse it, this post is the best explanation I’ve written: https://www.simonpainter.com/longest-prefix-matching/
+
+Vendor note: the exact tie-break order differs slightly between implementations, and there are knobs to change it. Junos has a good write-up here, including its default MED comparison behaviour and the options that alter it: https://www.juniper.net/documentation/us/en/software/junos/vpn-l2/bgp/topics/concept/routing-protocols-address-representation.html
+
+Cisco has a canonical write-up too (and it’s a good reminder that Cisco has router-local attributes like WEIGHT that don’t exist everywhere): https://www.cisco.com/c/en/us/support/docs/ip/border-gateway-protocol-bgp/13753-25.html
+:::
 
 ### The three attributes you’ll use constantly
 
@@ -407,11 +407,11 @@ Higher LOCAL_PREF wins.
 
 It’s popular for three reasons: it’s deterministic, it’s simple to reason about, and it doesn’t require you to play games with AS_PATH length.
 
-> Sidebar: ECMP vs active/passive is often dictated by security appliances.
->
-> ECMP (active/active) has real value, but plenty of real networks have stateful firewalls or NAT devices that **aren’t clustered**.
-> Those designs often require **symmetric paths** (same in and out) to avoid breaking sessions.
-> In that world, active/passive circuits aren’t a failure of imagination; they’re a pragmatic requirement.
+:::note ECMP vs active/passive is often dictated by security appliances.
+ECMP (active/active) has real value, but plenty of real networks have stateful firewalls or NAT devices that **aren’t clustered**.
+Those designs often require **symmetric paths** (same in and out) to avoid breaking sessions.
+In that world, active/passive circuits aren’t a failure of imagination; they’re a pragmatic requirement.
+:::
 
 ### Pattern: prefer exit A, keep exit B as backup
 
@@ -561,10 +561,10 @@ A pragmatic ordering is:
 2. If you’re dual-connected to the _same_ provider AS and they honour MED: MED can work cleanly.
 3. If you need a portable signal that propagates: prepend on the less-preferred circuit.
 
-> Sidebar: there is no guarantee of perfect symmetry.
->
-> Even when you do everything “right”, you can end up with a symmetric _intent_ but asymmetric _reality_.
-> Failures, maintenance, hot-potato routing and upstream policy all get a vote.
+:::note there is no guarantee of perfect symmetry.
+Even when you do everything “right”, you can end up with a symmetric _intent_ but asymmetric _reality_.
+Failures, maintenance, hot-potato routing and upstream policy all get a vote.
+:::
 
 ### Communities (conceptual)
 
@@ -739,11 +739,11 @@ The fix is boring and effective: strict import filters (what you accept), and st
 
 Import filtering is more than just prefix-lists. In real designs you will often also filter based on AS_PATH and communities. You might explicitly exclude routes with certain ASNs in the path, you might import only routes sourced from a specific ASN (to avoid your peer becoming an accidental transit), and you might use communities as the selection key, for example AWS regional indicators.
 
-> Sidebar: regional route filtering to keep control of latency
->
-> At a large fintech I worked at we had ExpressRoute and Direct Connect in many regions. We deliberately imported only the cloud routes that were relevant to each region, because we wanted inter-region traffic to stay on our own low-latency network, not to wander across a hyperscaler backbone just because it was reachable.
->
-> This is where communities become genuinely useful, not for “clever traffic engineering”, but as a clean mechanism to scope what you import.
+:::note regional route filtering to keep control of latency
+At a large fintech I worked at we had ExpressRoute and Direct Connect in many regions. We deliberately imported only the cloud routes that were relevant to each region, because we wanted inter-region traffic to stay on our own low-latency network, not to wander across a hyperscaler backbone just because it was reachable.
+
+This is where communities become genuinely useful, not for “clever traffic engineering”, but as a clean mechanism to scope what you import.
+:::
 
 ### Example: dual-provider internet peering (don’t become transit)
 
@@ -838,28 +838,28 @@ On the other hand, in some **private multi-cloud CNF** designs, you might _delib
 - e.g., allow private traffic from Cloud A to reach Cloud B via your exchange routers.
 - That’s a valid architecture, but only if you do it intentionally, and keep it isolated from public-routing domains.
 
-> Sidebar: RPSL (Routing Policy Specification Language)
->
-> In the public internet, routing policy is often described using RPSL objects (route/route6, aut-num, etc.), which are then used to build prefix filters.
-> It’s one of the reasons “who should accept what from whom” can be automated at scale.
->
-> If you’ve never bumped into it before: https://en.wikipedia.org/wiki/Routing_Policy_Specification_Language
->
-> Sidebar: a quick note on RPKI and route validation
->
-> RPKI is the mechanism that lets prefix holders publish cryptographic Route Origin Authorisations (ROAs), and lets networks validate whether a route announcement is likely to be legitimate.
->
-> Even if your enterprise BGP is mostly “private”, the upstreams you depend on operate in the public routing system, and the industry is increasingly treating RPKI-invalid routes as something to drop, not just something to log.
->
-> AWS has a good high-level write-up of what they’re doing here, which is useful context: https://aws.amazon.com/blogs/networking-and-content-delivery/how-aws-is-helping-to-secure-internet-routing/
+:::note RPSL (Routing Policy Specification Language)
+In the public internet, routing policy is often described using RPSL objects (route/route6, aut-num, etc.), which are then used to build prefix filters.
+It’s one of the reasons “who should accept what from whom” can be automated at scale.
 
-> Sidebar: how Azure prevents some transit scenarios
->
-> Microsoft actively prevents certain transit-routing behaviours in the backbone (for good reasons).
-> If you’re using Route Server + ExpressRoute in multi-hub designs, this can show up as “routes learned in one place aren’t propagated to another” when a shared circuit is involved.
->
-> I wrote up the behaviour and the design implications here:
-> https://www.simonpainter.com/transit-route-prevention/
+If you’ve never bumped into it before: https://en.wikipedia.org/wiki/Routing_Policy_Specification_Language
+
+Sidebar: a quick note on RPKI and route validation
+
+RPKI is the mechanism that lets prefix holders publish cryptographic Route Origin Authorisations (ROAs), and lets networks validate whether a route announcement is likely to be legitimate.
+
+Even if your enterprise BGP is mostly “private”, the upstreams you depend on operate in the public routing system, and the industry is increasingly treating RPKI-invalid routes as something to drop, not just something to log.
+
+AWS has a good high-level write-up of what they’re doing here, which is useful context: https://aws.amazon.com/blogs/networking-and-content-delivery/how-aws-is-helping-to-secure-internet-routing/
+:::
+
+:::note how Azure prevents some transit scenarios
+Microsoft actively prevents certain transit-routing behaviours in the backbone (for good reasons).
+If you’re using Route Server + ExpressRoute in multi-hub designs, this can show up as “routes learned in one place aren’t propagated to another” when a shared circuit is involved.
+
+I wrote up the behaviour and the design implications here:
+https://www.simonpainter.com/transit-route-prevention/
+:::
 
 ### Max-prefix
 
@@ -869,17 +869,17 @@ It limits how many routes you’re willing to accept from a neighbour. If you ex
 
 A pragmatic enterprise approach is to set max-prefix on every eBGP peer, to size the threshold based on what you _expect_ (plus headroom), and to decide the failure mode ahead of time, for example warn-only logging versus hard-teardown.
 
-> Sidebar: max-prefix as a rite of passage
->
-> BT have historically had a very low default prefix limit on some enterprise BGP peerings.
->
-> At ASDA, it was almost a rite of passage that someone would, at least once in their time there, remove or loosen a prefix filter, hit the prefix limit, and watch the BGP session drop.
->
-> The extra sting is that BT don’t necessarily auto-timeout and recover quickly. Even after you fix the policy, you may need to raise a priority support ticket to get the peering reset.
->
-> The lesson is simple, and painfully memorable. BT are protecting themselves aggressively from customers accidentally, or deliberately, advertising too many routes and filling up router memory.
->
-> A core principle of BGP is that it’s typically at your perimeter, so you should not trust the motives or capabilities of a peer. Always apply your own import policy, export policy, and limits to protect yourself.
+:::warning max-prefix as a rite of passage
+BT have historically had a very low default prefix limit on some enterprise BGP peerings.
+
+At ASDA, it was almost a rite of passage that someone would, at least once in their time there, remove or loosen a prefix filter, hit the prefix limit, and watch the BGP session drop.
+
+The extra sting is that BT don’t necessarily auto-timeout and recover quickly. Even after you fix the policy, you may need to raise a priority support ticket to get the peering reset.
+
+The lesson is simple, and painfully memorable. BT are protecting themselves aggressively from customers accidentally, or deliberately, advertising too many routes and filling up router memory.
+
+A core principle of BGP is that it’s typically at your perimeter, so you should not trust the motives or capabilities of a peer. Always apply your own import policy, export policy, and limits to protect yourself.
+:::
 
 If you’re peering with an upstream that can legitimately send you huge tables (e.g., full routes), max-prefix is still useful; you just size it appropriately.
 
@@ -906,25 +906,25 @@ Public peering options exist too, and they come with sharp edges. DX public VIF 
 
 Finally, availability patterns are “product-shaped”. You’ll often have multiple BGP sessions per circuit, dual circuits, and region and site diversity patterns. The BGP knobs are the same, but the constraints around them are not.
 
-> Sidebar: BGP inside AWS constructs (it’s not just a hybrid edge protocol)
->
-> BGP is no longer only about Direct Connect at the edge. AWS now has constructs where BGP drives changes inside the VPC routing domain.
->
-> A good example is Amazon VPC Route Server, which can use BGP to influence route tables (including IGW route tables) for patterns like floating IP failover, or steering traffic through active/standby inspection appliances.
->
-> Useful starting point: <https://aws.amazon.com/blogs/networking-and-content-delivery/dynamic-routing-using-amazon-vpc-route-server/>
+:::note BGP inside AWS constructs (it’s not just a hybrid edge protocol)
+BGP is no longer only about Direct Connect at the edge. AWS now has constructs where BGP drives changes inside the VPC routing domain.
 
-> Sidebar: AWS Cloud WAN Connect and MP-BGP reality
->
-> If you’re integrating SD-WAN or building a global enterprise WAN overlay, AWS Cloud WAN Connect is another place BGP shows up. It’s also a good reminder that modern enterprise designs often exchange IPv6 routes over MP-BGP, even when the BGP adjacency itself is IPv4.
->
-> Reference: <https://aws.amazon.com/blogs/networking-and-content-delivery/building-resilient-ipv6-network-with-sd-wans-and-aws-cloud-wan-connect-with-gre/>
+A good example is Amazon VPC Route Server, which can use BGP to influence route tables (including IGW route tables) for patterns like floating IP failover, or steering traffic through active/standby inspection appliances.
 
-> Sidebar: prove your resiliency, don’t just design it
->
-> BGP failover only matters if you’ve tested it. AWS provides guidance and tooling for deliberately failing over Direct Connect virtual interfaces, which makes it easier to run proper game-days.
->
-> Reference: <https://aws.amazon.com/blogs/networking-and-content-delivery/testing-aws-direct-connect-resiliency-with-resiliency-toolkit-failover-testing/>
+Useful starting point: <https://aws.amazon.com/blogs/networking-and-content-delivery/dynamic-routing-using-amazon-vpc-route-server/>
+:::
+
+:::note AWS Cloud WAN Connect and MP-BGP reality
+If you’re integrating SD-WAN or building a global enterprise WAN overlay, AWS Cloud WAN Connect is another place BGP shows up. It’s also a good reminder that modern enterprise designs often exchange IPv6 routes over MP-BGP, even when the BGP adjacency itself is IPv4.
+
+Reference: <https://aws.amazon.com/blogs/networking-and-content-delivery/building-resilient-ipv6-network-with-sd-wans-and-aws-cloud-wan-connect-with-gre/>
+:::
+
+:::note prove your resiliency, don’t just design it
+BGP failover only matters if you’ve tested it. AWS provides guidance and tooling for deliberately failing over Direct Connect virtual interfaces, which makes it easier to run proper game-days.
+
+Reference: <https://aws.amazon.com/blogs/networking-and-content-delivery/testing-aws-direct-connect-resiliency-with-resiliency-toolkit-failover-testing/>
+:::
 
 ### Route Server (brief pointer)
 
@@ -933,15 +933,15 @@ If you’re using managed route distribution services (like Azure Route Server),
 I’ve written up one of the key behaviours and its design implications here:
 https://www.simonpainter.com/transit-route-prevention/
 
-> Sidebar: AWS Route Server versus Azure Route Server
->
-> AWS Route Server and Azure Route Server sound like the same thing, but they aren’t.
->
-> Azure Route Server is closer to “BGP as a Service”, it peers using standard BGP and can support transitive routing patterns that feel familiar to enterprise network engineers.
->
-> AWS Route Server is a more specialised tool, it is primarily about orchestrating active/passive appliance failover by manipulating specific route tables, and it is deliberately non-transitive.
->
-> If you want the deeper comparison (and the philosophy behind the difference), I wrote it up here: https://www.simonpainter.com/aws-route-server/
+:::note AWS Route Server versus Azure Route Server
+AWS Route Server and Azure Route Server sound like the same thing, but they aren’t.
+
+Azure Route Server is closer to “BGP as a Service”, it peers using standard BGP and can support transitive routing patterns that feel familiar to enterprise network engineers.
+
+AWS Route Server is a more specialised tool, it is primarily about orchestrating active/passive appliance failover by manipulating specific route tables, and it is deliberately non-transitive.
+
+If you want the deeper comparison (and the philosophy behind the difference), I wrote it up here: https://www.simonpainter.com/aws-route-server/
+:::
 
 ## Wrapping up
 
