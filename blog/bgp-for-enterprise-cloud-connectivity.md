@@ -110,9 +110,9 @@ Why this matters for the cloud journey: this is the closest mental model to DX/E
 
 #### Pattern B: CE–CE peering over MPLS (customer edges peer with each other)
 
-You called this out explicitly, and yes — I’ve seen this in the wild too.
+This is **not the typical MPLS model** — most MPLS WANs are built as a many-to-many L3VPN where you peer to the provider and the provider does the route distribution.
 
-In this design, the provider network is treated as **a transport underlay**, and the **customer edge routers form BGP adjacencies with each other** (directly or via some kind of rendezvous).
+That said, I *have* seen real-world deployments where the MPLS network is treated as **a transport underlay**, and the **customer edge routers form BGP adjacencies with each other** (directly or via some kind of rendezvous).
 
 What it looks like from the customer’s point of view:
 - Site A CE has BGP neighbours that are *other customer CEs*.
