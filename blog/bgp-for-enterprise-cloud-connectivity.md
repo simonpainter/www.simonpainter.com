@@ -469,6 +469,19 @@ This post includes Mermaid diagrams for the key architectural patterns. If I’v
 - Add a short sidebar on **AWS Route Server vs Azure Route Server**, to head off naming confusion and emphasise the transitive versus non-transitive difference (and why this matters for appliance failover and routing design): https://www.simonpainter.com/aws-route-server/
 - Optionally add a callout that AWS Route Server is primarily active/passive NVA failover orchestration in a single VPC, while Azure Route Server is closer to “BGP as a Service”, and point readers to the post above for the deeper comparison.
 
+- Add an **ExpressRoute BGP essentials** callout that makes the BGP behaviour explicit (because the Microsoft Learn module underplays it), covering:
+  - each ExpressRoute peering is delivered via **a pair of independent eBGP sessions** (redundant);
+  - **prefix limit exceed** behavior (session termination) and why monitoring matters;
+  - fixed Microsoft-side **BGP timers** (keepalive/hold) and the recommendation to use **BFD** for faster failover;
+  - the boundary that route filtering is primarily an **on-prem edge** responsibility, and Azure UDRs are not dynamic/BGP;
+  - Microsoft peering specifics: no routes until a **route filter** is attached.
+
+Reference docs to cite:
+- https://learn.microsoft.com/en-us/azure/expressroute/expressroute-circuit-peerings
+- https://learn.microsoft.com/en-us/azure/expressroute/expressroute-faqs
+- https://learn.microsoft.com/en-us/azure/expressroute/design-architecture-for-resiliency
+- https://learn.microsoft.com/en-us/azure/troubleshoot/azure/expressroute/expressroute-troubleshooting-network-performance
+
 ## Influencing inbound traffic (enterprise reality)
 
 Inbound is where BGP stops feeling like “routing” and starts feeling like diplomacy.
