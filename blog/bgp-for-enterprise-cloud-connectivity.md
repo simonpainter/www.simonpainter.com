@@ -459,6 +459,13 @@ A few practical notes: in real configs you’ll almost always include explicit r
 
 This post includes Mermaid diagrams for the key architectural patterns. If I’ve missed an example you care about, it’s usually a sign I should diagram it out.
 
+## TODO (new topics to incorporate)
+
+- Consider a short section or sidebar on **BGP inside AWS constructs**, for example Amazon **VPC Route Server** driving VPC route table and IGW route table changes for dynamic routing patterns (floating IP failover, and firewall insertion).
+- Consider a short section on **AWS Cloud WAN Connect** in an enterprise WAN framing, including the MP-BGP/IPv6 nuance, ECMP, and the “GRE versus tunnel-less” design choice.
+- Add an operational section or sidebar on **proving resiliency**, including AWS **Direct Connect failover testing** and the idea of regular game-days.
+- Add an optional routing security sidebar: AWS’s posture on **RPKI/ROV** as context, and what that implies for enterprise expectations and internal hygiene.
+
 ## Influencing inbound traffic (enterprise reality)
 
 Inbound is where BGP stops feeling like “routing” and starts feeling like diplomacy.
