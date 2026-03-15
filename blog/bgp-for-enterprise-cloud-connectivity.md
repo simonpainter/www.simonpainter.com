@@ -201,6 +201,14 @@ If you strip away the product names, enterprise cloud connectivity is mostly jus
 
 That transport could be an MPLS or SD-WAN underlay, ExpressRoute or Direct Connect, or a cloud exchange in a CNF (where you have your own routers, and an L2 handoff to the peers).
 
+:::note BGP inside AWS constructs (it’s not just a hybrid edge protocol)
+BGP is no longer only about Direct Connect at the edge. AWS now has constructs where BGP drives changes inside the VPC routing domain.
+
+A good example is Amazon VPC Route Server, which can use BGP to influence route tables (including IGW route tables) for patterns like floating IP failover, or steering traffic through active/standby inspection appliances.
+
+Useful starting point: [Dynamic Routing Using Amazon VPC Route Server](https://aws.amazon.com/blogs/networking-and-content-delivery/dynamic-routing-using-amazon-vpc-route-server/)
+:::
+
 ### What’s actually peering with what?
 
 In the model we’re using for this post, your routers sit in one (or two) CNFs, you have L2 to each provider peer, and you run eBGP to Azure (ExpressRoute private peering), AWS (Direct Connect private VIF), and optionally your WAN provider(s) if you’re also aggregating MPLS or SD-WAN there.
@@ -581,9 +589,21 @@ Rather than duplicating provider tables here, I’ve [written up a comparison](c
 
 Start with the provider’s documentation for the specific connection type (DX public or private VIF, and ER private or Microsoft peering). Implement communities in code and policy with the same discipline as firewall rules, including version control, review, explicit intent, and testing. Prefer communities over “clever” AS_PATH games when the provider supports the behaviour you need.
 
+:::note Prove your resiliency, don’t just design it
+BGP failover only matters if you’ve tested it. AWS provides guidance and tooling for deliberately failing over Direct Connect virtual interfaces, which makes it easier to run proper game-days.
+
+Reference: [Testing AWS Direct Connect Resiliency with Resiliency Toolkit Failover Testing](https://aws.amazon.com/blogs/networking-and-content-delivery/testing-aws-direct-connect-resiliency-with-resiliency-toolkit-failover-testing/)
+:::
+
 ## Cloud exchange (CNF) patterns
 
 A cloud exchange is typically a **carrier neutral facility (CNF)** where you can aggregate cloud provider connectivity (ExpressRoute and Direct Connect), and WAN connectivity (MPLS and SD-WAN).
+
+:::note AWS Cloud WAN Connect and MP-BGP reality
+If you’re integrating SD-WAN or building a global enterprise WAN overlay, AWS Cloud WAN Connect is another place BGP shows up. It’s also a good reminder that modern enterprise designs often exchange IPv6 routes over MP-BGP, even when the BGP adjacency itself is IPv4.
+
+Reference: [Building a Resilient IPv6 Network with SD-WANs and AWS Cloud WAN Connect with GRE](https://aws.amazon.com/blogs/networking-and-content-delivery/building-resilient-ipv6-network-with-sd-wans-and-aws-cloud-wan-connect-with-gre/)
+:::
 
 In practice, a CNF is where enterprise networking starts to look a little bit like “real internet engineering”… except you’re doing it inside a building with cross-connects.
 
@@ -813,15 +833,13 @@ In the public internet, routing policy is often described using RPSL objects (ro
 It’s one of the reasons “who should accept what from whom” can be automated at scale.
 
 If you’ve never bumped into it before: [Routing Policy Specification Language](https://en.wikipedia.org/wiki/Routing_Policy_Specification_Language)
-
-Sidebar: a quick note on RPKI and route validation
+:::
 
 RPKI is the mechanism that lets prefix holders publish cryptographic Route Origin Authorisations (ROAs), and lets networks validate whether a route announcement is likely to be legitimate.
 
 Even if your enterprise BGP is mostly “private”, the upstreams you depend on operate in the public routing system, and the industry is increasingly treating RPKI-invalid routes as something to drop, not just something to log.
 
 AWS has a good high-level write-up of what they’re doing here, which is useful context: [How AWS is helping to secure internet routing](https://aws.amazon.com/blogs/networking-and-content-delivery/how-aws-is-helping-to-secure-internet-routing/)
-:::
 
 :::note how Azure prevents some transit scenarios
 Microsoft actively prevents certain transit-routing behaviours in the backbone (for good reasons).
@@ -874,26 +892,6 @@ Some practical differences you’ll feel are that you’re peering to a cloud se
 Public peering options exist too, and they come with sharp edges. DX public VIF and ER Microsoft peering can be great for predictable paths to public services, but they’re also where you really don’t want to accidentally export something that turns you into transit.
 
 Finally, availability patterns are “product-shaped”. You’ll often have multiple BGP sessions per circuit, dual circuits, and region and site diversity patterns. The BGP controls are the same, but the constraints around them are not.
-
-:::note BGP inside AWS constructs (it’s not just a hybrid edge protocol)
-BGP is no longer only about Direct Connect at the edge. AWS now has constructs where BGP drives changes inside the VPC routing domain.
-
-A good example is Amazon VPC Route Server, which can use BGP to influence route tables (including IGW route tables) for patterns like floating IP failover, or steering traffic through active/standby inspection appliances.
-
-Useful starting point: [Dynamic Routing Using Amazon VPC Route Server](https://aws.amazon.com/blogs/networking-and-content-delivery/dynamic-routing-using-amazon-vpc-route-server/)
-:::
-
-:::note AWS Cloud WAN Connect and MP-BGP reality
-If you’re integrating SD-WAN or building a global enterprise WAN overlay, AWS Cloud WAN Connect is another place BGP shows up. It’s also a good reminder that modern enterprise designs often exchange IPv6 routes over MP-BGP, even when the BGP adjacency itself is IPv4.
-
-Reference: [Building a Resilient IPv6 Network with SD-WANs and AWS Cloud WAN Connect with GRE](https://aws.amazon.com/blogs/networking-and-content-delivery/building-resilient-ipv6-network-with-sd-wans-and-aws-cloud-wan-connect-with-gre/)
-:::
-
-:::note prove your resiliency, don’t just design it
-BGP failover only matters if you’ve tested it. AWS provides guidance and tooling for deliberately failing over Direct Connect virtual interfaces, which makes it easier to run proper game-days.
-
-Reference: [Testing AWS Direct Connect Resiliency with Resiliency Toolkit Failover Testing](https://aws.amazon.com/blogs/networking-and-content-delivery/testing-aws-direct-connect-resiliency-with-resiliency-toolkit-failover-testing/)
-:::
 
 ### Route Server (brief pointer)
 
