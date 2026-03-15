@@ -335,7 +335,7 @@ The important nuance is that the BGP path selection algorithm only runs when you
 
 That’s one of the reasons providers often enforce a minimum, maximum, or fixed acceptable prefix length in their routing policy. They’re trying to keep the routing domain sane, and they’re also trying to avoid customers using more-specific prefixes as a cheap trick to bypass policy and traffic engineering.
 
-If you want the rationale for why prefix length wins before any BGP attribute, and why we shouldn’t abuse it, this post is my attempt to explain: [Longest Prefix Matching](https://www.simonpainter.com/longest-prefix-matching/).
+If you want the rationale for why prefix length wins before any BGP attribute, and why we shouldn’t abuse it, this post is my attempt to explain: [Longest Prefix Matching](longest-prefix-matching.md).
 
 Vendor note: the exact tie-break order differs slightly between implementations, and there are settings that can change it. Junos has a good write-up here, including its default MED comparison behaviour and the options that alter it: [Junos BGP Documentation](https://www.juniper.net/documentation/us/en/software/junos/vpn-l2/bgp/topics/concept/routing-protocols-address-representation.html)
 
@@ -908,7 +908,7 @@ Azure Route Server is closer to “BGP as a Service”, it peers using standard 
 
 AWS Route Server is a more specialised tool, it is primarily about orchestrating active/passive appliance failover by manipulating specific route tables, and it is deliberately non-transitive.
 
-If you want the deeper comparison (and the philosophy behind the difference), I wrote it up here: [AWS Route Server vs Azure Route Server](https://www.simonpainter.com/aws-route-server/)
+If you want the deeper comparison (and the philosophy behind the difference), I wrote it up here: [AWS Route Server vs Azure Route Server](aws-route-server.md)
 :::
 
 ## Wrapping up
