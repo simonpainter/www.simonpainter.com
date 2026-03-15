@@ -471,13 +471,6 @@ A few practical notes: in real configs you’ll almost always include explicit r
 
 This post includes Mermaid diagrams for the key architectural patterns. If I’ve missed an example you care about, it’s usually a sign I should diagram it out.
 
-## TODO (new topics to incorporate)
-
-- Add a short section or sidebar on **BGP inside AWS constructs**, for example Amazon **VPC Route Server** driving VPC route table and IGW route table changes for dynamic routing patterns (floating IP failover, and firewall insertion).
-- Add a short section on **AWS Cloud WAN Connect** in an enterprise WAN framing, including the MP-BGP/IPv6 nuance, ECMP, and the “GRE versus tunnel-less” design choice.
-- Add an operational section or sidebar on **proving resiliency**, including AWS **Direct Connect failover testing** and the idea of regular game-days.
-- Add an optional routing security sidebar: AWS’s posture on **RPKI/ROV** as context, and what that implies for enterprise expectations and internal hygiene.
-
 ## Influencing inbound traffic (enterprise reality)
 
 Inbound is where BGP stops feeling like “routing” and starts feeling like diplomacy.
@@ -893,6 +886,26 @@ Some practical differences you’ll feel are that you’re peering to a cloud se
 Public peering options exist too, and they come with sharp edges. DX public VIF and ER Microsoft peering can be great for predictable paths to public services, but they’re also where you really don’t want to accidentally export something that turns you into transit.
 
 Finally, availability patterns are “product-shaped”. You’ll often have multiple BGP sessions per circuit, dual circuits, and region and site diversity patterns. The BGP knobs are the same, but the constraints around them are not.
+
+> Sidebar: BGP inside AWS constructs (it’s not just a hybrid edge protocol)
+>
+> BGP is no longer only about Direct Connect at the edge. AWS now has constructs where BGP drives changes inside the VPC routing domain.
+>
+> A good example is Amazon VPC Route Server, which can use BGP to influence route tables (including IGW route tables) for patterns like floating IP failover, or steering traffic through active/standby inspection appliances.
+>
+> Useful starting point: <https://aws.amazon.com/blogs/networking-and-content-delivery/dynamic-routing-using-amazon-vpc-route-server/>
+
+> Sidebar: AWS Cloud WAN Connect and MP-BGP reality
+>
+> If you’re integrating SD-WAN or building a global enterprise WAN overlay, AWS Cloud WAN Connect is another place BGP shows up. It’s also a good reminder that modern enterprise designs often exchange IPv6 routes over MP-BGP, even when the BGP adjacency itself is IPv4.
+>
+> Reference: <https://aws.amazon.com/blogs/networking-and-content-delivery/building-resilient-ipv6-network-with-sd-wans-and-aws-cloud-wan-connect-with-gre/>
+
+> Sidebar: prove your resiliency, don’t just design it
+>
+> BGP failover only matters if you’ve tested it. AWS provides guidance and tooling for deliberately failing over Direct Connect virtual interfaces, which makes it easier to run proper game-days.
+>
+> Reference: <https://aws.amazon.com/blogs/networking-and-content-delivery/testing-aws-direct-connect-resiliency-with-resiliency-toolkit-failover-testing/>
 
 ### Route Server (brief pointer)
 
