@@ -327,18 +327,87 @@ We’ll work through these explicitly as we go.
 
 ## 7) Influencing outbound traffic (enterprise reality)
 
+Outbound is the part you *actually* control.
+If you’re deciding which circuit you want to use to *leave your network*, BGP gives you a few options — but in enterprise designs **LOCAL_PREF** is the one you’ll use constantly.
+
 ### LOCAL_PREF (the clean internal lever)
-(TODO)
 
-### IOS-XE example (LOCAL_PREF outbound preference)
+LOCAL_PREF is an attribute you set **inside your AS** to express preference for one exit over another.
+Higher LOCAL_PREF wins.
+
+It’s popular for three reasons:
+- it’s deterministic
+- it’s simple to reason about
+- it doesn’t require you to play games with AS_PATH length
+
+> Sidebar: ECMP vs active/passive is often dictated by security appliances.
+>
+> ECMP (active/active) has real value, but plenty of real networks have stateful firewalls or NAT devices that **aren’t clustered**.
+> Those designs often require **symmetric paths** (same in and out) to avoid breaking sessions.
+> In that world, active/passive circuits aren’t a failure of imagination — they’re a pragmatic requirement.
+
+### Pattern: prefer exit A, keep exit B as backup
+
+This is the bread-and-butter enterprise requirement.
+
+- You learn the same (or overlapping) routes from two upstreams / two circuits.
+- You want all outbound traffic to prefer circuit A.
+- If A fails, you want traffic to move to B.
+
+Mechanically, you do this by:
+- matching the routes you learn from neighbour A and setting a higher LOCAL_PREF,
+- leaving neighbour B at a lower LOCAL_PREF.
+
+### IOS-XE example (set LOCAL_PREF higher for routes learned from preferred peer)
+
 ```ios
-! TODO
+router bgp 65001
+ neighbor 192.0.2.1 remote-as 64512
+ neighbor 192.0.2.2 remote-as 64512
+!
+route-map PREFER-PEER-A-IN permit 10
+ set local-preference 200
+!
+route-map PREFER-PEER-B-IN permit 10
+ set local-preference 100
+!
+router bgp 65001
+ neighbor 192.0.2.1 route-map PREFER-PEER-A-IN in
+ neighbor 192.0.2.2 route-map PREFER-PEER-B-IN in
 ```
 
-### JunOS example (LOCAL_PREF outbound preference)
+### JunOS example (set LOCAL_PREF higher for routes learned from preferred peer)
+
 ```junos
-# TODO
+policy-options {
+  policy-statement PREFER-PEER-A-IN {
+    then local-preference 200;
+  }
+  policy-statement PREFER-PEER-B-IN {
+    then local-preference 100;
+  }
+}
+protocols {
+  bgp {
+    group PEER-A {
+      type external;
+      peer-as 64512;
+      import PREFER-PEER-A-IN;
+      neighbor 192.0.2.1;
+    }
+    group PEER-B {
+      type external;
+      peer-as 64512;
+      import PREFER-PEER-B-IN;
+      neighbor 192.0.2.2;
+    }
+  }
+}
 ```
+
+A few practical notes:
+- In real configs you’ll almost always include **explicit route filters** (prefix-lists) alongside these policies.
+- If you want active/active, LOCAL_PREF can still be used — you just set them equal and rely on other mechanisms (or ECMP capability) to load-share.
 
 ## 8) Influencing inbound traffic (enterprise reality)
 
