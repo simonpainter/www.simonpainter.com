@@ -506,7 +506,61 @@ https://www.simonpainter.com/community-comparison/
 
 ## 9) Communities (the provider-supported knobs)
 
-(TODO: keep conceptual; point to AWS/Azure docs and the comparison post above)
+BGP communities are just tags.
+That sounds underwhelming, but it’s exactly why they’re powerful.
+
+A community is a value (traditionally a 32-bit `X:Y` format, and in modern networks often *large communities*) that a router can attach to a route.
+The receiving network can then match on that tag and apply policy.
+
+In other words:
+- **you tag routes with intent**
+- **your peer maps that tag to behaviour**
+
+That’s why communities are often the cleanest inbound influence mechanism.
+You’re not trying to “beat” someone else’s decision process; you’re asking them to apply a documented policy.
+
+### The key rule: influence, not control
+
+Communities don’t override the fact that BGP crosses administrative boundaries.
+The peer still decides what they honour.
+
+Treat communities as:
+- a supported API into your provider’s policy, not
+- a guaranteed steering mechanism.
+
+### Common community categories you’ll encounter
+
+The exact values are provider-specific, but the *themes* repeat:
+
+- **Scope / propagation control**
+  - e.g., `NO_EXPORT` (RFC 1997) or “don’t advertise this beyond region X”.
+
+- **Preference / traffic engineering**
+  - “prefer this path more/less” (often implemented as a local preference change on the provider side).
+
+- **Blackholing** (in some designs)
+  - “discard traffic to this prefix at the edge” (useful for DDoS response when supported).
+
+- **Service / region classification**
+  - especially for public-cloud public prefixes (filter by service, region, sovereign cloud, etc.).
+
+### AWS vs Azure: don’t assume they work the same
+
+AWS and Azure both use communities heavily, but the models differ.
+
+Rather than duplicating provider tables here, I’ve written up a comparison (including examples like NO_EXPORT usage, regional scoping, and preference communities) in a dedicated post:
+
+https://www.simonpainter.com/community-comparison/
+
+### Practical advice
+
+- Start with the provider’s documentation for the specific connection type (DX public/private VIF; ER private/Microsoft peering).
+- Implement communities in code/policy with the same discipline as firewall rules:
+  - version control,
+  - review,
+  - explicit intent,
+  - and testing.
+- Prefer communities over “clever” AS_PATH games when the provider supports the behaviour you need.
 
 ## 10) Cloud exchange / carrier neutral facility (CNF) patterns
 
