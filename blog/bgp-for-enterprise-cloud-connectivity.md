@@ -214,14 +214,72 @@ That’s why a lot of BGP guidance boils down to:
 
 ## 5) Route advertisement basics (what you advertise and why)
 
+This is where most real-world BGP outages come from.
+Not because someone misunderstood the BGP decision process — but because someone advertised (or accepted) more routes than they intended.
+
 ### “Less is more”
-(TODO)
+
+At an enterprise edge, you almost always want to:
+- advertise **only the prefixes you genuinely own and intend to be reachable**, and
+- accept **only the prefixes you actually need**.
+
+Everything else is just future-you doing incident response.
+
+Practically that means:
+- explicit prefix-lists for what you originate
+- route-policy that rejects “surprises” by default
+- max-prefix limits (we’ll cover these in the safety rails section)
+
+### Private routes vs public routes (both exist in the cloud world)
+
+Most people start with **private** connectivity:
+- you advertise RFC1918 (or your internal private space) towards the cloud,
+- you receive cloud private prefixes back,
+- and you use that for VNet/VPC reachability.
+
+But both Azure and AWS also have **public peering-style** options where you can exchange **public routes** over the dedicated circuit:
+
+- **Azure ExpressRoute**: *Microsoft peering* (public services over the Microsoft backbone)
+- **AWS Direct Connect**: *public VIF* (public AWS services over the DX)
+
+Why you’d do it:
+- predictable latency and jitter vs the internet
+- avoid hairpinning through generic internet egress
+- improve the path to cloud SaaS / public endpoints where it matters
+
+> Sidebar: public peering doesn’t magically make the services private.
+>
+> You’re still reaching public IPs. You’re just reaching them over a different transport.
+> The security model (identity, TLS, authz) still matters.
 
 ### Summarisation (and the sharp edges)
-(TODO)
+
+Summarisation is attractive because it:
+- reduces route table size
+- can make failover faster/cleaner
+- and is easier to reason about
+
+But it has sharp edges:
+- you can accidentally blackhole traffic if you summarise a block that isn’t fully reachable in all failure modes
+- you can lose useful specificity for traffic engineering (more-specifics win)
+
+A pragmatic approach is:
+- summarise where it’s *structurally true* (e.g., you really do own that block end-to-end),
+- keep de-aggregation for the cases where you need it deliberately (and document why).
 
 ### Defaults
-(TODO)
+
+Default routes are a great tool when used intentionally.
+
+- In small branch designs, a default can be exactly what you want: “send everything to the core.”
+- At a cloud edge, a default can be dangerous if it causes:
+  - accidental internet breakout where you didn’t intend it, or
+  - asymmetric paths that make troubleshooting miserable.
+
+If you use defaults, treat them like any other route:
+- filter them explicitly
+- set their preference intentionally
+- test the failure mode (what happens when the preferred exit disappears?)
 
 ## 6) BGP path selection (the bits you actually use)
 
