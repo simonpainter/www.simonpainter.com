@@ -409,6 +409,9 @@ A few practical notes:
 - In real configs you’ll almost always include **explicit route filters** (prefix-lists) alongside these policies.
 - If you want active/active, LOCAL_PREF can still be used — you just set them equal and rely on other mechanisms (or ECMP capability) to load-share.
 
+## TODO: diagrams
+- Add **Mermaid diagrams** for each architectural example/pattern in this post (MPLS patterns, dual circuits, CNF designs, etc.).
+
 ## 8) Influencing inbound traffic (enterprise reality)
 
 ### Why inbound is harder
