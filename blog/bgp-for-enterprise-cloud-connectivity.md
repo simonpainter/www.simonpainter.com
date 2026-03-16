@@ -12,7 +12,7 @@ date: 2026-03-15
 draft: true
 ---
 
-I used to joke that the cloud networking exams, AZ-700 for Azure, and AWS Advanced Networking, were mostly just _“BGP in a GUI”_.
+I used to joke that the cloud networking exams, [AZ-700 for Azure](https://learn.microsoft.com/en-us/users/simonpainter/credentials/901c10b6d2135de3?ref=https%3A%2F%2Fwww.linkedin.com%2F), and [AWS Advanced Networking](https://www.credly.com/badges/5b413a12-1d38-4487-b36c-2fa470771a70), were mostly just _“BGP in a GUI”_.
 
 It’s not really true. Both exams cover a lot more than that: security, load balancers, DNS, design patterns… the works.
 
