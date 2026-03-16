@@ -44,7 +44,7 @@ There are two flavours of BGP in day-to-day designs:
 - **iBGP** (internal BGP): between routers _inside_ the same autonomous system.
 
 If you’ve only ever "touched BGP" at an MPLS edge, you’ve almost certainly only seen **eBGP**.
-Cloud connectivity tends to drag iBGP into the conversation because you suddenly have **multiple edges** (two routers, two sites, two CNFs, two clouds) and you need consistent policy and predictable failover.
+Cloud connectivity tends to drag iBGP into the conversation because you suddenly have **multiple edges** (two routers, two sites, two CNFs (carrier neutral facilities), two clouds) and you need consistent policy and predictable failover.
 
 ### eBGP
 
