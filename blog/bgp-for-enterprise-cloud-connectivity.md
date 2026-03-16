@@ -187,7 +187,7 @@ Why this matters for the cloud journey: this is the closest mental model to Dire
 
 ### ASNs in MPLS enterprise designs
 
-### Per-site ASNs
+#### Per-site ASNs
 
 A very common enterprise pattern is:
 
@@ -196,7 +196,7 @@ A very common enterprise pattern is:
 
 It’s convenient because it keeps the eBGP loop-prevention behaviour simple: every site is “a different AS”, so re-advertisement between sites doesn’t trip over “I see myself in the AS_PATH”.
 
-### Single ASN across all sites (and why private-AS stripping matters)
+#### Single ASN across all sites (and why private-AS stripping matters)
 
 It’s equally valid to run **the same ASN at every site**.
 
