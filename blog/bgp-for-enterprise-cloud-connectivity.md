@@ -187,6 +187,8 @@ Why this matters for the cloud journey: this is the closest mental model to Dire
 
 ### ASNs in MPLS enterprise designs
 
+How you assign ASNs across your sites has a direct impact on loop prevention and route propagation. There are two common models.
+
 #### Per-site ASNs
 
 A very common enterprise pattern is:
