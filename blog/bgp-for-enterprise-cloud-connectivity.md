@@ -679,7 +679,7 @@ As we mentioned earlier, active/passive is often dictated by the southbound arch
 
 There are two common ways enterprises structure ASNs at the edge.
 
-### Option A: single ASN across both CNFs (one enterprise AS)
+#### Option A: single ASN across both CNFs (one enterprise AS)
 
 This is the “clean BGP” model. Both CNF routers are in the same ASN, you run eBGP to each cloud or provider peer, and you run iBGP between your CNF routers (and usually to the rest of your core).
 
@@ -687,7 +687,7 @@ It’s nice because LOCAL_PREF works exactly how you expect for choosing your ou
 
 The trade-off is that you’re now in iBGP design land (full mesh versus route reflection, and so on).
 
-### Option B: dual private ASNs (one per CNF)
+#### Option B: dual private ASNs (one per CNF)
 
 This is an operationally popular model in enterprises because it feels like “two edges”. CNF A might be ASN 65001, CNF B might be ASN 65002, each CNF peers to the cloud or provider ASN, and somewhere downstream you have to reconnect those worlds (often another BGP hop inside your enterprise).
 
