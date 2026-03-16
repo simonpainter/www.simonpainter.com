@@ -94,16 +94,16 @@ On Cisco platforms, the default administrative distances reflect a common design
 The rationale is pragmatic. If you’ve already learned the route from the IGP, it’s often “closer” and more efficient to follow that IGP path than to follow an iBGP hop-count that might simply be reflecting policy, or topology you don’t want to traverse.
 
 The punchline is that if you redistribute between protocols, or if you run BGP deep in the network, you should understand how administrative distance interacts with BGP, and consider whether you need to tune it for your design.
+:::
 
-Sidebar: iBGP and eBGP multipath (and why you suddenly care in cloud)
+:::info iBGP and eBGP multipath (and why you suddenly care in cloud)
+BGP is often taught as "pick one best path", which is true for what it advertises, but not always true for what it forwards.
 
-BGP is often taught as “pick one best path”, which is true for what it advertises, but not always true for what it forwards.
+Most platforms can install multiple equal-cost BGP paths for the same prefix (multipath) and then forward over them using ECMP. Whether paths are considered "equal enough" depends on the platform and config, but the important point is that multipath is an explicit design choice.
 
-Most platforms can install multiple equal-cost BGP paths for the same prefix (multipath) and then forward over them using ECMP. Whether paths are considered “equal enough” depends on the platform and config, but the important point is that multipath is an explicit design choice.
+> **ECMP** (equal-cost multipath): using multiple next-hops for the same prefix when they're considered equally good.
 
-> **ECMP** (equal-cost multipath): using multiple next-hops for the same prefix when they’re considered equally good.
-
-This matters in cloud connectivity because active/active circuit pairs often rely on it. ExpressRoute in particular is commonly delivered as redundant circuit pairs, and many designs expect to use both links in steady state. Without multipath, you can easily end up with “one link hot, one link cold”, even though you paid for both.
+This matters in cloud connectivity because active/active circuit pairs often rely on it. ExpressRoute in particular is commonly delivered as redundant circuit pairs, and many designs expect to use both links in steady state. Without multipath, you can easily end up with "one link hot, one link cold", even though you paid for both.
 
 If you need symmetric flows through stateful appliances, you might still choose active/passive, but if you are aiming for active/active, make sure you understand how your platform handles eBGP multipath, iBGP multipath, and the tie-breaks that decide which paths qualify.
 :::
