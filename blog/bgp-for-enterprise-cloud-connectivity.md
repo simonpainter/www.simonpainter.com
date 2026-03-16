@@ -54,7 +54,7 @@ In enterprise cloud connectivity that usually means your router in a CNF peering
 
 > **MSEE** (Microsoft Enterprise Edge): Microsoft’s routers on the ExpressRoute edge that you peer with.
 >
->**PE** (Provider Edge): the provider’s edge router, facing customer circuits.
+> **PE** (Provider Edge): the provider’s edge router, facing customer circuits.
 >
 > **CNF** (carrier neutral facility): a colocation site where you can cross-connect to multiple carriers, cloud on-ramps, and exchanges.
 
