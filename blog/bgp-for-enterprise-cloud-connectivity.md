@@ -22,7 +22,7 @@ And it’s not fair to assume that every enterprise network engineer has spent y
 
 So this post is an explainer of the key BGP concepts that an enterprise network engineer needs to feel comfortable designing and operating **hybrid, multi-cloud connectivity**, where BGP plays its vital role.
 
-<!--truncate-->
+<!-- truncate -->
 
 ## What BGP is
 
