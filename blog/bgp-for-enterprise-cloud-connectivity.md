@@ -944,3 +944,5 @@ BGP can look intimidating because the internet uses it, and the internet is huge
 But enterprise cloud connectivity only needs a subset. Understand the eBGP versus iBGP boundary, know which attributes are useful in practice (LOCAL_PREF, AS_PATH, and MED), use communities when the provider documents them, and put safety rails around import and export so you don’t leak routes, or accidentally become transit.
 
 If you get those right, you’ll be able to design hybrid multi-cloud connectivity that behaves predictably, and when it doesn’t, you’ll know where to look.
+
+A practical starting point: audit your prefix-lists and export policies first. That's where the most damaging mistakes happen, and it's where a clean baseline gives you room to iterate on everything else.
