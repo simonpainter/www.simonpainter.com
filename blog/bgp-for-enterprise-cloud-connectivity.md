@@ -861,11 +861,13 @@ It’s one of the reasons “who should accept what from whom” can be automate
 If you’ve never bumped into it before: [Routing Policy Specification Language](https://en.wikipedia.org/wiki/Routing_Policy_Specification_Language)
 :::
 
+:::note RPKI and route origin validation
 RPKI is the mechanism that lets prefix holders publish cryptographic Route Origin Authorisations (ROAs), and lets networks validate whether a route announcement is likely to be legitimate.
 
 Even if your enterprise BGP is mostly “private”, the upstreams you depend on operate in the public routing system, and the industry is increasingly treating RPKI-invalid routes as something to drop, not just something to log.
 
 AWS has a good high-level write-up of what they’re doing here, which is useful context: [How AWS is helping to secure internet routing](https://aws.amazon.com/blogs/networking-and-content-delivery/how-aws-is-helping-to-secure-internet-routing/)
+:::
 
 :::note how Azure prevents some transit scenarios
 Microsoft actively prevents certain transit-routing behaviours in the backbone (for good reasons).
