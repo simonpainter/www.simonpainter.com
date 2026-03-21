@@ -36,7 +36,7 @@ The good news: you can fix this. Not by cutting quality, but by removing the fri
 
 ## A Real Example: The Firewall Rule That Took 30 Days
 
-I am slightly embarassed to say that this is a real example, it's a really bad example. Let me walk you through what high-HIP looks like: a business user who needs a firewall rule to enable a data flow. It should be really simple right?
+I am slightly embarrassed to say that this is a real example, it's a really bad example. Let me walk you through what high-HIP looks like: a business user who needs a firewall rule to enable a data flow. It should be really simple right?
 
 ### The Old Way
 
@@ -54,7 +54,7 @@ That's it. Vague, underspecified, but they don't know what else to say.
 
 **Day 20.** Compliance comes back with a mandatory requirement: "Any personally identifiable data crossing the internet must be encrypted."
 
-**Day 22.** Your team goes back to the business stakeholder: "The flow needs to support encryption for this to work. It's a non standard port so we can't tell if it's encrypted or not. Can you let us know?"
+**Day 22.** Your team goes back to the business stakeholder: "The flow needs to support encryption for this to work. It's a non-standard port so we can't tell if it's encrypted or not. Can you let us know?"
 
 Business user disappears for a week, then: "Yes, it's TLS."
 
@@ -105,7 +105,7 @@ The rule is live.
 
 Three things, working together:
 
-**1. Intent capture with intelligence.** Instead of "we need a firewall rule" (vague), you get "we need to move PII from our order system to a vendor analytics platform via TLS" (clear), along with the validated technical information that was needed to implement the rule. Guided questions and AI assistance, even simple conditional branching, replace vague tickets and follow up meetings. The business user answers once, thoroughly, and the system asks the right follow-ups.
+**1. Intent capture with intelligence.** Instead of "we need a firewall rule" (vague), you get "we need to move PII from our order system to a vendor analytics platform via TLS" (clear), along with the validated technical information that was needed to implement the rule. Guided questions and AI assistance, even simple conditional branching, replace vague tickets and follow-up meetings. The business user answers once, thoroughly, and the system asks the right follow-ups.
 
 **2. Policy-as-code embedded in the process.** The rule "PII data must be encrypted" isn't a memo filed somewhere or a compliance exception you might forget next time. It's *enforced* in the intake itself. It's not a question that has to be referred to the risk and compliance team for the hundredth time. When a user confirms "yes, this is PII," the system automatically flags encryption as mandatory, links to the policy, and checks the rule template for the required settings. The policy is visible, executable, and impossible to accidentally bypass.
 
@@ -123,7 +123,7 @@ Measure the HIP: That same firewall rule now takes 10 days, but more importantly
 
 **Step 2: Add automation.** You build a script that checks the change against policy, validates it's a known pattern, generates the configuration, and deploys it if all checks pass. A human still reviews the request, but the compliance checking is automated.
 
-Measure the HIP: Two people, HIP driven down further; the side effect is it not takes a few days not a few weeks.
+Measure the HIP: Two people, HIP driven down further; as a side effect it now takes a few days instead of a few weeks.
 
 **Step 3: Pre-approve firewall rule policies.** You codify the rules that govern what firewall rules are allowed. "PII in transit must be encrypted." "Cross-zone traffic needs mutual auth." You embed these rules in the automation. If a request matches policy, it approves itself.
 
