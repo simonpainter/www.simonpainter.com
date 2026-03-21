@@ -165,6 +165,13 @@ const config = {
         ],
         copyright: `Copyright © ${new Date().getFullYear()} Simon Painter`,
       },
+      ...(process.env.ALGOLIA_APP_ID && process.env.ALGOLIA_API_KEY ? {
+        algolia: {
+          appId: process.env.ALGOLIA_APP_ID,
+          apiKey: process.env.ALGOLIA_API_KEY,
+          indexName: process.env.ALGOLIA_INDEX_NAME || 'simonpainter',
+        },
+      } : {}),
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
