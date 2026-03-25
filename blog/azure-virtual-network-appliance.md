@@ -62,7 +62,7 @@ At the moment, during public preview, there is no charge for the Azure Virtual N
 
 ## OK, let's have a look at it then
 
-The folks at Azure will get *very upset* if you say this is just an NVA. Functionally it behaves a lot like one but it's using the new dedicated hardware that stuff like the scalable expressroute gateway is built on. The fact that it needs to be deployed into a dedicated subnet does suggest it follows the pattern of sideways scaling of instances behind a load balancer though.
+The folks at Azure will get *very upset* if you say this is just an NVA. Functionally it behaves a lot like one but it's using the new dedicated hardware that stuff like the scalable ExpressRoute gateway is built on. The fact that it needs to be deployed into a dedicated subnet does suggest it follows the pattern of sideways scaling of instances behind a load balancer though.
 
 > Azure Firewall has a problem with long lived TCP connections because it scales in and out by creating and destroying instances. When it scales in there is a non-deterministic process to drain the connections and then terminate a random instance which can lead to dropped connections.
 
