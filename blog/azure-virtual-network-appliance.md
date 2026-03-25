@@ -62,7 +62,7 @@ At the moment, during public preview, there is no charge for the Azure Virtual N
 
 ## OK, let's have a look at it then
 
-As a general rule of thumb, if an Azure service requires a dedicated subnet, then it is likely to be a bunch of managed VMs running a service inside a load balancer sandwich. This looks to be the case for the Azure Virtual Network Routing Appliance and some of the choices you make when you deploy it point towards that. What I am interested in is if they have avoided the mistakes they made with Azure Firewall and long lived TCP connections.
+The folks at Azure will get *very upset* if you say this is just an NVA. Functionally it behaves a lot like one but it's using the new dedicated hardware that stuff like the scalable expressroute gateway is built on. The fact that it needs to be deployed into a dedicated subnet does suggest it follows the pattern of sideways scaling of instances behind a load balancer though.
 
 > Azure Firewall has a problem with long lived TCP connections because it scales in and out by creating and destroying instances. When it scales in there is a non-deterministic process to drain the connections and then terminate a random instance which can lead to dropped connections.
 
@@ -90,7 +90,11 @@ There are a few more configuration options, to select an NSG and Route table for
 
 > It's important to call out here that the NSG is for the appliance subnet and not for the appliance NICs. I had a [question on reddit](https://www.reddit.com/r/AZURE/comments/1r3wlnd/comment/o5btw1a/) about if the NSG applied to the appliance could be used to control the traffic between spokes. The answer is that you can control traffic between the spokes using an NSG on the appliance subnet but NSGs are a blunt tool. Even though they are stateful you still have to apply the rule in two places because the traffic is coming in and going out of the subnet.
 
-Like any other NVA, or indeed an Azure Firewall, you need to make sure your spoke subnets have a route to the appliance. This leads to a couple of architectural options, especially if you have got on premise connectivity and also depending on how your internet egress is set up. If this is for internal traffic between spokes then you can either have spoke based routes pointing on premise traffic to your hub gateway, egress traffic to your NAT gateway or firewall, and everything in the cloud IP space to the appliance. This can be typically achieved with a single route table shared across all the spokes, unless you have spoke based egress. Depending on how complicated your IP schema is (and complicated here is a euphemism for "badly planned") you may have a lot of routes in that route table and making updates to it could be a pain.
+## How do I use it?
+
+Like a normal NVA, or indeed an Azure Firewall, you need to make sure your spoke subnets have a route to the appliance. This leads to a couple of architectural options, especially if you have got on premise connectivity and also depending on how your internet egress is set up. If this is for internal traffic between spokes then you can either have spoke based routes pointing on premise traffic to your hub gateway, egress traffic to your NAT gateway or firewall, and everything in the cloud IP space to the appliance. This can be typically achieved with a single route table shared across all the spokes, unless you have spoke based egress. Depending on how complicated your IP schema is (and complicated here is a euphemism for "badly planned") you may have a lot of routes in that route table and making updates to it could be a pain.
+
+The documents state that it's for private traffic only, not internet traffic. That's because it has no NAT egress capaiblity.
 
 ```mermaid
 flowchart TB
@@ -151,61 +155,7 @@ flowchart TB
     style OnPrem fill:#95a5a6,color:#fff
 ```
 
-Alternatively you can direct all traffic to the appliance using an explicit default route and then have the appliance route on premise traffic via the gateway and egress traffic via the NAT gateway or firewall. Given the capacity of the appliance and the fact that it's designed to be a routing appliance, I would be tempted to go with the second option and direct all traffic to the appliance and let it route on premise and egress traffic as needed. This would simplify the routing configuration in the spokes and make it easier to manage. The cost is that you lose granular control of the spoke routing but anything that enforces the principle of spokes being cookie cutter and not having bespoke routing is a good thing in my book.
-
-```mermaid
-flowchart TB
-    subgraph Hub["Hub VNet"]
-        FW["Azure Firewall"]
-        GW["VPN/ER Gateway"]
-        AVNA["Virtual Network<br/>Appliance"]
-        subgraph AVNART["AVNA Route Table"]
-            direction LR
-            AVNART1["Default Route<br/>(Firewall)"]
-            AVNART2["On Premise Prefixes/RFC1918<br/>(Gateway)"]
-            AVNART3["Learned Routes<br/>to Spokes"]
-        end
-    end
-    
-    subgraph SpokeA["Spoke A VNet"]
-        subgraph SubnetA1["Workload Subnet A"]
-            VMA["VMs"]
-        end
-        subgraph RTA["Route Table"]
-            RTA1["Default Route<br/>(AVNA)"]
-        end
-    end
-    
-    subgraph SpokeB["Spoke B VNet"]
-        subgraph SubnetB1["Workload Subnet B"]
-            VMB["VMs"]
-        end
-        subgraph RTB["Route Table"]
-            RTB1["Default Route<br/>(AVNA)"]
-        end
-    end
-    
-    SubnetA1 -.-> RTA
-    SubnetB1 -.-> RTB
-    
-    RTA1 --> AVNA
-    RTB1 --> AVNA
-    
-    AVNA -.-> AVNART
-    AVNART1 --> FW
-    AVNART2 --> GW
-    
-    FW -->|"Internet<br/>Egress"| Internet((Internet))
-    GW -->|"ExpressRoute/<br/>VPN"| OnPrem((On-Premise))
-    
-    style FW fill:#e74c3c,color:#fff
-    style GW fill:#9b59b6,color:#fff
-    style AVNA fill:#3498db,color:#fff
-    style VMA fill:#27ae60,color:#fff
-    style VMB fill:#27ae60,color:#fff
-    style Internet fill:#95a5a6,color:#fff
-    style OnPrem fill:#95a5a6,color:#fff
-```
+The alternative to send all traffic to the appliance and then have the subnet it lives in route to on premise, internet or other spokes would be a lot easier to manage however the appliance currently has no capability to route to the internet, even if you put a NAT gateway for the appliance subnet. I tried it so you don't have to!
 
 The halfway house is to have RFC1918 routes going to the appliance, which sorts out what goes on premise and what goes to another spoke, and then have the default route going to your egress solution. This is a bit more work to set up and manage but it does give you the best of both worlds in terms of control and simplicity. Separating cloud from on premise routes in the AVNA should be fairly straightforward because all the spoke routes will be learned in the hub automagically and everything else in 10/8 can go to your gateway.
 
