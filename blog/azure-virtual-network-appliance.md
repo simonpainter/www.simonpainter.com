@@ -94,7 +94,7 @@ There are a few more configuration options, to select an NSG and Route table for
 
 Like a normal NVA, or indeed an Azure Firewall, you need to make sure your spoke subnets have a route to the appliance. This leads to a couple of architectural options, especially if you have got on premise connectivity and also depending on how your internet egress is set up. If this is for internal traffic between spokes then you can either have spoke based routes pointing on premise traffic to your hub gateway, egress traffic to your NAT gateway or firewall, and everything in the cloud IP space to the appliance. This can be typically achieved with a single route table shared across all the spokes, unless you have spoke based egress. Depending on how complicated your IP schema is (and complicated here is a euphemism for "badly planned") you may have a lot of routes in that route table and making updates to it could be a pain.
 
-The documents state that it's for private traffic only, not internet traffic. That's because it has no NAT egress capaiblity.
+The documents state that it's for private traffic only, not internet traffic. That's because it has no NAT egress capability.
 
 ```mermaid
 flowchart TB
