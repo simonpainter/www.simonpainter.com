@@ -16,7 +16,7 @@ At the [Inclusive Tech Lab](https://www.microsoft.com/en-us/inclusive-tech-lab) 
 
 Bryce is the co-creator of the [Xbox Adaptive Controller](https://www.xbox.com/en-US/accessories/controllers/xbox-adaptive-controller) which is something I first saw yesterday in the Microsoft Store on Campus and didn't really understand what it was. The name actually gives a lot of it away. It's a controller for the Xbox that looks to the Xbox like any other controller but to the user it can be adapted to their needs. The back of the controller has a number of ports which can be connected to switches (that's buttons to you and me, but Bryce is a stickler for the right terminology) and these switches come in a range of sizes, shapes and configurations to be laid out exactly how the gamer needs them to be.
 
-![The Xbox Adaptive Controller](img/microsoft-inclusive-tech-lab/adaptive-controller%20-%201.png)
+![The Xbox Adaptive Controller](img/microsoft-inclusive-tech-lab/adaptive-controller.png)
 
 Bryce showed us how the typical controller has evolved to suit a very specific set of needs and the designers have made assumptions on fine motor capabilities, strength, range of motion and so on. The adaptive controller is designed to be used by gamers who don't have the same capabilities as the typical gamer and so it can be adapted to suit their needs.
 
