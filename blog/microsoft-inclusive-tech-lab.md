@@ -2,7 +2,7 @@
 
 title: A visit to the Microsoft Inclusive Tech Lab
 authors: simonpainter
-tags: 
+tags:
   - personal
   - opinion
 date: 2026-03-26
