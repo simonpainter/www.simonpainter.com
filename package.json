@@ -49,6 +49,7 @@
   "overrides": {
     "minimatch": ">=10.2.3",
     "serialize-javascript": "7.0.3",
-    "serve-handler": ">=6.1.7"
+    "serve-handler": ">=6.1.7",
+    "react-loadable-ssr-addon-v5-slorber": ">=1.0.3"
   }
 }
