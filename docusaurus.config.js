@@ -190,6 +190,9 @@ const config = {
           appId: process.env.ALGOLIA_APP_ID,
           apiKey: process.env.ALGOLIA_API_KEY,
           indexName: process.env.ALGOLIA_INDEX_NAME || 'simonpainter',
+          ...(process.env.ALGOLIA_ASSISTANT_ID ? {
+            askAi: process.env.ALGOLIA_ASSISTANT_ID,
+          } : {}),
         },
       } : {}),
       prism: {
