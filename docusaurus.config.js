@@ -31,6 +31,26 @@ const config = {
   themes: ['@docusaurus/theme-mermaid'],
   clientModules: [require.resolve('./src/scripts/mermaid_icons.js')],
 
+  plugins: [
+    function suppressVscodeLanguageServerTypesWarning() {
+      return {
+        name: 'suppress-vscode-languageserver-types-warning',
+        configureWebpack() {
+          return {
+            ignoreWarnings: [
+              // vscode-languageserver-types uses a UMD dynamic require() that
+              // webpack can't statically analyse. The warning is benign.
+              {
+                module: /vscode-languageserver-types/,
+                message: /Critical dependency: require function is used in a way/,
+              },
+            ],
+          };
+        },
+      };
+    },
+  ],
+
   presets: [
     [
       'classic',
