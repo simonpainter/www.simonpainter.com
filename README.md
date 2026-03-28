@@ -1,73 +1,47 @@
 # Simon Painter's Website
 
-Welcome to the repository for my personal website - a place where I share insights, solutions, and discoveries from my journey through cloud networking, infrastructure automation, and everything in between. This site started as my own digital notebook but has grown into a resource for anyone navigating the transition from traditional networking to the cloud.
+[![Deploy to S3](https://github.com/simonpainter/www.simonpainter.com/actions/workflows/merge_main.yml/badge.svg)](https://github.com/simonpainter/www.simonpainter.com/actions/workflows/merge_main.yml)
+[![PR Build Check](https://github.com/simonpainter/www.simonpainter.com/actions/workflows/pull_request.yml/badge.svg)](https://github.com/simonpainter/www.simonpainter.com/actions/workflows/pull_request.yml)
+[![Website Status](https://img.shields.io/website?url=https%3A%2F%2Fwww.simonpainter.com&label=simonpainter.com)](https://status.refriedbean.uk)
 
-## About Simon
+A personal blog where I write about cloud networking, infrastructure automation, and the messy reality of moving enterprises from traditional networks to the cloud. It started as my own digital notebook - somewhere to document solutions so I wouldn't have to solve the same problems twice. It's grown into something a bit more useful than that.
 
-I'm Simon Painter, a Cloud Network Architect and Microsoft MVP for Cloud and Datacenter Management - On-Premises Networking. With over two decades of experience in enterprise-scale cloud and network infrastructure, I've spent my career helping organisations navigate the shift from traditional networking to cloud-first architectures.
+## About Me
 
-My journey started in traditional network engineering, working across retail, finance, and enterprise technology environments. But like many of us, I found myself deep in the cloud transformation wave, specialising in multi-cloud networking, hybrid connectivity, and infrastructure automation. The more I learned, the more I realised that cloud networking isn't just traditional networking with a fancy interface - it's its own discipline with unique challenges and opportunities.
+I'm Simon Painter, a Cloud Network Architect and Microsoft MVP for Cloud and Datacenter Management. I've spent over two decades working on enterprise-scale network and cloud infrastructure, mostly helping organisations figure out what "cloud networking" actually means in practice.
 
-This blog started selfishly as my digital notebook - a place to document solutions so I wouldn't have to solve the same problems twice. But it's grown into something more: a resource for others making the same journey from network cables to cloud configs. Being recognised as a Microsoft MVP feels like validation that this approach of sharing what we learn actually helps people.
+My background is traditional network engineering - retail, finance, enterprise tech. I got pulled into the cloud transformation wave like most people in my field, and found that cloud networking isn't just traditional networking with a shinier interface. It's a different discipline with its own quirks, failure modes, and genuinely interesting problems.
 
-When I'm not working with networks and clouds, I enjoy making things - whether through 3D printing, building intricate Lego creations, or exploring new technologies. Based in Yorkshire, I share my life with my wife, three children, and our spaniel, Mabel.
+The Microsoft MVP recognition is nice, but the real reward is the occasional message from someone who found a post useful. That's what keeps me writing.
 
-## What You'll Find Here
+Outside of work I make things - 3D printing, Lego, tinkering with whatever technology has caught my eye that week. I'm based in Yorkshire with my wife, three kids, and our spaniel Mabel.
 
-This site serves as a platform for sharing practical insights about:
+## What I Write About
 
-- **Cloud networking** - AWS, Azure, and multi-cloud connectivity solutions
-- **Infrastructure automation** - Terraform, CI/CD, and infrastructure as code
-- **Network modernisation** - Moving from traditional to cloud-first architectures  
-- **Security best practices** - Securing cloud and hybrid environments
-- **Real-world solutions** - Practical approaches to common (and uncommon) problems
+Most posts fall into one of these areas:
 
-The content focuses on bridging the gap between traditional networking knowledge and modern cloud practices, with a heavy emphasis on practical implementation over theoretical concepts.
+**Cloud networking** - Deep dives into AWS and Azure networking, usually sparked by something that confused or surprised me. Things like how Azure's magic IPs work, why BGP behaves differently in the cloud, or what actually happens when you peer two VNets.
 
-## Technical Implementation
+**Infrastructure automation** - Terraform, CI/CD, and the infrastructure-as-code patterns that actually hold up at scale. I'm opinionated about this stuff and I'll tell you why.
 
-The site is built using modern tools and practices:
+**Network modernisation** - The practical side of moving from MPLS and traditional WAN to cloud-first architectures. SD-WAN, ZTNA, and why the journey is rarely as clean as the vendor decks suggest.
 
-- **Docusaurus 3.x** - React-based static site generator for fast, responsive performance
-- **GitHub Actions** - Automated build testing and deployment pipeline
-- **Markdown content** - All posts written in Markdown for easy editing and version control
-- **Tag organisation** - Content organised by technology areas for easy discovery
-- **Responsive design** - Optimised for desktop, tablet, and mobile viewing
-- **Dark mode support** - Full support for light and dark themes
+**Algorithms and logic** - Occasionally I write about the computer science basics that underpin network and infrastructure work. Not everyone who manages networks comes from a CS background, and that's fine - but some of this stuff is genuinely useful to know.
 
-## Development
+**The human side** - Not everything is technical. I write about communication, selling ideas to stakeholders, and the organisational dynamics that determine whether good technical work actually lands.
 
-Want to run the site locally? Here's how:
+## The Writing Style
 
-```bash
-# Install dependencies
-npm install
+I try to write the way I'd explain something to a colleague over coffee. Plain English, short paragraphs, concrete examples. I use analogies where they help and code where they don't. I'd rather be clear than impressive.
 
-# Start development server (with live reload)
-npm start
+Posts usually include diagrams where the architecture is complex enough to warrant one. I use Mermaid for most of these, which means they're version-controlled alongside the content.
 
-# Build for production
-npm run build
+## Technical Stack
 
-# Test the production build locally
-npm run serve
-```
-
-The site includes automated GitHub Actions that will test your pull request builds, so you'll know immediately if something breaks. The development server provides live reloading, making it easy to see your changes as you write.
-
-### Project Structure
-
-- `blog/` - All blog posts in Markdown format
-- `blog/authors.yml` - Author information and biographies  
-- `src/` - Custom React components and pages
-- `static/` - Static assets like images and files
-- `docusaurus.config.js` - Site configuration and navigation
-- `.github/workflows/` - GitHub Actions for testing and deployment
+The site runs on [Docusaurus 3.x](https://docusaurus.io/), deployed to S3 via GitHub Actions on every push to main. Content is Markdown. Pull requests trigger a build check so I know immediately if something's broken before it ships.
 
 ## Contributing
 
-Found something confusing? Have an idea for improvement? Want to contribute but not sure where to start? Check out the [Contributing Guide](CONTRIBUTING.md) for detailed instructions on how to get involved.
+Spotted an error? Have a better way to explain something? Check out the [Contributing Guide](CONTRIBUTING.md) for how to get involved, and the [Code of Conduct](CODE_OF_CONDUCT.md) for the ground rules.
 
-This site thrives on community input, and every contribution - no matter how small - makes it better for everyone. All contributors are expected to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
-
-Feel free to reach out on [LinkedIn](https://www.linkedin.com/in/sipainter/) or [GitHub](https://github.com/simonpainter).
+You can also find me on [LinkedIn](https://www.linkedin.com/in/sipainter/) or [GitHub](https://github.com/simonpainter).
