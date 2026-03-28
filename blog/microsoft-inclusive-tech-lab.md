@@ -17,7 +17,7 @@ This week I visited the Microsoft Campus in Redmond, Washington for [MVP Summit]
 
 At the lab we met Bryce. He's a man with a mission — actually, two missions. The first is to make technology more inclusive and accessible. The second is to make sure people know it exists.
 
-Bryce is the co-creator of the [Xbox Adaptive Controller](https://www.xbox.com/en-US/accessories/controllers/xbox-adaptive-controller). I'd spotted it earlier that day in the Microsoft Store on campus and couldn't quite work out what it was. The name actually tells you most of what you need to know. To the Xbox, it looks like any other controller. To the gamer, it's a blank canvas.
+Bryce is the co-creator of the [Xbox Adaptive Controller](https://www.xbox.com/en-US/accessories/controllers/xbox-adaptive-controller). I'd spotted it earlier that day in the Microsoft Store on campus and couldn't quite work out what it was. The name actually tells you most of what you need to know. To the Xbox, it looks like any other controller. To the gamer, it's whatever you need it to be.
 
 ## Rethinking the controller
 
