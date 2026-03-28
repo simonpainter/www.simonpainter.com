@@ -1,10 +1,10 @@
-# Contributor Covenant Code of Conduct
+# Code of Conduct
 
-## Our Pledge
+## My Pledge
 
-I want to make participating in this project a welcoming and respectful experience for everyone. This means creating a harassment-free environment regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, caste, colour, religion, or sexual identity and orientation.
+I want everyone who contributes to or interacts with this project to feel welcome. That means a harassment-free environment regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, caste, colour, religion, or sexual identity and orientation.
 
-I pledge to act and interact in ways that contribute to an open, welcoming, diverse, inclusive, and healthy community.
+I'll act in ways that keep this a friendly, inclusive space.
 
 ## Our Standards
 
