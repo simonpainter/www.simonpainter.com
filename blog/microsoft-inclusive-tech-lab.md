@@ -9,19 +9,42 @@ date: 2026-03-26
 
 ---
 
-This week I have been fortunate enough to visit the Microsoft Campus in Redmond, Washington, for [MVP Summit](most-valuable-professional.md). Most of what goes on at Summit is under a very strict NDA because we have had the chance to meet the product teams, get an understanding of the roadmap and provide some, often unvarnished, feedback on the products. One of the other opportunities we got was to go on some tours of the campus which is steeped in a history of innovation that has been going on for all of my life. In addition to the excellent tour of the Microsoft Archives, I was able to visit the Inclusive Tech Lab and was introduced to some of the things that Microsoft is doing to break down barriers to tech for people with a range of abilities.
+This week I visited the Microsoft Campus in Redmond, Washington for [MVP Summit](most-valuable-professional.md). Most of what happens at Summit is under strict NDA — we meet product teams, hear about the roadmap, and give often-unvarnished feedback. But alongside those sessions, we got to explore the campus itself, which carries decades of tech history in its buildings and corridors. I visited the Microsoft Archives, which was fascinating, but the highlight was a tour of the [Inclusive Tech Lab](https://www.microsoft.com/en-us/inclusive-tech-lab).
+
 <!-- truncate -->
 
-At the [Inclusive Tech Lab](https://www.microsoft.com/en-us/inclusive-tech-lab) we met Bryce. Bryce is a man with a mission. Actually he's a man with at least two missions. The first is to make technology more inclusive and accessible to everyone. The second is to make sure that people know about it.
+## Meet Bryce
 
-Bryce is the co-creator of the [Xbox Adaptive Controller](https://www.xbox.com/en-US/accessories/controllers/xbox-adaptive-controller) which is something I first saw yesterday in the Microsoft Store on Campus and didn't really understand what it was. The name actually gives a lot of it away. It's a controller for the Xbox that looks to the Xbox like any other controller but to the user it can be adapted to their needs. The back of the controller has a number of ports which can be connected to switches (that's buttons to you and me, but Bryce is a stickler for the right terminology) and these switches come in a range of sizes, shapes and configurations to be laid out exactly how the gamer needs them to be.
+At the lab we met Bryce. He's a man with a mission — actually, two missions. The first is to make technology more inclusive and accessible. The second is to make sure people know it exists.
+
+Bryce is the co-creator of the [Xbox Adaptive Controller](https://www.xbox.com/en-US/accessories/controllers/xbox-adaptive-controller). I'd spotted it earlier that day in the Microsoft Store on campus and couldn't quite work out what it was. The name actually tells you most of what you need to know. To the Xbox, it looks like any other controller. To the gamer, it's a blank canvas.
+
+## Rethinking the controller
+
+The back of the controller has a row of 3.5mm ports. Connect switches to them — and Bryce was clear that "switch" is the right word, not "button" — and you can lay them out however you need. Those switches come in all sizes, shapes, and activation forces. Some need only the lightest touch. Some are designed to be pressed with a foot, an elbow, or a chin.
 
 ![The Xbox Adaptive Controller](img/microsoft-inclusive-tech-lab/adaptive-controller.png)
 
-Bryce showed us how the typical controller has evolved to suit a very specific set of needs and the designers have made assumptions on fine motor capabilities, strength, range of motion and so on. The adaptive controller is designed to be used by gamers who don't have the same capabilities as the typical gamer and so it can be adapted to suit their needs.
+Bryce walked us through the assumptions baked into a standard controller: fine motor control in both hands, a certain grip strength, a specific range of motion in your fingers and wrists. Every one of those assumptions excludes someone. The adaptive controller doesn't try to fix the gamer — it fixes the controller.
 
-Born in 2017 as part of the Xbox devices team, the Inclusive Tech Lab has now spread into many different areas of tech adoption across software and hardware. A smaller [adaptive hub](https://www.microsoft.com/en-us/store/b/accessible-adaptive-devices-accessories) brings the same flexibility to the PC in order to enable people for whom the usual human interface devices are not suitable to be able to use a PC. What is incredible, and a real testament to the way Microsoft has embraced the idea of open source, is that there are a [range of STL files available to download for free](https://support.microsoft.com/en-us/surface/accessories/3d-printable-designs-for-microsoft-adaptive-accessories-surface-pen-and-microsoft-pens) so that anyone with access to a 3D printer can adapt the switches and adaptive mouse to suit their needs. This captures the idea of inclusive technology design being about solving the problem for one person at a time and not trying to always find a one size fits all solution.
+## Beyond the Xbox
 
-But solving problems is only part of the story, the other part is ensuring that everyone who needs to know about these solutions does know about them. Bryce and the team have done 25,000 tours of the lab to reach as many people as they can. They have a banner on their site to encourage people to [book a tour](https://www.microsoft.com/en-us/inclusive-tech-lab) and do these both in person on the Microsoft Campus and virtually.
+The lab was born in 2017 inside the Xbox devices team, but it's grown well beyond games. The [Microsoft Adaptive Hub](https://www.microsoft.com/en-us/store/b/accessible-adaptive-devices-accessories) brings the same philosophy to the PC, letting people connect whatever input devices work for them. It's the same idea: the computer shouldn't care how you talk to it.
 
-The Xbox Adaptive Controller and the work of the Inclusive Tech Lab represent something that should be obvious but isn't: technology belongs to everyone. Not because we're being charitable, but because problems come in infinite varieties and so do solutions. One person needs larger switches, another needs to arrange them differently, and someone else needs an entirely different way to interact with their devices. The genius isn't in building something that works for everyone; it's in building a system flexible enough to work for anyone.
+What really impressed me was the open source angle. Microsoft publishes a [range of STL files for free download](https://support.microsoft.com/en-us/surface/accessories/3d-printable-designs-for-microsoft-adaptive-accessories-surface-pen-and-microsoft-pens), so anyone with a 3D printer can adapt the switches and adaptive mouse to their exact needs. That's not just accessibility — it's accessibility at the edge, tailored for one person, in their home, for their specific situation.
+
+This is where the inclusive design philosophy gets interesting. It's not about building one product that works for everyone. It's about building a system flexible enough to work for anyone. The difference sounds subtle but it changes everything about how you approach the problem.
+
+## Reaching people
+
+Solving the problem is only half the work. Bryce and the team have now done 25,000 tours of the lab — in person on the Redmond campus and virtually for anyone who can't make the trip. You can [book a tour on their site](https://www.microsoft.com/en-us/inclusive-tech-lab), and I'd genuinely recommend it if you get the chance.
+
+The Lab teams with occupational therapists, disability advocates, and gamers to understand the full range of needs before they build anything. That close relationship between the people who need the technology and the people building it is what makes the difference. It's not a design team imagining what might help — it's a collaboration with the people who live the problem every day.
+
+## Why this matters
+
+Technology doesn't have an empathy setting. It does what it's designed to do, for the people it was designed for. Most of the time, that's a relatively narrow group — young, able-bodied, with standard motor control and two functioning hands. Everyone else makes do, finds workarounds, or simply can't participate.
+
+The Inclusive Tech Lab is a reminder that this is a design choice, not an inevitability. Every assumption you build into a product is a door you close on someone. And with a bit of thought — and sometimes a 3D printer — you can open it back up.
+
+Technology belongs to everyone. Not as charity, but as design.
