@@ -23,7 +23,7 @@ Bryce is the co-creator of the [Xbox Adaptive Controller](https://www.xbox.com/e
 
 The back of the controller has a row of 3.5mm ports. Connect switches to them and lay them out however you need. Bryce was clear on the terminology: these are switches, not buttons. Those switches come in all sizes, shapes, and activation forces. Some need only the lightest touch. Some are designed to be pressed with a foot, an elbow, or a chin.
 
-![The Xbox Adaptive Controller](img/microsoft-inclusive-tech-lab/adaptive-controller.png)
+![The Xbox Adaptive Controller](img/microsoft-inclusive-tech-lab/adaptive-controller.webp)
 
 Bryce walked us through the assumptions baked into a standard controller: fine motor control in both hands, a certain grip strength, a specific range of motion in your fingers and wrists. Every one of those assumptions excludes someone. The adaptive controller doesn't try to fix the gamer, it fixes the controller.
 
