@@ -1,6 +1,6 @@
 ---
 
-title: NFC Keyrings - An MVP Side Project
+title: NFC Keyrings - An MVP Summit Side Project
 authors: simonpainter
 tags:
   - personal
@@ -27,7 +27,7 @@ The NFC stickers are the clever bit. They're tiny passive chips that store a sma
 
 ## The 3D Print
 
-I designed a small keyring fob with a recess on the back sized to fit the NFC sticker neatly. The STL is set up for a two-colour print - if you're using a Bambu printer, the pause to swap filament is already baked in at the right layer so the text comes out in a contrasting colour without any fiddling.
+I designed a small keyring fob with space on the back sized to fit the NFC sticker neatly. The STL is set up for a two-colour print - if you're using a Bambu printer, the pause to swap filament is already baked in at the right layer so the text comes out in a contrasting colour without any fiddling.
 
 You can [download the 3MF file here](img/nfc-keyring/mvp-keyring.3mf). Drop it into your slicer and it should just work.
 
@@ -35,9 +35,9 @@ Once printed, press the split ring through the loop at the top and stick the NFC
 
 ## Programming the NFC Sticker
 
-This is the easiest part. I used [NFC Tools](https://apps.apple.com/gb/app/nfc-tools/id1252962749) on my iPhone. It's free, straightforward, and does exactly what it says.
+This is the easiest part. I used [NFC Tools](https://apps.apple.com/gb/app/nfc-tools/id1252962749) on my iPhone. It's free, straightforward, and does exactly what it says. When I say it's the easiest part, I mean it: I used the skills of my five year old to do it and they managed to program about a hundred of them for me.
 
-Open the app, tap **Write**, then **Add a record**, and choose **URL/URI**. Enter whatever link you want - I used my [Linktree](https://linktr.ee/simonpainter) page which has links to my LinkedIn, GitHub, and blog. Hit write, hold the phone over the sticker, and you're done. The whole process takes about ten seconds per sticker.
+Open the app, tap **Write**, then **Add a record**, and choose **URL/URI**. Enter whatever link you want - I used my [Linktree](https://linktr.ee/simonpainter) page which has links to my LinkedIn, GitHub, and blog. Hit write, hold the phone over the sticker, and you're done. Once you have set the URL you can write as many as you can by pressing the button and tapping the sticker - no need to re-enter the URL each time.
 
 ```mermaid
 flowchart LR
@@ -52,12 +52,14 @@ flowchart LR
 
 Once programmed, anyone with a modern iPhone or Android phone can tap the keyring and get straight to your link. No app required on their end - it just pops up as a notification.
 
+![iPhone notification when tapping the NFC keyring](img/nfc-keyring/nfc-notification.jpeg)
+
 ![NFC Tools URL entry screen](img/nfc-keyring/nfc-tools-url.png)
 
 ## The Result
 
 The total cost per keyring is pretty low - the NFC stickers come in packs and the split rings even more so. The only real investment is the filament and print time, which is minimal given the size.
 
-They went down well at Summit. People enjoyed the novelty, but the bit that really landed was the idea that they could reprogramme it themselves. Hand someone a business card and it ends up in a drawer. Hand someone a keyring that becomes theirs - with their own link on it - and it's actually useful.
+They went down well at Summit. People enjoyed the novelty, but the bit that really landed was the idea that they could reprogramme it themselves. Hand someone a business card and it ends up in a drawer. Hand someone a keyring that becomes theirs, with their own link on it - and it's actually useful.
 
 If you make your own, programme them with whatever URL makes sense for you - a LinkedIn profile, a personal site, a vCard link. And then tell the person you give it to that they can change it.
