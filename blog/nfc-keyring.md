@@ -28,7 +28,7 @@ The NFC stickers are the clever bit. They're tiny passive chips that store a sma
 
 I designed a small keyring fob with a recess on the back sized to fit the NFC sticker neatly. The STL is set up for a two-colour print - if you're using a Bambu printer, the pause to swap filament is already baked in at the right layer so the text comes out in a contrasting colour without any fiddling.
 
-You can [download the STL file here](#). Drop it into your slicer and it should just work.
+You can [download the 3MF file here](img/nfc-keyring/mvp-keyring.3mf). Drop it into your slicer and it should just work.
 
 Once printed, press the split ring through the loop at the top and stick the NFC sticker into the recess on the back. A dot of super glue keeps it in place if needed.
 
