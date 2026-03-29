@@ -233,3 +233,13 @@ private-link:
   label: 'Private Link'
   permalink: '/private-link'
   description: 'Azure Private Link, Private Endpoints, and secure service connectivity'
+
+making:
+  label: 'Making'
+  permalink: '/making'
+  description: 'Hardware projects, 3D printing, and hands-on making'
+
+nfc:
+  label: 'NFC'
+  permalink: '/nfc'
+  description: 'Near Field Communication technology, programming, and applications'
