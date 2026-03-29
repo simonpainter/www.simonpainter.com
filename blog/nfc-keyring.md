@@ -10,10 +10,9 @@ date: 2026-03-29
 
 ---
 
-[MVP Summit](/most-valuable-professional) is a lot. Hundreds of MVPs from all over the world descend on Redmond for a week, and within the first hour you've already lost count of the people you've met. Business cards feel a bit old-fashioned, and in a room full of tech people I wanted something a bit more memorable. So I made a small batch of 3D printed keyrings with NFC stickers on the back - tap one with a phone and you land straight on my Linktree.
+[MVP Summit](/most-valuable-professional) is a lot. Hundreds of MVPs from all over the world descend on Redmond for a week, and within the first few hours you've already lost count of the people you've met. Business cards feel a bit old-fashioned, and in a room full of tech people I wanted something a bit more fun. So I made a small batch of 3D printed keyrings with NFC stickers on the back - tap one with a phone and you land straight on my [Linktree](https://linktr.ee/simonpainter).
 
-The twist is that I encouraged everyone I gave one to to reprogramme it with their own details. That way it's not just a novelty - it becomes a useful thing they'll actually keep on their keys and use themselves. Here's how I made them.
-
+I also encouraged everyone I gave one to to reprogramme it with their own details. That way it's not just a novelty - it becomes a useful thing they'll actually keep on their keys and use themselves. Here's how I made them.
 <!-- truncate -->
 
 ## What You Need
@@ -38,15 +37,17 @@ Once printed, press the split ring through the loop at the top and stick the NFC
 
 This is the easiest part. I used [NFC Tools](https://apps.apple.com/gb/app/nfc-tools/id1252962749) on my iPhone. It's free, straightforward, and does exactly what it says.
 
-Open the app, tap **Write**, then **Add a record**, and choose **URL/URI**. Enter whatever link you want - I used my [Linktree](https://linktr.ee) page which has links to my LinkedIn, GitHub, and blog. Hit write, hold the phone over the sticker, and you're done. The whole process takes about ten seconds per sticker.
+Open the app, tap **Write**, then **Add a record**, and choose **URL/URI**. Enter whatever link you want - I used my [Linktree](https://linktr.ee/simonpainter) page which has links to my LinkedIn, GitHub, and blog. Hit write, hold the phone over the sticker, and you're done. The whole process takes about ten seconds per sticker.
 
-```
-open NFC Tools
-tap Write > Add a record > URL/URI
-enter your URL
-tap Write
-hold phone over sticker
-done
+```mermaid
+flowchart TD
+    A([Open NFC Tools]) --> B[Tap Write]
+    B --> C[Add a record]
+    C --> D[URL / URI]
+    D --> E[Enter your URL]
+    E --> F[Tap Write]
+    F --> G[Hold phone over sticker]
+    G --> H([Done ✓])
 ```
 
 ![NFC Tools URL entry screen](img/nfc-keyring/nfc-tools-url.png)
