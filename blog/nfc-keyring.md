@@ -10,7 +10,9 @@ date: 2026-03-29
 
 ---
 
-Since getting my [Microsoft MVP award](/most-valuable-professional) last year, I've been looking for a fun way to share my contact details at events. Business cards feel a bit old-fashioned, and I wanted something a bit more memorable. So I made a small batch of 3D printed keyrings with NFC stickers on the back - tap one with a phone and you land straight on my Linktree. Here's how I made them.
+[MVP Summit](/most-valuable-professional) is a lot. Hundreds of MVPs from all over the world descend on Redmond for a week, and within the first hour you've already lost count of the people you've met. Business cards feel a bit old-fashioned, and in a room full of tech people I wanted something a bit more memorable. So I made a small batch of 3D printed keyrings with NFC stickers on the back - tap one with a phone and you land straight on my Linktree.
+
+The twist is that I encouraged everyone I gave one to to reprogramme it with their own details. That way it's not just a novelty - it becomes a useful thing they'll actually keep on their keys and use themselves. Here's how I made them.
 
 <!-- truncate -->
 
@@ -55,6 +57,6 @@ Once programmed, anyone with a modern iPhone or Android phone can tap the keyrin
 
 The total cost per keyring is pretty low - the NFC stickers come in packs and the split rings even more so. The only real investment is the filament and print time, which is minimal given the size.
 
-I've been giving them out at events and people seem to genuinely enjoy the novelty of tapping a keyring to get contact details. It's a much better conversation starter than handing over a bit of card, and they actually keep it because it's useful as a keyring.
+They went down well at Summit. People enjoyed the novelty, but the bit that really landed was the idea that they could reprogramme it themselves. Hand someone a business card and it ends up in a drawer. Hand someone a keyring that becomes theirs - with their own link on it - and it's actually useful.
 
-If you make your own, you can programme them with any URL you like - a LinkedIn profile, a personal site, a vCard link, whatever makes sense for you.
+If you make your own, programme them with whatever URL makes sense for you - a LinkedIn profile, a personal site, a vCard link. And then tell the person you give it to that they can change it.
