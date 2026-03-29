@@ -37,7 +37,7 @@ Once printed, press the split ring through the loop at the top and stick the NFC
 
 This is the easiest part. I used [NFC Tools](https://apps.apple.com/gb/app/nfc-tools/id1252962749) on my iPhone. It's free, straightforward, and does exactly what it says. When I say it's the easiest part, I mean it: I used the skills of my five year old to do it and they managed to program about a hundred of them for me.
 
-![NFC Tools URL entry screen](img/nfc-keyring/nfc-tools-url.png)
+<img src={require('./img/nfc-keyring/nfc-tools-url.png').default} alt="NFC Tools URL entry screen" style={{width: '50%'}} />
 
 Open the app, tap **Write**, then **Add a record**, and choose **URL/URI**. Enter whatever link you want - I used my [Linktree](https://linktr.ee/simonpainter) page which has links to my LinkedIn, GitHub, and blog. Hit write, hold the phone over the sticker, and you're done. Once you have set the URL you can write as many as you can by pressing the button and tapping the sticker - no need to re-enter the URL each time.
 
@@ -54,9 +54,7 @@ flowchart LR
 
 Once programmed, anyone with a modern iPhone or Android phone can tap the keyring and get straight to your link. No app required on their end - it just pops up as a notification.
 
-![iPhone notification when tapping the NFC keyring](img/nfc-keyring/nfc-notification.jpeg)
-
-![NFC Tools URL entry screen](img/nfc-keyring/nfc-tools-url.png)
+<img src={require('./img/nfc-keyring/nfc-notification.jpeg').default} alt="iPhone notification when tapping the NFC keyring" style={{width: '50%'}} />
 
 ## The Result
 
