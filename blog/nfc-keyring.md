@@ -37,6 +37,8 @@ Once printed, press the split ring through the loop at the top and stick the NFC
 
 This is the easiest part. I used [NFC Tools](https://apps.apple.com/gb/app/nfc-tools/id1252962749) on my iPhone. It's free, straightforward, and does exactly what it says. When I say it's the easiest part, I mean it: I used the skills of my five year old to do it and they managed to program about a hundred of them for me.
 
+![NFC Tools URL entry screen](img/nfc-keyring/nfc-tools-url.png)
+
 Open the app, tap **Write**, then **Add a record**, and choose **URL/URI**. Enter whatever link you want - I used my [Linktree](https://linktr.ee/simonpainter) page which has links to my LinkedIn, GitHub, and blog. Hit write, hold the phone over the sticker, and you're done. Once you have set the URL you can write as many as you can by pressing the button and tapping the sticker - no need to re-enter the URL each time.
 
 ```mermaid
@@ -58,8 +60,17 @@ Once programmed, anyone with a modern iPhone or Android phone can tap the keyrin
 
 ## The Result
 
-The total cost per keyring is pretty low - the NFC stickers come in packs and the split rings even more so. The only real investment is the filament and print time, which is minimal given the size.
+The total cost per keyring works out remarkably low. Here's the breakdown:
 
-They went down well at Summit. People enjoyed the novelty, but the bit that really landed was the idea that they could reprogramme it themselves. Hand someone a business card and it ends up in a drawer. Hand someone a keyring that becomes theirs, with their own link on it - and it's actually useful.
+| Component | Cost |
+|---|---|
+| Filament | ~2p |
+| Keychain ring (£6.99 for 150) | ~4.7p |
+| NFC sticker (£6.99 for 50) | ~14p |
+| **Total** | **~21p** |
+
+Under 25p each, which makes them pretty guilt-free to hand out. I think 
+
+They went down well at Summit. People enjoyed the novelty, but the bit that really landed was the idea that they could reprogramme it themselves. Hand someone a business card and it ends up in a drawer. Hand someone a keyring that becomes theirs, with their own link on it, and it's actually useful.
 
 If you make your own, programme them with whatever URL makes sense for you - a LinkedIn profile, a personal site, a vCard link. And then tell the person you give it to that they can change it.
