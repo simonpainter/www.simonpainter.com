@@ -50,9 +50,9 @@ flowchart LR
     G --> H([Done ✓])
 ```
 
-![NFC Tools URL entry screen](img/nfc-keyring/nfc-tools-url.png)
-
 Once programmed, anyone with a modern iPhone or Android phone can tap the keyring and get straight to your link. No app required on their end - it just pops up as a notification.
+
+![NFC Tools URL entry screen](img/nfc-keyring/nfc-tools-url.png)
 
 ## The Result
 
