@@ -10,7 +10,7 @@ date: 2026-03-29
 
 ---
 
-Since getting my [Microsoft MVP award](/blog/most-valuable-professional) last year, I've been looking for a fun way to share my contact details at events. Business cards feel a bit old-fashioned, and I wanted something a bit more memorable. So I made a small batch of 3D printed keyrings with NFC stickers on the back - tap one with a phone and you land straight on my Linktree. Here's how I made them.
+Since getting my [Microsoft MVP award](/most-valuable-professional) last year, I've been looking for a fun way to share my contact details at events. Business cards feel a bit old-fashioned, and I wanted something a bit more memorable. So I made a small batch of 3D printed keyrings with NFC stickers on the back - tap one with a phone and you land straight on my Linktree. Here's how I made them.
 
 <!-- truncate -->
 
