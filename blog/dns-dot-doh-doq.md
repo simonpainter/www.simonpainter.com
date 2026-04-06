@@ -12,15 +12,13 @@ date: 2026-04-06
 
 ---
 
-In March 2026, Quad9 announced support for DNS over QUIC (DoQ) alongside DoH3 on their public resolver network. That's the same month Microsoft's DoH support for Windows Server DNS moved out of preview. Two announcements in the same month, both about encrypted DNS, and they point in different directions.
+The answer may indeed be 'not a lot', but I thought it was worth a clickbait headline from time to time. In March 2026, Quad9 announced support for DNS over QUIC (DoQ) alongside DoH3 on their public resolver network. That's the same month Microsoft's DoH support for Windows Server DNS moved out of preview. Two announcements in the same month, both about encrypted DNS, and they point in different directions.
 
 Microsoft's move continues the push toward DoH—encryption that hides in plain sight on port 443. Quad9's move adds DoQ, which offers better latency than DoT but keeps the port 853 visibility that enterprises actually want. Together they prompt a question I don't think the industry has properly answered yet: are we encrypting DNS for privacy, or for security? Because the answer changes everything about which protocol you should reach for.
 
-This post builds on my earlier work on [encrypted DNS governance](encrypted-dns.md) and [SVCB/HTTPS records](svcb-https-records.md). I'm not going to re-cover the wire format or the DoT vs DoH comparison—read those first if you need the background. This is about DoQ specifically, what QUIC brings to DNS, and why I think the enterprise conversation about encrypted DNS is asking the wrong question.
+This post builds on my earlier posts on [encrypted DNS governance](encrypted-dns.md) and [SVCB/HTTPS records](svcb-https-records.md). I'm not going to re-cover the wire format or the DoT vs DoH comparison—read those first if you need the background. This is about DoQ specifically, what QUIC brings to DNS, and why I think the enterprise conversation about encrypted DNS is asking the wrong question.
 
 <!-- truncate -->
-
----
 
 ## What QUIC Actually Is
 
@@ -28,23 +26,10 @@ Before talking about DoQ, it's worth being clear about what QUIC is—because it
 
 QUIC is a transport protocol designed from scratch with encryption as a first-class requirement, not an optional layer. It runs over UDP but provides the reliability, ordering, and congestion control you'd expect from TCP. The key distinction is that TLS isn't bolted on top of QUIC the way it is with TCP—the handshake is integrated. You can't have an unencrypted QUIC connection. Encryption is structural.
 
-```mermaid
-flowchart LR
-    subgraph TCP Stack
-        direction LR
-        A1[Application] --> B1[TLS] --> C1[TCP] --> D1[IP]
-    end
-    subgraph QUIC Stack
-        direction LR
-        A2[Application] --> B2["QUIC\n(TLS integrated)"] --> C2[UDP] --> D2[IP]
-    end
-```
 
 That integration matters for DNS because it collapses two separate negotiations—the TCP handshake and the TLS handshake—into one. TLS 1.3 over TCP costs 2 round trips before you can send application data. QUIC costs 1. For a protocol where every millisecond of the lookup adds to page load time, that's meaningful.
 
 QUIC also solves a problem that's plagued multiplexed protocols running over TCP: head-of-line blocking. When TCP loses a packet, everything queued behind it stalls until retransmission succeeds. HTTP/2 over TCP has this problem—you can have 50 requests multiplexed on one connection, but a single lost packet freezes all of them. QUIC handles loss at the stream level. If stream 5 loses a packet, streams 7 and 9 keep moving.
-
----
 
 ## DoQ: DNS-over-TCP's Logic, QUIC's Performance
 
@@ -76,7 +61,6 @@ sequenceDiagram
 
 The 0-RTT resumption story is where DoQ really separates itself from DoT. When a client has previously connected to a DoQ resolver, it stores a session token. On the next connection, it can send encrypted DNS data in the very first packet—before the server has responded at all. The resolver processes the query and the handshake simultaneously. For mobile clients that cycle through network connections frequently, that's not a theoretical win. It's a real reduction in lookup latency at exactly the moment users notice it most—when an app opens after switching from WiFi to cellular.
 
----
 
 ## What Quad9's Announcement Actually Means
 
@@ -90,7 +74,6 @@ First, DoQ now has a production resolver to test against at scale. Until now, Do
 
 Second, DDR (Discovery of Designated Resolvers, [RFC 9462](https://datatracker.ietf.org/doc/html/rfc9462)) becomes more interesting for DoQ. If you're already using Quad9 as your resolver, a DDR-capable client can now discover the DoQ endpoint automatically without manual configuration—the same mechanism I covered in detail in my [SVCB post](svcb-https-records.md). Clients that support both DDR and DoQ can upgrade transparently.
 
----
 
 ## The Protocol Landscape Now
 
@@ -123,7 +106,6 @@ The meaningful comparison for enterprise architects isn't DoT vs DoH any more—
 | Enterprise visibility | Yes | Yes | Needs interception |
 | Tooling maturity | High | Early | Medium |
 
----
 
 ## The Question Nobody's Asking
 
@@ -139,7 +121,6 @@ For a user on an untrusted network, confidentiality matters. Their ISP, their go
 
 For an enterprise, the threat model is different. You own the network between the client and your internal resolver. The risk isn't an observer on the wire—it's a compromised resolver returning poisoned responses, or malware using DNS for exfiltration and C2. Encryption doesn't address either of those. DNSSEC addresses the first. Visibility—the ability to see what's being queried—addresses the second.
 
----
 
 ## DNSSEC: The Security Property Enterprises Actually Need
 
@@ -169,7 +150,6 @@ But most enterprises don't run DNSSEC validation on their internal resolvers. Th
 
 The DNSSEC operational overhead is real—key rotation, larger response sizes due to RRSIG records, occasional validation failures that are painful to debug. But that overhead is lower than deploying and maintaining TLS interception infrastructure to inspect DoH traffic.
 
----
 
 ## Authentication vs Confidentiality in Practice
 
@@ -200,7 +180,6 @@ Deploying DoH internally gives you confidentiality on a hop you already control,
 
 I'd take DNSSEC validation on a plaintext resolver over DoH without DNSSEC validation, every time, for an internal enterprise deployment.
 
----
 
 ## What DoQ Changes for Enterprises
 
@@ -214,7 +193,6 @@ DoQ also has better characteristics for zone transfers. Zone content can be larg
 
 The tooling maturity gap is real—DoQ monitoring and inspection tools are considerably less developed than DoT equivalents. If you're considering DoQ for enterprise internal use today, factor in that your observability tooling may need to catch up.
 
----
 
 ## The Practical Upshot
 
@@ -225,14 +203,3 @@ Once that's in place, use DoT on the upstream forwarder hop—from your internal
 DoH belongs at the edge, not inside the perimeter. For users on untrusted networks—remote workers, mobile devices away from corporate infrastructure—DoH provides confidentiality from their local network observer. Inside your perimeter, it removes visibility for no additional security gain over DNSSEC + DoT.
 
 DoQ is worth watching for the upstream forwarder role, especially if you're running cloud-native or serverless workloads where connection churn is high. Quad9's production deployment means there's now a well-tested target to build against. Expect tooling to mature over the next 12-18 months.
-
----
-
-## Further Reading
-
-- [RFC 9250: DNS over QUIC](https://datatracker.ietf.org/doc/html/rfc9250)
-- [RFC 4033-4035: DNSSEC](https://datatracker.ietf.org/doc/html/rfc4033)
-- [RFC 9461: SVCB and HTTPS Records for DNS Servers](https://datatracker.ietf.org/doc/html/rfc9461)
-- [RFC 9462: Discovery of Designated Resolvers](https://datatracker.ietf.org/doc/html/rfc9462)
-- [My encrypted DNS post: DoH, DoT, enterprise visibility, and the FortiGate problem](encrypted-dns.md)
-- [My SVCB/HTTPS post: Service binding records, DDR, and how clients discover encrypted resolvers](svcb-https-records.md)
