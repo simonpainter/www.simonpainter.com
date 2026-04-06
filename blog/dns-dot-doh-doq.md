@@ -1,6 +1,6 @@
 ---
 
-title: "Quad9 now supports DoQ along with DoH3""
+title: "Quad9 now supports DoQ along with DoH3"
 authors: simonpainter
 tags:
   - dns
@@ -14,7 +14,7 @@ date: 2026-04-06
 
 In March 2026, [Quad9 announced support for DNS over QUIC (DoQ) alongside DoH3 on their public resolver network](https://quad9.net/news/blog/quad9-enables-dns-over-http-3-and-dns-over-quic/). That's the same month Microsoft's DoH support for Windows Server DNS moved out of preview. Two announcements in the same month, both about encrypted DNS, and they point in different directions.
 
-Microsoft's move continues the push toward DoH—encryption that hides in plain sight on port 443. Quad9's move adds DoQ, which offers better latency than DoT but keeps the port 853 visibility that enterprises actually want. Together they prompt a question I don't think the industry has properly answered yet: are we encrypting DNS for privacy, or for security? Because the answer changes everything about which protocol you should reach for. In this post I'll largely ignore DOH3, which is DoH over HTTP/3. It's HTTP/3 and that's about as exciting as it gets, otherwise it's the same story as DoH over HTTP/2.
+Microsoft's move continues the push toward DoH—encryption that hides in plain sight on port 443. Quad9's move adds DoQ, which offers better latency than DoT but keeps the port 853 visibility that enterprises actually want. Together they prompt a question I don't think the industry has properly answered yet: are we encrypting DNS for privacy, or for security? Because the answer changes everything about which protocol you should reach for. In this post I'll largely ignore DoH3, which is DoH over HTTP/3. It's HTTP/3 and that's about as exciting as it gets, otherwise it's the same story as DoH over HTTP/2.
 
 This post builds on my earlier posts on [encrypted DNS governance](encrypted-dns.md) and [SVCB/HTTPS records](svcb-https-records.md). I'm not going to re-cover the wire format or the DoT vs DoH comparison—read those first if you need the background. This is about DoQ specifically, what QUIC brings to DNS, and why I think the enterprise conversation about encrypted DNS is asking the wrong question.
 
@@ -30,7 +30,7 @@ That integration matters for DNS because it collapses two separate negotiations�
 
 QUIC also solves a problem that's plagued multiplexed protocols running over TCP: head-of-line blocking. When TCP loses a packet, everything queued behind it stalls until retransmission succeeds. HTTP/2 over TCP has this problem—you can have 50 requests multiplexed on one connection, but a single lost packet freezes all of them. QUIC handles loss at the stream level. If stream 5 loses a packet, streams 7 and 9 keep moving. This is a really big deal and addresses one of the biggest performance issues with DoH over HTTP/2 and DoT.
 
-DNS is built on UDP for a reason, it's designed to be fast and low latency and for the request and response to be independent and non blocking. If the problem is the lack of encryption, and that's hardly a given, then DoQ is the better solution than DoH and DoT because it preserves the performance characteristics of UDP while adding encryption.
+DNS is built on UDP for a reason, it's designed to be fast and low latency and for the request and response to be independent and non-blocking. If the problem is the lack of encryption, and that's hardly a given, then DoQ is the better solution than DoH and DoT because it preserves the performance characteristics of UDP while adding encryption.
 
 ## DoQ: DNS-over-TCP's Logic, QUIC's Performance
 
@@ -67,11 +67,11 @@ timeline
     2026 : DoQ reaches production scale with Quad9 and DoH3
 ```
 
-My worry is that the industry will treat DoQ as the last to the party and not adopt it as the best option for enterprise encypted DNS. Already we've seen Microsoft opt for DoH over DoT; one of the product managers told me they 'had to do one first' and DoH was the one supported on the client end. It would be good to see some joined up thinking with the Windows client and the DNS server teams making an intentional choice to support the protocol offering the best performance and security properites for enterpise use.
+My worry is that the industry will treat DoQ as late to the party and not adopt it as the best option for enterprise encrypted DNS. Already we've seen Microsoft opt for DoH over DoT; one of the product managers told me they 'had to do one first' and DoH was the one supported on the client end. It would be good to see some joined up thinking with the Windows client and the DNS server teams making an intentional choice to support the protocol offering the best performance and security properties for enterprise use.
 
 I get why 1.1.1.1, 8.8.8.8, 9.9.9.9 and all the other public resolvers have been quick to add DoH support. It's the easiest one to market to end users because it melts into the background of https traffic and is hard to spot, hard to police, and hard to sniff. For privacy conscious end users, DoH is the obvious choice even though it is an abomination of a protocol from a performance, management, and security perspective.
 
-For enterpise the choices are different. All the reasons a privacy conscious end user would want DoH are the same reasons an enterprise would absolutely not want it. DoH is a nightmare for enterprise visibility and governance. DoT is better, but the TCP handshake and TLS handshake overheads are a real problem for high-churn environments. DoQ is the best of both worlds: encryption without lower performance cost, and port 853 visibility for enterprise governance.
+For enterprise the choices are different. All the reasons a privacy conscious end user would want DoH are the same reasons an enterprise would absolutely not want it. DoH is a nightmare for enterprise visibility and governance. DoT is better, but the TCP handshake and TLS handshake overheads are a real problem for high-churn environments. DoQ is the best of both worlds: encryption with a lower performance cost, and port 853 visibility for enterprise governance.
 
 The choice of protocol has always been about more than performance. Where you run your DNS and who you need to trust shapes which protocol makes sense.
 
@@ -120,7 +120,7 @@ Roughly 60-65% of domain names are DNSSEC-signed globally. Most TLDs are signed.
 
 But a lot of enterprises don't run DNSSEC validation on their internal resolvers. They've deployed split-horizon DNS for internal zones. They've spent effort on encrypted DNS transport. They've blocked port 853 outbound. And they've left the door open to response tampering because their recursive resolver doesn't validate signatures.
 
-There's no excuse for this from a tooling perspective. [Windows DNS Server has supported DNSSEC since Windows Server 2012](https://learn.microsoft.com/en-us/windows-server/networking/dns/dnssec-overview)—that's over a decade of availability. BIND has supported it for longer. The feature is there; it just hasn't been prioritised.
+There's no excuse for this from a tooling perspective. [Windows DNS Server has supported DNSSEC since Windows Server 2012](https://learn.microsoft.com/en-us/windows-server/networking/dns/dnssec-overview). BIND has supported it for longer. The feature is there; it just hasn't been prioritised.
 
 The DNSSEC operational overhead is real: key rotation, larger response sizes due to RRSIG records, occasional validation failures that are painful to debug. But that overhead is lower than deploying and maintaining TLS interception infrastructure to inspect DoH traffic.
 
@@ -140,8 +140,7 @@ The result: DNSSEC validation on your recursive resolver + DoT or DoQ on the ups
 
 Deploying DoH internally gives you confidentiality on a hop you already control, removes the query visibility you need, and still leaves you vulnerable to response tampering if your resolver isn't validating DNSSEC.
 
-I'd take DNSSEC validation on a plaintext resolver over DoH without DNSSEC validation, every time, for an internal enterprise deployment.
-
+I'd take DNSSEC validation on a plaintext resolver over DoH without DNSSEC validation, every time, for an enterprise deployment.
 
 ## What DoQ Changes for Enterprises
 
@@ -155,13 +154,10 @@ DoQ also has better characteristics for zone transfers. Zone content can be larg
 
 The tooling maturity gap is real—DoQ monitoring and inspection tools are considerably less developed than DoT equivalents. If you're considering DoQ for enterprise internal use today, factor in that your observability tooling may need to catch up.
 
-
 ## The Practical Upshot
 
-If you haven't already, the most impactful thing you can do for your enterprise DNS security posture isn't deploying encrypted transports. It's enabling DNSSEC validation on your internal recursive resolvers. Both Windows Server DNS (2019+) and BIND support it with minimal configuration change. Your upstream resolvers (Quad9, Cloudflare, Google) already validate—make sure your internal resolvers do too.
+If you haven't already, the most impactful thing you can do for your enterprise DNS security posture isn't deploying encrypted transports. It's enabling DNSSEC validation on your internal recursive resolvers. Both Windows Server DNS and BIND support it with minimal configuration change. Your upstream resolvers (Quad9, Cloudflare, Google) already validate so make sure your internal resolvers do too.
 
-Once that's in place, use DoT on the upstream forwarder hop—from your internal resolver to your public DNS provider. This gives confidentiality where the network is untrusted and maintains visibility on the internal network.
+Once that's in place, use DoT or DoQ on the upstream forwarder hop, from your internal resolver to your public DNS provider. This gives confidentiality where the network is untrusted and maintains visibility on the internal network.
 
-DoH belongs at the edge, not inside the perimeter. For users on untrusted networks—remote workers, mobile devices away from corporate infrastructure—DoH provides confidentiality from their local network observer. Inside your perimeter, it removes visibility for no additional security gain over DNSSEC + DoT.
-
-DoQ is worth watching for the upstream forwarder role, especially if you're running cloud-native or serverless workloads where connection churn is high. Quad9's production deployment means there's now a well-tested target to build against. Expect tooling to mature over the next 12-18 months.
+DoH belongs outside the enterprise, not inside the perimeter. For users on untrusted networks such as remote workers, or mobile devices away from corporate infrastructure, DoH provides confidentiality from their local network observer. Inside your perimeter, it removes visibility for no additional security gain over DNSSEC + DoT/DoQ.
