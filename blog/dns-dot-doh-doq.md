@@ -157,7 +157,7 @@ A validating resolver checks that signature against the zone's public key (in th
 
 DNSSEC uses a chain of trust. The `.com` nameservers sign the DNSKEY records for `example.com`. Root nameservers sign the DNSKEY records for `.com`. A resolver that trusts the root key—which is published and well-known—can validate the entire chain from root to leaf. Compromise of a recursive resolver can't produce a valid RRSIG without the zone's private key.
 
-That's the property you want in an enterprise. If your internal resolver is validating DNSSEC, a DNS poisoning attack that redirects `payments.internal` to a malicious IP will fail because it can't produce a valid signature. Encryption of the query doesn't give you this—an encrypted query to a compromised resolver just gets you a confidential wrong answer.
+That's the property you want in an enterprise. If your resolver is validating DNSSEC, a DNS poisoning attack that redirects a signed name such as `example.com` to a malicious IP will fail because it can't produce a valid signature. For internal names such as `payments.internal`, that same protection only applies if the internal zone is DNSSEC-signed and your resolver has a trust anchor for it. Encryption of the query doesn't give you this—an encrypted query to a compromised resolver just gets you a confidential wrong answer.
 
 DNSSEC is protocol-agnostic. It works over plain DNS/UDP, DoT, DoH, or DoQ. The signature is in the response, not the transport. You can have DNSSEC validation without any encryption, and you can have encrypted DNS without any DNSSEC. They're independent.
 
