@@ -31,11 +31,11 @@ QUIC is a transport protocol designed from scratch with encryption as a first-cl
 ```mermaid
 flowchart LR
     subgraph TCP Stack
-        direction TB
+        direction LR
         A1[Application] --> B1[TLS] --> C1[TCP] --> D1[IP]
     end
     subgraph QUIC Stack
-        direction TB
+        direction LR
         A2[Application] --> B2["QUIC\n(TLS integrated)"] --> C2[UDP] --> D2[IP]
     end
 ```
