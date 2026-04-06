@@ -1,6 +1,6 @@
 ---
 
-title: "DNS over QUIC: What Quad9's DoQ support means for enterprise DNS"
+title: "Quad9 now supports DoQ along with DoH3""
 authors: simonpainter
 tags:
   - dns
@@ -12,9 +12,9 @@ date: 2026-04-06
 
 ---
 
-The answer may indeed be 'not a lot', but I thought it was worth a clickbait headline from time to time. In March 2026, Quad9 announced support for DNS over QUIC (DoQ) alongside DoH3 on their public resolver network. That's the same month Microsoft's DoH support for Windows Server DNS moved out of preview. Two announcements in the same month, both about encrypted DNS, and they point in different directions.
+In March 2026, [Quad9 announced support for DNS over QUIC (DoQ) alongside DoH3 on their public resolver network](https://quad9.net/news/blog/quad9-enables-dns-over-http-3-and-dns-over-quic/). That's the same month Microsoft's DoH support for Windows Server DNS moved out of preview. Two announcements in the same month, both about encrypted DNS, and they point in different directions.
 
-Microsoft's move continues the push toward DoH—encryption that hides in plain sight on port 443. Quad9's move adds DoQ, which offers better latency than DoT but keeps the port 853 visibility that enterprises actually want. Together they prompt a question I don't think the industry has properly answered yet: are we encrypting DNS for privacy, or for security? Because the answer changes everything about which protocol you should reach for.
+Microsoft's move continues the push toward DoH—encryption that hides in plain sight on port 443. Quad9's move adds DoQ, which offers better latency than DoT but keeps the port 853 visibility that enterprises actually want. Together they prompt a question I don't think the industry has properly answered yet: are we encrypting DNS for privacy, or for security? Because the answer changes everything about which protocol you should reach for. In this post I'll largely ignore DOH3, which is DoH over HTTP/3. It's HTTP/3 and that's about as exciting as it gets, otherwise it's the same story as DoH over HTTP/2.
 
 This post builds on my earlier posts on [encrypted DNS governance](encrypted-dns.md) and [SVCB/HTTPS records](svcb-https-records.md). I'm not going to re-cover the wire format or the DoT vs DoH comparison—read those first if you need the background. This is about DoQ specifically, what QUIC brings to DNS, and why I think the enterprise conversation about encrypted DNS is asking the wrong question.
 
@@ -22,14 +22,15 @@ This post builds on my earlier posts on [encrypted DNS governance](encrypted-dns
 
 ## What QUIC Actually Is
 
-Before talking about DoQ, it's worth being clear about what QUIC is—because it's not just "faster TCP."
+Before talking about DoQ, it's worth being clear about what QUIC is—because it's not just "faster than TCP."
 
 QUIC is a transport protocol designed from scratch with encryption as a first-class requirement, not an optional layer. It runs over UDP but provides the reliability, ordering, and congestion control you'd expect from TCP. The key distinction is that TLS isn't bolted on top of QUIC the way it is with TCP—the handshake is integrated. You can't have an unencrypted QUIC connection. Encryption is structural.
 
-
 That integration matters for DNS because it collapses two separate negotiations—the TCP handshake and the TLS handshake—into one. TLS 1.3 over TCP costs 2 round trips before you can send application data. QUIC costs 1. For a protocol where every millisecond of the lookup adds to page load time, that's meaningful.
 
-QUIC also solves a problem that's plagued multiplexed protocols running over TCP: head-of-line blocking. When TCP loses a packet, everything queued behind it stalls until retransmission succeeds. HTTP/2 over TCP has this problem—you can have 50 requests multiplexed on one connection, but a single lost packet freezes all of them. QUIC handles loss at the stream level. If stream 5 loses a packet, streams 7 and 9 keep moving.
+QUIC also solves a problem that's plagued multiplexed protocols running over TCP: head-of-line blocking. When TCP loses a packet, everything queued behind it stalls until retransmission succeeds. HTTP/2 over TCP has this problem—you can have 50 requests multiplexed on one connection, but a single lost packet freezes all of them. QUIC handles loss at the stream level. If stream 5 loses a packet, streams 7 and 9 keep moving. This is a really big deal and addresses one of the biggest performance issues with DoH over HTTP/2 and DoT.
+
+DNS is built on UDP for a reason, it's designed to be fast and low latency and for the request and response to be independent and non blocking. If the problem is the lack of encryption, and that's hardly a given, then DoQ is the better solution than DoH and DoT because it preserves the performance characteristics of UDP while adding encryption.
 
 ## DoQ: DNS-over-TCP's Logic, QUIC's Performance
 
@@ -37,36 +38,15 @@ QUIC also solves a problem that's plagued multiplexed protocols running over TCP
 
 Each DNS query/response pair gets its own bidirectional QUIC stream. The client's first query goes on stream 0, second on stream 4, third on stream 8. Because each is independent, responses can arrive out of order with no head-of-line blocking—the stream ID tells you which query a response belongs to.
 
-RFC 9250 makes one notable departure from conventional DNS: Message IDs must be set to zero on DoQ connections. The stream handles query/response correlation, so the 16-bit ID field that DNS has used since 1987 is redundant. Proxies that translate DoQ to DoT or UDP have to synthesise a real Message ID—something to watch for in implementations.
-
-```mermaid
-sequenceDiagram
-    participant C as Client
-    participant R as Resolver
-
-    Note over C,R: Cold start: DoT vs DoQ
-    
-    Note over C,R: DoT needs TCP + TLS (2-3 RTT)
-    C->>R: TCP SYN
-    R->>C: TCP SYN-ACK
-    C->>R: TCP ACK + TLS ClientHello
-    R->>C: TLS ServerHello + Certificate
-    C->>R: TLS Finished + DNS Query (stream)
-    R->>C: DNS Response
-
-    Note over C,R: DoQ needs QUIC Initial only (1-2 RTT)
-    C->>R: QUIC Initial (TLS ClientHello embedded)
-    R->>C: QUIC Handshake (TLS ServerHello + DNS Response)
-```
+RFC 9250 makes one notable departure from conventional DNS: Message IDs must be set to zero on DoQ connections. The stream handles query/response correlation, so the 16-bit ID field that DNS has used since 1987 is redundant. Proxies that translate DoQ to DoT or UDP have to synthesise a real Message ID, something to watch for in implementations.
 
 The 0-RTT resumption story is where DoQ really separates itself from DoT. When a client has previously connected to a DoQ resolver, it stores a session token. On the next connection, it can send encrypted DNS data in the very first packet—before the server has responded at all. The resolver processes the query and the handshake simultaneously. For mobile clients that cycle through network connections frequently, that's not a theoretical win. It's a real reduction in lookup latency at exactly the moment users notice it most—when an app opens after switching from WiFi to cellular.
 
-
 ## What Quad9's Announcement Actually Means
 
-Quad9 isn't the first public resolver to support DoQ—AdGuard and NextDNS got there earlier—but Quad9 is the first major infrastructure-grade resolver to do so. Quad9 operates 250+ PoPs globally, partners with Shadowserver for threat intelligence, and is a common choice for enterprises that want a privacy-respecting public resolver without Google or Cloudflare in the supply chain.
+Quad9 isn't the first public resolver to support DoQ, AdGuard and NextDNS got there earlier, but Quad9 is the first major infrastructure-grade resolver to do so. Quad9 operates 250+ PoPs globally, partners with Shadowserver for threat intelligence, and is a common choice for enterprises that want a privacy-respecting public resolver without Google or Cloudflare in the supply chain.
 
-The announcement also included DoH3—DoH carried over HTTP/3, which runs on QUIC. That's the best-of-both-worlds option if you want DoH's port 443 invisibility alongside QUIC's performance characteristics. Modern browsers that support HTTP/3 will upgrade from DoH/HTTP/2 to DoH3 automatically via Alt-Svc headers.
+The announcement also included DoH3, DoH carried over HTTP/3, which runs on QUIC. That's the best-of-both-worlds option if you want DoH's port 443 invisibility alongside QUIC's performance characteristics. Modern browsers that support HTTP/3 will upgrade from DoH/HTTP/2 to DoH3 automatically via Alt-Svc headers.
 
 What changes practically? Two things.
 
@@ -87,25 +67,17 @@ timeline
     2026 : DoQ reaches production scale with Quad9 and DoH3
 ```
 
+My worry is that the industry will treat DoQ as the last to the party and not adopt it as the best option for enterprise encypted DNS. Already we've seen Microsoft opt for DoH over DoT; one of the product managers told me they 'had to do one first' and DoH was the one supported on the client end. It would be good to see some joined up thinking with the Windows client and the DNS server teams making an intentional choice to support the protocol offering the best performance and security properites for enterpise use.
+
+I get why 1.1.1.1, 8.8.8.8, 9.9.9.9 and all the other public resolvers have been quick to add DoH support. It's the easiest one to market to end users because it melts into the background of https traffic and is hard to spot, hard to police, and hard to sniff. For privacy conscious end users, DoH is the obvious choice even though it is an abomination of a protocol from a performance, management, and security perspective.
+
+For enterpise the choices are different. All the reasons a privacy conscious end user would want DoH are the same reasons an enterprise would absolutely not want it. DoH is a nightmare for enterprise visibility and governance. DoT is better, but the TCP handshake and TLS handshake overheads are a real problem for high-churn environments. DoQ is the best of both worlds: encryption without lower performance cost, and port 853 visibility for enterprise governance.
+
 The choice of protocol has always been about more than performance. Where you run your DNS and who you need to trust shapes which protocol makes sense.
 
 DoH runs on port 443 and is indistinguishable from ordinary HTTPS. That's by design—it protects privacy from network observers including enterprise firewalls. As I covered in [my first encrypted DNS post](encrypted-dns.md), this is exactly what breaks FortiGate wildcard FQDN objects and circumvents DNS-based threat intelligence. DoH prioritises user confidentiality over organisational visibility.
 
-DoT and DoQ both run on port 853 and are identifiable as encrypted DNS without any decryption. A firewall can see the traffic, measure its volume, and block or allow specific resolver IPs. Enterprises that want encrypted DNS without losing observability have always been pushed toward DoT. Now they have DoQ as an alternative with better connection setup characteristics.
-
 The meaningful comparison for enterprise architects isn't DoT vs DoH any more—it's DoT vs DoQ, with DoH as the external-facing option for users on untrusted networks.
-
-| Aspect | DoT | DoQ | DoH |
-|--------|-----|-----|-----|
-| Port | 853 | 853 | 443 |
-| Transport | TCP + TLS | QUIC (TLS integrated) | TCP + TLS + HTTP/2 |
-| Cold start RTT | 2-3 | 1-2 | 2-3 |
-| 0-RTT resumption | No | Yes | No |
-| Head-of-line blocking | Yes (TCP) | No | Partial (HTTP/2) |
-| Identifiable as DNS | Yes | Yes | No |
-| Enterprise visibility | Yes | Yes | Needs interception |
-| Tooling maturity | High | Early | Medium |
-
 
 ## The Question Nobody's Asking
 
@@ -128,7 +100,7 @@ DNSSEC ([RFC 4033](https://datatracker.ietf.org/doc/html/rfc4033), [RFC 4034](ht
 
 Zone operators sign their DNS records with a private key. The signature arrives in the response as an RRSIG record alongside the real data:
 
-```
+```dns
 example.com. 3600 IN A 93.184.216.34
 example.com. 3600 IN RRSIG A 8 2 3600 20260501000000 20260401000000 (
     12345 example.com. <base64-encoded-signature> )
@@ -146,27 +118,17 @@ DNSSEC is protocol-agnostic. It works over plain DNS/UDP, DoT, DoH, or DoQ. The 
 
 Roughly 60-65% of domain names are DNSSEC-signed globally. Most TLDs are signed. The root is signed. Cloudflare, Google, Quad9, and other major resolver operators validate DNSSEC by default.
 
-But most enterprises don't run DNSSEC validation on their internal resolvers. They've deployed split-horizon DNS for internal zones. They've spent effort on encrypted DNS transport. They've blocked port 853 outbound. And they've left the door open to response tampering because their recursive resolver doesn't validate signatures.
+But a lot of enterprises don't run DNSSEC validation on their internal resolvers. They've deployed split-horizon DNS for internal zones. They've spent effort on encrypted DNS transport. They've blocked port 853 outbound. And they've left the door open to response tampering because their recursive resolver doesn't validate signatures.
 
-The DNSSEC operational overhead is real—key rotation, larger response sizes due to RRSIG records, occasional validation failures that are painful to debug. But that overhead is lower than deploying and maintaining TLS interception infrastructure to inspect DoH traffic.
+There's no excuse for this from a tooling perspective. [Windows DNS Server has supported DNSSEC since Windows Server 2012](https://learn.microsoft.com/en-us/windows-server/networking/dns/dnssec-overview)—that's over a decade of availability. BIND has supported it for longer. The feature is there; it just hasn't been prioritised.
 
+The DNSSEC operational overhead is real: key rotation, larger response sizes due to RRSIG records, occasional validation failures that are painful to debug. But that overhead is lower than deploying and maintaining TLS interception infrastructure to inspect DoH traffic.
 
 ## Authentication vs Confidentiality in Practice
 
 Consider the threat models honestly.
 
 An enterprise DNS resolver sits on your network, answering queries from your clients. The path from client to resolver is on infrastructure you control. The path from resolver to upstream forwarder might cross ISP networks. The path from forwarder to authoritative nameserver crosses the public internet.
-
-```mermaid
-flowchart TD
-    A[Employee Client] -->|"Your network\nDNSSEC validates responses"| B["Internal Recursive Resolver"]
-    B -->|"DoT to public resolver\nconfidentiality on untrusted path"| C["Public Resolver e.g. Quad9\nvalidates DNSSEC"]
-    C -->|"DNSSEC chain of trust"| D["Authoritative Nameservers\nDNSSEC-signed zones"]
-    
-    style B fill:#d4edda
-    style C fill:#d4edda
-    style D fill:#d4edda
-```
 
 On the internal hop, you control the network. DNSSEC validation at your resolver means tampered responses are rejected. You don't need to encrypt this hop for security reasons—and encrypting it removes the query visibility you need for threat detection.
 
