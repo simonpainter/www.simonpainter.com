@@ -35,3 +35,19 @@ jobs:
         with:
           message-path: 'build.log'
           repo-token: ${{ secrets.GITHUB_TOKEN }}  # Added required token
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Sync to Azure Blob Storage
+        uses: azure/CLI@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az storage blob sync \
+              --source build/ \
+              --container '$web' \
+              --account-name ${{ secrets.PREPROD_AZURE_STORAGE_ACCOUNT }} \
+              --delete-destination true
