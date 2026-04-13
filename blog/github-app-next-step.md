@@ -5,8 +5,8 @@ authors: simonpainter
 tags:
   - ai
   - github
-  - copilot
-  - tools
+  - mcp
+  - opinion
 date: 2026-04-13
 
 ---
