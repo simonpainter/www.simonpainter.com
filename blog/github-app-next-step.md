@@ -65,7 +65,7 @@ What I find genuinely interesting is how clearly the GitHub app reflects pattern
 
 The shift to a prompt-first interface feels like a direct lesson from Claude, ChatGPT, and Copilot Chat. For a lot of tasks, starting with a prompt is a better mental model than opening a file and asking questions about it. The editor is still there when you need it, but it's not the centre of gravity. I can still open things in vscode can use copilot there, but I don't have to make it the primary interface for every interaction. In fact I'm writing this sentence in vscode with Copilot helping me along after clicking on the handy 'Open' buttin in the GitHub app.
 
-<img src="/img/github-app-next-step/visual_studio_code_interface_buttons.png" alt="Screenshot of the GitHub app showing a prompt and an 'Open' button to open the code in vscode" style={{width: '50%'}} />
+<img src={require('./img/github-app-next-step/visual_studio_code_interface_buttons.png').default} alt="Screenshot of the GitHub app showing a prompt and an 'Open' button to open the code in vscode" style={{width: '50%'}} />
 
 Model choice is increasingly table stakes. OpenCode and the Copilot model picker established that appetite clearly: people want to pick the right model for the job rather than commit their entire workflow to one engine. Cross-provider support is the direction of travel.
 
