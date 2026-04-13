@@ -17,7 +17,7 @@ My journey with AI tools has followed a pattern I've seen before with Microsoft:
 
 ## The innovation and integration pattern
 
-Microsoft's reputation for "embrace and extend" — acquiring or copying ideas until competitors are squeezed out — isn't entirely unfair. But Azure told a different story.
+Microsoft's reputation for "embrace, extend, and extinguish" — acquiring or copying ideas until competitors are squeezed out — isn't entirely unfair. But Azure told a different story.
 
 Azure didn't win because it was objectively the best cloud platform. It won, at least partly, because it fits the world that Microsoft customers already live in. Office 365 integration, Active Directory, familiar tooling. Not always the best choice on raw specs, but often the best choice for the organisation already running Windows and Exchange.
 
@@ -37,9 +37,9 @@ Then things got interesting. The apps stopped competing purely on model quality 
 
 I tried Claude Code and found it good, but I replaced it with OpenCode when I wanted more control over which model I was using. That flexibility matters. The best model for writing documentation isn't necessarily the best model for refactoring code, and I don't want to be locked into one engine for everything. Copilot has this right too — you can switch models and optimise for cost and capability at the same time.
 
-I installed the Claude desktop app mainly to get access to MCP servers. Model Context Protocol — MCP — is a way for AI tools to connect to external systems: databases, APIs, your own custom tools. Once you've used it, you can't imagine going back to a model that can't reach your infrastructure and act on it.
+I installed the Claude desktop app mainly to get access to MCP servers. Model Context Protocol is a way for AI tools to connect to external systems: databases, APIs, your own custom tools. Once you've used it, you can't imagine going back to a model that can't reach your infrastructure and act on it. I liken it to APIs with AI friendly instructions baked in. It's not perfect, and some people are saying that LLMs with CLI access make it redundant, but we'll ses about that.
 
-Then I built OpenClaw. It runs on hardware I control, which means I decide what it can access and what it can do. It connects to GitHub so it can handle admin tasks and edit code in repos. It connects to WhatsApp so I can steer it from my phone. It runs cron jobs, so I can automate things intelligently in the background without babysitting a chat session.
+Then I built an OpenClaw instance. Actually it was something else that day I think. It runs on a raspberry pi, hardware I control, which means I decide what it can access and what it can do. It connects to GitHub so it can handle admin tasks and edit code in repos. It connects to WhatsApp so I can steer it from my phone. It runs cron jobs, so I can automate things intelligently in the background without babysitting a chat session.
 
 At that point the question stopped being "which model is best?" and became something much more interesting:
 
@@ -55,7 +55,7 @@ Microsoft has now blown all of this out of the water with the Copilot ecosystem.
 
 Why build an agent that can interact with GitHub when Copilot is already native to GitHub? Why build separate pipelines for email, documents, and code when Microsoft 365 Copilot ties them together in the tools you already use? The advantage isn't raw capability, it's integration density.
 
-Copilot CLI competes well with Claude Code and OpenCode on features. But the GitHub app goes further — not because it's technically superior on every axis, but because it's built into the place where development work actually happens.
+Copilot CLI competes well with Claude Code and OpenCode on features. But now there is a GitHub app which goes further; not because it's technically superior on every axis, but because it's built into the place where development work actually happens.
 
 This is the bet Microsoft is making: agentic workflow belongs inside the tools where work already happens, not bolted on from outside.
 
@@ -63,7 +63,9 @@ This is the bet Microsoft is making: agentic workflow belongs inside the tools w
 
 What I find genuinely interesting is how clearly the GitHub app reflects patterns that worked elsewhere, brought closer to where developers live.
 
-The shift to a prompt-first interface feels like a direct lesson from Claude, ChatGPT, and Copilot Chat. For a lot of tasks, starting with a prompt is a better mental model than opening a file and asking questions about it. The editor is still there when you need it, but it's not the centre of gravity.
+The shift to a prompt-first interface feels like a direct lesson from Claude, ChatGPT, and Copilot Chat. For a lot of tasks, starting with a prompt is a better mental model than opening a file and asking questions about it. The editor is still there when you need it, but it's not the centre of gravity. I can still open things in vscode can use copilot there, but I don't have to make it the primary interface for every interaction. In fact I'm writing this sentence in vscode with Copilot helping me along after clicking on the handy 'Open' buttin in the GitHub app.
+
+<img src="/img/github-app-next-step/visual_studio_code_interface_buttons.png" alt="Screenshot of the GitHub app showing a prompt and an 'Open' button to open the code in vscode" style={{width: '50%'}} />
 
 Model choice is increasingly table stakes. OpenCode and the Copilot model picker established that appetite clearly: people want to pick the right model for the job rather than commit their entire workflow to one engine. Cross-provider support is the direction of travel.
 
