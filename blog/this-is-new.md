@@ -1,6 +1,6 @@
 ---
 
-title: This a demo for Fletch
+title: This is a demo for Fletch
 authors: simonpainter
 tags:
   - opinion
