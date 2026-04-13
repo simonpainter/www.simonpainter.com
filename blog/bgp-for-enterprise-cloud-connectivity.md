@@ -276,7 +276,7 @@ On the enterprise side, you then need to decide how those routes get back into t
 :::warning ExpressRoute BGP essentials
 Microsoft Learn content about ExpressRoute often talks about “peerings” and “routing domains” without emphasising the mechanism. ExpressRoute is, in practice, delivered via redundant eBGP sessions.
 
-Each peering (Private peering, and Microsoft peering) is delivered via a pair of independent eBGP sessions. If you exceed prefix limits, the BGP session is terminated by default — a hard failure mode and a good reason to monitor prefix counts. Default limits are 4,000 prefixes for private peering (10,000 with ExpressRoute Premium) and 200 for Microsoft peering; sessions restore automatically once the prefix count drops back below the limit.
+Each peering (Private peering, and Microsoft peering) is delivered via a pair of independent eBGP sessions. If you exceed prefix limits, the BGP session is terminated by default — a hard failure mode and a good reason to monitor prefix counts. Default limits are 4,000 prefixes for private peering (10,000 with ExpressRoute Premium) and 200 for Microsoft peering; once you resolve the prefix count issue, the session will attempt to re-establish via BGP's normal reconnect cycle, though depending on your platform configuration you may need to trigger a manual session reset to recover immediately.
 
 Microsoft-side BGP timers are fixed at 60 seconds keepalive and 180 seconds hold and can’t be changed on Microsoft’s side. You can configure lower timers on your CPE and the session will negotiate to the lower value, though Microsoft recommends BFD instead for fast failover. BFD is enabled by default on Microsoft’s side for new peerings, but needs to be configured on your CPE to be effective.
 
@@ -444,6 +444,7 @@ Mechanically, you do this by matching the routes you learn from neighbour A and 
 ### IOS-XE example (set LOCAL_PREF higher for routes learned from preferred peer)
 
 ```ios
+! Both peers are in the same provider AS here; LOCAL_PREF works identically when peers are in different ASNs.
 router bgp 65001
  neighbor 192.0.2.1 remote-as 64512
  neighbor 192.0.2.2 remote-as 64512
@@ -462,6 +463,7 @@ router bgp 65001
 ### JunOS example (set LOCAL_PREF higher for routes learned from preferred peer)
 
 ```junos
+/* Both peers are in the same provider AS here; LOCAL_PREF works identically when peers are in different ASNs. */
 policy-options {
   policy-statement PREFER-PEER-A-IN {
     then local-preference 200;
