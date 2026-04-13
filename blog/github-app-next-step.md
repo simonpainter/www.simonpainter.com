@@ -99,7 +99,7 @@ I want to give you a real example of what autopilot actually looks like in pract
 
 Fighting Fantasy gamebooks were a big part of my childhood. If you grew up in the UK in the 1980s you probably remember them — pocket-sized paperback adventures by Steve Jackson and Ian Livingstone, first published in 1982, where you played the hero, rolled dice for combat, and managed three stats: SKILL, STAMINA, and LUCK. The books were divided into numbered sections; you'd make a choice, flip to section 247, fight a goblin, and either survive or start again.
 
-I decided to build a Python engine to run those adventures in the terminal. The thing is, I didn't write a single line of code. Not one. The entire engine — branching narrative, dice-based combat, luck tests, a JSON adventure format, and a full test suite — was built entirely through the GitHub app's chat interface.
+They also translated really well to code. As a kid my first foray into BBC BASIC was converting the pages of the books into code with GOTO statements. It was a mess, but it worked. I always thought it would be fun to build a more robust engine for those adventures, but I never got around to it until last week. I decided to build a Python engine to run those adventures in the terminal. The thing is, I didn't write a single line of code. Not one. The entire engine including branching narrative, dice-based combat, luck tests, and a JSON adventure format was built entirely through the GitHub app's chat interface.
 
 My input was my own recollections of the rules and some photos of the instruction pages from the books, uploaded directly through the chat. I described what I wanted, the agent figured out the architecture, wrote the code, and tested it. The repo is [here](https://github.com/simonpainter/fighting-fantasy) if you want to see the result.
 
@@ -107,6 +107,6 @@ This is an extreme example, and I'm not suggesting it's how you'd build producti
 
 ## What comes next
 
-If you squint at the trajectory, the next phase is already visible. I want voice so I can talk to my agents while I'm doing other things. I want an agent that stops being a chat box and becomes a layer that sits across your tools: tracking state, running parallel work, and handing you decisions instead of logs. In that world, you spend less time in the weeds of implementation and more time on the higher-value work: architecture, intent, constraints, and reviewing the output.
+If you squint at the trajectory, the next phase is already pretty visible. I want voice so I can talk to my agents while I'm doing other things. I want an agent that stops being a chat box and becomes a layer that sits across your tools: tracking state, running parallel work, and handing you decisions instead of logs. In that world, you spend less time in the weeds of implementation and more time on the higher-value work: architecture, intent, constraints, and reviewing the output.
 
 The tooling takes care of the rest. Quietly, in the background, inside the tools where you already work.
