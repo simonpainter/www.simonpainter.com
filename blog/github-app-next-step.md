@@ -4,9 +4,11 @@ title: "From chatbots to workflows: why the GitHub app is the next step"
 authors: simonpainter
 tags:
   - ai
+  - automation
   - github
   - mcp
   - opinion
+  - personal
 date: 2026-04-13
 
 ---
@@ -39,7 +41,7 @@ I tried Claude Code and found it good, but I replaced it with OpenCode when I wa
 
 I installed the Claude desktop app mainly to get access to MCP servers. Model Context Protocol is a way for AI tools to connect to external systems: databases, APIs, your own custom tools. Once you've used it, you can't imagine going back to a model that can't reach your infrastructure and act on it. I liken it to APIs with AI friendly instructions baked in. It's not perfect, and some people are saying that LLMs with CLI access make it redundant, but we'll see about that.
 
-Then I set up an OpenClaw instance — I've tried a few different options over time but this is the one that stuck. It runs on a Raspberry Pi, hardware I control, which means I decide what it can access and what it can do. It connects to GitHub so it can handle admin tasks and edit code in repos. It connects to WhatsApp so I can steer it from my phone. It runs cron jobs, so I can automate things intelligently in the background without babysitting a chat session.
+Then I set up an OpenClaw instance, it was called something else back then. It runs on a Raspberry Pi, hardware I control, which means I decide what it can access and what it can do. It connects to GitHub so it can handle admin tasks and edit code in repos. It connects to WhatsApp so I can steer it from my phone. It runs cron jobs, so I can automate things intelligently in the background without babysitting a chat session.
 
 At that point the question stopped being "which model is best?" and became something much more interesting: Where does the agent run? What can it reach? How do I steer it? How do I trust it? How do I keep control?
 
@@ -69,7 +71,7 @@ MCP server support being easy to set up reflects exactly what Claude Desktop pro
 
 The async, multi-session model takes the best lesson from tools like OpenClaw and other agent runners. Running multiple sessions in the background, context-switching freely, and coming back to review progress is a different way of working to "single chat, single thread". You can feel the shift in how people describe using it.
 
-Mobile control is the one that still feels like a near-future feature rather than a current one. My OpenClaw setup via WhatsApp gave me a taste of what it means to manage agents from your phone rather than just chat with them. If that lands well in the GitHub app, and it's already [public preview in the CLI](https://github.blog/changelog/2026-04-13-remote-control-cli-sessions-on-web-and-mobile-in-public-preview/), it genuinely changes when and where development work can happen.
+Mobile control is the one that still feels like a near-future feature rather than a current one. My OpenClaw setup via WhatsApp gave me a taste of what it means to manage agents from your phone rather than just chat with them. If that lands well in the GitHub app, and it's already [public preview in the Copilot CLI](https://github.blog/changelog/2026-04-13-remote-control-cli-sessions-on-web-and-mobile-in-public-preview/), it genuinely changes when and where development work can happen.
 
 Finally, repo-native conventions feel like the natural evolution of devcontainer and dotfiles patterns. The appetite for `/` commands and repo-defined skills is asking agents to work the way the project works, not the way the tool was designed.
 
