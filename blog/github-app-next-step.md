@@ -1,0 +1,94 @@
+---
+
+title: "From chatbots to workflows: why the GitHub app is the next step"
+authors: simonpainter
+tags:
+  - ai
+  - github
+  - copilot
+  - tools
+date: 2026-04-13
+
+---
+
+My journey with AI tools has followed a pattern I've seen before with Microsoft: someone builds something useful, then someone else makes it native to where you already work. That turns out to matter more than being technically superior.
+
+<!-- truncate -->
+
+## The innovation and integration pattern
+
+Microsoft's reputation for "embrace and extend" — acquiring or copying ideas until competitors are squeezed out — isn't entirely unfair. But Azure told a different story.
+
+Azure didn't win because it was objectively the best cloud platform. It won, at least partly, because it fits the world that Microsoft customers already live in. Office 365 integration, Active Directory, familiar tooling. Not always the best choice on raw specs, but often the best choice for the organisation already running Windows and Exchange.
+
+I see exactly the same pattern playing out with AI.
+
+## Phase 1: the model race
+
+My own journey started where most people's did: with a chat box and a model.
+
+While a lot of people fixated on ChatGPT, I found Claude a better engine for the work I actually needed doing. The content felt more grounded, the reasoning was sharper, and it worked better for the kinds of technical writing and problem solving I throw at it. There have been times I've reached for OpenAI models, but Anthropic consistently came out ahead in my early experiments.
+
+This was the first phase of AI apps: a model, a chat box, a prompt. Useful, but limited in scope.
+
+## Phase 2: tools, choice, and control
+
+Then things got interesting. The apps stopped competing purely on model quality and started competing on capabilities.
+
+I tried Claude Code and found it good, but I replaced it with OpenCode when I wanted more control over which model I was using. That flexibility matters. The best model for writing documentation isn't necessarily the best model for refactoring code, and I don't want to be locked into one engine for everything. Copilot has this right too — you can switch models and optimise for cost and capability at the same time.
+
+I installed the Claude desktop app mainly to get access to MCP servers. Model Context Protocol — MCP — is a way for AI tools to connect to external systems: databases, APIs, your own custom tools. Once you've used it, you can't imagine going back to a model that can't reach your infrastructure and act on it.
+
+Then I built OpenClaw. It runs on hardware I control, which means I decide what it can access and what it can do. It connects to GitHub so it can handle admin tasks and edit code in repos. It connects to WhatsApp so I can steer it from my phone. It runs cron jobs, so I can automate things intelligently in the background without babysitting a chat session.
+
+At that point the question stopped being "which model is best?" and became something much more interesting:
+
+- Where does the agent run?
+- What can it reach?
+- How do I steer it?
+- How do I trust it?
+- How do I keep control?
+
+## Phase 3: ecosystems win
+
+Microsoft has now blown all of this out of the water with the Copilot ecosystem.
+
+Why build an agent that can interact with GitHub when Copilot is already native to GitHub? Why build separate pipelines for email, documents, and code when Microsoft 365 Copilot ties them together in the tools you already use? The advantage isn't raw capability, it's integration density.
+
+Copilot CLI competes well with Claude Code and OpenCode on features. But the GitHub app goes further — not because it's technically superior on every axis, but because it's built into the place where development work actually happens.
+
+This is the bet Microsoft is making: agentic workflow belongs inside the tools where work already happens, not bolted on from outside.
+
+## The GitHub app: what good ideas look like when they converge
+
+What I find genuinely interesting is how clearly the GitHub app reflects patterns that worked elsewhere, brought closer to where developers live.
+
+The shift to a prompt-first interface feels like a direct lesson from Claude, ChatGPT, and Copilot Chat. For a lot of tasks, starting with a prompt is a better mental model than opening a file and asking questions about it. The editor is still there when you need it, but it's not the centre of gravity.
+
+Model choice is increasingly table stakes. OpenCode and the Copilot model picker established that appetite clearly: people want to pick the right model for the job rather than commit their entire workflow to one engine. Cross-provider support is the direction of travel.
+
+MCP server support being easy to set up reflects exactly what Claude Desktop proved: if MCP is hard to configure, people won't use it. The next natural step is better visibility and debugging when those servers misbehave — still a rough edge across the board.
+
+The async, multi-session model takes the best lesson from tools like OpenClaw and other agent runners. Running multiple sessions in the background, context-switching freely, and coming back to review progress is a different way of working to "single chat, single thread". You can feel the shift in how people describe using it.
+
+Mobile control is the one that still feels like a near-future feature rather than a current one. My OpenClaw setup via WhatsApp gave me a taste of what it means to manage agents from your phone rather than just chat with them. If that lands well in the GitHub app, it genuinely changes when and where development work can happen.
+
+Finally, repo-native conventions feel like the natural evolution of devcontainer and dotfiles patterns. The appetite for `/` commands and repo-defined skills is asking agents to work the way the project works, not the way the tool was designed.
+
+## What people are noticing in the private preview
+
+The most encouraging early feedback isn't about novelty. It's about workflow.
+
+The async, multi-session model keeps coming up. Being able to kick off several jobs, switch context, and let the agent run in the background feels like a step change. Investigation tasks and "make progress while I do something else" scenarios are where it shines.
+
+People also respond well to a prompt-first interface that still respects the code. Quick jumps into a real editor to sanity-check and tweak the output, without making the editor the primary interface. And for well-bounded tasks, the willingness to delegate and just validate the result — autopilot for low-risk changes — is real.
+
+The wishlist is even more telling, because it shows where this goes next. Mobile as a genuine remote control for running agents, not just a mobile chat window. Cross-provider model choice so people aren't locked in. Agents that understand and follow the project's own conventions and automation rather than working around them. And project management automation: triage, prioritisation, stand-up summaries, the unglamorous work that steals time from more valuable things.
+
+## What comes next
+
+If you squint at the trajectory, the next phase is already visible.
+
+The agent stops being a chat box and becomes a layer that sits across your tools — tracking state, running parallel work, and handing you decisions instead of logs. In that world, you spend less time in the weeds of implementation and more time on the higher-value work: architecture, intent, constraints, and reviewing the output.
+
+The tooling takes care of the rest. Quietly, in the background, inside the tools where you already work.
