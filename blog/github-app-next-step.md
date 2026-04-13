@@ -19,7 +19,7 @@ My journey with AI tools has followed a pattern I've seen before with Microsoft:
 
 ## The innovation and integration pattern
 
-Microsoft's reputation for "embrace, extend, and extinguish" — acquiring or copying ideas until competitors are squeezed out — isn't entirely unfair. But Azure told a different story.
+Microsoft's reputation for "embrace, extend, and extinguish", acquiring or copying ideas until competitors are squeezed out, isn't entirely unfair. But Azure told a different story.
 
 Azure didn't win because it was objectively the best cloud platform. It won, at least partly, because it fits the world that Microsoft customers already live in. Office 365 integration, Active Directory, familiar tooling. Not always the best choice on raw specs, but often the best choice for the organisation already running Windows and Exchange.
 
