@@ -93,6 +93,18 @@ It's a prompt-first interface that still respects the code. Quick jumps into a r
 
 The wishlist is even more telling, because it shows where this goes next. Mobile as a genuine remote control for running agents, not just a mobile chat window. Cross-provider model choice so people aren't locked in — Anthropic models running on Anthropic's own infrastructure, not just Microsoft's hosted versions. Agents that understand and follow the project's own conventions and automation rather than working around them. And project management automation: triage, prioritisation, stand-up summaries, the unglamorous work that steals time from more valuable things.
 
+## A concrete example: building a game engine without writing a line of code
+
+I want to give you a real example of what autopilot actually looks like in practice, because I think it lands differently than any abstract description.
+
+Fighting Fantasy gamebooks were a big part of my childhood. If you grew up in the UK in the 1980s you probably remember them — pocket-sized paperback adventures by Steve Jackson and Ian Livingstone, first published in 1982, where you played the hero, rolled dice for combat, and managed three stats: SKILL, STAMINA, and LUCK. The books were divided into numbered sections; you'd make a choice, flip to section 247, fight a goblin, and either survive or start again.
+
+I decided to build a Python engine to run those adventures in the terminal. The thing is, I didn't write a single line of code. Not one. The entire engine — branching narrative, dice-based combat, luck tests, a JSON adventure format, and a full test suite — was built entirely through the GitHub app's chat interface.
+
+My input was my own recollections of the rules and some photos of the instruction pages from the books, uploaded directly through the chat. I described what I wanted, the agent figured out the architecture, wrote the code, and tested it. The repo is [here](https://github.com/simonpainter/fighting-fantasy) if you want to see the result.
+
+This is an extreme example, and I'm not suggesting it's how you'd build production software. But it illustrates something important. The task was well-bounded: I had a clear spec (the game rules), a clear output format (a working Python engine), and a way to validate the result (does the game play correctly?). That's exactly the profile where autopilot earns its keep. I was the architect and the tester. The agent did the rest.
+
 ## What comes next
 
 If you squint at the trajectory, the next phase is already visible. I want voice so I can talk to my agents while I'm doing other things. I want an agent that stops being a chat box and becomes a layer that sits across your tools: tracking state, running parallel work, and handing you decisions instead of logs. In that world, you spend less time in the weeds of implementation and more time on the higher-value work: architecture, intent, constraints, and reviewing the output.
