@@ -18,7 +18,7 @@ The book itself, and many of the search results I found, says that it is due to 
 
 ## What are root servers anyway?
 
-When you type `www.example.com` into your browser, your computer doesn't magically know where that is. It needs to look it up. DNS — the Domain Name System — is the phone book that turns human-readable names into IP addresses your computer can route to.
+When you type `www.example.com` into your browser, your computer doesn't magically know where that is. It needs to look it up. DNS (the Domain Name System) is the phone book that turns human-readable names into IP addresses your computer can route to.
 
 The lookup process starts at the top. Your DNS resolver (usually provided by your ISP or a service like `1.1.1.1`) asks a root server: "who's in charge of `.com`?" The root server points you to the `.com` nameservers, those point you to `example.com`'s nameservers, and eventually you get the IP address you need.
 
@@ -40,44 +40,54 @@ sequenceDiagram
     Resolver-->>Browser: It's at 93.184.216.34
 ```
 
-The root servers are the very first step. Every DNS lookup on the internet ultimately traces back to them. They're the authoritative source for the root zone — the "`.`" at the top of the DNS hierarchy that you never see but is always there.
+The root servers are the very first step. Every DNS lookup on the internet ultimately traces back to them. They're the authoritative source for the root zone, the "`.`" at the top of the DNS hierarchy that you never see but is always there.
 
 ## The 512-byte problem
 
-When DNS was designed in the 1980s, the internet was a very different place. [RFC 1035](https://www.rfc-editor.org/rfc/rfc1035), published in 1987, defined the protocol we still use today at its core. One of the key decisions was that DNS would run over UDP — the fast, connectionless protocol — rather than TCP, which adds the overhead of a handshake and connection management.
+When DNS was designed in the 1980s, the internet was a very different place. [RFC 1035](https://www.rfc-editor.org/rfc/rfc1035), published in 1987, defined the protocol we still use today at its core. One of the key decisions was that DNS would run over UDP (the fast, connectionless protocol) rather than TCP, which adds the overhead of a handshake and connection management.
 
-UDP is great for quick queries. You fire a packet, you get a packet back. But UDP packets have a practical size limit. The original DNS spec capped responses at **512 bytes**. That's not much — this paragraph alone is already bigger than that.
+UDP is great for quick queries. You fire a packet, you get a packet back. But UDP packets have a practical size limit. The original DNS spec capped responses at **512 bytes**. That's not much; this paragraph alone is already bigger than that.
 
-Why 512? The internet of 1987 ran over a patchwork of different network types, and 512 bytes was a safe size that could travel across all of them without being fragmented. Fragmented packets are slow, unreliable, and complicated to reassemble. Keeping responses under 512 bytes meant they'd fit in a single UDP datagram and arrive intact.
+> I have covered a bit more detail about the DNS protocol and in particular how DNS over UDP was extended to DNS over TCP in [this post about DNS Encryption](encrypted-dns.md#dns-over-tcp-adding-a-length-field)
 
-## The maths that gave us 13
+Why 512? The internet of 1987 ran over a patchwork of different network types, and 512 bytes was a safe size that could travel across all of them without being fragmented. Fragmented packets area pain because you need to have sequence numbers and all that jazz. Keeping responses under 512 bytes meant they'd fit in a single UDP datagram and arrive intact.
 
-Here's where it gets interesting. The root servers need to announce themselves. When your resolver starts up, it needs a "hints file" — a list of the root servers and their IP addresses so it knows where to begin. This list is itself delivered as a DNS response, and that response has to fit in 512 bytes.
+## Where does my resolver get the list of root servers from?
 
-Let's work through the packet layout. A DNS response has:
+The root servers are not announced through DNS, they are coded into your resolver. You can download the 'root hints' file from [IANA](https://www.iana.org/domains/root/files) which contains the names and IP addresses of the 13 root servers. This file is updated periodically as needed, but the core list of 13 servers has remained stable for decades. So why do we need to worry about the size of the response if it's hardcoded into the resolver? Well those hints are used for the priming query specified in [RFC 9609](https://www.rfc-editor.org/rfc/rfc9609).
 
-- A fixed **12-byte header** containing message ID, flags, and counts
-- A **question section** — what was asked
-- An **answer section** — the NS records pointing to each root server
-- An **additional section** — the "glue records" with the actual IP addresses
+## And now the maths bit
 
-Each root server entry needs two records: an NS record giving its name (like `a.root-servers.net`) and an A record with its IPv4 address. With DNS name compression — a clever trick where repeated domain suffixes like `.root-servers.net` are replaced with a back-reference pointer — each pair of records takes roughly 35–40 bytes.
+[RFC 9609](https://www.rfc-editor.org/rfc/rfc9609) (published February 2025) formalises the rules around the priming query response. The resolver picks one of the hint addresses, sends a query for `. IN NS`, and the response must come back with an RCODE of NOERROR with the Authoritative Answer (AA) bit set. The NS records appear in the Answer section (not the Authority section, because they originate from the root zone itself), and the Additional section carries the A and AAAA records for each root server.
+
+Under the original [RFC 1035](https://www.rfc-editor.org/rfc/rfc1035) 512-byte limit, only the IPv4 A records could realistically fit alongside the NS records. Let's work through why 13 is the maximum.
+
+A DNS response has:
+
+- A fixed **12-byte header**: message ID, flags, and counts
+- A **question section**: what was asked
+- An **answer section**: the NS records pointing to each root server
+- An **additional section**: the A records with the actual IPv4 addresses
+
+Each root server needs an NS record giving its name (like `a.root-servers.net`) and an A record with its IPv4 address. With DNS name compression, a clever trick where repeated domain suffixes like `.root-servers.net` are replaced with a back-reference pointer, each pair of records takes roughly 31 bytes.
 
 With a 12-byte header and 13 pairs of records:
 
 ```
 12 bytes  (header)
-+ 5 bytes  (question)
-+ 13 × ~15 bytes (NS records, with name compression)
-+ 13 × ~16 bytes (A glue records)
++  5 bytes  (question)
++ 13  ~15 bytes (NS records, with name compression)
++ 13  ~16 bytes (A records)
 = ~484 bytes
 ```
 
-Add a fourteenth root server and you'd push past 512. So 13 it was. The number wasn't chosen for mystical reasons — it's just the most that fit in the tin.
+Add a fourteenth root server and you'd push past 512. So 13 it was. The number wasn't chosen for mystical reasons. It's just the most that fit in the tin.
+
+RFC 9609 also notes something worth knowing: resolvers **should not** expect exactly 13 NS records in the response, because some root servers have historically returned fewer. And today, since each root server has both an A and an AAAA record, the combined size of all address records far exceeds 512 bytes. Root servers are permitted to omit some addresses from the Additional section without setting the TC (Truncated) bit, because those addresses are not considered glue records in the context of a priming response. If your resolver doesn't get all the addresses it needs, it can query for them directly.
 
 ## The names behind the letters
 
-The 13 root servers are known by the letters A through M (skipping nothing), and their names follow the pattern `x.root-servers.net`. They're run by 12 different organisations — Verisign operates both A and J.
+The 13 root servers are known by the letters A through M (skipping nothing), and their names follow the pattern `x.root-servers.net`. They're run by 12 different organisations; Verisign operates both A and J.
 
 | Letter | Operator |
 |--------|----------|
@@ -101,17 +111,15 @@ The geographic and organisational spread is deliberate. If one organisation has 
 
 Here's the twist: there aren't actually 13 physical servers. There are over 1,600.
 
-Each "root server" is really a name for a cluster of machines spread across the globe, all sharing the same IP address. This works through **anycast** — a routing technique where multiple machines advertise the same IP address, and your traffic gets directed to whichever is geographically or topologically closest.
+Each "root server" is really a name for a cluster of machines spread across the globe, all sharing the same IP address. This works through **anycast**, a routing technique where multiple machines advertise the same IP address, and your traffic gets directed to whichever is geographically or topologically closest.
 
-So when your resolver queries `a.root-servers.net`, it might talk to a machine in London, Frankfurt, Singapore, or São Paulo depending on where you are. The 13 "servers" are really 13 identities, each backed by many instances. It's a neat workaround for the original physical limitation — we couldn't add more root *names*, but we could add more root *machines*.
+So when your resolver queries `a.root-servers.net`, it might talk to a machine in London, Frankfurt, Singapore, or São Paulo depending on where you are. The 13 "servers" are really 13 identities, each backed by many instances. It's a neat workaround for the original physical limitation; we couldn't add more root *names*, but we could add more root *machines*.
 
 ## What changed: EDNS and beyond
 
-The 512-byte limit held until 1999, when Paul Vixie published RFC 2671 introducing **EDNS0** — Extension Mechanisms for DNS. EDNS0 lets a client advertise a larger buffer size in its query, and the server can respond with a bigger packet if the client can handle it. Most modern resolvers advertise 4,096 bytes or more.
+The 512-byte limit held until 1999, when Paul Vixie published RFC 2671 introducing **EDNS0** (Extension Mechanisms for DNS). EDNS0 lets a client advertise a larger buffer size in its query, and the server can respond with a bigger packet if the client can handle it. Most modern resolvers advertise 4,096 bytes or more.
 
-This opened the door to larger DNS responses, which was critical for **DNSSEC** — DNS Security Extensions. DNSSEC adds cryptographic signatures to DNS records to prove they haven't been tampered with, and those signatures are large. Without EDNS0, DNSSEC would be practically impossible.
-
-DNS over TCP was always technically allowed as a fallback when a response was too big for UDP, but it was rarely used. The convention was clear: DNS is UDP, TCP is the exception. EDNS0 shifted that balance by making large UDP responses viable, and more recently **DNS over TLS (DoT)** and **DNS over HTTPS (DoH)** have brought TCP back into the mainstream for privacy reasons — wrapping DNS queries in encryption so your ISP can't see what you're looking up.
+DNS over TCP was always technically allowed as a fallback when a response was too big for UDP but EDNS0 opened the door to larger UDP DNS responses, which was critical for **DNSSEC** (DNS Security Extensions). DNSSEC adds cryptographic signatures to DNS records to prove they haven't been tampered with, and those signatures are large. Without EDNS0, DNSSEC would be practically impossible.
 
 ## A constraint that shaped the internet
 
