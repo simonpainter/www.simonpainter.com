@@ -9,7 +9,7 @@ tags:
   - mcp
   - opinion
   - personal
-date: 2026-04-13
+date: 2026-04-17
 
 ---
 
@@ -75,7 +75,7 @@ Mobile control is the one that still feels like a near-future feature rather tha
 
 Finally, repo-native conventions feel like the natural evolution of devcontainer and dotfiles patterns. The appetite for `/` commands and repo-defined skills is really about asking agents to work the way the project works, not the way the tool was designed.
 
-But that's not all that's in there at the moment either. And I say 'at the moment' with real intent because one of the features in the list below wasn't there yesterday. The pace of iteration is impressive, and the roadmap is ambitious.
+But that's not all that's in there at the moment either. And I say 'at the moment' with real intent because one of the features in the list below wasn't there a few days ago. The pace of iteration is impressive, and the roadmap is ambitious.
 
 ![Screenshot of the GitHub app menu](img/github-app-next-step/github_sidebar_navigation_home_pull_requests_issues_chat_workflows.png)
 
