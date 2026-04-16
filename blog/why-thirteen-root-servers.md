@@ -50,17 +50,17 @@ UDP is great for quick queries. You fire a packet, you get a packet back. But UD
 
 > I have covered a bit more detail about the DNS protocol, including how DNS works over both UDP and TCP, in [this post about DNS Encryption](encrypted-dns.md#dns-over-tcp-adding-a-length-field)
 
-Why 512? The internet of 1987 ran over a patchwork of different network types, and 512 bytes was a safe size that could travel across all of them without being fragmented. Fragmented packets are a pain because you need to have sequence numbers and all that jazz. Keeping responses under 512 bytes meant they'd fit in a single UDP datagram and arrive intact.
+Why 512? The internet of 1987 ran over a patchwork of different network types, and 512 bytes was a safe size that could travel across all of them without being fragmented. Fragmented packets are a pain because you need to reassemble them again later. Keeping responses under 512 bytes meant they'd fit in a single UDP datagram and arrive intact.
 
 ## Where does my resolver get the list of root servers from?
 
-The root servers are not announced through DNS, they are coded into your resolver. You can download the 'root hints' file from [IANA](https://www.iana.org/domains/root/files) which contains the names and IP addresses of the 13 root servers. This file is updated periodically as needed, but the core list of 13 servers has remained stable for decades. So why do we need to worry about the size of the response if it's hardcoded into the resolver? Well those hints are used for the priming query specified in [RFC 9609](https://www.rfc-editor.org/rfc/rfc9609).
+The root servers are not exactly announced through DNS, they are configured as 'root hints' into your resolver. You can download the 'root hints' file from [IANA](https://www.iana.org/domains/root/files) which contains the names and IP addresses of the 13 root servers. This file is updated periodically as needed, but the core list of 13 servers has remained stable for decades. So why do we need to worry about the size of the response if it's configured into the resolver? Well those hints are used for the priming query specified in [RFC 9609](https://www.rfc-editor.org/rfc/rfc9609) at startup. This allows the resolver to verify that the root hints list is complete and up to date.
 
 ## And now the maths bit
 
 [RFC 9609](https://www.rfc-editor.org/rfc/rfc9609), and [RFC 8109](https://www.rfc-editor.org/rfc/rfc8109) before it, formalised the rules around the priming query response. The resolver picks one of the hint addresses, sends a query for `. IN NS`, and the response must come back with an RCODE of NOERROR with the Authoritative Answer (AA) bit set. The NS records appear in the Answer section (not the Authority section, because they originate from the root zone itself), and the Additional section carries the A and AAAA records for each root server. You can try this out yourself with `dig . NS @a.root-servers.net` and see the response.
 
-Under the original [RFC 1035](https://www.rfc-editor.org/rfc/rfc1035) 512-byte limit, there were no AAAA records yet so only the IPv4 A records were needed. Alongside the NS records you could fit 13 of these. Let's work through why 13 is the maximum.
+Under the original [RFC 1035](https://www.rfc-editor.org/rfc/rfc1035) 512-byte limit, back when there were no AAAA records, there was just enough room to fit 13 NS records and their corresponding A records, but not 14. The math is tight, but it works. Let's break down the size of the response.
 
 A DNS response has:
 
