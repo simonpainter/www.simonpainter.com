@@ -50,7 +50,7 @@ UDP is great for quick queries. You fire a packet, you get a packet back. But UD
 
 > I have covered a bit more detail about the DNS protocol, including how DNS works over both UDP and TCP, in [this post about DNS Encryption](encrypted-dns.md#dns-over-tcp-adding-a-length-field)
 
-Why 512? The internet of 1987 ran over a patchwork of different network types, and 512 bytes was a safe size that could travel across all of them without being fragmented. Fragmented packets are a pain because you need to have sequence numbers and all that jazz. Keeping responses under 512 bytes meant they'd fit in a single UDP datagram and arrive intact.
+Why 512? The internet of 1987 ran over a patchwork of different network types, and 512 bytes was a safe size that could travel across all of them without being fragmented. Fragmented packets are a pain because you need to reassemble them again later. Keeping responses under 512 bytes meant they'd fit in a single UDP datagram and arrive intact.
 
 ## Where does my resolver get the list of root servers from?
 
