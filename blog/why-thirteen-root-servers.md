@@ -10,7 +10,9 @@ date: 2026-04-16
 
 ---
 
-The internet has exactly 13 DNS root servers. Not 12, not 14 — 13. That's not a coincidence or an arbitrary decision made in a committee meeting. It's a hard constraint baked into the physics of early networking, and the story behind it is a great example of how engineering limits shape the world we build.
+I'm enjoying reading ["DNS: The Internet's Control Plane" by Enrique Somoza](https://www.amazon.co.uk/DNS-Internets-Enrique-Somoza-D-Sc/dp/B0GVZXYHDT/ref=zg_bsnr_g_3756_d_sccl_14/000-0000000-0000000?psc=1) and one of the things it mentioned was that there are exactly 13 DNS root servers and this is a hangover from the early days of the internet before DNS over TCP was a thing. It also predates the anycast architecture that allows each root server IP to be served by multiple machines around the world. I thought it worth a little dig. Get it?
+
+The book itself, and many of the search results I found, says that it is due to the 512-byte limit of a UDP DNS response. But I wanted to understand exactly what that the response was and how the 13 is calculated.
 
 <!-- truncate -->
 
@@ -22,7 +24,7 @@ The lookup process starts at the top. Your DNS resolver (usually provided by you
 
 ```mermaid
 sequenceDiagram
-    participant Browser
+    participant Browser as Stub Resolver
     participant Resolver
     participant RootServer as Root Server
     participant TLD as .com Nameserver
@@ -42,7 +44,7 @@ The root servers are the very first step. Every DNS lookup on the internet ultim
 
 ## The 512-byte problem
 
-When DNS was designed in the 1980s, the internet was a very different place. RFC 1035, published in 1987, defined the protocol we still use today at its core. One of the key decisions was that DNS would run over UDP — the fast, connectionless protocol — rather than TCP, which adds the overhead of a handshake and connection management.
+When DNS was designed in the 1980s, the internet was a very different place. [RFC 1035](https://www.rfc-editor.org/rfc/rfc1035), published in 1987, defined the protocol we still use today at its core. One of the key decisions was that DNS would run over UDP — the fast, connectionless protocol — rather than TCP, which adds the overhead of a handshake and connection management.
 
 UDP is great for quick queries. You fire a packet, you get a packet back. But UDP packets have a practical size limit. The original DNS spec capped responses at **512 bytes**. That's not much — this paragraph alone is already bigger than that.
 
