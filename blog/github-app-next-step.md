@@ -105,7 +105,7 @@ My input was my own recollections of the rules and some photos of the instructio
 
 This is an extreme example, and I'm not suggesting it's how you'd build production software. But it illustrates something important. The task was well-bounded: I had a clear spec (the game rules), a clear output format (a working Python engine), and a way to validate the result (does the game play correctly?). That's exactly the profile where autopilot earns its keep. I was the architect and the tester. The agent did the rest.
 
-<img src={require('./img/github-app-next-step/fighting_fantasy_terminal.png').default} alt="The Fighting Fantasy engine running in a terminal, showing narrative text, exits, and character stats" style={{width: '75%'}} />
+![The Fighting Fantasy engine running in a terminal, showing narrative text, exits, and character stats](img/github-app-next-step/fighting_fantasy_terminal.png)
 
 ## What comes next
 
