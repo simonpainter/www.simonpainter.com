@@ -86,8 +86,6 @@ With a 12-byte header and 13 servers:
 
 That fits comfortably under 512 bytes. In fact, with the modern `x.root-servers.net` naming scheme and this level of compression, you could squeeze in up to 15 servers before hitting the limit. So why 13? The naming convention was not always this uniform. The original root servers had names like `NS.NIC.DDN.MIL` and `A.ISI.EDU`, heterogeneous names with no shared suffix to compress. Without that suffix compression, the encoding is larger and the arithmetic tightens up considerably.
 
-The constraint also looks rather different once you add IPv6. Each AAAA record is 28 bytes (the address field is four times the size of an IPv4 address). Once you include both A and AAAA records for all 13 servers, the response balloons to around 800 bytes, well over the 512-byte limit. RFC 9609 acknowledges this directly: "The combined size of all the A and AAAA RRsets exceeds the original 512-octet payload limit." This is why root servers are permitted to omit some addresses from the Additional section without setting the TC (Truncated) bit, and why modern resolvers use EDNS0 to advertise a larger buffer.
-
 RFC 9609 also notes something worth knowing: resolvers **should not** expect exactly 13 NS records in the response, because some root servers have historically returned fewer. If your resolver doesn't get all the addresses it needs, it can query for them directly.
 
 ## 13 names, but thousands of machines
