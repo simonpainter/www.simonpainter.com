@@ -69,21 +69,26 @@ A DNS response has:
 - An **answer section**: the NS records pointing to each root server
 - An **additional section**: the A records with the actual IPv4 addresses
 
-Each root server needs an NS record giving its name (like `a.root-servers.net`) and an A record with its IPv4 address. With DNS name compression, a clever trick where repeated domain suffixes like `.root-servers.net` are replaced with a back-reference pointer, each pair is roughly 31 bytes (15 + 16).
+Each root server needs an NS record giving its name (like `a.root-servers.net`) and an A record with its IPv4 address. DNS uses name compression, a trick where repeated domain suffixes are replaced with a two-byte back-reference pointer to where the suffix already appeared in the packet.
 
-With a 12-byte header and 13 pairs of records:
+The first NS record has to spell out `root-servers.net` in full, costing 31 bytes. Every subsequent NS record can use a pointer back to that suffix, shrinking each RDATA from 20 bytes down to 4 bytes, making each of those records just 15 bytes. I verified this by capturing a real priming response and parsing the raw packet.
+
+With a 12-byte header and 13 servers:
 
 ```text
-12 bytes  (header)
+ 12 bytes  (header)
 +  5 bytes  (question)
-+ 195 bytes (13 x 15 NS records, with compression)
-+ 208 bytes (13 x 16 A records, with compression)
-= 420 bytes
++ 31 bytes  (NS1: l.root-servers.net, full RDATA)
++180 bytes  (12 × 15 bytes, NS2-NS13 with compressed RDATA)
++208 bytes  (13 × 16 bytes, A records with compressed names)
+= 436 bytes
 ```
 
-That calculation shows the minimum possible size, but real DNS packets are not always that compact. Early operators needed some breathing room so things stayed compatible across different networks and implementations. In practice, 13 names became the safe choice and remained standard. The number wasn't chosen for mystical reasons. It's what fit the constraints.
+That fits comfortably under 512 bytes. In fact, with the modern `x.root-servers.net` naming scheme and this level of compression, you could squeeze in up to 15 servers before hitting the limit. So why 13? The naming convention was not always this uniform. The original root servers had names like `NS.NIC.DDN.MIL` and `A.ISI.EDU`, heterogeneous names with no shared suffix to compress. Without that suffix compression, the encoding is larger and the arithmetic tightens up considerably.
 
-RFC 9609 also notes something worth knowing: resolvers **should not** expect exactly 13 NS records in the response, because some root servers have historically returned fewer. And today, since each root server has both an A and an AAAA record, the combined size of all address records far exceeds 512 bytes. Root servers are permitted to omit some addresses from the Additional section without setting the TC (Truncated) bit, because those addresses are not considered glue records in the context of a priming response. If your resolver doesn't get all the addresses it needs, it can query for them directly.
+The constraint also looks rather different once you add IPv6. Each AAAA record is 28 bytes (the address field is four times the size of an IPv4 address). Once you include both A and AAAA records for all 13 servers, the response balloons to around 800 bytes, well over the 512-byte limit. RFC 9609 acknowledges this directly: "The combined size of all the A and AAAA RRsets exceeds the original 512-octet payload limit." This is why root servers are permitted to omit some addresses from the Additional section without setting the TC (Truncated) bit, and why modern resolvers use EDNS0 to advertise a larger buffer.
+
+RFC 9609 also notes something worth knowing: resolvers **should not** expect exactly 13 NS records in the response, because some root servers have historically returned fewer. If your resolver doesn't get all the addresses it needs, it can query for them directly.
 
 ## 13 names, but thousands of machines
 
