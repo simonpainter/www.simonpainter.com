@@ -10,9 +10,9 @@ date: 2026-04-16
 
 ---
 
-I'm enjoying reading ["DNS: The Internet's Control Plane" by Enrique Somoza](https://www.amazon.co.uk/DNS-Internets-Enrique-Somoza-D-Sc/dp/B0GVZXYHDT/ref=zg_bsnr_g_3756_d_sccl_14/000-0000000-0000000?psc=1) and one of the things it mentioned was that there are exactly 13 DNS root servers and this is a hangover from the early days of the internet before DNS over TCP was a thing. It also predates the anycast architecture that allows each root server IP to be served by multiple machines around the world. I thought it worth a little dig. Get it?
+I'm enjoying reading ["DNS: The Internet's Control Plane" by Enrique Somoza](https://www.amazon.co.uk/DNS-Internets-Enrique-Somoza-D-Sc/dp/B0GVZXYHDT/ref=zg_bsnr_g_3756_d_sccl_14/000-0000000-0000000?psc=1) and one of the things it mentioned was that there are exactly 13 DNS root servers and this is a hangover from the early days of the internet. It also predates the anycast architecture that allows each root server IP to be served by multiple machines around the world. I thought it worth a little dig. Get it?
 
-The book itself, and many of the search results I found, says that it is due to the 512-byte limit of a UDP DNS response. But I wanted to understand exactly what that the response was and how the 13 is calculated.
+The book itself, and many of the search results I found, says that it is due to the 512-byte limit of a UDP DNS response. But I wanted to get into the detail that wasn't easily found and understand exactly what that the response was and how the 13 is calculated.
 
 <!-- truncate -->
 
@@ -50,7 +50,7 @@ UDP is great for quick queries. You fire a packet, you get a packet back. But UD
 
 > I have covered a bit more detail about the DNS protocol and in particular how DNS over UDP was extended to DNS over TCP in [this post about DNS Encryption](encrypted-dns.md#dns-over-tcp-adding-a-length-field)
 
-Why 512? The internet of 1987 ran over a patchwork of different network types, and 512 bytes was a safe size that could travel across all of them without being fragmented. Fragmented packets area pain because you need to have sequence numbers and all that jazz. Keeping responses under 512 bytes meant they'd fit in a single UDP datagram and arrive intact.
+Why 512? The internet of 1987 ran over a patchwork of different network types, and 512 bytes was a safe size that could travel across all of them without being fragmented. Fragmented packets are a pain because you need to have sequence numbers and all that jazz. Keeping responses under 512 bytes meant they'd fit in a single UDP datagram and arrive intact.
 
 ## Where does my resolver get the list of root servers from?
 
@@ -58,9 +58,9 @@ The root servers are not announced through DNS, they are coded into your resolve
 
 ## And now the maths bit
 
-[RFC 9609](https://www.rfc-editor.org/rfc/rfc9609) (published February 2025) formalises the rules around the priming query response. The resolver picks one of the hint addresses, sends a query for `. IN NS`, and the response must come back with an RCODE of NOERROR with the Authoritative Answer (AA) bit set. The NS records appear in the Answer section (not the Authority section, because they originate from the root zone itself), and the Additional section carries the A and AAAA records for each root server.
+[RFC 9609](https://www.rfc-editor.org/rfc/rfc9609), and [RFC 8109](https://www.rfc-editor.org/rfc/rfc8109) before it, formalised the rules around the priming query response. The resolver picks one of the hint addresses, sends a query for `. IN NS`, and the response must come back with an RCODE of NOERROR with the Authoritative Answer (AA) bit set. The NS records appear in the Answer section (not the Authority section, because they originate from the root zone itself), and the Additional section carries the A and AAAA records for each root server. You can try this out yourself with `dig . NS @a.root-servers.net` and see the response.
 
-Under the original [RFC 1035](https://www.rfc-editor.org/rfc/rfc1035) 512-byte limit, only the IPv4 A records could realistically fit alongside the NS records. Let's work through why 13 is the maximum.
+Under the original [RFC 1035](https://www.rfc-editor.org/rfc/rfc1035) 512-byte limit, there were no AAAA records yet so only the IPv4 A records were needed. Alongside the NS records you could fit 13 of these. Let's work through why 13 is the maximum.
 
 A DNS response has:
 
@@ -73,11 +73,11 @@ Each root server needs an NS record giving its name (like `a.root-servers.net`) 
 
 With a 12-byte header and 13 pairs of records:
 
-```
+```text
 12 bytes  (header)
 +  5 bytes  (question)
-+ 13  ~15 bytes (NS records, with name compression)
-+ 13  ~16 bytes (A records)
++ 13 x 15 bytes (NS records, with name compression)
++ 13 x 16 bytes (A records)
 = ~484 bytes
 ```
 
@@ -85,35 +85,13 @@ Add a fourteenth root server and you'd push past 512. So 13 it was. The number w
 
 RFC 9609 also notes something worth knowing: resolvers **should not** expect exactly 13 NS records in the response, because some root servers have historically returned fewer. And today, since each root server has both an A and an AAAA record, the combined size of all address records far exceeds 512 bytes. Root servers are permitted to omit some addresses from the Additional section without setting the TC (Truncated) bit, because those addresses are not considered glue records in the context of a priming response. If your resolver doesn't get all the addresses it needs, it can query for them directly.
 
-## The names behind the letters
-
-The 13 root servers are known by the letters A through M (skipping nothing), and their names follow the pattern `x.root-servers.net`. They're run by 12 different organisations; Verisign operates both A and J.
-
-| Letter | Operator |
-|--------|----------|
-| A | Verisign |
-| B | USC Information Sciences Institute |
-| C | Cogent Communications |
-| D | University of Maryland |
-| E | NASA Ames Research Center |
-| F | Internet Systems Consortium |
-| G | US Department of Defense |
-| H | US Army Research Lab |
-| I | Netnod |
-| J | Verisign |
-| K | RIPE NCC |
-| L | ICANN |
-| M | WIDE Project |
-
-The geographic and organisational spread is deliberate. If one organisation has an outage, the others keep the internet's DNS infrastructure running. Diversity is resilience.
-
 ## 13 names, but thousands of machines
 
-Here's the twist: there aren't actually 13 physical servers. There are over 1,600.
+But are we dependent for our most important infrastructure on just 13 servers? Not quite: there aren't actually 13 physical servers. There are over 1,500.
 
-Each "root server" is really a name for a cluster of machines spread across the globe, all sharing the same IP address. This works through **anycast**, a routing technique where multiple machines advertise the same IP address, and your traffic gets directed to whichever is geographically or topologically closest.
+Each "root server" is really an anycast IP for a cluster of machines spread across the globe, all sharing the same address. This gives resillience and performance because resolvers can query the nearest instance of `a.root-servers.net` rather than having to talk to a single machine in one location.
 
-So when your resolver queries `a.root-servers.net`, it might talk to a machine in London, Frankfurt, Singapore, or São Paulo depending on where you are. The 13 "servers" are really 13 identities, each backed by many instances. It's a neat workaround for the original physical limitation; we couldn't add more root *names*, but we could add more root *machines*.
+So when your resolver queries `a.root-servers.net`, it might talk to a machine in London, Frankfurt, Singapore, or São Paulo depending on where you are. The 13 "servers" are really 13 identities, each backed by many instances. It's a neat workaround for the original physical limitation; we couldn't add more names or IP addresses, but we could add more root *servers*.
 
 ## What changed: EDNS and beyond
 
@@ -125,6 +103,6 @@ DNS over TCP was always technically allowed as a fallback when a response was to
 
 The 13-root-server limit is a wonderful example of how constraints from one era leave permanent marks on the technology that follows. The engineers who defined DNS in 1987 weren't thinking about a global internet with billions of devices. They were solving the problems in front of them with the tools they had.
 
-The 512-byte UDP limit was a reasonable constraint at the time. The decision to cap root servers at a number that fit that constraint was pragmatic. And the anycast architecture that now lets those 13 names expand to 1,600+ machines is an elegant solution that grew around the original limitation rather than replacing it.
+The 512-byte UDP limit was a reasonable constraint at the time. The decision to cap root servers at a number that fit that constraint was pragmatic. And the anycast architecture that now lets those 13 names expand to over 1,500 machines is an elegant solution that grew around the original limitation rather than replacing it. Can you imagine having a root zone with 1,500 NS records?
 
-The number 13 isn't magic. It's just physics, arithmetic, and a bit of clever engineering.
+The number 13 isn't magic. It's just bytes, arithmetic, and a bit of clever engineering.
