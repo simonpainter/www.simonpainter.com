@@ -83,4 +83,4 @@ What surprised me was the **regional clustering**. European IXP participants bun
 
 The interactive view is great for exploring, but I liked the look of it and thought it would be a good addition to my office wall. A few minutes later I had an export tool. The tool exports a **3x high-resolution PNG** of whatever's on screen, and a **full vector SVG** at A3 landscape with labels on the major hubs, ready to open in stuff like Inkscape.
 
-You can explore the [most recent version here](html/visualize_out.html).
+You can explore the [most recent version here](pathname:///html/visualize_out.html).
