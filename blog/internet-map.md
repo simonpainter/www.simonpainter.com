@@ -5,7 +5,7 @@ authors: simonpainter
 tags:
   - personal
   - bgp
-  - networking
+  - networks
   - python
   - ai
   - labs
