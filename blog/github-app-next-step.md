@@ -63,7 +63,7 @@ What I find interesting is how clearly the GitHub app reflects patterns that wor
 
 The shift to a prompt-first interface feels like a direct lesson from Claude, ChatGPT, and Copilot Chat. For a lot of tasks, starting with a prompt is a better mental model than opening a file and asking questions about it. The editor is still there when you need it, but it's not the centre of gravity. I can still open things in VS Code and use Copilot there, but I don't have to make it the primary interface for every interaction. In fact I'm writing this sentence in VS Code with Copilot helping me along after clicking on the handy 'Open' button in the GitHub app.
 
-<img src={require('./img/github-app-next-step/visual_studio_code_interface_buttons.png').default} alt="Screenshot of the GitHub app showing a prompt and an 'Open' button to open the code in VS Code" style={{width: '50%'}} />
+<img src={require('./img/github-app-next-step/visual_studio_code_interface_buttons.png').default} alt="VS Code interface strip showing the controls used after opening the code from the GitHub app" style={{width: '50%'}} />
 
 People ask me which AI I use. Right now I lean towards Anthropic's models; Claude has consistently worked better for me across writing, reasoning, and code. When I say that, the follow-up is usually "so are you using Claude Desktop or Codex?" and that's where the conversation gets interesting. I don't need either. Microsoft's Copilot strategy means the models I want are already in the tools I use, rather than asking me to adopt yet another app. I pick Claude Sonnet or Opus from the model picker and get on with it.
 
