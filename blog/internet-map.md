@@ -6,6 +6,11 @@ tags:
   - personal
   - bgp
   - networking
+  - python
+  - ai
+  - labs
+  - programming
+  - algorithms
 date: 2026-04-19
 
 ---
