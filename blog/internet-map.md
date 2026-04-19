@@ -14,6 +14,8 @@ I've always been more interested in the plumbing of the internet than the web pa
 
 <!-- truncate -->
 
+Randall Munroe got there first, obviously. [XKCD 195](https://xkcd.com/195/) mapped the IPv4 address space as a Hilbert curve back in 2006, and [XKCD 802](https://xkcd.com/802/) charted the relative populations of online communities like continents on a world map. Both are brilliant. Mine is different — I promise — because it maps the *routing relationships* between networks rather than addresses or users. Also mine is interactive, which I'm going to count as a win.
+
 This was a vibe coding project: I had a rough idea, let the AI write most of the code, and steered it toward something I found interesting. Here's what it does and what it found.
 
 ## Where the data comes from
