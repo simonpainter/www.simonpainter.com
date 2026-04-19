@@ -10,41 +10,48 @@ date: 2026-04-19
 
 ---
 
-I've always found the structure of the internet fascinating — not the web pages on top of it, but the physical and logical plumbing underneath. Every time you load a page, your packets travel across a patchwork of independent networks called **Autonomous Systems (ASes)**, each identified by an **ASN** (Autonomous System Number). The way these networks connect to each other — who peers with whom — is what I wanted to visualise.
+I've always been more interested in the plumbing of the internet than the web pages sitting on top of it. Every time you load a page, your packets hop across a patchwork of independent networks called **Autonomous Systems (ASes)**, each with its own **ASN** (Autonomous System Number). Who connects to whom — and how — is what I wanted to map.
+
 <!-- truncate -->
+
+This was a vibe coding project: I had a rough idea, let the AI write most of the code, and steered it toward something I found interesting. Here's what it does and what it found.
+
 ## Where the data comes from
 
-The internet's routing fabric is largely visible through the **BGP (Border Gateway Protocol)** routing tables held by public route servers. Projects like [RouteViews](http://www.routeviews.org) and [RIPE NCC's RIS](https://ris.ripe.net) run publicly accessible route servers that let anyone log in and dump the full global routing table.
+The internet's routing fabric is surprisingly transparent. **BGP (Border Gateway Protocol)** is the protocol that knits all those independent networks together, and public route servers run by projects like [RouteViews](http://www.routeviews.org) and [RIPE NCC's RIS](https://ris.ripe.net) let anyone log in and grab a full copy of the global routing table.
 
-A BGP route looks something like this:
+A typical BGP route entry looks like this:
 
+```
 *> 1.0.0.0/24 203.0.113.1 0 13335 15169 i
+```
 
+That trailing sequence — `13335 15169` — is the **AS path**: every autonomous system the route advertisement passed through to reach this vantage point. It's a breadcrumb trail across the internet.
 
-That trailing sequence — `13335 15169` — is the **AS path**: a record of every autonomous system the route advertisement travelled through to reach this vantage point. It's basically a breadcrumb trail across the internet.
-
-I wrote a Python tool that connects to 76 public route servers (via Telnet and SSH), streams their full BGP tables, and parses out those AS paths. From a single run I collected **302,563 routes** from 30 reachable servers, revealing **17,621 unique ASNs** and **24,299 peering relationships**.
+I wrote a Python tool that connects to 76 public route servers over Telnet and SSH, streams their full BGP tables, and pulls out those AS paths. From a single run across 30 reachable servers I got **302,563 routes**, covering **17,621 unique ASNs** and **24,299 peering relationships**.
 
 ## Building the graph
 
-Each AS path is processed to extract directed edges: if `13335` appears immediately before `15169` in a path, that's an edge `13335 → 15169`. The more routes that share an adjacency, and the more independent vantage points that see it, the stronger the edge weight.
+Processing an AS path is straightforward. If `13335` sits immediately before `15169`, that's a directed edge `13335 → 15169`. The more routes that share an adjacency — and the more independent vantage points that confirm it — the stronger that edge.
 
-The result is a [NetworkX](https://networkx.org) directed graph where:
+```python
+for path in as_paths:
+    for asn_a, asn_b in get_adjacent_pairs(path):
+        increment_edge_weight(graph, asn_a, asn_b)
+        increment_vantage_count(graph, asn_a, asn_b)
+```
 
-- **Nodes** are ASNs, annotated with how many prefixes they originate and how often they appear in paths
-- **Edges** carry a `weight` (route count) and `vantage_count` (how many route servers independently confirmed this peering)
-
-The graph is exported to GraphML, GEXF, JSON, and CSV — useful for different downstream tools.
+The result is a [NetworkX](https://networkx.org) directed graph where nodes are ASNs (annotated with prefix counts and path frequency) and edges carry a `weight` and `vantage_count`. The graph exports to GraphML, GEXF, JSON, and CSV.
 
 ## The visualisation
 
-With 17,000+ nodes, traditional SVG-based graph layouts grind browsers to a halt. Instead I used **D3.js with Canvas rendering** — drawing every node and edge directly to a `<canvas>` element each simulation tick, which keeps things smooth even at this scale.
+With 17,000+ nodes, SVG-based layouts fall over. I used **D3.js with Canvas rendering** instead — drawing every node and edge directly to a `<canvas>` element on each simulation tick, which stays smooth even at this scale.
 
-The layout uses D3's force simulation:
+The layout uses D3's force simulation to find a natural arrangement:
 
-- **Charge force** pushes nodes apart (repulsion)
-- **Link force** pulls connected nodes together, with distance scaled inversely to edge weight — so heavily-trafficked peerings draw ASes closer
-- **Collision force** stops nodes overlapping
+- **Charge force** pushes nodes apart
+- **Link force** pulls connected nodes together, with distance scaled inversely to edge weight — heavily-used peerings pull ASes closer
+- **Collision force** stops nodes from overlapping
 
 Nodes are coloured by degree (number of direct peers):
 
@@ -55,21 +62,20 @@ Nodes are coloured by degree (number of direct peers):
 | 🔵 Blue | Mid-tier — degree 5–19 |
 | ⚫ Grey | Leaf nodes — degree < 5 |
 
-Node size scales with `observed_count` — how frequently an ASN appears anywhere in BGP paths — which is a reasonable proxy for how "central" a network is to internet routing.
+Node size scales with `observed_count` — how often an ASN appears anywhere across all BGP paths. It's a decent proxy for how central a network is to internet routing.
 
-The page is fully interactive: zoom, pan, click a node to highlight its neighbourhood, search by ASN, and filter out low-weight edges to reduce noise. The whole thing is a single self-contained HTML file (~2.7 MB with data embedded) that needs no server.
+The whole thing is a single self-contained HTML file (~2.7 MB, data embedded) with no server needed. You can zoom, pan, click a node to highlight its neighbourhood, search by ASN, and filter low-weight edges to cut the noise.
 
 ## What the graph reveals
 
-The structure is unmistakably **scale-free** — a small number of ASNs have enormous numbers of peers (the well-known Tier-1 carriers: AS3356 Lumen/Level3, AS1299 Telia, AS6939 Hurricane Electric), while the vast majority are leaf nodes with just one or two upstream connections. This kind of hub-and-spoke topology is typical of networks that grow by preferential attachment, which is exactly how the internet has evolved organically over decades.
+The structure is **scale-free** — a small number of ASNs connect to enormous numbers of peers while the vast majority have just one or two upstream connections. Think of it like a city's road network: a few motorways carry most of the traffic, branching out into countless residential streets. The well-known Tier-1 carriers dominate the core: AS3356 (Lumen/Level3), AS1299 (Telia), AS6939 (Hurricane Electric).
 
-The denser core also shows clear **regional clustering** — European IXP participants cluster together, as do Asia-Pacific and Latin American networks — even though the layout algorithm has no geographic information at all. Connectivity patterns alone are enough to reveal geography.
+That pattern makes sense. The internet grew by **preferential attachment** — new networks tend to connect to already well-connected networks because that's where the traffic is. Scale-free structure is the natural result.
+
+What surprised me was the **regional clustering**. European IXP participants bunch together, as do Asia-Pacific and Latin American networks, even though the layout algorithm has zero geographic information. Connectivity patterns alone reveal geography.
 
 ## Exporting for print
 
-The interactive view is great for exploring, but I also wanted a poster-quality output. The tool exports:
-
-- A **3× high-resolution PNG** of whatever is currently on screen
-- A **full vector SVG** sized to A3 landscape, with labels on all major hubs and a legend — suitable for opening in Inkscape or Preview and saving as a print-ready PDF
+The interactive view is great for exploring, but I wanted a poster too. The tool exports a **3× high-resolution PNG** of whatever's on screen, and a **full vector SVG** at A3 landscape with labels on the major hubs — ready to open in Inkscape or Preview and save as a PDF.
 
 You can explore the [live version here](html/visualize_out.html).
