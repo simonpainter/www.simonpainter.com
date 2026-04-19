@@ -37,7 +37,7 @@ This was the first phase of AI apps: a model, a chat box, a prompt. Useful, but 
 
 Then things got interesting. The apps stopped competing purely on model quality and started competing on capabilities.
 
-I tried Claude Code and found it good, but I replaced it with OpenCode when I wanted more control over which model I was using. That flexibility matters. The best model for writing documentation isn't necessarily the best model for refactoring code, and I don't want to be locked into one engine for everything. Copilot has this right too — you can switch models and optimise for cost and capability at the same time.
+I tried Claude Code and found it good, but I replaced it with OpenCode when I wanted more control over which model I was using. That flexibility matters. The best model for writing documentation isn't necessarily the best model for refactoring code, and I don't want to be locked into one engine for everything. Copilot has this right too: you can switch models and optimise for cost and capability at the same time.
 
 I installed the Claude desktop app mainly to get access to MCP servers. Model Context Protocol is a way for AI tools to connect to external systems: databases, APIs, your own custom tools. Once you've used it, you can't imagine going back to a model that can't reach your infrastructure and act on it. I liken it to APIs with AI-friendly instructions baked in. It's not perfect, and some people are saying that LLMs with CLI access make it redundant, but we'll see about that.
 
@@ -65,13 +65,13 @@ The shift to a prompt-first interface feels like a direct lesson from Claude, Ch
 
 <img src={require('./img/github-app-next-step/visual_studio_code_interface_buttons.png').default} alt="Screenshot of the GitHub app showing a prompt and an 'Open' button to open the code in VS Code" style={{width: '50%'}} />
 
-People ask me which AI I use. Right now I lean towards Anthropic's models — Claude has consistently worked better for me across writing, reasoning, and code. When I say that, the follow-up is usually "so are you using Claude Desktop or Codex?" and that's where the conversation gets interesting. I don't need either. Microsoft's Copilot strategy means the models I want are already in the tools I use, rather than asking me to adopt yet another app. I pick Claude Sonnet or Opus from the model picker and get on with it.
+People ask me which AI I use. Right now I lean towards Anthropic's models; Claude has consistently worked better for me across writing, reasoning, and code. When I say that, the follow-up is usually "so are you using Claude Desktop or Codex?" and that's where the conversation gets interesting. I don't need either. Microsoft's Copilot strategy means the models I want are already in the tools I use, rather than asking me to adopt yet another app. I pick Claude Sonnet or Opus from the model picker and get on with it.
 
 ![The GitHub Copilot model picker showing Claude and GPT options](img/github-app-next-step/github_copilot_model_selection_interface.png)
 
 
 
-MCP server support being easy to set up reflects exactly what Claude Desktop proved: if MCP is hard to configure, people won't use it. The next natural step is better visibility and debugging when those servers misbehave — still a rough edge across the board.
+MCP server support being easy to set up reflects exactly what Claude Desktop proved: if MCP is hard to configure, people won't use it. The next natural step is better visibility and debugging when those servers misbehave, still a rough edge across the board.
 
 The async, multi-session model takes the best lesson from tools like OpenClaw and other agent runners. Running multiple sessions in the background, context-switching freely, and coming back to review progress is a different way of working to "single chat, single thread". You can feel the shift in how people describe using it.
 
@@ -95,13 +95,13 @@ The async, multi-session model keeps coming up. Being able to kick off several j
 
 It's a prompt-first interface that still respects the code. Quick jumps into a real editor to sanity-check and tweak the output, without making the editor the primary interface. And for well-bounded tasks, the willingness to delegate and just validate the result (autopilot for low-risk changes) is real.
 
-The wishlist is even more telling, because it shows where this goes next. Mobile as a genuine remote control for running agents, not just a mobile chat window. Cross-provider model choice so people aren't locked in — Anthropic models running on Anthropic's own infrastructure, not just Microsoft's hosted versions. Agents that understand and follow the project's own conventions and automation rather than working around them. And project management automation: triage, prioritisation, stand-up summaries, the unglamorous work that steals time from more valuable things.
+The wishlist is even more telling, because it shows where this goes next. Mobile as a genuine remote control for running agents, not just a mobile chat window. Cross-provider model choice so people aren't locked in: Anthropic models running on Anthropic's own infrastructure, not just Microsoft's hosted versions. Agents that understand and follow the project's own conventions and automation rather than working around them. And project management automation: triage, prioritisation, stand-up summaries, the unglamorous work that steals time from more valuable things.
 
 ## A concrete example: building a game engine without writing a line of code
 
 I want to give you a real example of what autopilot actually looks like in practice, because I think it lands differently than any abstract description.
 
-Fighting Fantasy gamebooks were a big part of my childhood. If you grew up in the UK in the 1980s you probably remember them — pocket-sized paperback adventures by Steve Jackson and Ian Livingstone, first published in 1982, where you played the hero, rolled dice for combat, and managed three stats: SKILL, STAMINA, and LUCK. The books were divided into numbered sections; you'd make a choice, flip to section 247, fight a goblin, and either survive or start again.
+Fighting Fantasy gamebooks were a big part of my childhood. If you grew up in the UK in the 1980s you probably remember them: pocket-sized paperback adventures by Steve Jackson and Ian Livingstone, first published in 1982, where you played the hero, rolled dice for combat, and managed three stats: SKILL, STAMINA, and LUCK. The books were divided into numbered sections; you'd make a choice, flip to section 247, fight a goblin, and either survive or start again.
 
 They also translated really well to code. As a kid my first foray into BBC BASIC was converting the pages of the books into code with GOTO statements. It was a mess, but it worked. I always thought it would be fun to build a more robust engine for those adventures, but I never got around to it until last week. I decided to build a Python engine to run those adventures in the terminal. The thing is, I didn't write a single line of code. Not one. The entire engine including branching narrative, dice-based combat, luck tests, and a JSON adventure format was built entirely through the GitHub app's chat interface.
 
