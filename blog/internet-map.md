@@ -15,7 +15,7 @@ date: 2026-04-19
 
 ---
 
-I've always been more interested in the plumbing of the internet than the web pages sitting on top of it. Every time you load a page, your packets hop across a patchwork of independent networks called **Autonomous Systems (ASes)**, each with its own **ASN** (Autonomous System Number). Who connects to whom, and how, is what I wanted to map.
+I've always been more interested in the plumbing of the internet than the web pages sitting on top of it. Every time you load a page, your packets hop across a patchwork of independent networks called **Autonomous Systems (ASes)**, each with its own **ASN** (Autonomous System Number). Who connects to whom, and how, is what I wanted to map. Now that it's so easy to vibe code with AI, any idea or interest can be turned into a project in minutes. So I built an interactive map of the internet's AS-level topology, and here's how it works and what it shows.
 
 <!-- truncate -->
 
@@ -26,7 +26,7 @@ Randall Munroe got there first, obviously. [XKCD 195](https://xkcd.com/195/) map
 
 Mine is different, I promise, because it maps the *routing relationships* between networks rather than addresses or users. Also mine is interactive, which I'm going to count as a win.
 
-This was a vibe coding project: I had a rough idea, let the AI write most of the code, and steered it toward something I found interesting. Here's what it does and what it found.
+This was a vibe coding project: I had a rough idea, let the AI write most of the code, and steered it toward something I found interesting. Here's what it does and what it found. I then left it to run overnight to collect the data I needed. In the morning I found that it had completed 83 seconds after I went off to bed.
 
 ## Where the data comes from
 
@@ -40,7 +40,7 @@ A typical BGP route entry looks like this:
 
 That trailing sequence, `13335 15169`, is the **AS path**: every autonomous system the route advertisement passed through to reach this vantage point. It's a breadcrumb trail across the internet.
 
-I wrote a Python tool that connects to 76 public route servers over Telnet and SSH, streams their full BGP tables, and pulls out those AS paths. From a single run across 30 reachable servers I got **302,563 routes**, covering **17,621 unique ASNs** and **24,299 peering relationships**.
+I used Copilot to build a Python tool that connects to 76 public route servers over Telnet and SSH, streams their full BGP tables, and pulls out those AS paths. From a single run across 30 reachable servers I got **302,563 routes**, covering **17,621 unique ASNs** and **24,299 peering relationships**.
 
 ## Building the graph
 
@@ -81,6 +81,6 @@ What surprised me was the **regional clustering**. European IXP participants bun
 
 ## Exporting for print
 
-The interactive view is great for exploring, but I wanted a poster too. The tool exports a **3x high-resolution PNG** of whatever's on screen, and a **full vector SVG** at A3 landscape with labels on the major hubs, ready to open in Inkscape or Preview and save as a PDF.
+The interactive view is great for exploring, but I liked the look of it and thought it would be a good addition to my office wall. A few minutes later I had an export tool. The tool exports a **3x high-resolution PNG** of whatever's on screen, and a **full vector SVG** at A3 landscape with labels on the major hubs, ready to open in stuff like Inkscape.
 
-You can explore the [live version here](html/visualize_out.html).
+You can explore the [most recent version here](html/visualize_out.html).
