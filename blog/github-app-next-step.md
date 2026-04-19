@@ -65,7 +65,11 @@ The shift to a prompt-first interface feels like a direct lesson from Claude, Ch
 
 <img src={require('./img/github-app-next-step/visual_studio_code_interface_buttons.png').default} alt="Screenshot of the GitHub app showing a prompt and an 'Open' button to open the code in VS Code" style={{width: '50%'}} />
 
-Model choice is increasingly table stakes. OpenCode and the Copilot model picker established that appetite clearly: people want to pick the right model for the job rather than commit their entire workflow to one engine. Cross-provider support is the direction of travel.
+People ask me which AI I use. Right now I lean towards Anthropic's models — Claude has consistently worked better for me across writing, reasoning, and code. When I say that, the follow-up is usually "so are you using Claude Desktop or Codex?" and that's where the conversation gets interesting. I don't need either. Microsoft's Copilot strategy means the models I want are already in the tools I use, rather than asking me to adopt yet another app. I pick Claude Sonnet or Opus from the model picker and get on with it.
+
+![The GitHub Copilot model picker showing Claude and GPT options](img/github-app-next-step/github_copilot_model_selection_interface.png)
+
+
 
 MCP server support being easy to set up reflects exactly what Claude Desktop proved: if MCP is hard to configure, people won't use it. The next natural step is better visibility and debugging when those servers misbehave — still a rough edge across the board.
 
