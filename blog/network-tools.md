@@ -3,10 +3,7 @@ title: Ping is lying to you - try these instead
 authors: simonpainter
 tags:
   - networks
-  - tools
   - dns
-  - ntp
-  - http
   - bash
 date: 2026-04-21
 
