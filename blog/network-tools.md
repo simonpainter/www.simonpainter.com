@@ -107,7 +107,9 @@ The maths is done with `awk` because Bash can't do floating point natively. Stat
 
 That's really the point. The hard work has already been done by `curl`, `dig` and `sntp`. They speak the protocols, handle TLS, retries, IPv6, all of it. Wrapping them in a `while` loop with a stats trap is a tiny amount of code for a tool you'll actually use.
 
-## Where I've found them useful
+## Where I think I will find them useful
+
+I'm slap bang in the middle of a datacentre migration right now. The team is all over the application migrations but pretty soon the network part is going to get very noisy. Moving essential services like DNS, NTP and load balancers is always a bit nerve wracking and watching the pings is sometimes the only thing you can do.
 
 ### Server and load balancer migrations
 
@@ -135,4 +137,4 @@ If you're measuring latency for an SLA, a capacity plan or a migration sign-off,
 
 ## Try them
 
-The repo is at [github.com/simonpainter/network-tools](https://github.com/simonpainter/network-tools). They're plain Bash, MIT licensed, and need only `curl`, `dig` and `sntp` which you almost certainly already have. Clone it, drop the scripts on your `PATH`, and the next time someone says "the network is slow" you'll have something better than `ping` to point at the problem.
+The repo is at [@simonpainter/network-tools](https://github.com/simonpainter/network-tools). They're plain Bash, MIT licensed, and need only `curl`, `dig` and `sntp` which you almost certainly already have. Clone it, drop the scripts on your `PATH`, and the next time someone says "the network is slow" you'll have something better than `ping` to point at the problem.
