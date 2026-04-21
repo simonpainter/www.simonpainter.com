@@ -12,7 +12,7 @@ date: 2026-04-21
 
 ---
 
-A friend of mine shared a clever little tool on LinkedIn the other week. Someone had written a "ping" in Go that fired HTTP requests instead of ICMP echoes. I sent it over to [Zain](authors/zainkhan.md) and we both agreed the idea was great. But writing it in Go felt like a lot of effort for what is, at heart, a loop around `curl`. So I wrote a Bash version in about ten minutes. Then I wrote one for DNS. Then one for NTP. They all live here now: [github.com/simonpainter/network-tools](https://github.com/simonpainter/network-tools).
+A friend of mine shared a clever little tool on LinkedIn the other week. Someone had written a "ping" in Go that fired HTTP requests instead of ICMP echoes. I sent it over to Zain and we both agreed the idea was great. But writing it in Go felt like a lot of effort for what is, at heart, a loop around `curl`. So I wrote a Bash version in about ten minutes. Then I wrote one for DNS. Then one for NTP. They all live here now: [@simonpainter/network-tools](https://github.com/simonpainter/network-tools).
 
 <!-- truncate -->
 
@@ -23,6 +23,8 @@ A friend of mine shared a clever little tool on LinkedIn the other week. Someone
 ICMP `ping` is the first thing most of us reach for when something feels slow or broken. It's quick, it's everywhere, and it gives you a number. The trouble is that number tells you about ICMP, and ICMP isn't what your users are actually doing.
 
 A load balancer might happily reply to ICMP while the backend pool is on fire. A firewall might rate-limit or drop ICMP entirely while letting TCP through. A DNS resolver might be reachable but refusing to answer queries. An NTP server might be up but giving you a clock that's drifted. In each case `ping` says "fine" and the application says "broken".
+
+TCP ping (things like `tcping`, `hping3 -S`, or `nc -z` in a loop) gets you closer. It opens a TCP connection on the right port, so a firewall blocking ICMP can't fool you and a dead listener shows up as a refused connection. That's a real improvement over ICMP. But it stops at the handshake. A successful TCP ping tells you the socket opened. It doesn't tell you the web server returned a 200, the resolver answered `NOERROR`, or the time source gave you a sane offset. The application layer is still a black box.
 
 The fix isn't a cleverer ping. It's pinging with the protocol that actually matters.
 
@@ -97,26 +99,9 @@ Lines are colour-coded by the size of the offset, so a server that's drifted is 
 
 ## How they're built
 
-There's no magic here. Each script follows the same shape:
+There's no magic here. Each script parses its arguments, prints a header, sets a Ctrl+C trap to dump stats, then loops: run the protocol client, parse the response, print a line, update the running min/avg/max, sleep, repeat.
 
-```python
-parse_args()
-print_header()
-trap_ctrl_c(print_stats)
-
-seq = 0
-while True:
-    seq += 1
-    response = run_protocol_client(target)
-    code, time_ms = parse_response(response)
-    print_line(seq, code, time_ms)
-    update_stats(time_ms)
-    if count_reached(seq):
-        print_stats()
-    sleep(interval)
-```
-
-The `run_protocol_client` step is the only bit that changes between tools. For `httping` it's `curl -w` with a format string that asks for the status code and `time_total`. For `dnsping` it's `dig +stats` and a couple of `awk` lines to pull the status and the "Query time" field. For `ntpping` it's `sntp` with `-K /dev/null` and a regex for the offset and delay.
+The only bit that changes between tools is the client call. For `httping` it's `curl -w` with a format string that asks for the status code and `time_total`. For `dnsping` it's `dig +stats` and a couple of `awk` lines to pull the status and the "Query time" field. For `ntpping` it's `sntp` with `-K /dev/null` and a regex for the offset and delay.
 
 The maths is done with `awk` because Bash can't do floating point natively. Stats are kept as plain shell variables and updated each iteration. The whole thing is under 200 lines per tool.
 
