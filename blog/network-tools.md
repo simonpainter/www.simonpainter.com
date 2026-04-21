@@ -9,7 +9,7 @@ date: 2026-04-21
 
 ---
 
-A friend of mine shared a clever little tool on LinkedIn the other week. Someone had written a "ping" in Go that fired HTTP requests instead of ICMP echoes. I sent it over to Zain and we both agreed the idea was great. But writing it in Go felt like a lot of effort for what is, at heart, a loop around `curl`. So I wrote a Bash version in about ten minutes. Then I wrote one for DNS. Then one for NTP. They all live here now: [@simonpainter/network-tools](https://github.com/simonpainter/network-tools).
+I saw a clever little tool on LinkedIn the other week. Someone had written a "ping" in Go that fired HTTP requests instead of ICMP echoes. I sent it over to Zain and we both agreed the idea was great. But writing it in Go felt like a lot of effort for what is, at heart, a loop around `curl`. So I wrote a Bash version in about ten minutes. Then I wrote one for DNS. Then one for NTP. They all live here now: [@simonpainter/network-tools](https://github.com/simonpainter/network-tools).
 
 <!-- truncate -->
 
