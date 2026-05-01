@@ -909,6 +909,23 @@ The exact commands differ (IOS-XE versus JunOS), but the operational goal is the
 If your platform supports route refresh, use it.
 If it doesn’t, you’ll end up doing some kind of clear/reset; just do it intentionally, and during a safe window.
 
+
+
+### BFD, timers, and failure detection (pragmatic guidance)
+
+In enterprise cloud connectivity, “BGP convergence” is often really “failure detection”. The BGP decision process can be fast, but if your router takes 180 seconds to notice the neighbour is dead, your users will still call it an outage.
+
+There are three common layers of failure detection:
+
+- **Physical/link state**: if the interface drops, the session drops. This is the fastest and most reliable signal, but it only works when the failure is on the local link.
+- **BGP keepalive/hold timers**: by default these can be tens or hundreds of seconds. Lower timers can help, but they also increase sensitivity to transient loss.
+- **BFD**: a dedicated liveness protocol that can detect failure in milliseconds to low seconds, and then trigger BGP to react.
+
+The pragmatic guidance is:
+
+- Prefer **BFD** for fast failover when it’s supported end-to-end (your device and the peer), rather than trying to force very low BGP timers.
+- Keep BGP timers reasonable and consistent with the peer’s capabilities. Some cloud edges (ExpressRoute) have fixed Microsoft-side timer behaviour, so design with that constraint and use BFD where available.
+- Remember that fast detection is only useful if you also have a safe alternate path (and you’ve tested it).
 ## Cloud-specific gotchas
 
 This post is intentionally vendor-neutral, but cloud connectivity has a few “cloud-shaped” differences that are worth keeping in mind.
