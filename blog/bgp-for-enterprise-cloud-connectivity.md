@@ -900,16 +900,75 @@ If you’re peering with an upstream that can legitimately send you huge tables 
 
 ### Route refresh / soft reconfig basics
 
-Modern BGP gives you ways to change policy without bouncing the session. This matters operationally because bouncing a session can cause unnecessary convergence churn, and on some designs it can cause traffic loss while paths re-learn.
+Modern BGP gives you ways to change policy without bouncing the session. This matters operationally because resetting a session causes avoidable convergence churn, and in some designs it can cause traffic loss while paths re-learn.
 
-Two concepts you’ll see are Route Refresh, a capability where you can ask a neighbour to resend routes after you change policy, and soft reconfiguration, which keeps enough state to re-evaluate routes against new policy without a hard reset.
+Two concepts you’ll see are:
 
-The exact commands differ (IOS-XE versus JunOS), but the operational goal is the same: change filter or policy, refresh routes, and confirm the new bestpaths.
+- **Route Refresh**: a capability where you can ask a neighbour to resend routes after you change policy.
+- **Soft reconfiguration**: keeping enough state to re-evaluate routes against new policy without a hard reset (implementation varies by vendor).
 
-If your platform supports route refresh, use it.
-If it doesn’t, you’ll end up doing some kind of clear/reset; just do it intentionally, and during a safe window.
+The exact commands differ (IOS-XE versus JunOS), but the operational goal is the same: change filter or policy, refresh routes, then confirm the new bestpaths.
 
+If your platform supports route refresh, use it. If it doesn’t, you’ll end up doing some kind of clear/reset, just do it intentionally, and during a safe window.
 
+### BGP safety rails (the stuff that prevents outages)
+
+Most enterprise BGP incidents aren’t “we misunderstood MED”. They’re “we leaked routes”, “we accepted routes we didn’t mean to”, or “we overwhelmed the peer with prefixes”.
+
+These are the safety rails I consider non-negotiable at an enterprise/cloud edge.
+
+#### 1) Explicit export policy (never rely on defaults)
+
+Only advertise what you intend to advertise.
+
+- Use an explicit prefix-list (or route-filter) of your **owned/originated** prefixes.
+- Default action should be **deny**.
+- Avoid “redistribute connected/static” without tight filters.
+
+The cloud-specific reason this matters: accidental export can make you **transit** between the cloud and somewhere else (WAN, internet, or another cloud path), and that tends to end in tears.
+
+#### 2) Explicit import policy (reject surprises)
+
+Only accept what you need.
+
+- If you only need cloud RFC1918, filter to the expected ranges.
+- If you expect a default route, match it explicitly.
+- If you don’t expect a default route, explicitly reject it.
+
+This is especially important on public peering style constructs (ExpressRoute Microsoft peering, Direct Connect public VIF) where “accept everything” can explode your table and your blast radius.
+
+#### 3) Max-prefix limits (and alerts)
+
+Set max-prefix (or maximum-routes) thresholds on every eBGP session.
+
+- Pick a limit that is safely above your normal steady-state plus headroom.
+- Decide what you want the router to do at the limit (warn only, or tear down the session).
+- Alert on “approaching limit” before you hit it.
+
+ExpressRoute enforces hard prefix limits and will drop sessions if you exceed them, so you should treat prefix counts as a first-class metric.
+
+#### 4) Transit prevention (don’t accidentally become a router between worlds)
+
+A very common enterprise requirement is: “cloud should be reachable from the enterprise, but the cloud should not be able to use us as transit to somewhere else”.
+
+Transit prevention is mostly policy, but the mental checklist is:
+
+- Don’t export routes learned from peer A to peer B unless you explicitly mean to.
+- Use separate policies per neighbour (cloud, WAN, internet) rather than one shared route-map.
+- Prefer tagging routes on import (communities) and matching those tags on export.
+
+If you’re using a managed route distribution service, be aware that some platforms bake this in (for example, Azure Route Server has specific constraints designed to prevent certain transitive routing patterns).
+
+#### 5) “Make it observable” (so you notice the drift)
+
+At minimum, you want dashboards or alerts for:
+
+- BGP session state (up/down, flaps)
+- Prefix counts (received and advertised)
+- Changes in the set of advertised prefixes
+- Path changes for key prefixes (if you have tooling for it)
+
+A lot of “mystery outages” are just silent policy drift that nobody was watching.
 
 ### BFD, timers, and failure detection (pragmatic guidance)
 
