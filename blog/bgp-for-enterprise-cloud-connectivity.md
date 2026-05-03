@@ -219,6 +219,33 @@ If you strip away the product names, enterprise cloud connectivity is mostly jus
 
 That transport could be an MPLS or SD-WAN underlay, ExpressRoute or Direct Connect, or a cloud exchange in a CNF (where you have your own routers, and an L2 handoff to the peers).
 
+### What actually makes a BGP session come up (the essentials)
+
+When someone says “BGP is down”, nine times out of ten it’s one of a small set of prerequisites. If you know these, you can triage most cloud-edge BGP problems quickly.
+
+At a high level, a BGP session requires:
+
+- **IP reachability to the neighbour** (layer 3): you must be able to route packets to the peer’s address (and back). In many cloud circuits, this is over a provider-managed L2 handoff with IPs assigned to each side, but it still reduces to “can I reach the neighbour IP?”.
+- **TCP/179 connectivity**: BGP runs over TCP port 179. ACLs, security policies, or middleboxes can break this.
+- **Correct neighbour configuration**:
+  - remote AS (the ASN you expect the peer to use)
+  - the neighbour IP address
+  - authentication (MD5/TCP-AO) if used
+- **Address family activation**: modern BGP config often separates “neighbour exists” from “neighbour is enabled for IPv4/IPv6 unicast”. It’s easy to have the session up but exchange no routes because the AFI/SAFI is not enabled.
+
+Two practical cloud gotchas:
+
+- **MTU mismatches** can cause weirdness that looks like “BGP is unstable”, especially if the underlay is doing encapsulation (MPLS, VXLAN, GRE). Path MTU issues tend to show up as sessions that flap under load, or routes that won’t exchange reliably.
+- **Routing loops and asymmetric return paths** can bite when you’re introducing iBGP and multiple exits. BGP may come up, but traffic blackholes because the data plane doesn’t follow the control plane’s intent.
+
+If you only remember one debugging sequence: verify neighbour IP reachability first, then TCP/179, then ASNs and policy.
+
+:::note Don’t confuse “session is up” with “routes are usable”
+BGP can be established while still being operationally broken.
+
+Common examples are: a prefix filter that drops everything, max-prefix limits tripping, next-hop reachability missing (especially in iBGP designs), or policy setting LOCAL_PREF/MED in a way that selects an unexpected path.
+:::
+
 :::note BGP inside AWS constructs (it’s not just a hybrid edge protocol)
 BGP is no longer only about Direct Connect at the edge. AWS now has constructs where BGP drives changes inside the VPC routing domain.
 
