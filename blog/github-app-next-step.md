@@ -29,7 +29,7 @@ I see exactly the same pattern playing out with AI.
 
 My own journey started where most people's did: with a chat box and a model.
 
->Actually that's not quite true. Before ChatGPT, I trained a model on my boss's emails so that I could create emails that sounded like he had written them. This was a bit of a joke at the time, but served the purpose when I needed him to escalate and issue and he was too busy to write the email himself; he would ask me to draft it and then he'd send it. I used the model to make it sound like him, and it worked well enough.
+>Actually that's not quite true. Before ChatGPT, I trained a model on my boss's emails so that I could create emails that sounded like he had written them. This was a bit of a joke at the time, but served the purpose when I needed him to escalate and issue and he was too busy to write the email himself; he would ask me to draft it and then he'd send it. I used the model to make it sound like him, and it worked well enough. This was the stage before pre-trained models and LLMs hitting the headlines.
 
 While a lot of people fixated on ChatGPT, I found Claude a better engine for the work I actually needed doing. The content felt more grounded, the reasoning was sharper, and it worked better for the kinds of technical writing and problem-solving I throw at it. There have been times I've reached for OpenAI models, but Anthropic consistently came out ahead in my early experiments.
 
