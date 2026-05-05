@@ -33,7 +33,7 @@ The service requires a dedicated /27 subnet (suggesting it's actually a scale se
 
 **Scale-Out Load Balancer Architectures**: Perhaps the most compelling use case is exemplified by [HAProxy Enterprise's Route Health Injection](https://www.haproxy.com/documentation/haproxy-enterprise/enterprise-modules/route-health-injection/) (RHI) feature. Multiple HAProxy instances can advertise the same Virtual IP addresses via BGP, leveraging Equal Cost Multi-Path (ECMP) routing to distribute traffic across multiple load balancer instances. When a HAProxy node fails health checks for its backend servers, it withdraws its BGP advertisement, automatically removing itself from the load balancing pool. This enables true horizontal scaling of stateless network functions.
 
-**Roll your own VWAN**: In hub-and-spoke topologies, Azure Route Server can coordinate routing with NVAs to build something that looks like VWAN but is less opaque.
+**Roll your own VWAN**: In hub-and-spoke topologies, Azure Route Server can coordinate routing with NVAs to build something that looks like VWAN but gives you more visibility into what's happening.
 
 **Anycast Services**: Azure Route Server can support [anycast architectures](anycast-route-server.md) where multiple instances advertise the same service IP from different locations.
 
