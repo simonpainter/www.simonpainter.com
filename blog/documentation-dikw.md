@@ -44,15 +44,15 @@ We're pretty good at the information layer too. Network diagrams show topology, 
 
 The knowledge layer - understanding how network design serves business needs - lives scattered across project documents, architectural decision records, and the occasional wiki page. It's patchy, often outdated, and rarely connected to the technical reality it's supposed to explain.
 
-And the wisdom layer? That's almost entirely tribal. It's the insights that come from years of experience, the patterns that emerge from repeated incidents, the unwritten rules about what works and what doesn't. This knowledge exists in people's heads and nowhere else.
+And the wisdom layer? That's almost entirely undocumented. It's the insights that come from years of experience, the patterns that emerge from repeated incidents, the unwritten rules about what works and what doesn't. This knowledge exists in people's heads and nowhere else.
 
-## The nature of tribal knowledge and wisdom
+## The nature of institutional knowledge and wisdom
 
-Before we go further, let's talk about what tribal wisdom is and what it means. I use this term to describe the understanding passed down between engineers like an oral tradition - insights, patterns, and contextual knowledge that never make it into formal documentation.
+Before we go further, let's talk about what institutional wisdom is and what it means. I use this term to describe the understanding passed down between engineers like an oral tradition - insights, patterns, and contextual knowledge that never make it into formal documentation.
 
-At the knowledge layer, tribal knowledge includes understanding how your network actually supports business operations. This knowledge lives in people's heads because nobody ever documented the full context of how systems interconnect.
+At the knowledge layer, institutional knowledge includes understanding how your network actually supports business operations. This knowledge lives in people's heads because nobody ever documented the full context of how systems interconnect.
 
-But tribal wisdom goes deeper. It's the wisdom held by the senior engineers - the team's elders who've seen multiple generations of technology and organisational change. This is experiential knowledge that comes with stories and context.
+But institutional wisdom goes deeper. It's the wisdom held by the senior engineers - the team's elders who've seen multiple generations of technology and organisational change. This is experiential knowledge that comes with stories and context.
 
 It's the senior engineer telling you, "Don't restart BGP on that router during market hours - learned that the hard way in 2008." It's knowing that a particular switch model always shows interface errors two weeks before it fails completely. It's understanding that the monitoring system reports everything as normal, but when you see this specific combination of log entries, then something is about to crash.
 
@@ -60,13 +60,13 @@ This wisdom lives in conversations, in the margins of team meetings, in the know
 
 ## The fragility of institutional memory
 
-Here's what makes both tribal knowledge and wisdom so vulnerable: they exist primarily in people's minds, not in systems or documents.
+Here's what makes both institutional knowledge and wisdom so vulnerable: they exist primarily in people's minds, not in systems or documents.
 
 When experienced engineers leave, retire, or get made redundant, decades of institutional memory walks out the door with them. Outsourcing to managed services is particularly devastating - the handover documentation captures processes and procedures, but it never captures the nuanced understanding of how systems actually behave under stress, or why certain design decisions were made years ago.
 
 Knowledge transfer sessions try to bridge this gap, but they're fighting human nature. You can't download twenty years of pattern recognition in a few training sessions. The subtle cues that trigger "something's not quite right" in an experienced engineer's mind - those don't transfer easily in formal handovers.
 
-Yet this tribal knowledge and wisdom often contain the most valuable insights about your infrastructure. It's the difference between someone who can follow a runbook and someone who can write the runbook.
+Yet this institutional knowledge and wisdom often contain the most valuable insights about your infrastructure. It's the difference between someone who can follow a runbook and someone who can write the runbook.
 
 ## When tools become part of the problem
 
@@ -161,7 +161,7 @@ This matters because networks aren't just technical systems. They're socio-techn
 
 ## Start where it hurts most
 
-You don't need to revolutionise everything at once. Pick the area where tribal knowledge is most critical - maybe it's your BGP configuration, your security policies, or your change management procedures.
+You don't need to revolutionise everything at once. Pick the area where institutional knowledge is most critical - maybe it's your BGP configuration, your security policies, or your change management procedures.
 
 For your next significant change, document not just what you're implementing, but why you chose this approach over alternatives. Capture the business context, the technical constraints, and the expected outcomes. Store it with the implementation, not separate from it.
 
