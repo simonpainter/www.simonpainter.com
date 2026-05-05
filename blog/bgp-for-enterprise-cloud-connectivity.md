@@ -1012,6 +1012,7 @@ The pragmatic guidance is:
 - Prefer **BFD** for fast failover when it’s supported end-to-end (your device and the peer), rather than trying to force very low BGP timers.
 - Keep BGP timers reasonable and consistent with the peer’s capabilities. Some cloud edges (ExpressRoute) have fixed Microsoft-side timer behaviour, so design with that constraint and use BFD where available.
 - Remember that fast detection is only useful if you also have a safe alternate path (and you’ve tested it).
+
 ## Cloud-specific gotchas
 
 This post is intentionally vendor-neutral, but cloud connectivity has a few “cloud-shaped” differences that are worth keeping in mind.
