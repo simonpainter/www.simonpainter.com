@@ -34,7 +34,7 @@ Regardless, and in an effort to simplify things for users, many operators added 
 
 This constraint has led to modern workarounds such as CNAME flattening and ALIAS records, which allow some DNS hosting providers to synthesize A/AAAA records from the CNAME target at the zone apex—a feature not possible with standard CNAME semantics.
 
-There's also the HTTPS RR type, defined in [RFC 7553](https://www.rfc-editor.org/rfc/rfc7553), which allows for aliasing at the apex without violating the coexistence rule, [but support for this record type is still limited](svcb-https-records.md).
+There's also the HTTPS RR type, defined in [RFC 9460](https://www.rfc-editor.org/rfc/rfc9460), which allows for aliasing at the apex without violating the coexistence rule, [but support for this record type is still limited](svcb-https-records.md).
 
 ## CNAME Chains: The Loop Problem
 
