@@ -79,6 +79,7 @@ podunk.xx.  NS ns1.example.com.
 
 ns1.example.com.  CNAME ns1-primary.example.com.
 ns1-primary.example.com.  A 192.0.2.1
+ns2.example.com.          A 192.0.2.2
 ```
 
 The delegation to `ns1.example.com` will be lame because the NS record points to a CNAME.
