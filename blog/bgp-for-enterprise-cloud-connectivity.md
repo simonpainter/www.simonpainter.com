@@ -934,7 +934,7 @@ Two concepts you’ll see are:
 - **Route Refresh**: a capability where you can ask a neighbour to resend routes after you change policy.
 - **Soft reconfiguration**: keeping enough state to re-evaluate routes against new policy without a hard reset (implementation varies by vendor).
 
-The exact commands differ (IOS-XE versus JunOS), but the operational goal is the same: change filter or policy, refresh routes, then confirm the new bestpaths.
+The exact commands differ (IOS-XE versus JunOS), but the operational goal is the same: change filter or policy, refresh routes, then confirm the new best paths.
 
 If your platform supports route refresh, use it. If it doesn’t, you’ll end up doing some kind of clear/reset, just do it intentionally, and during a safe window.
 
