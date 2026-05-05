@@ -30,7 +30,7 @@ In practical terms, if your zone is `example.com.`, you cannot create a CNAME at
 
 This is a big one these days because of two developments since RFC 1034 was published in 1987: The default expectation of web use means that people rarely type `www.example.com` because they expect example.com to work in their browser. I recall the purists in the early 2000s insisting that you should not allow the apex to resolve to the web server because it encouraged bad habits and laziness.
 
-Regardless, and in an effort to simplify things for users, many operators added an A record at the apex pointing to the same IP as `www`. For a long time this was fine until cloud hosting, DNS based load balancers, CDNs, and all sorts of other modern services started to expect you to point your website address to another FQDN using a CNAME rather than to an IP address using an A record.
+Regardless, and in an effort to simplify things for users, many operators added an A record at the apex pointing to the same IP as `www`. For a long time this was fine until cloud hosting, DNS-based load balancers, CDNs, and all sorts of other modern services started to expect you to point your website address to another FQDN using a CNAME rather than to an IP address using an A record.
 
 This constraint has led to modern workarounds such as CNAME flattening and ALIAS records, which allow some DNS hosting providers to synthesize A/AAAA records from the CNAME target at the zone apex—a feature not possible with standard CNAME semantics.
 
