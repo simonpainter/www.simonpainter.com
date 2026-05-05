@@ -219,6 +219,33 @@ If you strip away the product names, enterprise cloud connectivity is mostly jus
 
 That transport could be an MPLS or SD-WAN underlay, ExpressRoute or Direct Connect, or a cloud exchange in a CNF (where you have your own routers, and an L2 handoff to the peers).
 
+### What actually makes a BGP session come up (the essentials)
+
+When someone says “BGP is down”, nine times out of ten it’s one of a small set of prerequisites. If you know these, you can triage most cloud-edge BGP problems quickly.
+
+At a high level, a BGP session requires:
+
+- **IP reachability to the neighbour** (layer 3): you must be able to route packets to the peer’s address (and back). In many cloud circuits, this is over a provider-managed L2 handoff with IPs assigned to each side, but it still reduces to “can I reach the neighbour IP?”.
+- **TCP/179 connectivity**: BGP runs over TCP port 179. ACLs, security policies, or middleboxes can break this.
+- **Correct neighbour configuration**:
+  - remote AS (the ASN you expect the peer to use)
+  - the neighbour IP address
+  - authentication (MD5/TCP-AO) if used
+- **Address family activation**: modern BGP config often separates “neighbour exists” from “neighbour is enabled for IPv4/IPv6 unicast”. It’s easy to have the session up but exchange no routes because the AFI/SAFI is not enabled.
+
+Two practical cloud gotchas:
+
+- **MTU mismatches** can cause weirdness that looks like “BGP is unstable”, especially if the underlay is doing encapsulation (MPLS, VXLAN, GRE). Path MTU issues tend to show up as sessions that flap under load, or routes that won’t exchange reliably.
+- **Routing loops and asymmetric return paths** can bite when you’re introducing iBGP and multiple exits. BGP may come up, but traffic blackholes because the data plane doesn’t follow the control plane’s intent.
+
+If you only remember one debugging sequence: verify neighbour IP reachability first, then TCP/179, then ASNs and policy.
+
+:::note Don’t confuse “session is up” with “routes are usable”
+BGP can be established while still being operationally broken.
+
+Common examples are: a prefix filter that drops everything, max-prefix limits tripping, next-hop reachability missing (especially in iBGP designs), or policy setting LOCAL_PREF/MED in a way that selects an unexpected path.
+:::
+
 :::note BGP inside AWS constructs (it’s not just a hybrid edge protocol)
 BGP is no longer only about Direct Connect at the edge. AWS now has constructs where BGP drives changes inside the VPC routing domain.
 
@@ -902,14 +929,91 @@ If you’re peering with an upstream that can legitimately send you huge tables 
 
 ### Route refresh / soft reconfig basics
 
-Modern BGP gives you ways to change policy without bouncing the session. This matters operationally because bouncing a session can cause unnecessary convergence churn, and on some designs it can cause traffic loss while paths re-learn.
+Modern BGP gives you ways to change policy without bouncing the session. This matters operationally because resetting a session causes avoidable convergence churn, and in some designs it can cause traffic loss while paths re-learn.
 
-Two concepts you’ll see are Route Refresh, a capability where you can ask a neighbour to resend routes after you change policy, and soft reconfiguration, which keeps enough state to re-evaluate routes against new policy without a hard reset.
+Two concepts you’ll see are:
 
-The exact commands differ (IOS-XE versus JunOS), but the operational goal is the same: change filter or policy, refresh routes, and confirm the new bestpaths.
+- **Route Refresh**: a capability where you can ask a neighbour to resend routes after you change policy.
+- **Soft reconfiguration**: keeping enough state to re-evaluate routes against new policy without a hard reset (implementation varies by vendor).
 
-If your platform supports route refresh, use it.
-If it doesn’t, you’ll end up doing some kind of clear/reset; just do it intentionally, and during a safe window.
+The exact commands differ (IOS-XE versus JunOS), but the operational goal is the same: change filter or policy, refresh routes, then confirm the new best paths.
+
+If your platform supports route refresh, use it. If it doesn’t, you’ll end up doing some kind of clear/reset, just do it intentionally, and during a safe window.
+
+### BGP safety rails (the stuff that prevents outages)
+
+Most enterprise BGP incidents aren’t “we misunderstood MED”. They’re “we leaked routes”, “we accepted routes we didn’t mean to”, or “we overwhelmed the peer with prefixes”.
+
+These are the safety rails I consider non-negotiable at an enterprise/cloud edge.
+
+#### 1) Explicit export policy (never rely on defaults)
+
+Only advertise what you intend to advertise.
+
+- Use an explicit prefix-list (or route-filter) of your **owned/originated** prefixes.
+- Default action should be **deny**.
+- Avoid “redistribute connected/static” without tight filters.
+
+The cloud-specific reason this matters: accidental export can make you **transit** between the cloud and somewhere else (WAN, internet, or another cloud path), and that tends to end in tears.
+
+#### 2) Explicit import policy (reject surprises)
+
+Only accept what you need.
+
+- If you only need cloud RFC1918, filter to the expected ranges.
+- If you expect a default route, match it explicitly.
+- If you don’t expect a default route, explicitly reject it.
+
+This is especially important on public peering style constructs (ExpressRoute Microsoft peering, Direct Connect public VIF) where “accept everything” can explode your table and your blast radius.
+
+#### 3) Max-prefix limits (and alerts)
+
+Set max-prefix (or maximum-routes) thresholds on every eBGP session.
+
+- Pick a limit that is safely above your normal steady-state plus headroom.
+- Decide what you want the router to do at the limit (warn only, or tear down the session).
+- Alert on “approaching limit” before you hit it.
+
+ExpressRoute enforces hard prefix limits and will drop sessions if you exceed them, so you should treat prefix counts as a first-class metric.
+
+#### 4) Transit prevention (don’t accidentally become a router between worlds)
+
+A very common enterprise requirement is: “cloud should be reachable from the enterprise, but the cloud should not be able to use us as transit to somewhere else”.
+
+Transit prevention is mostly policy, but the mental checklist is:
+
+- Don’t export routes learned from peer A to peer B unless you explicitly mean to.
+- Use separate policies per neighbour (cloud, WAN, internet) rather than one shared route-map.
+- Prefer tagging routes on import (communities) and matching those tags on export.
+
+If you’re using a managed route distribution service, be aware that some platforms bake this in (for example, Azure Route Server has specific constraints designed to prevent certain transitive routing patterns).
+
+#### 5) “Make it observable” (so you notice the drift)
+
+At minimum, you want dashboards or alerts for:
+
+- BGP session state (up/down, flaps)
+- Prefix counts (received and advertised)
+- Changes in the set of advertised prefixes
+- Path changes for key prefixes (if you have tooling for it)
+
+A lot of “mystery outages” are just silent policy drift that nobody was watching.
+
+### BFD, timers, and failure detection (pragmatic guidance)
+
+In enterprise cloud connectivity, “BGP convergence” is often really “failure detection”. The BGP decision process can be fast, but if your router takes 180 seconds to notice the neighbour is dead, your users will still call it an outage.
+
+There are three common layers of failure detection:
+
+- **Physical/link state**: if the interface drops, the session drops. This is the fastest and most reliable signal, but it only works when the failure is on the local link.
+- **BGP keepalive/hold timers**: by default these can be tens or hundreds of seconds. Lower timers can help, but they also increase sensitivity to transient loss.
+- **BFD**: a dedicated liveness protocol that can detect failure in milliseconds to low seconds, and then trigger BGP to react.
+
+The pragmatic guidance is:
+
+- Prefer **BFD** for fast failover when it’s supported end-to-end (your device and the peer), rather than trying to force very low BGP timers.
+- Keep BGP timers reasonable and consistent with the peer’s capabilities. Some cloud edges (ExpressRoute) have fixed Microsoft-side timer behaviour, so design with that constraint and use BFD where available.
+- Remember that fast detection is only useful if you also have a safe alternate path (and you’ve tested it).
 
 ## Cloud-specific gotchas
 
