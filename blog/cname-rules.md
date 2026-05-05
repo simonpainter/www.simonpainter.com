@@ -133,7 +133,7 @@ The same principle applies to NS records, which also use a `<domain-name>` in th
 
 ## When CNAMEs Are Appropriate
 
-OK, I went wildly off topic there, but all of DNS is a precise endevour. The point is that the rules around CNAMEs are strict for good reasons, and they are not meant to be a gotcha or a trap. They are designed to ensure that DNS resolution is efficient, consistent, and compatible with all implementations. To balance this cautionary tone, [RFC 1912](https://www.rfc-editor.org/rfc/rfc1912#section-2.4) also provides positive guidance on CNAME use:
+OK, I went wildly off topic there, but all of DNS is a precise endeavour. The point is that the rules around CNAMEs are strict for good reasons, and they are not meant to be a gotcha or a trap. They are designed to ensure that DNS resolution is efficient, consistent, and compatible with all implementations. To balance this cautionary tone, [RFC 1912](https://www.rfc-editor.org/rfc/rfc1912#section-2.4) also provides positive guidance on CNAME use:
 
 "Use them when renaming hosts, but plan to get rid of them (and inform your users). However CNAMEs are useful (and encouraged) for generalized names for servers -- `ftp' for your ftp server, `www' for your Web server, `gopher' for your Gopher server, `news' for your Usenet news server, etc."
 
