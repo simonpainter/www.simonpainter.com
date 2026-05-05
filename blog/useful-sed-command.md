@@ -37,7 +37,7 @@ simon@MacBook-Pro latency-test % ssh 20.2.203.67
 @    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
-Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+Someone could be eavesdropping on you right now (on-path attack)!
 It is also possible that a host key has just been changed.
 The fingerprint for the ED25519 key sent by the remote host is
 SHA256:ZTSAbBMCdno0oVBZIJ3t1YSWMGB5j6v0tf6g4Urk4xo.
