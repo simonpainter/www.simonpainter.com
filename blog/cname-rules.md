@@ -1,6 +1,6 @@
 ---
 
-title: "CNAME Rules in DNS: A Comprehensive Reference to RFC 1034 and RFC 1912"
+title: "CNAME rules in DNS - what you need to know"
 authors: simonpainter
 tags:
   - dns
