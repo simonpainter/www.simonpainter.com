@@ -10,7 +10,7 @@ date: 2026-05-05
 
 ---
 
-The CNAME (Canonical Name) record is one of the most straightforward DNS record types in concept: it creates an alias for a domain name. Yet the DNS specifications impose very rigid constraints on where and how CNAMEs can be used. These rules exist for good reasons: consistency, cache efficiency, and preventing resolver bugs. This post is about all the rules relating to CNAME usage, drawing directly from [RFC 1034 (Domain Names - Concepts and Facilities)](https://www.rfc-editor.org/rfc/rfc1034) and [RFC 1912 (Common DNS Operational and Configuration Errors)](https://www.rfc-editor.org/rfc/rfc1912). More importantly it should explain some of the really annoying gotchas that have tripped me up at various points in my career, and that I want you to be better equipped to avoid.
+The CNAME (Canonical Name) record is one of the most straightforward DNS record types in concept: it creates an alias for a domain name. Yet the DNS specifications impose very rigid constraints on where and how CNAMEs can be used. These rules exist for good reasons: consistency, cache efficiency, and preventing resolver bugs. This post is about all the rules relating to CNAME usage, drawing directly from [RFC 1034 (Domain Names - Concepts and Facilities)](https://www.rfc-editor.org/rfc/rfc1034) and [RFC 1912 (Common DNS Operational and Configuration Errors)](https://www.rfc-editor.org/rfc/rfc1912). More importantly, it should explain some of the really annoying gotchas that have tripped me up at various points in my career, and that I want you to be better equipped to avoid.
 
 <!-- truncate -->
 
