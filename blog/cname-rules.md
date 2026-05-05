@@ -69,7 +69,7 @@ CNAME chains are not forbidden by the RFCs, but they are explicitly discouraged.
 
 The problem is compounded by another issue noted in the same section: "older BIND servers reportedly will get caught in an infinite query loop trying to figure out the address for the aliased nameserver, causing a continuous stream of DNS requests to be sent."
 
-Practically, this means the delegation will not work. When a resolver encounters an NS record pointing to a CNAME, it will attempt to follow the alias to get the nameserver's IP address, but the chain breaks down or loops. Lame delegations result, where DNS queries for the delegated zone fail.
+Practically, this means the delegation will not work. When a resolver encounters an NS record pointing to a CNAME, it will attempt to follow the alias to get the nameserver's IP address, but the chain breaks down or loops. Broken delegations result, where DNS queries for the delegated zone fail.
 
 **Configuration example (do NOT do this):**
 
@@ -82,7 +82,7 @@ ns1-primary.example.com.  A 192.0.2.1
 ns2.example.com.          A 192.0.2.2
 ```
 
-The delegation to `ns1.example.com` will be lame because the NS record points to a CNAME.
+The delegation to `ns1.example.com` breaks because the NS record points to a CNAME.
 
 ## MX Records Must Not Point to CNAMEs
 
