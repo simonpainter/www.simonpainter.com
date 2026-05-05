@@ -137,7 +137,7 @@ OK, I went wildly off topic there, but all of DNS is a precise endeavour. The po
 
 "Use them when renaming hosts, but plan to get rid of them (and inform your users). However CNAMEs are useful (and encouraged) for generalized names for servers -- `ftp' for your ftp server, `www' for your Web server, `gopher' for your Gopher server, `news' for your Usenet news server, etc."
 
-> Haven't heard of Gopher? It's a pre-web protocol for distributed document search and retrieval. It was popular in the early 1990s but was quickly overshadowed by the rise of the World Wide Web. The mention of Gopher in RFC 1912 is a reminder of how somethings go away and some things persevere.
+> Haven't heard of Gopher? It's a pre-web protocol for distributed document search and retrieval. It was popular in the early 1990s but was quickly overshadowed by the rise of the World Wide Web. The mention of Gopher in RFC 1912 is a reminder of how some things go away and some things persevere.
 
 CNAMEs are invaluable for creating semantic aliases: you can point `www.example.com` to the same server as `example.com` without duplicating A records. You can use `ftp.example.com` and `mail.example.com` as logical names that all resolve to the same host. This is excellent practice and explicitly encouraged.
 
