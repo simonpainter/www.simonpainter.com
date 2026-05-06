@@ -65,7 +65,7 @@ Giving out three different addresses for your three application instances is goi
 
 > The magic of the Azure Load Balancer is that it operates at Layer 4 (TCP/UDP) and doesn't really work like AWS ones or a typical on-premises load balancer. It works ephemerally within the fabric, so it isn't some sort of VM that terminates connections. Instead, it looks at the first packet, decides where it's going using a 5-tuple hash (source IP, source port, destination IP, destination port, protocol type), and then sends all subsequent traffic to the right place. Because of how it works, Azure Load Balancer is always zone redundant.
 
-We can put an Azure load balancer in front of our VMs (we'd also need a public IP for it), but that means your traffic from the internet is getting directly terminated on the VM itself. That's pretty scary nowadays. Try it with your hello world server for a while and take a look at your access logs to see how long it takes before the bad guys are probing it. 
+We can put an Azure load balancer in front of our VMs (we'd also need a public IP for it), but that means your traffic from the internet is getting directly terminated on the VM itself. That's pretty scary nowadays. Try it with your hello world server for a while and take a look at your access logs to see how long it takes before attackers are probing it. 
 
 A much better solution is some sort of reverse proxy that will terminate the connections: Azure Application Gateway does this nicely. Operating at Layer 7 (HTTP/HTTPS), it works similarly to on-premises equipment like F5 LTMs in that it terminates connections, performs TLS offload, and provides separation between your external and internal traffic flows.
 
