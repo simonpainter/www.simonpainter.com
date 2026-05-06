@@ -58,7 +58,7 @@ That's it. Vague, underspecified, but they don't know what else to say.
 
 Business user disappears for a week, then: "Yes, it's TLS."
 
-**Day 30.** The rule finally deploys. The audit trail is a tangled mess of emails, ticket comments, version history, justified escalations, and tribal knowledge about *why* this rule matters. If you're lucky it has also been documented somewhere but as soon as you add a stage gate to enforce that you're adding more HIP into an already bloated process.
+**Day 30.** The rule finally deploys. The audit trail is a tangled mess of emails, ticket comments, version history, justified escalations, and undocumented knowledge about *why* this rule matters. If you're lucky, it's documented somewhere, but as soon as you add a stage gate to enforce that you're adding more HIP into an already bloated process.
 
 **Cost:** 30 days, five people involved (business stakeholder, network engineer, compliance, possibly CAB, application developers), three decision loops. Human time consumed: easily 20-30 hours across the team spread across a month. Governance muddled. Risk of future misconfiguration high, because the reasoning behind the rule isn't codified anywhere.
 
