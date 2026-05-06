@@ -81,7 +81,7 @@ Each service gets direct access whilst sharing the same public IP, but you can s
 
 Here's where things get really useful. Let me paint a scenario I've seen countless times.
 
-You're running a service that needs to connect to external APIs - payment processors, third-party data feeds, whatever. These external services often require IP whitelisting for security. You need a fixed pool of IP addresses for your outbound connections.
+You're running a service that needs to connect to external APIs - payment processors, third-party data feeds, whatever. These external services often require IP allowlisting for security. You need a fixed pool of IP addresses for your outbound connections.
 
 Azure Firewall can do this, but it maxes out at around 2,500 SNAT ports per public IP. If you're running high-throughput applications or have many concurrent connections, you'll hit that limit quickly.
 
@@ -100,9 +100,9 @@ flowchart TB
     end
     
     subgraph "External Services"
-        API1[Payment API<br/>Whitelist: 20.1.2.3]
-        API2[Data Feed<br/>Whitelist: 20.1.2.3]
-        API3[Auth Service<br/>Whitelist: 20.1.2.3]
+        API1[Payment API<br/>Allowlist: 20.1.2.3]
+        API2[Data Feed<br/>Allowlist: 20.1.2.3]
+        API3[Auth Service<br/>Allowlist: 20.1.2.3]
     end
     
     VM1 --> SNAT
@@ -124,7 +124,7 @@ flowchart TB
 
 ```
 
-Load balancer outbound rules can solve this. With multiple public IPs, you can get around 64,000 SNAT ports per IP. That's a massive increase in capacity whilst maintaining your fixed IP pool for whitelisting. You don't get the level of layer 7 filtering you get with a firewall but you do get something that supports long lived TCP connections.
+Load balancer outbound rules can solve this. With multiple public IPs, you can get around 64,000 SNAT ports per IP. That's a massive increase in capacity whilst maintaining your fixed IP pool for allowlisting. You don't get the level of layer 7 filtering you get with a firewall but you do get something that supports long lived TCP connections.
 
 Here's the calculation that matters: if you have 1,000 concurrent connections that each last 30 seconds, plus the TCP TIME_WAIT period of 240 seconds, you need about 9,000 SNAT ports. Azure Firewall's 2,500 port limit won't cut it, but a single load balancer IP gives you more than 10 times that capacity.
 
