@@ -27,17 +27,17 @@ It's not that the other engineers are incapable. They're smart people. The probl
 
 In reality I suspect that *Magic Jeff* just wants to preserve his job by not writing things down and so maintaining his position as the only person who can do the critical process. That's a risky strategy because every management consultant I have ever spoken to will tell you to weed out those people first and reward those who document repeatable standardised processes.
 
-### Tribal knowledge
+### Undocumented knowledge
 
-I'm not sure if we're allowed to call it *tribal knowledge* anymore, but the idea is the same. Everyone in the team just knows how things are done. They pass it down from older, wiser team members to the new recruits. This works fine until someone leaves the team, or the team gets too big for everyone to know everything. That's when knowledge drifts or you get islands of expertise in characters like *Magic Jeff*.
+Every team builds up undocumented knowledge over time. Everyone in the team just knows how things are done. They pass it down from older, wiser team members to the new recruits. This works fine until someone leaves the team, or the team gets too big for everyone to know everything. That's when knowledge drifts or you get islands of expertise in characters like *Magic Jeff*.
 
 The problem here is the same: nobody wants to be the first to write it down. Everyone assumes someone else will do it, or that they'll get it wrong if they try.
 
 ## The solution: post the wrong answer
 
-Here's the thing: *Magic Jeff's* undocumented process and your team's tribal knowledge *are* your current standards. They're just not written down. And like that sockpuppet's deliberately wrong forum post, they're imperfect implementations that work well enough to persist.
+Here's the thing: *Magic Jeff's* undocumented process and your team's undocumented knowledge *are* your current standards. They're just not written down. And like that sockpuppet's deliberately wrong forum post, they're imperfect implementations that work well enough to persist.
 
-The trick is recognising that when you write down "this is how *Magic Jeff* does it" or "this is what tribal knowledge says," you're not creating perfection - you're posting your wrong answer. And just like on that forum, people will rush to correct it. "That's not secure enough." "We should use this naming pattern instead." "This conflicts with the firewall team's approach."
+The trick is recognising that when you write down "this is how *Magic Jeff* does it" or "this is what the team does," you're not creating perfection - you're posting your wrong answer. And just like on that forum, people will rush to correct it. "That's not secure enough." "We should use this naming pattern instead." "This conflicts with the firewall team's approach."
 
 But they'll only do that if there's something written down that they can react to.
 
@@ -53,6 +53,6 @@ Encouraging that first draft and getting it out there for a road test and critic
 
 ## Just post the wrong answer
 
-So next time you're stuck trying to write the perfect standard, remember the sockpuppet. Document what *Magic Jeff* actually does. Write down the tribal knowledge as it exists today, inconsistencies and all. Post your wrong answer.
+So next time you're stuck trying to write the perfect standard, remember the sockpuppet. Document what *Magic Jeff* actually does. Write down the undocumented knowledge as it exists today, inconsistencies and all. Post your wrong answer.
 
 The engineers who would never find time to help you write a standard from scratch will suddenly have plenty of opinions about why your draft is flawed. Let them. That's how imperfect-but-visible becomes refined-and-adopted. The alternative is perfect-but-imaginary, which helps nobody.
