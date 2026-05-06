@@ -21,7 +21,7 @@ ICMP `ping` is the first thing most of us reach for when something feels slow or
 
 A load balancer might happily reply to ICMP while the backend pool is on fire. A firewall might rate-limit or drop ICMP entirely while letting TCP through. A DNS resolver might be reachable but refusing to answer queries. An NTP server might be up but giving you a clock that's drifted. In each case `ping` says "fine" and the application says "broken".
 
-TCP ping (things like `tcping`, `hping3 -S`, or `nc -z` in a loop) gets you closer. It opens a TCP connection on the right port, so a firewall blocking ICMP can't fool you and a dead listener shows up as a refused connection. That's a real improvement over ICMP. But it stops at the handshake. A successful TCP ping tells you the socket opened. It doesn't tell you the web server returned a 200, the resolver answered `NOERROR`, or the time source gave you a sane offset. The application layer is still a black box.
+TCP ping (things like `tcping`, `hping3 -S`, or `nc -z` in a loop) gets you closer. It opens a TCP connection on the right port, so a firewall blocking ICMP can't fool you and a dead listener shows up as a refused connection. That's a real improvement over ICMP. But it stops at the handshake. A successful TCP ping tells you the socket opened. It doesn't tell you the web server returned a 200, the resolver answered `NOERROR`, or the time source gave you a sane offset. The application layer is still hidden from you.
 
 The fix isn't a cleverer ping. It's pinging with the protocol that actually matters.
 
