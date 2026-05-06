@@ -122,7 +122,7 @@ It's also brilliant for catching the resolver that's silently truncating respons
 
 ### NTP migrations
 
-NTP is the protocol nobody thinks about until clocks drift and Kerberos breaks. `ntpping` lets you sanity-check a new time source before you point production at it. If the offset is bouncing around or the delay is wildly variable, that server isn't ready to be a stratum source for anything that matters.
+NTP is the protocol nobody thinks about until clocks drift and Kerberos breaks. `ntpping` lets you quickly verify a new time source before you point production at it. If the offset is bouncing around or the delay is wildly variable, that server isn't ready to be a stratum source for anything that matters.
 
 It's also handy when you're moving workloads between regions or clouds and want to confirm the local NTP service is actually local and not a few hundred milliseconds away.
 
