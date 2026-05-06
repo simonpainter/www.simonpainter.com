@@ -214,7 +214,7 @@ graph TB
 
 Since full mesh networks don't scale well, we need to connect multiple devices on a shared wire. But first, we need to solve another problem: making sure each device gets only the data meant for it. This is where addressing begins.
 
-If we have a shared wire connecting all computers (perhaps using T-shaped splitters), any computer can send data that all others receive. By adding a destination address to each data chunk, and having each computer know its own address, devices can ignore data not meant for them. This might sound crazy in today's security-conscious world, but networks were much more trusting in the early days.
+If we have a shared wire connecting all computers (perhaps using T-shaped splitters), any computer can send data that all others receive. By adding a destination address to each data chunk, and having each computer know its own address, devices can ignore data not meant for them. This might sound wild in today's security-conscious world, but networks were much more trusting in the early days.
 
 ```mermaid
 %%{init: {'gitGraph': { 'showCommitLabel':true,'mainBranchName': 'Bus Topology'}} }%%
