@@ -203,7 +203,62 @@ rtt min/avg/max = 160/179.4/363 µs
 
 The raw socket run gave a min/avg/max of 160/179.4/363µs across 40 packets. The average is virtually identical to the DGRAM run — the two modes measure the same underlying network latency. The reported max is higher here because the longer run captured a couple of occasional spikes (seq=1 at 363µs and seq=34 at 322µs) that are likely background OS scheduler interruptions on the Pi rather than network events. The steady-state band from seq=3 onwards is consistently 160–180µs.
 
-That's a clean baseline: sub-200µs point-to-point between two Raspberry Pi 5s with nothing in between. To put it in context, PROFINET RT requires delivery within 1–10ms. Even accounting for the multiple network hops we're about to introduce, we're starting from a floor that's more than five times below the tightest standard industrial Ethernet threshold. There's meaningful headroom to absorb switching and routing overhead before we'd need to worry.
+The raw socket run gave a clean baseline: sub-200µs point-to-point between two Raspberry Pi 5s with nothing in between. To put it in context, PROFINET RT requires delivery within 1–10ms. Even accounting for the multiple network hops we're about to introduce, we're starting from a floor that's more than five times below the tightest standard industrial Ethernet threshold. There's meaningful headroom to absorb switching and routing overhead before we'd need to worry.
+
+I also ran echo_test across the same crossover path to get the TCP baseline:
+
+```
+simon@pi1:~ $ python3 echo_test/client/echo_client.py 10.1.1.2 7
+ECHO 10.1.1.2:7 (64 bytes of data)
+64 bytes from 10.1.1.2:7: seq=1 time=108.204 μs
+64 bytes from 10.1.1.2:7: seq=2 time=228.241 μs
+64 bytes from 10.1.1.2:7: seq=3 time=247.612 μs
+64 bytes from 10.1.1.2:7: seq=4 time=211.297 μs
+64 bytes from 10.1.1.2:7: seq=5 time=207.945 μs
+64 bytes from 10.1.1.2:7: seq=6 time=229.352 μs
+64 bytes from 10.1.1.2:7: seq=7 time=199.204 μs
+64 bytes from 10.1.1.2:7: seq=8 time=198.352 μs
+64 bytes from 10.1.1.2:7: seq=9 time=183.501 μs
+64 bytes from 10.1.1.2:7: seq=10 time=182.019 μs
+64 bytes from 10.1.1.2:7: seq=11 time=190.333 μs
+64 bytes from 10.1.1.2:7: seq=12 time=195.019 μs
+64 bytes from 10.1.1.2:7: seq=13 time=194.037 μs
+64 bytes from 10.1.1.2:7: seq=14 time=193.057 μs
+64 bytes from 10.1.1.2:7: seq=15 time=181.186 μs
+64 bytes from 10.1.1.2:7: seq=16 time=193.000 μs
+64 bytes from 10.1.1.2:7: seq=17 time=191.778 μs
+64 bytes from 10.1.1.2:7: seq=18 time=180.557 μs
+64 bytes from 10.1.1.2:7: seq=19 time=184.575 μs
+64 bytes from 10.1.1.2:7: seq=20 time=190.741 μs
+64 bytes from 10.1.1.2:7: seq=21 time=185.315 μs
+64 bytes from 10.1.1.2:7: seq=22 time=180.130 μs
+64 bytes from 10.1.1.2:7: seq=23 time=189.815 μs
+64 bytes from 10.1.1.2:7: seq=24 time=225.778 μs
+64 bytes from 10.1.1.2:7: seq=25 time=197.705 μs
+64 bytes from 10.1.1.2:7: seq=26 time=222.408 μs
+64 bytes from 10.1.1.2:7: seq=27 time=200.705 μs
+64 bytes from 10.1.1.2:7: seq=28 time=203.353 μs
+64 bytes from 10.1.1.2:7: seq=29 time=195.890 μs
+64 bytes from 10.1.1.2:7: seq=30 time=195.741 μs
+64 bytes from 10.1.1.2:7: seq=31 time=188.056 μs
+64 bytes from 10.1.1.2:7: seq=32 time=195.463 μs
+64 bytes from 10.1.1.2:7: seq=33 time=195.482 μs
+64 bytes from 10.1.1.2:7: seq=34 time=196.519 μs
+64 bytes from 10.1.1.2:7: seq=35 time=195.148 μs
+64 bytes from 10.1.1.2:7: seq=36 time=194.427 μs
+64 bytes from 10.1.1.2:7: seq=37 time=185.538 μs
+64 bytes from 10.1.1.2:7: seq=38 time=187.204 μs
+^C
+--- 10.1.1.2:7 echo statistics ---
+39 packets transmitted, 38 received, 2.6% packet loss
+rtt min/avg/max/stddev = 108.204/195.387/247.612/20.966 μs
+```
+
+The TCP echo average sits at 195.4µs — about 16µs higher than the uping average of 179.4µs. That gap is expected: TCP adds connection state overhead compared to raw ICMP, and the echo server on Pi 2 introduces a small amount of application processing time for each bounce. The standard deviation of 20.966µs reflects the spread you can see in the raw numbers: the session takes a few packets to settle (seq=2 through seq=6 are the highest), then tightens into a consistent band around 185–200µs for the remainder.
+
+The 2.6% packet loss (one packet from 39) is worth noting. In this context it most likely reflects the Ctrl-C interrupt catching a packet mid-flight rather than genuine loss, but it's something to watch in later tests on longer runs.
+
+The crossover baselines from both tools are now established. All subsequent tests will be measured against these numbers.
 
 ### Test 2: Single Arista Switch (L2 Baseline)
 
