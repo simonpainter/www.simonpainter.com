@@ -186,6 +186,6 @@ graph TD
 
 ### The big questions
 
-So is it ready for production use? For most network teams, yes. The MCP server transforms NetBox from a technical database into a conversational interface that non-technical stakeholders can actually use. While the initial setup required some troubleshooting and the error messages could be clearer, the time investment pays off quickly. I was particularly impressed when it generated a comprehensive KTLO roadmap in under two minutes — a task that typically takes me hours and that I genuinely dislike doing.
+So is it ready for production use? For most network teams, yes. The MCP server transforms NetBox from a technical database into a conversational interface that non-technical stakeholders can actually use. While the initial setup required some troubleshooting and the error messages could be clearer, the time investment pays off quickly. I was particularly impressed when it generated a comprehensive KTLO roadmap in under two minutes, a task that typically takes me hours and that I genuinely dislike doing.
 
 My initial skepticism about MCP being _just another front-end_ might be unfounded. This one isn't about putting lipstick on poorly managed data; it's about making well-structured NetBox data accessible to people who wouldn't otherwise use it. If your organisation is comfortable with LLM usage and you're already maintaining quality data in NetBox, this tool will save significant time for both technical and business users.
