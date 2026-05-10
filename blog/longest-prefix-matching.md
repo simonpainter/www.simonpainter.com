@@ -80,7 +80,7 @@ def select_best_metric_route(routes):
     return best_route
 ```
 
-A purely metric-based approach would try to evaluate and compare metrics across routes of different prefix lengths. This creates significant challenges. The computational complexity would be O(n * m), where n is the number of routes in the table and m is the number of metrics we need to evaluate for each matching route. Moreover, comparing metrics between routes of different prefix lengths (like comparing a /24 against a /16) raises fundamental questions about how to weight specificity against other routing characteristics.
+A purely metric-based approach would try to evaluate and compare metrics across routes of different prefix lengths. This creates significant challenges. The computational complexity would be O(n * m), where n is the number of routes in the table and m is the number of metrics we need to evaluate for each matching route. On top of that, comparing metrics between routes of different prefix lengths (like comparing a /24 against a /16) raises fundamental questions about how to weight specificity against other routing characteristics.
 
 However, this doesn't mean metrics aren't valuable - quite the opposite. In modern routing systems, we use metrics extensively, but we do so within the narrowed scope that LPM provides. Instead of comparing metrics between routes of different prefix lengths, we only evaluate metrics between routes that share the same prefix length. This creates a natural hierarchy where:
 
@@ -156,7 +156,7 @@ The triumph of LPM lies in its elegant balance of computational efficiency, arch
 
 The [trie](https://en.wikipedia.org/wiki/Trie)-based implementation allows for quick updates, which proves crucial in dynamic cloud environments where routes can change frequently due to auto-scaling events, failover scenarios, network policy updates, and service endpoint changes.
 
-Today's cloud providers have built upon this foundation through various optimisations. Their implementations use multi-bit tries for faster lookups, compressed tries to reduce memory usage, and distributed tries for hardware-level parallelisation. Many use sophisticated caching strategies for frequently accessed routes. Yet the core principle remains unchanged: longer prefixes indicate more specific intent and take precedence in routing decisions.
+Today's cloud providers have built upon this foundation through various optimisations. Their implementations use multi-bit tries for faster lookups, compressed tries to reduce memory usage, and distributed tries for hardware-level parallelisation. Many use sophisticated caching strategies for frequently accessed routes. Yet the core principle remains unchanged: longer prefixes signal more specific intent and take precedence in routing decisions.
 
 Understanding why LPM forms the foundation of routing decisions helps cloud network engineers make better architectural choices. Whether designing a simple VPC or a complex multi-region network, knowing that routing decisions will consistently follow the most specific path allows for predictable and secure network designs.
 
