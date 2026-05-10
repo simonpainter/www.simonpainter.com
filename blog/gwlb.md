@@ -67,7 +67,7 @@ The GENEVE header structure is particularly interesting in its design. It starts
 The first 8 bytes include:
 
 - Version (2 bits): Currently set to 0
-- Option Length (6 bits): Indicates length of optional metadata in 4-byte multiples
+- Option Length (6 bits): How many 4-byte chunks of optional metadata are included
 - Control bit (1 bit): Distinguishes control from data packets
 - Reserved bits (3 bits): Set aside for future use
 - Protocol Type (16 bits): Identifies the encapsulated protocol
