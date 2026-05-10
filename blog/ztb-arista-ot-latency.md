@@ -55,13 +55,13 @@ The credentials are injected from a cloud vault. The vendor never sees them. The
 
 > *"VPNs and traditional PAM solutions grant broad network access, frequently extending implicit trust to administrator and third-party devices. This 'all or nothing' model undermines least-privileged access and creates opportunities for ransomware attacks, credential abuse, and lateral movement."*
 
-### Arista and Hitless Upgrades
+### Arista Smart System Upgrade (SSU)
 
-Arista's selling point for OT-adjacent environments is their In-Service Software Upgrade (ISSU) capability, which they market as "hitless." On platforms with redundant supervisors (the 7500R and 7800R series), a software upgrade triggers a supervisor switchover while the line cards continue forwarding packets. The hardware ASIC never stops. BGP and OSPF adjacencies are preserved via Graceful Restart. Arista's marketing language is "zero traffic disruption" and "no planned downtime for software maintenance."
+Arista frames software maintenance around Smart System Upgrade (SSU), which is an EOS upgrade workflow rather than a blanket promise that every upgrade is hitless. The point of SSU is to make upgrades predictable: pre-check compatibility, stage the image, choose the safest upgrade path for the platform, and keep a controlled rollback path if the checks fail.
 
-On fixed-form switches, Arista offers a "warm reload" variant where the EOS process restarts but the forwarding hardware continues based on the last programmed tables. This isn't zero-packet-loss in the strictest sense, but the disruption window is measured in milliseconds rather than seconds. The important caveat is that BFD sessions will drop during ISSU if sub-second timers are configured, and Graceful Restart must be negotiated with all BGP peers before the upgrade begins.
+In practice, that means the observed impact depends on platform model, redundancy design, and enabled features. Some combinations can be non-disruptive, while others are low-disruption but not fully hitless. That's exactly why this test matters in an OT setting where maintenance windows are tiny or non-existent.
 
-I'll be testing this claim directly. The `echo_test` tool, described below, keeps a persistent TCP session alive and records any interruption to the microsecond.
+I'll test SSU behaviour directly with `echo_test`. It keeps a persistent TCP session alive and records any interruption or latency anomaly down to the microsecond.
 
 ## The Test Lab
 
@@ -276,11 +276,11 @@ Pi 1 and Pi 3 on separate network segments, with traffic routed through the Zsca
 
 Both Pi 1 and Pi 2 on the same subnet, but with ZTB's /32 host isolation enabled. Policy permits communication between the two. This tests whether the segmentation mechanism itself adds latency compared to the baseline routed path through ZTB. If /32 isolation forces a different forwarding path or additional policy lookup, it should show up in the numbers.
 
-### Test 6: Hitless Upgrade of Arista
+### Test 6: Arista SSU Upgrade Behaviour
 
 *Results to follow.*
 
-With `echo_test` running a persistent TCP session between Pi 1 and Pi 3 across the inter-switch link, I'll trigger an EOS software upgrade on Arista Switch 1. The test is simple: does the TCP session survive? If echo_test records a gap in sequence numbers or an elevated RTT, that's the upgrade window. If it shows a clean, continuous stream, Arista's hitless upgrade claim holds up.
+With `echo_test` running a persistent TCP session between Pi 1 and Pi 3 across the inter-switch link, I'll trigger an EOS software upgrade on Arista Switch 1 using the SSU workflow. The test is simple: does the TCP session survive, and what does latency do during the upgrade window? If echo_test records a gap in sequence numbers or a sharp RTT spike, that's service impact. If it stays continuous with stable latency, SSU is behaving as intended for this design.
 
 I'll capture the full echo_test output around the upgrade window so any disruption is visible at microsecond resolution.
 
