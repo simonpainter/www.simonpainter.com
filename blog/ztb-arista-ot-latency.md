@@ -128,42 +128,7 @@ seq=2 12µs from 127.0.0.1
 seq=3 17µs from 127.0.0.1
 seq=4 15µs from 127.0.0.1
 seq=5 11µs from 127.0.0.1
-seq=6 9µs from 127.0.0.1
-seq=7 14µs from 127.0.0.1
-seq=8 10µs from 127.0.0.1
-seq=9 9µs from 127.0.0.1
-seq=10 11µs from 127.0.0.1
-seq=11 11µs from 127.0.0.1
-seq=12 10µs from 127.0.0.1
-seq=13 9µs from 127.0.0.1
-seq=14 9µs from 127.0.0.1
-seq=15 9µs from 127.0.0.1
-seq=16 9µs from 127.0.0.1
-seq=17 9µs from 127.0.0.1
-seq=18 8µs from 127.0.0.1
-seq=19 8µs from 127.0.0.1
-seq=20 8µs from 127.0.0.1
-seq=21 9µs from 127.0.0.1
-seq=22 9µs from 127.0.0.1
-seq=23 9µs from 127.0.0.1
-seq=24 8µs from 127.0.0.1
-seq=25 9µs from 127.0.0.1
-seq=26 8µs from 127.0.0.1
-seq=27 9µs from 127.0.0.1
-seq=28 9µs from 127.0.0.1
-seq=29 22µs from 127.0.0.1
-seq=30 13µs from 127.0.0.1
-seq=31 11µs from 127.0.0.1
-seq=32 10µs from 127.0.0.1
-seq=33 13µs from 127.0.0.1
-seq=34 10µs from 127.0.0.1
-seq=35 9µs from 127.0.0.1
-seq=36 9µs from 127.0.0.1
-seq=37 9µs from 127.0.0.1
-seq=38 9µs from 127.0.0.1
-seq=39 8µs from 127.0.0.1
-seq=40 8µs from 127.0.0.1
-seq=41 9µs from 127.0.0.1
+...
 seq=42 9µs from 127.0.0.1
 seq=43 13µs from 127.0.0.1
 seq=44 9µs from 127.0.0.1
@@ -183,20 +148,7 @@ ECHO 127.0.0.1:7 (64 bytes of data)
 64 bytes from 127.0.0.1:7: seq=3 time=45.277 μs
 64 bytes from 127.0.0.1:7: seq=4 time=34.222 μs
 64 bytes from 127.0.0.1:7: seq=5 time=31.925 μs
-64 bytes from 127.0.0.1:7: seq=6 time=30.721 μs
-64 bytes from 127.0.0.1:7: seq=7 time=38.333 μs
-64 bytes from 127.0.0.1:7: seq=8 time=48.074 μs
-64 bytes from 127.0.0.1:7: seq=9 time=31.722 μs
-64 bytes from 127.0.0.1:7: seq=10 time=29.129 μs
-64 bytes from 127.0.0.1:7: seq=11 time=43.019 μs
-64 bytes from 127.0.0.1:7: seq=12 time=31.000 μs
-64 bytes from 127.0.0.1:7: seq=13 time=29.092 μs
-64 bytes from 127.0.0.1:7: seq=14 time=42.258 μs
-64 bytes from 127.0.0.1:7: seq=15 time=41.314 μs
-64 bytes from 127.0.0.1:7: seq=16 time=33.315 μs
-64 bytes from 127.0.0.1:7: seq=17 time=28.167 μs
-64 bytes from 127.0.0.1:7: seq=18 time=28.241 μs
-64 bytes from 127.0.0.1:7: seq=19 time=42.055 μs
+...
 64 bytes from 127.0.0.1:7: seq=20 time=66.685 μs
 ^C
 --- 127.0.0.1:7 echo statistics ---
@@ -260,36 +212,9 @@ seq=2 176µs from 10.1.1.2
 seq=3 167µs from 10.1.1.2
 seq=4 165µs from 10.1.1.2
 seq=5 168µs from 10.1.1.2
-seq=6 164µs from 10.1.1.2
-seq=7 166µs from 10.1.1.2
-seq=8 165µs from 10.1.1.2
-seq=9 161µs from 10.1.1.2
-seq=10 177µs from 10.1.1.2
-seq=11 173µs from 10.1.1.2
-seq=12 186µs from 10.1.1.2
-seq=13 201µs from 10.1.1.2
-seq=14 212µs from 10.1.1.2
-seq=15 176µs from 10.1.1.2
-seq=16 168µs from 10.1.1.2
-seq=17 169µs from 10.1.1.2
-seq=18 171µs from 10.1.1.2
-seq=19 169µs from 10.1.1.2
-seq=20 164µs from 10.1.1.2
-seq=21 161µs from 10.1.1.2
-seq=22 163µs from 10.1.1.2
-seq=23 180µs from 10.1.1.2
-seq=24 167µs from 10.1.1.2
-seq=25 166µs from 10.1.1.2
-seq=26 164µs from 10.1.1.2
-seq=27 162µs from 10.1.1.2
-seq=28 163µs from 10.1.1.2
-seq=29 164µs from 10.1.1.2
-seq=30 161µs from 10.1.1.2
-seq=31 168µs from 10.1.1.2
-seq=32 162µs from 10.1.1.2
-seq=33 160µs from 10.1.1.2
+...
 seq=34 322µs from 10.1.1.2
-seq=35 178µs from 10.1.1.2
+...
 seq=36 175µs from 10.1.1.2
 seq=37 177µs from 10.1.1.2
 seq=38 174µs from 10.1.1.2
@@ -315,38 +240,7 @@ ECHO 10.1.1.2:7 (64 bytes of data)
 64 bytes from 10.1.1.2:7: seq=3 time=247.612 μs
 64 bytes from 10.1.1.2:7: seq=4 time=211.297 μs
 64 bytes from 10.1.1.2:7: seq=5 time=207.945 μs
-64 bytes from 10.1.1.2:7: seq=6 time=229.352 μs
-64 bytes from 10.1.1.2:7: seq=7 time=199.204 μs
-64 bytes from 10.1.1.2:7: seq=8 time=198.352 μs
-64 bytes from 10.1.1.2:7: seq=9 time=183.501 μs
-64 bytes from 10.1.1.2:7: seq=10 time=182.019 μs
-64 bytes from 10.1.1.2:7: seq=11 time=190.333 μs
-64 bytes from 10.1.1.2:7: seq=12 time=195.019 μs
-64 bytes from 10.1.1.2:7: seq=13 time=194.037 μs
-64 bytes from 10.1.1.2:7: seq=14 time=193.057 μs
-64 bytes from 10.1.1.2:7: seq=15 time=181.186 μs
-64 bytes from 10.1.1.2:7: seq=16 time=193.000 μs
-64 bytes from 10.1.1.2:7: seq=17 time=191.778 μs
-64 bytes from 10.1.1.2:7: seq=18 time=180.557 μs
-64 bytes from 10.1.1.2:7: seq=19 time=184.575 μs
-64 bytes from 10.1.1.2:7: seq=20 time=190.741 μs
-64 bytes from 10.1.1.2:7: seq=21 time=185.315 μs
-64 bytes from 10.1.1.2:7: seq=22 time=180.130 μs
-64 bytes from 10.1.1.2:7: seq=23 time=189.815 μs
-64 bytes from 10.1.1.2:7: seq=24 time=225.778 μs
-64 bytes from 10.1.1.2:7: seq=25 time=197.705 μs
-64 bytes from 10.1.1.2:7: seq=26 time=222.408 μs
-64 bytes from 10.1.1.2:7: seq=27 time=200.705 μs
-64 bytes from 10.1.1.2:7: seq=28 time=203.353 μs
-64 bytes from 10.1.1.2:7: seq=29 time=195.890 μs
-64 bytes from 10.1.1.2:7: seq=30 time=195.741 μs
-64 bytes from 10.1.1.2:7: seq=31 time=188.056 μs
-64 bytes from 10.1.1.2:7: seq=32 time=195.463 μs
-64 bytes from 10.1.1.2:7: seq=33 time=195.482 μs
-64 bytes from 10.1.1.2:7: seq=34 time=196.519 μs
-64 bytes from 10.1.1.2:7: seq=35 time=195.148 μs
-64 bytes from 10.1.1.2:7: seq=36 time=194.427 μs
-64 bytes from 10.1.1.2:7: seq=37 time=185.538 μs
+...
 64 bytes from 10.1.1.2:7: seq=38 time=187.204 μs
 ^C
 --- 10.1.1.2:7 echo statistics ---
