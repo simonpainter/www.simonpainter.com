@@ -110,11 +110,11 @@ The real magic happens when you start using natural language to query complex ne
 
 `Find devices with 'core' in their name`
 
-Claude doesn't just return raw data—it understands context, formats responses clearly, and can even suggest next steps or identify potential issues.
+Claude doesn't just return raw data; it understands context, formats responses clearly, and can even suggest next steps or identify potential issues.
 
 We're entering an era where AI assistants will become integral to infrastructure management. The ability to query, analyse, and act on network data using natural language will change how we interact with our systems.
 
-MCP provides the foundation for this transformation. As more organisations build MCP servers for their internal tools, we'll see AI assistants that truly understand our environments—not just as external observers, but as integral parts of our operational workflows.
+MCP provides the foundation for this transformation. As more organisations build MCP servers for their internal tools, we'll see AI assistants that truly understand our environments, not just as external observers, but as integral parts of our operational workflows.
 
 The NetBox integration I've built is a proof of concept for this future. It demonstrates that with modest engineering effort, we can bridge the gap between AI capabilities and our existing infrastructure tools.
 
