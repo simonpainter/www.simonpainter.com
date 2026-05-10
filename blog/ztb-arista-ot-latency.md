@@ -1,6 +1,6 @@
 ---
 
-title: "Zero Trust Branch in an OT World: Testing Latency and Resilience with Arista and Raspberry Pi"
+title: "Latency and Resilience Testing of Zscaler Zero Trust Branch with Arista Switches for an OT Environment"
 authors: simonpainter
 tags:
   - networks
