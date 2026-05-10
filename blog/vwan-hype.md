@@ -18,7 +18,7 @@ When Microsoft unveiled [Azure](/tags/azure) Virtual WAN, it was heralded as a r
 
 At its core, Virtual WAN is built on a hub-and-spoke architecture. The Virtual WAN Hub serves as the central connection point, orchestrating various networking components. Microsoft offers two flavours: Basic, which supports VPN-only connectivity to branch locations, and Standard, which adds support for User VPN, ExpressRoute, and inter-hub connectivity.
 
-The service comprises several key components. The overarching Virtual WAN Service contains all other elements, including the Virtual WAN Hubs that form the regional cores. These hubs house gateways that facilitate connections to spoke virtual networks, branch sites, and other hubs. Hub Route Tables manage the complex task of routing within and between hubs, while Sites represent branch locations for site-to-site VPN connections.
+The service comprises several key components. The overarching Virtual WAN Service contains all other elements, including the Virtual WAN Hubs that form the regional cores. These hubs house gateways that support connections to spoke virtual networks, branch sites, and other hubs. Hub Route Tables manage the complex task of routing within and between hubs, while Sites represent branch locations for site-to-site VPN connections.
 
 Virtual WAN supports a range of connectivity options, including Site-to-Site VPN, Point-to-Site VPN for remote users, ExpressRoute for private connectivity, and Virtual Network Peering for connecting [Azure](/tags/azure) resources. This comprehensive approach aims to address virtually all network connectivity scenarios within a single, managed service.
 
@@ -42,7 +42,7 @@ For companies with existing hub-and-spoke architectures, the migration to Virtua
 
 Performance issues have also emerged as a concern for some Virtual WAN users I've spoken with. Routing through Virtual WAN hubs can introduce additional latency compared to direct peering between virtual networks. This added delay can be problematic for latency-sensitive applications, potentially impacting user experience and application performance.
 
-Furthermore, throughput limitations can pose challenges for high-bandwidth scenarios. VNet-to-VNet traffic through Virtual WAN hubs is capped at 50 Gbps, which may be insufficient for organisations with data-intensive workloads or those running large-scale analytics operations.
+Also, throughput limitations can pose challenges for high-bandwidth scenarios. VNet-to-VNet traffic through Virtual WAN hubs is capped at 50 Gbps, which may be insufficient for organisations with data-intensive workloads or those running large-scale analytics operations.
 
 ### Feature Gaps
 
