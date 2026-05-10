@@ -234,7 +234,7 @@ The technical skills assessment focuses on observable behaviors and tangible evi
 
 #### Observable Indicators
 
-Technical leadership can assess capability through day-to-day operational evidence. For instance, examine how teams approach infrastructure changes: do they manually configure systems, or do they use infrastructure as code? When faced with repetitive tasks, do teams automate them? The consistent use of version control, code review processes, and automated testing indicates higher technical maturity.
+Technical leadership can assess capability through day-to-day operational evidence. For instance, examine how teams approach infrastructure changes: do they manually configure systems, or do they use infrastructure as code? When faced with repetitive tasks, do teams automate them? The consistent use of version control, code review processes, and automated testing shows higher technical maturity.
 
 #### Measurable Outcomes
 
