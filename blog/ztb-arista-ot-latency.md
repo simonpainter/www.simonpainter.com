@@ -6,11 +6,9 @@ tags:
   - networks
   - security
   - zero-trust
-  - ot
-  - arista
-  - zscaler
   - performance
-  - testing
+  - labs
+  - high-availability
 date: 2026-05-09
 
 ---
