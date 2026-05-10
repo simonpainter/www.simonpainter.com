@@ -28,7 +28,7 @@ This problem has only got worse with cloud adoption. While cloud providers promi
 
 ## The Platform Team Solution
 
-I think the answer lies in reimagining how we approach infrastructure support. Instead of teams focused on specific technologies, we need platform teams with broad skills and complete visibility. Think of it as "full stack infrastructure" — similar to how development has embraced full stack engineers.
+I think the answer lies in reimagining how we approach infrastructure support. Instead of teams focused on specific technologies, we need platform teams with broad skills and complete visibility. Think of it as "full stack infrastructure", similar to how development has embraced full stack engineers.
 
 These platform teams should work in a completely new way. They need to bring together networking, security, cloud, and systems expertise under one roof. For them to succeed, they must maintain end-to-end visibility across all connectivity paths, while focusing on delivering services rather than managing individual components. Most importantly, they need to see the infrastructure landscape as a whole, not as separate parts.
 
@@ -36,7 +36,7 @@ These platform teams should work in a completely new way. They need to bring tog
 
 To transform from siloed specialists to platform teams, we need to make several key changes. First, we need tools that support this vision. This means putting in place end-to-end synthetic monitoring and comprehensive observability platforms. But crucially, we need to rethink how we present this information.
 
-Traditional dashboards that show the status of individual services or tech components miss the point entirely. Instead, dashboards should focus on business outcomes and customer journeys. A retail dashboard shouldn't tell you if the payment gateway is online — it should answer the basic question "Can your customers buy things?" This single view should show the health of every component and data flow needed for a customer to scan their goods and complete their purchase.
+Traditional dashboards that show the status of individual services or tech components miss the point entirely. Instead, dashboards should focus on business outcomes and customer journeys. A retail dashboard shouldn't tell you if the payment gateway is online; it should answer the basic question "Can your customers buy things?" This single view should show the health of every component and data flow needed for a customer to scan their goods and complete their purchase.
 
 Take a banking platform, for example. Rather than showing database uptime or network latency, the dashboard should answer "Can customers check their balance?" This immediately puts the technology stack in the context of customer experience. For an online shop, the key questions might be "Can customers fill their basket? Can they pay for it? Can we pick the order? Can we ship it?" Each of these represents a complex chain of connected services and data flows, but the dashboard boils this down to what really matters: business outcomes.
 
@@ -46,6 +46,6 @@ Evolving skills is just as crucial. We should be developing "T-shaped" engineers
 
 ## The Path Forward
 
-The future of infrastructure support isn't about proving you're not at fault — it's about working together to solve problems and deliver services. By breaking down silos and building platform teams with comprehensive skills and visibility, we can move past the blame game and focus on what really matters: delivering reliable, high-performance services to our users.
+The future of infrastructure support isn't about proving you're not at fault; it's about working together to solve problems and deliver services. By breaking down silos and building platform teams with comprehensive skills and visibility, we can move past the blame game and focus on what really matters: delivering reliable, high-performance services to our users.
 
 The tech industry has already embraced "full stack" as a development approach. It's time we applied the same thinking to infrastructure teams. The result will be faster fixes, better service quality, and happier teams who can focus on innovation rather than defending their innocence.
