@@ -14,7 +14,7 @@ date: 2025-07-31
 
 In a recent blog post I wrote: "As network engineers we are used to the declarative model of configuration management and so this fits nicely into that mindset - you declare what you want and Terraform will make it so." But declaring what you want is only half the battle. The real challenge lies in how you structure that declaration to handle the messy reality of business requirements whilst maintaining the automation benefits that drew us to declarative tools in the first place.
 <!-- truncate -->
-Some time ago I was chatting to an enthusiastic young network architect at a customer management and contact centre business. He told me of his ambitious plans to create T-shirt sized site network designs - small, medium, and large templates that would transform our dozen sites from individual pets into a standardised, automatable fleet.
+Some time ago I was chatting to a young network architect at a customer management and contact centre business. He told me of his ambitious plans to create T-shirt sized site network designs - small, medium, and large templates that would transform our dozen sites from individual pets into a standardised, automatable fleet.
 
 He was, of course, deluded.
 
