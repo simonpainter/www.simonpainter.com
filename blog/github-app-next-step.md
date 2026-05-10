@@ -9,7 +9,7 @@ tags:
   - mcp
   - opinion
   - personal
-date: 2026-05-06
+date: 2026-05-12
 
 ---
 
