@@ -37,7 +37,7 @@ The refinement stage proved crucial. Here, I'd compare AI-generated content with
 
 ## The Hyperbole Challenge
 
-One of the most significant challenges emerged early in the process. The initial versions read like they were written by an overenthusiastic recruiter after three espressos. While technically accurate, they were laden with superlatives and grandiose statements that felt out of place in the measured tone of UK technical circles.
+One of the most significant challenges emerged early in the process. The initial versions read like they were written by an overzealous recruiter after three espressos. While technically accurate, they were laden with superlatives and grandiose statements that felt out of place in the measured tone of UK technical circles.
 
 Common infrastructure upgrades were described as "revolutionary transformations." Standard implementations became "groundbreaking innovations." My cloud networking experience was invariably "unparalleled." This Silicon Valley-style self-promotion required significant toning down to match the more reserved expectations of the UK market.
 
