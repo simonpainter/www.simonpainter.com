@@ -120,7 +120,7 @@ The key difference between the two tools is protocol layer. uping measures ICMP 
 
 Before measuring anything across a physical link I ran both tools against the loopback interface on Pi 2. The loopback never touches the NIC, the cable, or anything external — packets go from the sending process, through the kernel's network stack, and straight back. It's the purest possible measure of OS and software overhead.
 
-```
+```text
 simon@pi2:~ $ uping 127.0.0.1
 UPING 127.0.0.1 (127.0.0.1): ICMPv4 ICMP, timeout 2.0s
 seq=1 35µs from 127.0.0.1
@@ -140,7 +140,7 @@ seq=46 8µs from 127.0.0.1
 rtt min/avg/max = 8/10.7/35 µs
 ```
 
-```
+```text
 simon@pi2:~ $ python echo_test/client/echo_client.py 127.0.0.1 7
 ECHO 127.0.0.1:7 (64 bytes of data)
 64 bytes from 127.0.0.1:7: seq=1 time=45.111 μs
@@ -183,7 +183,7 @@ I ran uping twice: first without `sudo` to see the DGRAM socket baseline, then w
 
 Without `sudo` (DGRAM socket):
 
-```
+```text
 simon@pi1:~/uping $ ./uping 10.1.1.2
 uping: using unprivileged DGRAM socket (timing may be less accurate; run with sudo for best results)
 UPING 10.1.1.2 (10.1.1.2): ICMPv4 ICMP, timeout 2.0s
@@ -204,7 +204,7 @@ rtt min/avg/max = 160/169.6/197 µs
 
 With `sudo` (raw socket, 40 packets):
 
-```
+```text
 simon@pi1:~/uping $ sudo ./uping 10.1.1.2
 UPING 10.1.1.2 (10.1.1.2): ICMPv4 ICMP, timeout 2.0s
 seq=1 363µs from 10.1.1.2
@@ -232,7 +232,7 @@ The raw socket run gave a clean baseline: sub-200µs point-to-point between two 
 
 I also ran echo_test across the same crossover path to get the TCP baseline:
 
-```
+```text
 simon@pi1:~ $ python3 echo_test/client/echo_client.py 10.1.1.2 7
 ECHO 10.1.1.2:7 (64 bytes of data)
 64 bytes from 10.1.1.2:7: seq=1 time=108.204 μs
