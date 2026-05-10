@@ -161,7 +161,7 @@ The loopback numbers give us a useful lower bound: the Raspberry Pi 5's kernel n
 Comparing loopback to the crossover cable results puts the physical layer cost in perspective:
 
 | | uping avg | echo_test avg |
-|---|---|---|
+| --- | --- | --- |
 | Loopback (kernel only) | 10.7µs | 39.1µs |
 | Crossover cable | 179.4µs | 195.4µs |
 | Physical layer overhead | ~169µs | ~156µs |
