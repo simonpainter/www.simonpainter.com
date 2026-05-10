@@ -116,6 +116,106 @@ The key difference between the two tools is protocol layer. uping measures ICMP 
 
 ## The Tests
 
+### Test 0: Loopback Baseline
+
+Before measuring anything across a physical link I ran both tools against the loopback interface on Pi 2. The loopback never touches the NIC, the cable, or anything external — packets go from the sending process, through the kernel's network stack, and straight back. It's the purest possible measure of OS and software overhead.
+
+```
+simon@pi2:~ $ uping 127.0.0.1
+UPING 127.0.0.1 (127.0.0.1): ICMPv4 ICMP, timeout 2.0s
+seq=1 35µs from 127.0.0.1
+seq=2 12µs from 127.0.0.1
+seq=3 17µs from 127.0.0.1
+seq=4 15µs from 127.0.0.1
+seq=5 11µs from 127.0.0.1
+seq=6 9µs from 127.0.0.1
+seq=7 14µs from 127.0.0.1
+seq=8 10µs from 127.0.0.1
+seq=9 9µs from 127.0.0.1
+seq=10 11µs from 127.0.0.1
+seq=11 11µs from 127.0.0.1
+seq=12 10µs from 127.0.0.1
+seq=13 9µs from 127.0.0.1
+seq=14 9µs from 127.0.0.1
+seq=15 9µs from 127.0.0.1
+seq=16 9µs from 127.0.0.1
+seq=17 9µs from 127.0.0.1
+seq=18 8µs from 127.0.0.1
+seq=19 8µs from 127.0.0.1
+seq=20 8µs from 127.0.0.1
+seq=21 9µs from 127.0.0.1
+seq=22 9µs from 127.0.0.1
+seq=23 9µs from 127.0.0.1
+seq=24 8µs from 127.0.0.1
+seq=25 9µs from 127.0.0.1
+seq=26 8µs from 127.0.0.1
+seq=27 9µs from 127.0.0.1
+seq=28 9µs from 127.0.0.1
+seq=29 22µs from 127.0.0.1
+seq=30 13µs from 127.0.0.1
+seq=31 11µs from 127.0.0.1
+seq=32 10µs from 127.0.0.1
+seq=33 13µs from 127.0.0.1
+seq=34 10µs from 127.0.0.1
+seq=35 9µs from 127.0.0.1
+seq=36 9µs from 127.0.0.1
+seq=37 9µs from 127.0.0.1
+seq=38 9µs from 127.0.0.1
+seq=39 8µs from 127.0.0.1
+seq=40 8µs from 127.0.0.1
+seq=41 9µs from 127.0.0.1
+seq=42 9µs from 127.0.0.1
+seq=43 13µs from 127.0.0.1
+seq=44 9µs from 127.0.0.1
+seq=45 10µs from 127.0.0.1
+seq=46 8µs from 127.0.0.1
+^C
+--- 127.0.0.1 uping statistics ---
+46 packets transmitted, 46 received, 0.0% loss
+rtt min/avg/max = 8/10.7/35 µs
+```
+
+```
+simon@pi2:~ $ python echo_test/client/echo_client.py 127.0.0.1 7
+ECHO 127.0.0.1:7 (64 bytes of data)
+64 bytes from 127.0.0.1:7: seq=1 time=45.111 μs
+64 bytes from 127.0.0.1:7: seq=2 time=61.463 μs
+64 bytes from 127.0.0.1:7: seq=3 time=45.277 μs
+64 bytes from 127.0.0.1:7: seq=4 time=34.222 μs
+64 bytes from 127.0.0.1:7: seq=5 time=31.925 μs
+64 bytes from 127.0.0.1:7: seq=6 time=30.721 μs
+64 bytes from 127.0.0.1:7: seq=7 time=38.333 μs
+64 bytes from 127.0.0.1:7: seq=8 time=48.074 μs
+64 bytes from 127.0.0.1:7: seq=9 time=31.722 μs
+64 bytes from 127.0.0.1:7: seq=10 time=29.129 μs
+64 bytes from 127.0.0.1:7: seq=11 time=43.019 μs
+64 bytes from 127.0.0.1:7: seq=12 time=31.000 μs
+64 bytes from 127.0.0.1:7: seq=13 time=29.092 μs
+64 bytes from 127.0.0.1:7: seq=14 time=42.258 μs
+64 bytes from 127.0.0.1:7: seq=15 time=41.314 μs
+64 bytes from 127.0.0.1:7: seq=16 time=33.315 μs
+64 bytes from 127.0.0.1:7: seq=17 time=28.167 μs
+64 bytes from 127.0.0.1:7: seq=18 time=28.241 μs
+64 bytes from 127.0.0.1:7: seq=19 time=42.055 μs
+64 bytes from 127.0.0.1:7: seq=20 time=66.685 μs
+^C
+--- 127.0.0.1:7 echo statistics ---
+20 packets transmitted, 20 received, 0.0% packet loss
+rtt min/avg/max/stddev = 28.167/39.056/66.685/10.739 μs
+```
+
+The loopback numbers give us a useful lower bound: the Raspberry Pi 5's kernel network stack costs roughly 10µs for an ICMP round-trip and 39µs for a TCP echo round-trip. Those are irreducible overheads baked into the OS. Everything added by the physical NIC, cable, and any network devices on top of that.
+
+Comparing loopback to the crossover cable results puts the physical layer cost in perspective:
+
+| | uping avg | echo_test avg |
+|---|---|---|
+| Loopback (kernel only) | 10.7µs | 39.1µs |
+| Crossover cable | 179.4µs | 195.4µs |
+| Physical layer overhead | ~169µs | ~156µs |
+
+The physical NIC and gigabit link add around 160–170µs to the kernel baseline. That's the cost of serialising the packet onto the wire, transmitting it at 1Gbps, and deserialising it at the far end — twice, for the round trip. It's a fixed floor that no amount of network optimisation can remove, because it's physics.
+
 ### Test 1: Crossover Cable Baseline
 
 Before introducing any switching hardware, I connected Pi 1 directly to Pi 2 with a crossover cable. This gives a true baseline for the Raspberry Pi 5's network stack latency with no intermediate devices.
