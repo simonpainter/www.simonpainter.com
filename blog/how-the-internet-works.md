@@ -457,7 +457,7 @@ AND
 Device A only knows the IP address
 ```
 
-Without a solution, every device would need a manually maintained table mapping every local IP to its MAC address - essentially the same scaling problem we had with MAC address tables in switches. Moreover, these mappings would need constant updates as devices join, leave, or change addresses.
+Without a solution, every device would need a manually maintained table mapping every local IP to its MAC address - essentially the same scaling problem we had with MAC address tables in switches. On top of that, these mappings would need constant updates as devices join, leave, or change addresses.
 
 ARP solves this through a dynamic discovery process:
 
@@ -646,7 +646,7 @@ Everything else can remain the same because all other sites will use the existin
 Building up a routing table dynamically relies on routers talking to each other. This is done using routing protocols which are essentially ways for routers to exchange information about the networks they know about and in many cases the distance or cost of getting there over that path. One of the most popular protocols, OSPF (Open Shortest Path First), uses a route finding algorith called [Dijkstra's Algorithm](dijkstra-ospf.md) which is the same algorithm used by some sat nav units to calculate the best route to somewhere taking into account distance, road congestion, and speed limits.
 
 > A better solution for Sat Navs is likely to be [the A* search algorithm](algorithms.md#a-a-star-search) which takes
-> into account heuristics to indicate roughly what direction the target is from the start point. If you are in London
+> into account heuristics to show roughly what direction the target is from the start point. If you are in London
 > trying to find a route to Edinburgh you are probably going to be wasting your time looking at routes that start off
 > going south. OSPF has no such heuristic to influence path selection so relies on cost alone.
 
@@ -1012,7 +1012,7 @@ HTML began as a simple language derived from SGML (Standard Generalized Markup L
 
 #### HTTP: From Simple to Sophisticated
 
-HTTP evolved alongside HTML to facilitate the transfer of web resources:
+HTTP evolved alongside HTML to support the transfer of web resources:
 
 - **HTTP/0.9** (1991): An unnamed, extremely simple protocol allowing only GET requests
 - **HTTP/1.0** (1996): Added headers, status codes, and support for different document types
