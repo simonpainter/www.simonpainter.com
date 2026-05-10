@@ -131,12 +131,12 @@ Using a business focussed feature set as the basis for your documentation also a
 
 ## Conclusion
 
-The shift to documentation-first infrastructure isn't just about better diagrams or more detailed runbooks—it's about fundamentally changing how we think about infrastructure design and management. When documentation becomes the source of truth rather than an afterthought, we create systems that aren't only more reliable but also more understandable and maintainable.
+The shift to documentation-first infrastructure isn't just about better diagrams or more detailed runbooks; it's about fundamentally changing how we think about infrastructure design and management. When documentation becomes the source of truth rather than an afterthought, we create systems that aren't only more reliable but also more understandable and maintainable.
 
 The benefits are clear: fewer incident-driven changes, better alignment between business requirements and infrastructure capabilities, and monitoring that actually tells us what matters. Most importantly, documentation-first practices help us answer the critical question "has this ever worked?" before problems arise, not after.
 
-Infrastructure as Code has given us the tools to make this shift practical. By treating our infrastructure documentation with the same rigor we apply to application code—version control, testing, continuous integration—we can finally break free from the curse of the perpetually outdated network diagram.
+Infrastructure as Code has given us the tools to make this shift practical. By treating our infrastructure documentation with the same rigor we apply to application code, with version control, testing, and continuous integration, we can finally break free from the curse of the perpetually outdated network diagram.
 
 The transition requires discipline and cultural change, but the investment pays dividends in reduced operational overhead, clearer communication, and systems that behave predictably. Start small, pick a single service or location, document it thoroughly, test against that documentation, and build from there.
 
-Your future self—and your colleagues—will thank you when the next incident hits and the documentation actually reflects reality.
+Your future self, and your colleagues, will thank you when the next incident hits and the documentation actually reflects reality.
