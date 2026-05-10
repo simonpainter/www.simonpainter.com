@@ -79,7 +79,7 @@ Default   Active   0.0.0.0/0         Internet
 ...
 ```
 
-This is fine for most scenarios, but in some cases, we might want to be selective about which routes we receive and consequently which subnets can route between each other. That's where subnet peering, which should probably be called subnet-specific peering, comes in.
+This is fine for most scenarios, but in some cases, we might want to be selective about which routes we receive and which subnets can route between each other. That's where subnet peering, which should probably be called subnet-specific peering, comes in.
 
 ### Enabling Subnet Peering
 
