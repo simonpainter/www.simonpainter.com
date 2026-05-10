@@ -21,7 +21,7 @@ A couple of days ago, I saw a meme targeted at network engineers that mentioned 
 >
 > If you want to add VLAN 8 to the list above, you use the command
 > `switchport trunk allowed vlan add 8`. What you definitely don't do is forget the `add`
-> keyword and just type `switchport trunk allowed vlan 8`—because that replaces the existing
+> keyword and just type `switchport trunk allowed vlan 8`, because that replaces the existing
 > list with whatever you included in the command. You could alternatively type
 > `switchport trunk allowed vlan 5-9`, but who does that?
 
@@ -35,7 +35,7 @@ While I was thinking about this, I nearly sat down to write about the absurdity 
 
 I found myself thinking more about the value of good peer review and how it saved me from an outage, a long night, and almost certainly some real embarrassment. The simple act of running a fresh pair of eyes over a change plan can be all it takes to spot an error that could be catastrophic.
 
-One recent organisation I worked with had a succession of avoidable outages and implemented a four-eyes change process where each change was done in tandem with two engineers on a shared screen during a recorded Teams session — a buddy system where the change implementer asked for approval from their buddy before hitting enter on each command. While it was onerous and resulted in massive costs and delays to networking projects, it was extremely effective. I can't imagine anyone outside the most critical infrastructure would have appetite for such an approach long-term.
+One recent organisation I worked with had a succession of avoidable outages and implemented a four-eyes change process where each change was done in tandem with two engineers on a shared screen during a recorded Teams session: a buddy system where the change implementer asked for approval from their buddy before hitting enter on each command. While it was onerous and resulted in massive costs and delays to networking projects, it was extremely effective. I can't imagine anyone outside the most critical infrastructure would have appetite for such an approach long-term.
 
 ## Speed vs. Safety
 
@@ -47,8 +47,8 @@ But velocity of change is exactly when four-eyes peer review is important, and i
 
 ## More Than Just a Command
 
-The VLAN add disaster has become more than just a cautionary tale about a poorly designed command — it's become a cultural touchstone that reminds us why we need each other. Every network engineer who's heard the story, whether they've lived it or not, understands the fragility of our infrastructure.
+The VLAN add disaster has become more than just a cautionary tale about a poorly designed command; it's become a cultural touchstone that reminds us why we need each other. Every network engineer who's heard the story, whether they've lived it or not, understands the fragility of our infrastructure.
 
-What started as a meme about Cisco command syntax reveals something deeper about our profession. We work in an environment where a single mistyped word can bring down critical services, where the pressure to move fast can cloud our judgment, and where the complexity of our systems often exceeds what any one person can safely navigate alone. The VLAN add disaster isn't really about VLANs at all—it's about the necessity of humility, the value of collaboration, and the wisdom of building safety nets into our processes.
+What started as a meme about Cisco command syntax reveals something deeper about our profession. We work in an environment where a single mistyped word can bring down critical services, where the pressure to move fast can cloud our judgment, and where the complexity of our systems often exceeds what any one person can safely navigate alone. The VLAN add disaster isn't really about VLANs at all; it's about the necessity of humility, the value of collaboration, and the wisdom of building safety nets into our processes.
 
-The next time you're about to hit enter on a command, remember that diligent ops guy who saved me from my own mistake. Remember that good peer review isn't about slowing things down or questioning competence—it's about acknowledging that we're all human, and that our best defense against disaster is often just another pair of eyes and a simple question: "Are you sure about that, mate?"
+The next time you're about to hit enter on a command, remember that diligent ops guy who saved me from my own mistake. Remember that good peer review isn't about slowing things down or questioning competence; it's about acknowledging that we're all human, and that our best defense against disaster is often just another pair of eyes and a simple question: "Are you sure about that, mate?"
