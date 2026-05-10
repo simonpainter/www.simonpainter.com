@@ -22,7 +22,7 @@ This principle of intentional alerting is just as powerful in IT, especially net
 
 The solution is to be ruthlessly intentional about which alerts are enabled and how they're managed. Every alert should have a clear owner and a defined action plan. If you can't explain who's responsible for an alert and what they should do about it, that's a warning sign that the alert might not be necessary.
 
-One effective tool for this is what I call an "alert dictionary" — a central resource that maps out key information for each alert, such as:
+One effective tool for this is what I call an "alert dictionary": a central resource that maps out key information for each alert, such as:
 
 - Who owns the alert
 - What specific actions should be taken in response
