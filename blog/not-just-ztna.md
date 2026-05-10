@@ -40,7 +40,7 @@ SD-WAN enables greater network segmentation and moves organisations away from th
 
 The business case for SD-WAN adoption traditionally focused on cost savings versus MPLS circuits or enhanced network features. But these justifications often failed under scrutiny because fundamental VPN limitations including performance consistency, reliability, and operational complexity stayed relevant despite internet infrastructure improvements. Organisations must accept that transition periods typically increase rather than decrease costs, as running SD-WAN alongside existing infrastructure requires maintaining dual skill sets and managing hybrid operational complexity.
 
-The compelling case for SD-WAN emerges when positioned as zero trust enablement rather than network replacement. This approach provides a practical path forward, using SD-WAN to facilitate broader zero trust adoption while maintaining security during migration periods. The investment pays off not through immediate network benefits, but through its role in enabling the security transformation that zero trust architectures require.
+The compelling case for SD-WAN emerges when positioned as zero trust enablement rather than network replacement. This approach provides a practical path forward, using SD-WAN to enable broader zero trust adoption while maintaining security during migration periods. The investment pays off not through immediate network benefits, but through its role in enabling the security transformation that zero trust architectures require.
 
 ## Current Challenges: ZTNA Without Network Isolation
 
