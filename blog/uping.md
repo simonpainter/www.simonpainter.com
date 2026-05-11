@@ -3,10 +3,7 @@ title: "Meet uping: pronounced 'micro ping'"
 authors: simonpainter
 tags:
   - networks
-  - tools
-  - linux
-  - macos
-  - open-source
+  - performance
 date: 2026-05-11
 
 ---
