@@ -160,8 +160,8 @@ Comparing loopback to the crossover cable results puts the physical layer cost i
 | | uping avg | echo_test avg |
 | --- | --- | --- |
 | Loopback (kernel only) | 8.9µs | 39.1µs |
-| Crossover cable | 179.4µs | 195.4µs |
-| Physical layer overhead | ~170.5µs | ~156.3µs |
+| Crossover cable | 10.5µs | 195.4µs |
+| Physical layer overhead | ~1.6µs | ~156.3µs |
 
 The physical NIC and gigabit link add around 160–170µs to the kernel baseline. That's the cost of serialising the packet onto the wire, transmitting it at 1Gbps, and deserialising it at the far end — twice, for the round trip. It's a fixed floor that no amount of network optimisation can remove, because it's physics.
 
@@ -177,62 +177,6 @@ graph LR
 ```
 
 I ran `uping` with elevated privileges (raw socket mode) to keep measurement consistency across phases.
-
-```text
-simon@pi1:~/uping $ sudo ./uping 10.1.1.2
-UPING 10.1.1.2 (10.1.1.2): ICMPv4 ICMP, timeout 2.0s
-seq=1 363µs from 10.1.1.2
-seq=2 176µs from 10.1.1.2
-seq=3 167µs from 10.1.1.2
-seq=4 165µs from 10.1.1.2
-seq=5 168µs from 10.1.1.2
-...
-seq=34 322µs from 10.1.1.2
-...
-seq=36 175µs from 10.1.1.2
-seq=37 177µs from 10.1.1.2
-seq=38 174µs from 10.1.1.2
-seq=39 177µs from 10.1.1.2
-seq=40 173µs from 10.1.1.2
-^C
---- 10.1.1.2 uping statistics ---
-40 packets transmitted, 40 received, 0.0% loss
-rtt min/avg/max = 160/179.4/363 µs
-```
-
-This run gave a min/avg/max of 160/179.4/363µs across 40 packets. The max is driven by two occasional spikes (seq=1 at 363µs and seq=34 at 322µs) that are likely background OS scheduler interruptions on the Pi rather than network events. The steady-state band from seq=3 onwards is consistently 160–180µs.
-
-The raw socket run gave a clean baseline: sub-200µs point-to-point between two Raspberry Pi 5s with nothing in between. To put it in context, PROFINET RT requires delivery within 1–10ms. Even accounting for the multiple network hops we're about to introduce, we're starting from a floor that's more than five times below the tightest standard industrial Ethernet threshold. There's meaningful headroom to absorb switching and routing overhead before we'd need to worry.
-
-I also ran echo_test across the same crossover path to get the TCP baseline:
-
-```text
-simon@pi1:~ $ python3 echo_test/client/echo_client.py 10.1.1.2 7
-ECHO 10.1.1.2:7 (64 bytes of data)
-64 bytes from 10.1.1.2:7: seq=1 time=108.204 μs
-64 bytes from 10.1.1.2:7: seq=2 time=228.241 μs
-64 bytes from 10.1.1.2:7: seq=3 time=247.612 μs
-64 bytes from 10.1.1.2:7: seq=4 time=211.297 μs
-64 bytes from 10.1.1.2:7: seq=5 time=207.945 μs
-...
-64 bytes from 10.1.1.2:7: seq=38 time=187.204 μs
-^C
---- 10.1.1.2:7 echo statistics ---
-39 packets transmitted, 38 received, 2.6% packet loss
-rtt min/avg/max/stddev = 108.204/195.387/247.612/20.966 μs
-```
-
-The TCP echo average sits at 195.4µs — about 16µs higher than the uping average of 179.4µs. That gap is expected: TCP adds connection state overhead compared to raw ICMP, and the echo server on Pi 2 introduces a small amount of application processing time for each bounce. The standard deviation of 20.966µs reflects the spread you can see in the raw numbers: the session takes a few packets to settle (seq=2 through seq=6 are the highest), then tightens into a consistent band around 185–200µs for the remainder.
-
-The 2.6% packet loss (one packet from 39) is worth noting. In this context it most likely reflects the Ctrl-C interrupt catching a packet mid-flight rather than genuine loss, but it's something to watch in later tests on longer runs.
-
-The crossover baselines from both tools are now established. All subsequent tests will be measured against these numbers.
-
-### Test 2: Single Arista Switch (L2 Baseline)
-
-Pi 1 and Pi 2 connected through a single Arista switch on the same VLAN. This measures what the Arista switching silicon adds to the baseline latency. Arista's fixed-form campus switches use custom silicon with cut-through forwarding, so I'd expect the added latency to be in the low microseconds.
-
-`uping` rerun from this phase (`-i 0.1 -c 50`):
 
 ```text
 simon@pi1:~ $ uping -i 0.1 -c 50 10.1.1.1
@@ -253,7 +197,65 @@ seq=50 9µs from 10.1.1.1
 rtt min/avg/max = 9/10.5/32 µs
 ```
 
-This confirms the caveat. When targeting `10.1.1.1` from Pi 1, the latency is loopback-like and far below inter-host values, so this uping dataset should be treated as a local-address control, not the single-switch baseline. I will rerun Test 2 uping against the peer host address and replace this section with the corrected switch-path figure.
+This run gave a min/avg/max of 9/10.5/32µs across 50 packets with zero loss. Most packets sit in a very tight 8-12µs band with a small first-packet warmup spike.
+
+This gives a clean crossover ICMP baseline before adding switching layers. To put it in context, PROFINET RT requires delivery within 1–10ms, so there's substantial latency headroom for the next phases.
+
+I also ran echo_test across the same crossover path to get the TCP baseline:
+
+```text
+simon@pi1:~ $ python3 echo_test/client/echo_client.py 10.1.1.2 7
+ECHO 10.1.1.2:7 (64 bytes of data)
+64 bytes from 10.1.1.2:7: seq=1 time=108.204 μs
+64 bytes from 10.1.1.2:7: seq=2 time=228.241 μs
+64 bytes from 10.1.1.2:7: seq=3 time=247.612 μs
+64 bytes from 10.1.1.2:7: seq=4 time=211.297 μs
+64 bytes from 10.1.1.2:7: seq=5 time=207.945 μs
+...
+64 bytes from 10.1.1.2:7: seq=38 time=187.204 μs
+^C
+--- 10.1.1.2:7 echo statistics ---
+39 packets transmitted, 38 received, 2.6% packet loss
+rtt min/avg/max/stddev = 108.204/195.387/247.612/20.966 μs
+```
+
+The TCP echo average sits at 195.4µs. That's expectedly higher than ICMP because echo_test measures full TCP plus application response path, while uping measures ICMP RTT only. The standard deviation of 20.966µs reflects the spread you can see in the raw numbers: the session takes a few packets to settle (seq=2 through seq=6 are the highest), then tightens into a consistent band around 185–200µs for the remainder.
+
+The 2.6% packet loss (one packet from 39) is worth noting. In this context it most likely reflects the Ctrl-C interrupt catching a packet mid-flight rather than genuine loss, but it's something to watch in later tests on longer runs.
+
+The crossover baselines from both tools are now established. All subsequent tests will be measured against these numbers.
+
+### Test 2: Single Arista Switch (L2 Baseline)
+
+Pi 1 and Pi 2 connected through a single Arista switch on the same VLAN. This measures what the Arista switching silicon adds to the baseline latency. Arista's fixed-form campus switches use custom silicon with cut-through forwarding, so I'd expect the added latency to be in the low microseconds.
+
+`uping` result from this phase (`-i 0.1 -c 50`):
+
+```text
+simon@pi1:~ $ uping -i 0.1 -c 50 10.1.1.1
+UPING 10.1.1.1 (10.1.1.1): ICMPv4 ICMP, timeout 2.0s
+seq=1 36µs from 10.1.1.1
+seq=2 19µs from 10.1.1.1
+seq=3 12µs from 10.1.1.1
+seq=4 10µs from 10.1.1.1
+seq=5 10µs from 10.1.1.1
+...
+seq=15 86µs from 10.1.1.1
+...
+seq=34 47µs from 10.1.1.1
+...
+seq=46 15µs from 10.1.1.1
+seq=47 16µs from 10.1.1.1
+seq=48 16µs from 10.1.1.1
+seq=49 15µs from 10.1.1.1
+seq=50 16µs from 10.1.1.1
+
+--- 10.1.1.1 uping statistics ---
+50 packets transmitted, 50 received, 0.0% loss
+rtt min/avg/max = 9/17.1/86 µs
+```
+
+This run produced **9/17.1/86µs** (min/avg/max) with zero loss. Most packets sit in a 14-19µs band, with two visible spikes at seq 15 and seq 34.
 
 `echo_test` result from the same phase (`--size 64 --frequency 0.5 --count 10`):
 
@@ -282,7 +284,7 @@ Incremental view for Test 2 so far:
 
 | Metric | Loopback avg | Crossover avg | Test 2 avg | Delta vs crossover | Notes |
 | --- | --- | --- | --- | --- | --- |
-| uping (ICMP) | 8.9µs | 179.4µs | 10.5µs | -168.9µs | Local-address control (`10.1.1.1`), not switch-path baseline |
+| uping (ICMP) | 8.9µs | 10.5µs | 17.1µs | +6.6µs | Single-switch L2 path |
 | echo_test (TCP) | 39.1µs | 195.4µs | 192.8µs | -2.6µs | In line with crossover at current sample size |
 
 ### Test 3: Two Connected Arista Switches
