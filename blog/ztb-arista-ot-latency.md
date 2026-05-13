@@ -286,6 +286,29 @@ This run produced **9/17.1/86µs** (min/avg/max) with zero loss. That's very low
 
 One caveat worth calling out: this average is much lower than the earlier crossover baseline, so I will repeat this phase with peer addressing double-checked before drawing hard conclusions on switch-added overhead.
 
+`echo_test` result from the same phase (`--size 64 --frequency 0.5 --count 10`):
+
+```text
+simon@pi1:~ $ python3 echo_test/client/echo_client.py 10.1.1.2 7 --size 64 --frequency 0.5 --count 10
+ECHO 10.1.1.2:7 (64 bytes of data)
+64 bytes from 10.1.1.2:7: seq=1 time=133.478 μs
+64 bytes from 10.1.1.2:7: seq=2 time=203.417 μs
+64 bytes from 10.1.1.2:7: seq=3 time=197.026 μs
+64 bytes from 10.1.1.2:7: seq=4 time=204.946 μs
+64 bytes from 10.1.1.2:7: seq=5 time=199.478 μs
+64 bytes from 10.1.1.2:7: seq=6 time=203.179 μs
+64 bytes from 10.1.1.2:7: seq=7 time=190.605 μs
+64 bytes from 10.1.1.2:7: seq=8 time=207.760 μs
+64 bytes from 10.1.1.2:7: seq=9 time=192.668 μs
+64 bytes from 10.1.1.2:7: seq=10 time=195.333 μs
+
+--- 10.1.1.2:7 echo statistics ---
+10 packets transmitted, 10 received, 0.0% packet loss
+rtt min/avg/max/stddev = 133.478/192.789/207.760/21.563 μs
+```
+
+This TCP dataset is clean with zero loss and an average of **192.8µs**, which is effectively in line with the crossover TCP baseline (**195.4µs**) at this sample size. The first packet is again the fastest outlier, and packets 2 to 10 sit in a tight ~190-208µs band.
+
 ### Test 3: Two Connected Arista Switches
 
 *Results to follow.*
