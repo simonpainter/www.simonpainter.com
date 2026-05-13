@@ -116,26 +116,25 @@ The key difference between the two tools is protocol layer. uping measures ICMP 
 
 ### Test 0: Loopback Baseline
 
-Before measuring anything across a physical link I ran both tools against the loopback interface on Pi 2. The loopback never touches the NIC, the cable, or anything external — packets go from the sending process, through the kernel's network stack, and straight back. It's the purest possible measure of OS and software overhead.
+Before measuring anything across a physical link I ran both tools against the loopback interface. The loopback never touches the NIC, the cable, or anything external — packets go from the sending process, through the kernel's network stack, and straight back. It's the purest possible measure of OS and software overhead.
 
 ```text
-simon@pi2:~ $ uping 127.0.0.1
+simon@pi1:~ $ uping -i 0.1 -c 50 127.0.0.1
 UPING 127.0.0.1 (127.0.0.1): ICMPv4 ICMP, timeout 2.0s
-seq=1 35µs from 127.0.0.1
+seq=1 39µs from 127.0.0.1
 seq=2 12µs from 127.0.0.1
-seq=3 17µs from 127.0.0.1
-seq=4 15µs from 127.0.0.1
-seq=5 11µs from 127.0.0.1
+seq=3 9µs from 127.0.0.1
+seq=4 9µs from 127.0.0.1
+seq=5 8µs from 127.0.0.1
 ...
-seq=42 9µs from 127.0.0.1
-seq=43 13µs from 127.0.0.1
-seq=44 9µs from 127.0.0.1
-seq=45 10µs from 127.0.0.1
-seq=46 8µs from 127.0.0.1
-^C
+seq=47 8µs from 127.0.0.1
+seq=48 8µs from 127.0.0.1
+seq=49 9µs from 127.0.0.1
+seq=50 8µs from 127.0.0.1
+
 --- 127.0.0.1 uping statistics ---
-46 packets transmitted, 46 received, 0.0% loss
-rtt min/avg/max = 8/10.7/35 µs
+50 packets transmitted, 50 received, 0.0% loss
+rtt min/avg/max = 8/8.9/39 µs
 ```
 
 ```text
@@ -154,15 +153,15 @@ ECHO 127.0.0.1:7 (64 bytes of data)
 rtt min/avg/max/stddev = 28.167/39.056/66.685/10.739 μs
 ```
 
-The loopback numbers give us a useful lower bound: the Raspberry Pi 5's kernel network stack costs roughly 10µs for an ICMP round-trip and 39µs for a TCP echo round-trip. Those are irreducible overheads baked into the OS. Everything added by the physical NIC, cable, and any network devices on top of that.
+The loopback numbers give us a useful lower bound: the Raspberry Pi 5's kernel network stack costs roughly 9µs for an ICMP round-trip and 39µs for a TCP echo round-trip. Those are irreducible overheads baked into the OS. Everything added by the physical NIC, cable, and any network devices on top of that.
 
 Comparing loopback to the crossover cable results puts the physical layer cost in perspective:
 
 | | uping avg | echo_test avg |
 | --- | --- | --- |
-| Loopback (kernel only) | 10.7µs | 39.1µs |
+| Loopback (kernel only) | 8.9µs | 39.1µs |
 | Crossover cable | 179.4µs | 195.4µs |
-| Physical layer overhead | ~169µs | ~156µs |
+| Physical layer overhead | ~171µs | ~156µs |
 
 The physical NIC and gigabit link add around 160–170µs to the kernel baseline. That's the cost of serialising the packet onto the wire, transmitting it at 1Gbps, and deserialising it at the far end — twice, for the round trip. It's a fixed floor that no amount of network optimisation can remove, because it's physics.
 
