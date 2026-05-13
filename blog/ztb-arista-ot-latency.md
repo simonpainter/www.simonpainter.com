@@ -256,35 +256,7 @@ The crossover baselines from both tools are now established. All subsequent test
 
 Pi 1 and Pi 2 connected through a single Arista switch on the same VLAN. This measures what the Arista switching silicon adds to the baseline latency. Arista's fixed-form campus switches use custom silicon with cut-through forwarding, so I'd expect the added latency to be in the low microseconds.
 
-`uping` result from this phase (`-i 0.1 -c 50`):
-
-```text
-simon@pi1:~ $ uping -i 0.1 -c 50 10.1.1.1
-UPING 10.1.1.1 (10.1.1.1): ICMPv4 ICMP, timeout 2.0s
-seq=1 36µs from 10.1.1.1
-seq=2 19µs from 10.1.1.1
-seq=3 12µs from 10.1.1.1
-seq=4 10µs from 10.1.1.1
-seq=5 10µs from 10.1.1.1
-...
-seq=15 86µs from 10.1.1.1
-...
-seq=34 47µs from 10.1.1.1
-...
-seq=46 15µs from 10.1.1.1
-seq=47 16µs from 10.1.1.1
-seq=48 16µs from 10.1.1.1
-seq=49 15µs from 10.1.1.1
-seq=50 16µs from 10.1.1.1
-
---- 10.1.1.1 uping statistics ---
-50 packets transmitted, 50 received, 0.0% loss
-rtt min/avg/max = 9/17.1/86 µs
-```
-
-This run produced **9/17.1/86µs** (min/avg/max) with zero loss. That's very low latency and comfortably inside OT requirements, with two visible spikes at seq 15 and seq 34. The steady-state band sits around 14-19µs for most packets.
-
-I repeated the command during a crossover retest:
+`uping` rerun from this phase (`-i 0.1 -c 50`):
 
 ```text
 simon@pi1:~ $ uping -i 0.1 -c 50 10.1.1.1
