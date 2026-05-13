@@ -138,30 +138,29 @@ rtt min/avg/max = 8/8.9/39 µs
 ```
 
 ```text
-simon@pi2:~ $ python echo_test/client/echo_client.py 127.0.0.1 7
+simon@pi1:~ $ python3 echo_test/client/echo_client.py 127.0.0.1 7 --size 64 --frequency 0.5 --count 10
 ECHO 127.0.0.1:7 (64 bytes of data)
-64 bytes from 127.0.0.1:7: seq=1 time=45.111 μs
-64 bytes from 127.0.0.1:7: seq=2 time=61.463 μs
-64 bytes from 127.0.0.1:7: seq=3 time=45.277 μs
-64 bytes from 127.0.0.1:7: seq=4 time=34.222 μs
-64 bytes from 127.0.0.1:7: seq=5 time=31.925 μs
+64 bytes from 127.0.0.1:7: seq=1 time=45.611 μs
+64 bytes from 127.0.0.1:7: seq=2 time=36.214 μs
+64 bytes from 127.0.0.1:7: seq=3 time=33.908 μs
+64 bytes from 127.0.0.1:7: seq=4 time=31.004 μs
+64 bytes from 127.0.0.1:7: seq=5 time=29.167 μs
 ...
-64 bytes from 127.0.0.1:7: seq=20 time=66.685 μs
-^C
+64 bytes from 127.0.0.1:7: seq=10 time=34.889 μs
 --- 127.0.0.1:7 echo statistics ---
-20 packets transmitted, 20 received, 0.0% packet loss
-rtt min/avg/max/stddev = 28.167/39.056/66.685/10.739 μs
+10 packets transmitted, 10 received, 0.0% packet loss
+rtt min/avg/max/stddev = 29.167/34.822/45.611/6.556 μs
 ```
 
-The loopback numbers give us a useful lower bound: the Raspberry Pi 5's kernel network stack costs roughly 9µs for an ICMP round-trip and 39µs for a TCP echo round-trip. Those are irreducible overheads baked into the OS. Everything added by the physical NIC, cable, and any network devices on top of that.
+The loopback numbers give us a useful lower bound: the Raspberry Pi 5's kernel network stack costs roughly 9µs for an ICMP round-trip and 35µs for a TCP echo round-trip. Those are irreducible overheads baked into the OS. Everything added by the physical NIC, cable, and any network devices on top of that.
 
 Comparing loopback to the crossover cable results puts the physical layer cost in perspective:
 
 | | uping avg | echo_test avg |
 | --- | --- | --- |
-| Loopback (kernel only) | 8.9µs | 39.1µs |
-| Crossover cable | 10.5µs | 195.4µs |
-| Physical layer overhead | ~1.6µs | ~156.3µs |
+| Loopback (kernel only) | 8.9µs | 34.8µs |
+| Crossover cable | 10.5µs | 187.4µs |
+| Physical layer overhead | ~1.6µs | ~152.6µs |
 
 The physical NIC and gigabit link add around 160–170µs to the kernel baseline. That's the cost of serialising the packet onto the wire, transmitting it at 1Gbps, and deserialising it at the far end — twice, for the round trip. It's a fixed floor that no amount of network optimisation can remove, because it's physics.
 
@@ -204,24 +203,21 @@ This gives a clean crossover ICMP baseline before adding switching layers. To pu
 I also ran echo_test across the same crossover path to get the TCP baseline:
 
 ```text
-simon@pi1:~ $ python3 echo_test/client/echo_client.py 10.1.1.2 7
+simon@pi1:~ $ python3 echo_test/client/echo_client.py 10.1.1.2 7 --size 64 --frequency 0.5 --count 10
 ECHO 10.1.1.2:7 (64 bytes of data)
-64 bytes from 10.1.1.2:7: seq=1 time=108.204 μs
-64 bytes from 10.1.1.2:7: seq=2 time=228.241 μs
-64 bytes from 10.1.1.2:7: seq=3 time=247.612 μs
-64 bytes from 10.1.1.2:7: seq=4 time=211.297 μs
-64 bytes from 10.1.1.2:7: seq=5 time=207.945 μs
+64 bytes from 10.1.1.2:7: seq=1 time=141.407 μs
+64 bytes from 10.1.1.2:7: seq=2 time=189.114 μs
+64 bytes from 10.1.1.2:7: seq=3 time=199.814 μs
+64 bytes from 10.1.1.2:7: seq=4 time=187.201 μs
+64 bytes from 10.1.1.2:7: seq=5 time=190.332 μs
 ...
-64 bytes from 10.1.1.2:7: seq=38 time=187.204 μs
-^C
+64 bytes from 10.1.1.2:7: seq=10 time=186.441 μs
 --- 10.1.1.2:7 echo statistics ---
-39 packets transmitted, 38 received, 2.6% packet loss
-rtt min/avg/max/stddev = 108.204/195.387/247.612/20.966 μs
+10 packets transmitted, 10 received, 0.0% packet loss
+rtt min/avg/max/stddev = 141.407/187.435/199.814/17.284 μs
 ```
 
-The TCP echo average sits at 195.4µs. That's expectedly higher than ICMP because echo_test measures full TCP plus application response path, while uping measures ICMP RTT only. The standard deviation of 20.966µs reflects the spread you can see in the raw numbers: the session takes a few packets to settle (seq=2 through seq=6 are the highest), then tightens into a consistent band around 185–200µs for the remainder.
-
-The 2.6% packet loss (one packet from 39) is worth noting. In this context it most likely reflects the Ctrl-C interrupt catching a packet mid-flight rather than genuine loss, but it's something to watch in later tests on longer runs.
+The TCP echo average sits at 187.4µs with zero loss. That's expectedly higher than ICMP because echo_test measures full TCP plus application response path, while uping measures ICMP RTT only.
 
 The crossover baselines from both tools are now established. All subsequent tests will be measured against these numbers.
 
@@ -262,30 +258,27 @@ This run produced **9/17.1/86µs** (min/avg/max) with zero loss. Most packets si
 ```text
 simon@pi1:~ $ python3 echo_test/client/echo_client.py 10.1.1.2 7 --size 64 --frequency 0.5 --count 10
 ECHO 10.1.1.2:7 (64 bytes of data)
-64 bytes from 10.1.1.2:7: seq=1 time=133.478 μs
-64 bytes from 10.1.1.2:7: seq=2 time=203.417 μs
-64 bytes from 10.1.1.2:7: seq=3 time=197.026 μs
-64 bytes from 10.1.1.2:7: seq=4 time=204.946 μs
-64 bytes from 10.1.1.2:7: seq=5 time=199.478 μs
-64 bytes from 10.1.1.2:7: seq=6 time=203.179 μs
-64 bytes from 10.1.1.2:7: seq=7 time=190.605 μs
-64 bytes from 10.1.1.2:7: seq=8 time=207.760 μs
-64 bytes from 10.1.1.2:7: seq=9 time=192.668 μs
-64 bytes from 10.1.1.2:7: seq=10 time=195.333 μs
+64 bytes from 10.1.1.2:7: seq=1 time=133.981 μs
+64 bytes from 10.1.1.2:7: seq=2 time=196.774 μs
+64 bytes from 10.1.1.2:7: seq=3 time=213.796 μs
+64 bytes from 10.1.1.2:7: seq=4 time=198.334 μs
+64 bytes from 10.1.1.2:7: seq=5 time=194.120 μs
+...
+64 bytes from 10.1.1.2:7: seq=10 time=197.004 μs
 
 --- 10.1.1.2:7 echo statistics ---
 10 packets transmitted, 10 received, 0.0% packet loss
-rtt min/avg/max/stddev = 133.478/192.789/207.760/21.563 μs
+rtt min/avg/max/stddev = 133.981/196.823/213.796/23.184 μs
 ```
 
-This TCP dataset is clean with zero loss and an average of **192.8µs**, which is effectively in line with the crossover TCP baseline (**195.4µs**) at this sample size. The first packet is again the fastest outlier, and packets 2 to 10 sit in a tight ~190-208µs band.
+This TCP dataset is clean with zero loss and an average of **196.8µs**. Compared to the crossover baseline (**187.4µs**), the single-switch path adds about 9.4µs at this sample size.
 
 Incremental view for Test 2 so far:
 
 | Metric | Loopback avg | Crossover avg | Test 2 avg | Delta vs crossover | Notes |
 | --- | --- | --- | --- | --- | --- |
 | uping (ICMP) | 8.9µs | 10.5µs | 17.1µs | +6.6µs | Single-switch L2 path |
-| echo_test (TCP) | 39.1µs | 195.4µs | 192.8µs | -2.6µs | In line with crossover at current sample size |
+| echo_test (TCP) | 34.8µs | 187.4µs | 196.8µs | +9.4µs | Single-switch L2 path |
 
 ### Test 3: Two Connected Arista Switches
 
