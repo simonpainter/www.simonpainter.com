@@ -176,30 +176,7 @@ graph LR
     PI1 <-->|Crossover cable| PI2
 ```
 
-I ran uping twice: first without `sudo` to see the DGRAM socket baseline, then with `sudo` to use the raw socket mode which embeds the timestamp directly in the ICMP payload for the most accurate reading.
-
-Without `sudo` (DGRAM socket):
-
-```text
-simon@pi1:~/uping $ ./uping 10.1.1.2
-uping: using unprivileged DGRAM socket (timing may be less accurate; run with sudo for best results)
-UPING 10.1.1.2 (10.1.1.2): ICMPv4 ICMP, timeout 2.0s
-seq=1 197µs from 10.1.1.2
-seq=2 170µs from 10.1.1.2
-seq=3 165µs from 10.1.1.2
-seq=4 162µs from 10.1.1.2
-seq=5 161µs from 10.1.1.2
-seq=6 169µs from 10.1.1.2
-seq=7 162µs from 10.1.1.2
-seq=8 160µs from 10.1.1.2
-seq=9 180µs from 10.1.1.2
-^C
---- 10.1.1.2 uping statistics ---
-9 packets transmitted, 9 received, 0.0% loss
-rtt min/avg/max = 160/169.6/197 µs
-```
-
-With `sudo` (raw socket, 40 packets):
+I ran `uping` with elevated privileges (raw socket mode) to keep measurement consistency across phases.
 
 ```text
 simon@pi1:~/uping $ sudo ./uping 10.1.1.2
@@ -223,7 +200,7 @@ seq=40 173µs from 10.1.1.2
 rtt min/avg/max = 160/179.4/363 µs
 ```
 
-The raw socket run gave a min/avg/max of 160/179.4/363µs across 40 packets. The average is virtually identical to the DGRAM run — the two modes measure the same underlying network latency. The reported max is higher here because the longer run captured a couple of occasional spikes (seq=1 at 363µs and seq=34 at 322µs) that are likely background OS scheduler interruptions on the Pi rather than network events. The steady-state band from seq=3 onwards is consistently 160–180µs.
+This run gave a min/avg/max of 160/179.4/363µs across 40 packets. The max is driven by two occasional spikes (seq=1 at 363µs and seq=34 at 322µs) that are likely background OS scheduler interruptions on the Pi rather than network events. The steady-state band from seq=3 onwards is consistently 160–180µs.
 
 The raw socket run gave a clean baseline: sub-200µs point-to-point between two Raspberry Pi 5s with nothing in between. To put it in context, PROFINET RT requires delivery within 1–10ms. Even accounting for the multiple network hops we're about to introduce, we're starting from a floor that's more than five times below the tightest standard industrial Ethernet threshold. There's meaningful headroom to absorb switching and routing overhead before we'd need to worry.
 
