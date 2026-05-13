@@ -284,7 +284,28 @@ rtt min/avg/max = 9/17.1/86 µs
 
 This run produced **9/17.1/86µs** (min/avg/max) with zero loss. That's very low latency and comfortably inside OT requirements, with two visible spikes at seq 15 and seq 34. The steady-state band sits around 14-19µs for most packets.
 
-One caveat worth calling out: this average is much lower than the earlier crossover baseline, so I will repeat this phase with peer addressing double-checked before drawing hard conclusions on switch-added overhead.
+I repeated the command during a crossover retest:
+
+```text
+simon@pi1:~ $ uping -i 0.1 -c 50 10.1.1.1
+UPING 10.1.1.1 (10.1.1.1): ICMPv4 ICMP, timeout 2.0s
+seq=1 32µs from 10.1.1.1
+seq=2 13µs from 10.1.1.1
+seq=3 10µs from 10.1.1.1
+seq=4 9µs from 10.1.1.1
+seq=5 10µs from 10.1.1.1
+...
+seq=47 15µs from 10.1.1.1
+seq=48 10µs from 10.1.1.1
+seq=49 9µs from 10.1.1.1
+seq=50 9µs from 10.1.1.1
+
+--- 10.1.1.1 uping statistics ---
+50 packets transmitted, 50 received, 0.0% loss
+rtt min/avg/max = 9/10.5/32 µs
+```
+
+This confirms the caveat. When targeting `10.1.1.1` from Pi 1, the latency is loopback-like and far below inter-host values, so this uping dataset should be treated as a local-address control, not the single-switch baseline. I will rerun Test 2 uping against the peer host address and replace this section with the corrected switch-path figure.
 
 `echo_test` result from the same phase (`--size 64 --frequency 0.5 --count 10`):
 
