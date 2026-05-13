@@ -161,7 +161,7 @@ Comparing loopback to the crossover cable results puts the physical layer cost i
 | --- | --- | --- |
 | Loopback (kernel only) | 8.9µs | 39.1µs |
 | Crossover cable | 179.4µs | 195.4µs |
-| Physical layer overhead | ~171µs | ~156µs |
+| Physical layer overhead | ~170.5µs | ~156.3µs |
 
 The physical NIC and gigabit link add around 160–170µs to the kernel baseline. That's the cost of serialising the packet onto the wire, transmitting it at 1Gbps, and deserialising it at the far end — twice, for the round trip. It's a fixed floor that no amount of network optimisation can remove, because it's physics.
 
@@ -277,6 +277,13 @@ rtt min/avg/max/stddev = 133.478/192.789/207.760/21.563 μs
 ```
 
 This TCP dataset is clean with zero loss and an average of **192.8µs**, which is effectively in line with the crossover TCP baseline (**195.4µs**) at this sample size. The first packet is again the fastest outlier, and packets 2 to 10 sit in a tight ~190-208µs band.
+
+Incremental view for Test 2 so far:
+
+| Metric | Loopback avg | Crossover avg | Test 2 avg | Delta vs crossover | Notes |
+| --- | --- | --- | --- | --- | --- |
+| uping (ICMP) | 8.9µs | 179.4µs | 10.5µs | -168.9µs | Local-address control (`10.1.1.1`), not switch-path baseline |
+| echo_test (TCP) | 39.1µs | 195.4µs | 192.8µs | -2.6µs | In line with crossover at current sample size |
 
 ### Test 3: Two Connected Arista Switches
 
