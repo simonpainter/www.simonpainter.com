@@ -9,11 +9,11 @@ tags:
   - mcp
   - opinion
   - personal
-date: 2026-05-12
+date: 2026-05-14
 
 ---
 
-My journey with AI tools has followed a pattern I've seen before with Microsoft: someone builds something useful, then Microsoft makes it native to where you already work. That turns out to matter more than being technically superior.
+My journey with AI tools has followed a pattern I've seen before with Microsoft: someone builds something useful, then Microsoft makes it native to where you already work. That turns out to matter more than being technically superior. Today, the [GitHub Copilot app](https://github.com/github/app) launched into public preview, and it's the clearest expression of that pattern I've seen yet.
 
 <!-- truncate -->
 
@@ -53,7 +53,7 @@ Microsoft has now blown all of this out of the water with the Copilot ecosystem.
 
 Why build an agent that can interact with GitHub when Copilot is already native to GitHub? Why build separate pipelines for email, documents, and code when Microsoft 365 Copilot ties them together in the tools you already use? The advantage isn't raw capability, it's integration density.
 
-Copilot CLI competes well with Claude Code and OpenCode on features. But now there is a GitHub app which goes further; not because it's technically superior on every axis, but because it's built into the place where development work actually happens.
+Copilot CLI competes well with Claude Code and OpenCode on features. But today the [GitHub app](https://github.com/github/app) launched into public preview, and it goes further; not because it's technically superior on every axis, but because it's built into the place where development work actually happens.
 
 This is the bet Microsoft is making: agentic workflow belongs inside the tools where work already happens, not bolted on from outside.
 
