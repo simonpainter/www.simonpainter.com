@@ -59,7 +59,7 @@ This is the bet Microsoft is making: agentic workflow belongs inside the tools w
 
 ## The GitHub app: what good ideas look like when they converge
 
-What I find interesting is how clearly the GitHub app reflects patterns that worked elsewhere, brought closer to where developers live. If you look back and what I built my OpenClaw instance to do, and what the GitHub app does, the overlap is huge. The GitHub app is a distillation of the best ideas from the ecosystem, built into the tools where they do the most good.
+What I find interesting is how clearly the GitHub app reflects patterns that worked elsewhere, brought closer to where developers live. If you look back at what I built my OpenClaw instance to do, and what the GitHub app does, the overlap is huge. The GitHub app is a distillation of the best ideas from the ecosystem, built into the tools where they do the most good.
 
 ![Screenshot of the GitHub app showing a prompt and an 'Open' button to open the code in VS Code](img/github-app-next-step/github_copilot_interface_screenshot.png)
 
