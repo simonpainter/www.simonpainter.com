@@ -71,7 +71,7 @@ People ask me which AI model I use. Right now I still lean towards Anthropic's m
 
 ![The GitHub Copilot model picker showing Claude and GPT options](img/github-app-next-step/github_copilot_model_selection_interface.png)
 
-MCP server support being easy to set up reflects exactly what Claude Desktop proved: if MCP is hard to configure, people won't use it. It's why STDIO based MCP servers are for nerds and http based ones are for everyone else.The next natural step is better visibility and debugging when those servers misbehave, still a rough edge across the board.
+MCP server support being easy to set up reflects exactly what Claude Desktop proved: if MCP is hard to configure, people won't use it. It's why STDIO-based MCP servers are for nerds and HTTP-based ones are for everyone else. The next natural step is better visibility and debugging when those servers misbehave, still a rough edge across the board.
 
 The async, multi-session model takes the best lesson from tools like OpenClaw and other agent runners. Running multiple sessions in the background, context-switching freely, and coming back to review progress is a different way of working to "single chat, single thread". You can feel the shift in how people describe using it.
 
