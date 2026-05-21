@@ -1,5 +1,5 @@
 ---
-title: "Hybrid Cloud Reference Architectures: From Active Directory DNS to Infoblox"
+title: "Hybrid Cloud Reference Architectures: From AD on-premises to hybrid cloud DNS with Infoblox"
 authors: simonpainter
 tags:
   - dns
@@ -99,7 +99,7 @@ The key difference from Azure is that AWS doesn't have a managed resolver servic
 
 Where Infoblox fits in AWS is similar to Azure. You can deploy Infoblox Grid Members in AWS (as EC2 instances), and they communicate back to your on-premises Grid Master. Alternatively, you can use BloxOne Hosts in AWS, which sync with the BloxOne cloud console. For on-premises zones, both approaches work—Infoblox becomes the authoritative source, and AWS Route 53 Resolver forwards queries to it via the outbound endpoint.
 
-The operational model is also similar: you're managing conditional forwarders and zone authorities. Pattern A (Infoblox-centric) still means syncing AWS zones to Infoblox. Pattern B (AWS-primary) means using Route 53 Private Hosted Zones for cloud zones and Infoblox for on-premises. Pattern C (segmented by stability) applies here too, routing high-churn zones through Route 53 and stable zones through Infoblox.
+The operational model is also similar: you're managing conditional forwarders and zone authorities. Pattern A keeps transition risk low by routing unresolved cloud queries back through on-premises DNS. Pattern B keeps internet egress local to each cloud while requiring explicit conditional rules for every remote zone family. Pattern C places resolver control in Infoblox-hosted cloud VMs and forwards cloud zones by rule to Route 53 or Azure DNS.
 
 ## AWS and Azure Comparison
 
@@ -123,261 +123,172 @@ If you're managing a multi-cloud environment (some workloads on AWS, some on Azu
 
 ## DNS Resolution Strategy: Three Patterns
 
-Now here's where it gets interesting. Knowing the official architectures is important, but real organisations need flexibility. Your business isn't "pure AWS-centric" or "pure Azure-primary." Your business has legacy systems that don't change often, new Kubernetes workloads that spin up hourly, compliance zones that are stable, and dynamic microservices that change constantly.
+The right model depends on how much change your teams can absorb. Most organisations need a transition pattern first, then decide if they stay there or move to a cloud-local egress pattern later.
 
-The architecture you choose needs to match your operational reality. And your operational reality is driven by in the most part by **which of your DNS zones change**.
+### Pattern A: Transitional Forwarding with On-Premises DNS Egress
 
-This is the insight that changes everything: on-premises zones almost never change. A new server? Sure, that's maybe once a month. New corporate domain? That's very rare. But cloud zones? Kubernetes clusters with auto-scaling? Those come and go all the time. New microservices? New environments? Those zones are changing far more frequently.
+This is the low-impact starting state for many migrations. On-premises AD DNS keeps internet egress, and cloud platforms are added through conditional forwarding. You keep existing operational controls while introducing Azure and AWS resolution paths.
 
-This frequency difference directly affects your operational overhead. If you pick the wrong pattern, you'll spend all your time managing forwarders and keeping DNS databases in sync. Pick the right pattern, and the infrastructure just works.
+On-premises AD DNS forwards cloud zones (`*.azure.internal`, `*.aws.internal`, or your own cloud subdomains) to cloud resolver endpoints. Cloud resolvers use unconditional forwarding for anything non-local back to on-premises DNS. That means unresolved cloud queries still return to on-premises first, and on-premises decides whether to send them to AWS, Azure, or internet resolvers.
 
-Let me describe three patterns. One, two, or all three might apply to your organisation. For these examples, I'm assuming you're using Infoblox as your primary DNS management platform, but the principles apply regardless of which DNS system you choose.
+In a hybrid multi-cloud setup, Azure resolver forwards unresolved, non-Azure zones to on-premises DNS. On-premises DNS then conditionally forwards AWS zones to Route 53 Resolver endpoints. This creates cloud-to-cloud name resolution without creating direct Azure-to-AWS resolver coupling.
 
-### Pattern A: Infoblox-Centric (Enterprise Consolidation)
+Benefits: lowest migration risk, no immediate internet egress change in cloud, centralised visibility during transition.
 
-**When to choose this:** You've got a mature on-premises Infoblox deployment. You want all zones—on-premises and cloud—managed from Infoblox. You're willing to accept some complexity to get unified control.
-
-In this pattern, Infoblox (NIOS, deployed on-premises) is the single source of truth for all DNS zones. On-premises zones live in Infoblox. Cloud zones are created in Infoblox too. Azure zones might also exist in Azure DNS (for Private Link integration or cloud app requirements), but they're also synchronised to Infoblox via API.
-
-Resolution flows like this:
-
-- On-premises clients query on-premises AD DNS. AD DNS has a conditional forwarder that sends queries for cloud zones to Infoblox. Infoblox resolves them. Internet queries go through Infoblox's upstream forwarders.
-
-- Azure clients are configured (via VNet settings or Azure Firewall) to use an Azure DNS Private Resolver's inbound endpoint. That endpoint forwards all queries to Infoblox. Infoblox resolves them from its database.
-
-The upside: Unified control. One team, one management interface, one policy. You make a change in Infoblox and it affects your entire hybrid environment. Security policies, threat protection, zone configurations—all centralised.
-
-The downside: You're maintaining zone synchronisation. Azure zones exist in two places—Azure DNS and Infoblox. If you create a new zone in Azure DNS, someone (or some automation) needs to import it into Infoblox. If you update records in Azure, those updates need to flow back to Infoblox. This sync overhead is your operational cost.
+Pitfalls: on-premises DNS owns the forwarder burden, every new cloud zone needs conditional forwarder updates, and on-premises resolver outages affect all environments.
 
 ```mermaid
-graph TB
-    subgraph "On-Premises"
-        ADBX["Active Directory DNS"]
-        INFOX["Infoblox NIOS<br/>(Primary Authority)"]
-        clients["On-Prem Clients"]
-        clients -->|Query| ADBX
-        ADBX -->|Cloud zones| INFOX
+flowchart TB
+    subgraph Azure["Azure"]
+        direction TB
+        AZWorkload["Azure Apps"]
+        AZOut["Azure Outbound Resolver"]
+        AZIn["Azure Resolver Inbound"]
     end
-    
-    subgraph "Azure"
-        AppX["App Workloads"]
-        resolverX["Azure DNS<br/>Private Resolver<br/>(Inbound Endpoint)"]
-        AppX -->|Query| resolverX
-        resolverX -->|All zones| INFOX
+
+    subgraph AWS["AWS"]
+        direction TB
+        AWSWorkload["AWS Apps"]
+        AWSOut["AWS Outbound Resolver"]
+        AWSIn["Route 53 Resolver Inbound"]
     end
-    
-    ADBX -->|Internet queries| internet["Upstream DNS"]
-    INFOX -.->|Zone Sync<br/>API/Zone Transfer| AzureDNS["Azure DNS"]
-    
-    style INFOX fill:#4CAF50,stroke:#2E7D32,color:#fff
+
+    subgraph OnPrem["On-Premises"]
+        direction TB
+        OPClient["On-Prem Clients"]
+        AD["AD DNS"]
+    end
+
+    Internet["Public DNS Upstream"]
+
+
+    OPClient --> AD
+    AZWorkload --> AZOut
+    AWSWorkload --> AWSOut
+    AZOut -->|Unresolved, non-Azure zones| AD
+    AWSOut -->|Unresolved, non-AWS zones| AD
+    AD -->|Conditional: Azure zones| AZIn
+    AD -->|Conditional: AWS zones| AWSIn
+    AD -->|Internet egress| Internet
 ```
 
+### Pattern B: Local Cloud Egress with Full Conditional Forwarding
 
-### Pattern B: Azure-Primary with On-Premises Connector (Cloud-First)
+This model keeps zone resolution explicit everywhere. Azure and AWS workloads use local cloud resolvers for internet DNS egress, while conditional forwarding rules are defined for each remote zone family (on-premises, Azure-private, AWS-private, and any delegated application zones).
 
-**When to choose this:** You're cloud-first. Most of your new workloads are in Azure. On-premises is becoming the exception, not the rule. You've got separate cloud and on-premises teams that don't want to coordinate constantly.
+It can perform well and gives local control per environment, but it is maintenance-heavy. Every new zone often means updates in multiple places: on-premises forwarders, Azure forwarding rulesets, and AWS Route 53 Resolver rules.
 
-In this pattern, Azure DNS is the primary authority for cloud zones. Infoblox (NIOS or BloxOne Hosts) manages on-premises zones only.
+Benefits: local cloud internet egress, predictable zone routing, clearer cloud autonomy.
 
-Resolution flows like this:
-
-- On-premises clients query on-premises AD DNS. AD DNS has a conditional forwarder that sends queries for on-premises domains to Infoblox (resolves immediately) and queries for cloud domains to Azure DNS Private Resolver's inbound endpoint. Two different paths, but both work.
-
-- Azure clients are configured to use Azure DNS Private Resolver. The resolver has an outbound endpoint with forwarding rulesets. For on-premises zones, it forwards to Infoblox. For cloud zones, it resolves from Azure's private DNS zones.
-
-The upside: Minimal latency for cloud zones (they stay in Azure, no extra hops). Cloud teams own cloud DNS and don't need to coordinate with on-premises teams. On-premises is simple—Infoblox handles it, and that's it.
-
-The downside: Split zone ownership. If you need to troubleshoot why a client can't reach a service, you might need to check both Azure DNS and Infoblox. Cross-zone failover is more complex. If you need a policy that spans both environments, you're coordinating between two teams and two systems.
+Pitfalls: high operational overhead, elevated risk of configuration drift, and slower change velocity when teams must coordinate rule updates for every new zone.
 
 ```mermaid
-graph TB
-    subgraph "On-Premises"
-        ADBX["Active Directory DNS"]
-        INFOB["Infoblox<br/>(On-Prem Zones)"]
-        clientsB["On-Prem Clients"]
-        clientsB -->|Query| ADBX
-        ADBX -->|On-Prem zones| INFOB
-        ADBX -->|Cloud zones| resolverInbound["Azure Resolver<br/>Inbound Endpoint"]
+flowchart TB
+    subgraph Azure["Azure"]
+        direction TB
+        AZIn["Azure Resolver Inbound"]
+        AZWorkload["Azure Apps"]
+        AZRes["Azure Resolver"]
     end
-    
-    subgraph "Azure"
-        AppB["App Workloads"]
-        AzureDNSB["Azure DNS<br/>(Cloud Zones)"]
-        resolverB["Azure DNS<br/>Private Resolver"]
-        AppB -->|Query| resolverB
-        resolverB -->|Cloud zones| AzureDNSB
-        resolverB -->|On-Prem zones| INFOB
+
+    subgraph AWS["AWS"]
+        direction TB
+        AWSIn["Route 53 Resolver Inbound"]
+        AWSWorkload["AWS Apps"]
+        AWSRes["AWS Resolver"]
     end
-    
-    style AzureDNSB fill:#2196F3,stroke:#1565C0,color:#fff
-    style INFOB fill:#FF9800,stroke:#E65100,color:#fff
+
+    subgraph OnPrem["On-Premises"]
+        direction TB
+        OPClient["On-Prem Clients"]
+        AD["AD DNS"]
+    end
+
+  
+    Public["Public DNS"]
+
+
+    OPClient --> AD
+    AZWorkload --> AZRes
+    AWSWorkload --> AWSRes
+    AZRes -->|Conditional: On-prem zones| AD
+    AZRes -->|Conditional: AWS zones| AWSIn
+    AWSRes -->|Conditional: On-prem zones| AD
+    AWSRes -->|Conditional: Azure zones| AZIn
+    AD -->|Conditional: Azure zones| AZIn
+    AD -->|Conditional: AWS zones| AWSIn
+
+    AD -->|Internet egress| Public
+    AZRes -->|Internet egress| Public
+    AWSRes -->|Internet egress| Public
 ```
 
+### Pattern C: DHCP-Directed DNS via Infoblox/VM Resolvers
 
-### Pattern C: Segmented by Zone Stability (Hybrid-Optimised)
+This model uses custom DHCP options so cloud clients query VM-based resolvers first, commonly Infoblox NIOS members on EC2 or Azure VMs. These resolvers are authoritative for on-premises zones and use conditional forwarding rules for cloud zones in Azure and AWS.
 
-**When to choose this:** You're managing both volatile cloud and stable on-premises infrastructure. You want to optimise operational overhead. You've got the discipline to maintain a clear zone taxonomy.
+The goal is policy consistency and deep control from a DNS platform your team already knows. Cloud DNS services still host cloud-native zones where needed, but the resolver decision point sits with Infoblox-hosted resolvers.
 
-In this pattern, zones are routed based on how often they change, not where they live.
+Benefits: consistent policy enforcement, central logging and security controls, strong fit for organisations already invested in Infoblox operations.
 
-- **High-churn zones** (Kubernetes, microservices, auto-scaling services): Primary in Azure DNS. TTLs are low (60-300 seconds) because these zones change frequently. Infoblox might have read-only replicas for failover, but Azure is the source of truth.
-
-- **Stable zones** (on-premises corporate domains, legacy services, compliance-sensitive domains): Primary in Infoblox. TTLs are high (1-24 hours) because these zones rarely change.
-
-Resolution flows like this:
-
-- On-premises clients query on-premises AD DNS. AD DNS has conditional forwarders based on zone registry. "Is this zone high-churn? Forward to Azure. Is it stable? Forward to Infoblox or resolve locally."
-
-- Azure clients query Azure DNS Private Resolver. The resolver's outbound forwarding rules are based on the same zone registry. High-churn zones resolve from Azure DNS. Stable zones forward to Infoblox.
-
-The upside: Forwarder maintenance overhead is minimal. You only update your forwarding configuration when zones are added or retired—which is infrequent. Each zone is optimised for its actual change rate. You get unified policy enforcement (zones are tagged and policies apply across both systems), but with distributed operation.
-
-The downside: Most complex to design. You need a clear, maintained zone registry that documents which zones are high-churn and which are stable. If your zone taxonomy drifts, you'll have mismatches between Azure and Infoblox. Requires discipline and good documentation.
+Pitfalls: you now run DNS infrastructure in cloud VMs, resolver scaling and HA become your responsibility, and DHCP misconfiguration can break resolution broadly.
 
 ```mermaid
-graph TB
-    subgraph "On-Premises"
-        ADBC["Active Directory DNS<br/>with Zone Registry"]
-        INFOC["Infoblox<br/>(Stable Zones)"]
-        clientsC["On-Prem Clients"]
-        clientsC -->|Query| ADBC
-        ADBC -->|Stable zones| INFOC
-        ADBC -->|High-churn zones| resolverIC["Azure Resolver"]
+flowchart TB
+    subgraph Azure["Azure"]
+        AZClient["Azure Apps"]
+        IBXAZ["Infoblox Member (Azure)"]
+        AZCloud["Azure Private DNS"]
     end
-    
-    subgraph "Azure"
-        AppC["App Workloads"]
-        zoneRegistry["Zone Registry<br/>(Shared)"]
-        AzureDNSC["Azure DNS<br/>(High-Churn)"]
-        resolverC["Azure DNS<br/>Private Resolver"]
-        AppC -->|Query| resolverC
-        resolverC -->|High-churn zones| AzureDNSC
-        resolverC -->|Stable zones| INFOC
+
+    subgraph OnPrem["On-Premises"]
+        OPClient["On-Prem Clients"]
+        IBXOP["Infoblox Member (On-Prem)"]
     end
-    
-    ADBC -.->|Consults| zoneRegistry
-    resolverC -.->|Consults| zoneRegistry
-    
-    style AzureDNSC fill:#2196F3,stroke:#1565C0,color:#fff
-    style INFOC fill:#FF9800,stroke:#E65100,color:#fff
-    style zoneRegistry fill:#FFC107,stroke:#F57F17,color:#000
+
+    subgraph AWS["AWS"]
+        AWSClient["AWS Apps"]
+        IBXAWS["Infoblox Member (AWS)"]
+        AWSCloud["Route 53 Private Zones"]
+    end
+
+
+
+    OPClient --> IBXOP
+    AZClient --> IBXAZ
+    AWSClient --> IBXAWS
+
+    IBXAZ -->|Azure zones| AZCloud
+    IBXOP -->|Azure zones| AZCloud
+
+
+    IBXAWS -.->|Replication| IBXOP
+    IBXAZ -.->|Replication| IBXOP
+
+    IBXAWS -->|AWS zones| AWSCloud
+    IBXOP -->|AWS zones| AWSCloud
+
+
 ```
 
 
 ## Summary
 
-The architecture you choose comes down to a simple question: where do you want to put your operational complexity?
+The architecture you choose comes down to where you want to carry operational load.
 
-Pattern A says: "Put it in zone synchronisation. We want unified control." The trade-off is that you're syncing zones between Azure and Infoblox constantly.
+**Pattern A** keeps risk low during transition by preserving on-premises internet egress and central forwarding control.
 
-Pattern B says: "Put it in zone splitting. We're happy with separate teams owning separate systems." The trade-off is that you can't have unified policies.
+**Pattern B** gives local cloud egress and explicit control, but costs more in day-to-day rule maintenance.
 
-Pattern C says: "Put it in zone taxonomy and conditional forwarding rules. We'll maintain clear documentation of which zones are which." The trade-off is that this requires discipline.
+**Pattern C** centralises control through Infoblox-style resolvers in cloud VMs, but shifts responsibility for DNS runtime operations to your team.
 
-There's no right answer. There's the answer that matches your organisation's operational model.
-
-## Migration Considerations
-
-No matter which pattern you choose, the migration itself follows a similar structure. The key principle is to avoid a "big bang" cutover where you flip everything at once. Instead, you want to migrate gradually, validating each step.
-
-### Phase 1: Assessment
-
-Before you deploy anything, you need to understand what you're actually migrating.
-
-**Zone Inventory**: List every DNS zone you're currently running. For each zone, document:
-- Owner (which team manages it)
-- Change frequency (how often records are added/modified)
-- Record count and types
-- Compliance or regulatory requirements
-- Dependencies (which applications depend on it)
-
-**Baseline Measurement**: Run your current DNS for 2-4 weeks and measure:
-- Query volume and peak times
-- Response times and latency
-- Error rates
-- Which zones get queried most often
-
-**Connectivity Audit**: Verify your on-premises to Azure connectivity:
-- VPN or ExpressRoute latency
-- Failover paths (what happens if the primary link goes down)
-- Firewall rules and security group settings that might block DNS traffic
-
-**Hard-Coded DNS in Applications**: Search your application configs for hard-coded DNS server IPs. If applications are configured to talk to a specific DNS server IP, they'll bypass your new infrastructure during migration.
-
-```mermaid
-graph LR
-    A["Phase 1<br/>Assessment<br/>2-4 weeks"]
-    B["Phase 2<br/>Parallel Running<br/>2-4 weeks"]
-    C["Phase 3<br/>Incremental Delegation<br/>2-8 weeks"]
-    D["Phase 4<br/>Full Cutover<br/>1-2 days"]
-    E["Phase 5<br/>Decommission<br/>1-2 weeks"]
-    
-    A -->|Deploy & Test| B
-    B -->|Zone Delegation| C
-    C -->|70-80% Migrated| D
-    D -->|Stable Operation| E
-    
-    style A fill:#E8F5E9,stroke:#4CAF50
-    style B fill:#E3F2FD,stroke:#2196F3
-    style C fill:#FFF3E0,stroke:#FF9800
-    style D fill:#FCE4EC,stroke:#E91E63
-    style E fill:#F3E5F5,stroke:#9C27B0
-```
-
-
-### Phase 2: Parallel Running
-
-You're now going to run new and old DNS infrastructure side-by-side.
-
-**Deploy Infoblox** (NIOS or BloxOne Hosts) according to your chosen pattern. Test it in isolation. Import your zones. Validate that all zones resolve correctly.
-
-**Configure Conditional Forwarders**: On your legacy on-premises AD DNS, add conditional forwarders. For your test zones (maybe 10% of your total), forward queries to Infoblox. Monitor closely. Watch for resolution failures, latency issues, or mismatches.
-
-**Configure Azure**: If you're using pattern B or C, set up Azure DNS Private Resolver outbound endpoints. If pattern A, set up inbound endpoints. Test from both on-premises and cloud clients.
-
-**Monitor**: Check DNS query logs from both systems. Are queries hitting the right resolvers? Are there any resolution failures?
-
-This phase might take 2-4 weeks. Don't rush it. This is when you discover surprises.
-
-### Phase 3: Incremental Delegation
-
-Now you're going to migrate zones one by one (or in small batches). The key technique is **zone delegation**.
-
-Instead of changing your entire zone to Infoblox, you delegate a subdomain to Infoblox. For example:
-
-- Your parent zone is still in AD DNS: `company.com`
-- You delegate the subdomain to Infoblox: `cloud.company.com` → NS records pointing to Infoblox
-- When a client queries for `www.cloud.company.com`, the AD DNS server refers them to Infoblox's nameservers
-
-This lets you migrate zones one at a time, with low risk. If something goes wrong with one delegated subdomain, it doesn't affect other zones.
-
-During this phase:
-
-- Lower TTLs to 60-300 seconds. When things change (new subdomain, new records), you want changes to propagate fast.
-- Gradually migrate your largest workloads to cloud zones in Infoblox.
-- Update DHCP scopes to gradually point clients to new DNS (5%, then 25%, then 50%, etc.)
-- Monitor constantly. Watch for DNS errors. Have a rollback plan.
-
-This phase might take 2-8 weeks depending on how many zones you have and how risk-averse your organisation is.
-
-### Phase 4: Full Cutover
-
-Once you've migrated 70-80% of your zones and validated everything works, you're ready for full cutover.
-
-- Update all DHCP scopes to point to new DNS.
-- Update any static network configurations.
-- Monitor query logs obsessively. Have runbooks for rolling back.
-- Keep the old DNS running for 24-48 hours as a safety net.
-
-### Phase 5: Decommission Legacy
-
-After 1-2 weeks of stable operation, you can retire the old DNS infrastructure. But keep documentation of the migration. When the next person asks "why do we run DNS this way?", you want them to understand the decisions that were made.
+There is no universal winner. The right answer is the one your teams can operate well at scale.
 
 ## Best Practices & Lessons Learned
 
 The most important thing is understanding zone behaviour before you pick an architecture. If you classify zones by ownership and change frequency first, the design choices become clearer and you avoid expensive mid-project reversals. After that, tune TTLs to match actual change patterns instead of copying defaults from other environments. Stable zones can carry longer TTLs, while fast-moving service zones usually need shorter TTLs.
 
-Zone delegation is your friend. It lets you migrate gradually and safely. Figure out your subdomain strategy before you start. If you're using pattern A (Infoblox-centric), automate zone synchronisation. Use Terraform or Ansible to manage your forwarder configurations. The less manual work you're doing, the less drift you'll have.
+Zone delegation is your friend. It lets you migrate gradually and safely. Figure out your subdomain strategy before you start. If you're using pattern A, automate conditional forwarder management and zone registration updates so cloud zone onboarding does not depend on manual edits. Use Terraform or Ansible to manage your forwarder configurations. The less manual work you're doing, the less drift you'll have.
 
 The rest is execution discipline. Plan delegation early so migration can happen in safe slices, automate sync and forwarder configuration where possible, and test failover paths deliberately instead of assuming they will work. Don't assume failover works. Simulate Azure-to-Infoblox link failures. Simulate Infoblox downtime. Test on-premises-to-cloud resolution with resolvers offline. Document what happens. Write runbooks. Once you have traffic on the new platform, measure real change rates and resolver behaviour for a few weeks, then tune policy and alerting from evidence rather than assumptions.
 
@@ -385,13 +296,13 @@ The rest is execution discipline. Plan delegation early so migration can happen 
 
 I've seen these mistakes enough times that they deserve their own section.
 
-The most common failure pattern is choosing architecture before understanding zone dynamics. Teams optimise for a clean diagram, then discover they signed up for constant synchronization or cross-team handoffs they cannot sustain. You choose pattern A (Infoblox-centric) because it sounds like unified control. You deploy Infoblox. Then you realise that Azure creates new zones constantly (for new deployments, Kubernetes services, etc.). You're now stuck syncing zones between Azure and Infoblox constantly. You should have chosen pattern B or C instead.
+The most common failure pattern is choosing architecture before understanding zone dynamics. Teams optimise for a clean diagram, then discover they signed up for constant rule maintenance or cross-team handoffs they cannot sustain. You choose pattern A because it feels safest, then never automate forwarder updates and slowly create a backlog of missing cloud zones. You choose pattern B for local egress, then underestimate how quickly conditional rules grow across both clouds. You choose pattern C for central control, then skip DNS VM capacity planning and find out during an incident.
 
 Close behind that are migration hygiene issues. Your load balancer is configured to use a specific DNS server IP. During migration, that IP goes away. The load balancer can't resolve anything. You migrate with 24-hour TTLs. A record changes in Infoblox, but clients are still caching the old record for another 23 hours. They can't reach the service. Search your entire infrastructure for hard-coded DNS IPs beforehand. Replace them with DHCP-assigned DNS where possible. Lower TTLs 24-48 hours before cutover and raise them back up after.
 
 Resilience mistakes are also common. You deploy one Azure DNS Private Resolver instance. It fails, and your entire hybrid DNS infrastructure collapses. Deploy resolver instances in multiple availability zones. Configure failover. Test it.
 
-Another trap is underestimating operational overhead for your chosen pattern. Pattern A sounds unified and clean until you realise you're managing zone sync overhead constantly. Pattern B sounds simple until split zone ownership creates coordination chaos. Be honest about your team's operational maturity. Pick a pattern you can actually sustain.
+Another trap is underestimating operational overhead for your chosen pattern. Pattern A looks low risk but still needs disciplined forwarder lifecycle management. Pattern B gives local cloud egress but multiplies rule administration points. Pattern C gives central control but requires you to run and scale resolver VMs in cloud environments. Be honest about your team's operational maturity. Pick a pattern you can actually sustain.
 
 Compressed migration timelines create avoidable outages. You want to get this over with. You speed up the migration. Suddenly you've got resolution failures in production that take hours to debug. Build in buffer time. Test each phase thoroughly. Incremental migration beats fast migration every time.
 
@@ -403,7 +314,7 @@ Migrating from Active Directory DNS to Infoblox in a hybrid cloud environment is
 
 Don't try to migrate everything at once. Use zone delegation to migrate gradually. Measure. Monitor. Document. Test failover scenarios explicitly.
 
-The three patterns I've described—Infoblox-centric, Azure-primary, and segmented-by-stability—aren't the only possible designs, but they cover most real-world scenarios. One of them likely matches your situation.
+The three patterns I've described, transitional forwarding, local cloud egress with full conditional forwarding, and DHCP-directed Infoblox resolvers, are not the only possible designs, but they cover most real-world scenarios. One of them likely matches your situation.
 
 The organisations I work with that get this right have one thing in common: they understand the operational trade-offs of their chosen pattern and they've planned accordingly. They're not trying to be something they're not.
 
