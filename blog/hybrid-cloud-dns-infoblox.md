@@ -13,9 +13,9 @@ tags:
 date: 2026-05-21
 ---
 
-I've spent some time helping organisations move their DNS infrastructure from legacy on-premises Active Directory (AD) DNS to modern hybrid cloud environments. Every single migration tells a slightly different story, but they all share some common threads.
+I've spent some time helping organisations move their DNS infrastructure from legacy on-premises Active Directory (AD) DNS to modern hybrid cloud environments. They're all different, but they all share some common threads.
 
-If you're planning to migrate to a hybrid cloud environment, it's common to think about the connectivity first: expressroute/direct connect, VPN, SDWAN etc. But DNS is far more critical. It's the foundation of your network. If your DNS isn't designed for hybrid it doesn't matter how good your connectivity is. Your applications won't be able to find each other, and your users won't be able to access services.
+If you're planning to migrate to a hybrid cloud environment, it's common to think about the connectivity first: expressroute/direct connect, VPN, SDWAN etc. But DNS should be top of the list. It's the foundation of your network. If your DNS isn't designed for hybrid it doesn't matter how good your connectivity is. Your applications won't be able to find each other, and your users won't be able to access services.
 
 <!-- truncate -->
 
@@ -117,21 +117,21 @@ The two clouds are more similar than different when it comes to hybrid DNS, but 
 
 **Managed vs self-service:** Azure manages most of the infrastructure for you. AWS gives you more levers to pull, which is good if you need control and bad if you want things simple.
 
-For hybrid DNS specifically, the architectural principles are identical: on-premises DNS talks to a cloud endpoint (inbound), cloud workloads talk to a resolver that forwards on-premises queries (outbound), and Infoblox can be the source of truth for all zones or just for on-premises zones. The three patterns apply equally to both clouds.
+For hybrid DNS specifically, the architectural principles are identical: on-premises DNS talks to a cloud endpoint (inbound), cloud workloads talk to a resolver that forwards on-premises queries (outbound), and your own DNS infrastructure can be the source of truth for all zones or just for on-premises zones. The three patterns apply equally to both clouds.
 
 If you're managing a multi-cloud environment (some workloads on AWS, some on Azure), the main operational difference is that you're managing two separate DNS control planes. Azure DNS and Route 53 don't talk to each other. Your zone taxonomy, conditional forwarding rules, and Infoblox sync configuration need to be maintained across both clouds independently. This is manageable but requires discipline.
 
 ## DNS Resolution Strategy: Three Patterns
 
-Now here's where it gets interesting. Knowing the official architectures is important, but real organisations need flexibility. Your business isn't "pure Infoblox-centric" or "pure Azure-primary." Your business has legacy systems that don't change often, new Kubernetes workloads that spin up hourly, compliance zones that are stable, and dynamic microservices that change constantly.
+Now here's where it gets interesting. Knowing the official architectures is important, but real organisations need flexibility. Your business isn't "pure AWS-centric" or "pure Azure-primary." Your business has legacy systems that don't change often, new Kubernetes workloads that spin up hourly, compliance zones that are stable, and dynamic microservices that change constantly.
 
-The architecture you choose needs to match your operational reality. And your operational reality is driven by **how often your DNS zones change**.
+The architecture you choose needs to match your operational reality. And your operational reality is driven by in the most part by **which of your DNS zones change**.
 
-This is the insight that changes everything: on-premises zones almost never change. A new file server? That's maybe once a month. New corporate domain? That's rare. But cloud zones? Kubernetes clusters with auto-scaling? Those change constantly. A Kubernetes deployment might spin up new pods every few seconds, each with a new DNS record.
+This is the insight that changes everything: on-premises zones almost never change. A new server? Sure, that's maybe once a month. New corporate domain? That's very rare. But cloud zones? Kubernetes clusters with auto-scaling? Those come and go all the time. New microservices? New environments? Those zones are changing far more frequently.
 
 This frequency difference directly affects your operational overhead. If you pick the wrong pattern, you'll spend all your time managing forwarders and keeping DNS databases in sync. Pick the right pattern, and the infrastructure just works.
 
-Let me describe three patterns. One, two, or all three might apply to your organisation.
+Let me describe three patterns. One, two, or all three might apply to your organisation. For these examples, I'm assuming you're using Infoblox as your primary DNS management platform, but the principles apply regardless of which DNS system you choose.
 
 ### Pattern A: Infoblox-Centric (Enterprise Consolidation)
 
