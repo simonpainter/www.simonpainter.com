@@ -13,27 +13,27 @@ tags:
 date: 2026-05-21
 ---
 
-I've spent the last few years helping organisations move their DNS infrastructure from legacy on-premises Active Directory (AD) DNS to modern hybrid cloud environments. Every single migration tells a slightly different story, but they all share a common thread: zone change frequency determines whether your migration is smooth or painful.
+I've spent some time helping organisations move their DNS infrastructure from legacy on-premises Active Directory (AD) DNS to modern hybrid cloud environments. Every single migration tells a slightly different story, but they all share some common threads.
 
-If you're planning to migrate to Infoblox in a hybrid cloud environment, your biggest decision isn't between NIOS and BloxOne. It's understanding where your DNS zones live, how often they change, and how that drives your architectural choices. Get that wrong, and you'll spend months updating forwarders and wrestling with inconsistent DNS data. Get it right, and the whole thing just works.
+If you're planning to migrate to a hybrid cloud environment, it's common to think about the connectivity first: expressroute/direct connect, VPN, SDWAN etc. But DNS is far more critical. It's the foundation of your network. If your DNS isn't designed for hybrid it doesn't matter how good your connectivity is. Your applications won't be able to find each other, and your users won't be able to access services.
 
 <!-- truncate -->
 
 ## Current State: Legacy On-Premise AD DNS
 
-Most organisations I work with have been running Active Directory integrated DNS for fifteen or twenty years. It's reliable, integrated with their domain infrastructure, and frankly, most people haven't thought about it in a decade.
+Most organisations I work with have been running Active Directory integrated DNS for fifteen or twenty years, I put a few in back in the early noughties. It's reliable, integrated with their domain infrastructure, and frankly, most people haven't thought about it in a decade. It has led to the anomaly where DNS in many companies lives with the server team or the identity team, not the network team.
 
-But AD DNS has some real limitations when you're trying to build a hybrid cloud infrastructure.
+But AD DNS has some limitations when you're trying to build a hybrid cloud infrastructure.
 
 ### The Pain Points with Active Directory DNS
 
-The main issue is coupling. With AD integrated zones, DNS is tied to domain controller placement, so in hybrid you usually choose between keeping DNS anchored on-premises (which adds WAN dependency for Azure workloads) or deploying domain controllers in Azure mostly to make AD DNS replication and locality work properly. In practice, that often pushes identity infrastructure decisions before teams are ready to move identity itself.
+The main issue is coupling. With AD integrated zones, DNS is tied to domain controller placement, so in hybrid you usually choose between keeping DNS anchored on-premises (which adds WAN dependency for cloud workloads) or deploying domain controllers in your cloud mostly to make AD DNS replication and locality work properly. In practice, that often pushes identity infrastructure decisions before teams are ready to move identity itself.
 
 Replication delays are usually a consequence of that design, not a separate root cause. If the authoritative path still crosses WAN links, AD replication latency shows up as DNS convergence lag, and cloud and on-prem clients can briefly see different answers. At the same time, teams often introduce split responsibility by hosting some zones in AD DNS and others in cloud DNS platforms, which raises the risk of inconsistent records, harder troubleshooting, and more manual coordination.
 
-Cloud platforms like Azure DNS, AWS Route 53, and Google Cloud DNS don't speak Active Directory. They don't understand AD replication, dynamic updates, or AD security. If you want to host a zone in Azure DNS, you're managing it in two places—Azure DNS for the cloud zones, and AD DNS for the on-premises zones. That's a recipe for confusion.
+Cloud platforms like Azure DNS, AWS Route 53, and Google Cloud DNS don't speak Active Directory. They speak DNS, but they don't do AD replication. Forwarding resolvers while keeping your AD zones authoritive and on premise is a mess that just hasn't happened yet.
 
-Making sure that on-premises systems can resolve cloud hostnames, and cloud systems can resolve on-premises hostnames, requires careful configuration of conditional forwarders, zone transfers, or custom DNS deployments. Each approach has different security and performance implications. Active Directory DNS was designed for single-site or limited multi-site deployments. True hybrid cloud pushes it beyond what it was built for.
+Making sure that on-premises systems can resolve cloud hostnames, and cloud systems can resolve on-premises hostnames, requires careful configuration of conditional forwarders, zone transfers, or custom DNS deployments. Each approach has different security and performance implications.
 
 ## Why Migrate? Business Drivers
 
@@ -41,50 +41,9 @@ So why move away from something that's been stable for two decades? The biggest 
 
 It also gives you a cleaner operating model for hybrid and multi-cloud. Rather than maintaining separate DNS tooling and workflows for on-prem and cloud, you can run one platform and one process. In most organisations that reduces friction and removes a hidden blocker to cloud adoption.
 
-Infoblox solutions (both NIOS and BloxOne) understand cloud natively. They integrate with AWS, Azure, and GCP. They support dynamic workloads like Kubernetes. They've got built-in threat protection, analytics, and automation APIs that modern cloud teams expect. Once you're running Infoblox, your teams don't need to maintain domain controllers just for DNS. You don't need separate DNS infrastructure for cloud. You've got a unified platform that scales.
-
-## Infoblox Solutions: NIOS vs BloxOne
-
-Before we talk about architecture patterns, let's understand the two main Infoblox solutions and how they differ.
-
-### Infoblox NIOS: On-Premises Control
-
-NIOS is the traditional Infoblox solution. It's been around for twenty years and it's battle-tested. You deploy NIOS appliances (or virtual machines) in your data centres. Those appliances run DNS, DHCP, and IPAM services.
-
-If you're migrating from legacy AD DNS, NIOS is the natural choice. It feels familiar. You've got on-premises control. You manage zones, forwarders, and policies from your local infrastructure.
-
-NIOS integrates with cloud environments, but here's the key: your control plane stays on-premises. You might deploy a virtual NIOS instance in Azure or AWS, but that instance connects back to your on-premises Grid Master for management and zone replication. It's cloud integration, but with on-premises DNA.
-
-**Key capabilities:**
-- Grid Master/Member architecture (centralised management, distributed responders)
-- Zone replication between appliances via TSIG-secured transfers
-- Anycast IP support for stateless, resilient DNS responders
-- Built-in threat protection and DNS firewall
-- Full IPAM integration with on-premises bias
-
-**Best for:** Enterprises with substantial on-premises infrastructure; organisations that want on-premises control; gradual cloud adoption journey.
-
-### Infoblox BloxOne DDI: Cloud-Native
-
-BloxOne is Infoblox's cloud-first solution. It's a Software-as-a-Service platform. You don't deploy a Grid Master anywhere. Instead, you use Infoblox's cloud-hosted management console.
-
-You still deploy appliances (BloxOne Hosts) on-premises and in the cloud. But those hosts are thin clients. They pull their configuration from the cloud console. They synchronise zones via encrypted HTTPS APIs. If the cloud link goes down, they continue running with their cached configuration. When the link comes back, they sync again.
-
-This is a fundamentally different model. Your zones live in the cloud. Your policies live in the cloud. Your analytics and threat intelligence live in the cloud. The appliances on-premises are just execution endpoints.
-
-**Key capabilities:**
-- Cloud-hosted SaaS management console
-- BloxOne Hosts as distributed execution endpoints
-- Native integration with AWS, Azure, GCP
-- Automation-first APIs optimised for CI/CD
-- Centralised threat intelligence and analytics
-- Automatic failover and geo-redundancy
-
-**Best for:** Cloud-first organisations; multi-cloud environments; teams that want cloud-managed infrastructure; organisations that want to move away from on-premises management overhead.
-
 ## Official Reference Architectures
 
-Before I describe three custom patterns, let me show you the official reference architectures that Infoblox and Microsoft have published. These are based on thousands of deployments.
+Let me show you the official reference architectures that Infoblox and Microsoft have published. These are based on thousands of deployments.
 
 ### Microsoft Azure Hybrid DNS Architecture
 
