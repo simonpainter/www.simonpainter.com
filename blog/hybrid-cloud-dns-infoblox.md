@@ -51,7 +51,7 @@ Microsoft's official hybrid DNS architecture (from their Azure Architecture Cent
 
 First, they recommend a hub-and-spoke topology. You've got a central hub VNet that hosts your connectivity resources (VPN/ExpressRoute gateways, firewalls). The DNS resolver sits in a separate shared services VNet, not in the hub itself. This reduces the blast radius if something goes wrong with your centralised infrastructure.
 
-Second, the resolver itself is Azure DNS Private Resolver—a managed service. You don't run your own DNS VMs. Azure manages the infrastructure, redundancy, and patching for you.
+Second, the resolver itself is Azure DNS Private Resolver—a managed service which uses the [Azure Magic IP](azure-magic-ip.md). You don't run your own DNS resolver VMs. Azure manages the infrastructure, redundancy, and patching for you.
 
 The resolver has two endpoints:
 
@@ -65,41 +65,27 @@ For multi-region deployments, Microsoft recommends using a single global private
 
 This is the official architecture. It's enterprise-grade, highly available, and clean. But it assumes you want Azure to be your primary DNS authority for all cloud zones.
 
-### Infoblox NIOS Best Practices Reference Architecture
+### Infoblox Best Practices Reference Architecture
 
-Infoblox's official NIOS guidance is different. It's designed for organisations that want Infoblox to be the primary authority.
+Infoblox's official guidance is different. It's designed for organisations that want Infoblox to be the primary authority.
 
 The core model is Grid Master/Member. You deploy a Grid Master (typically on-premises, sometimes highly available with Grid Master redundancy). This Grid Master manages all DNS zones, policies, and configuration across your entire hybrid environment.
 
 You then deploy Grid Members—DNS servers that report to the Grid Master. You've got Grid Members in your on-premises data centres, and you deploy Grid Members (as virtual NIOS instances) in Azure, AWS, and GCP. Every Grid Member synchronises zones with the Grid Master using TSIG-secured zone transfers.
 
-For resilience, Infoblox recommends Anycast IPs. An Anycast IP is a single IP address that multiple DNS servers advertise. Queries to that IP go to the nearest healthy responder. This gives you stateless, resilient DNS without complex load balancing.
+For resilience, Infoblox recommends Anycast IPs. An Anycast IP is a single IP address that multiple DNS servers advertise. Queries to that IP go to the nearest healthy responder. It works [really well using BGP and Azure Route Server](azure-route-server-nios.md) and is easy to set up.
 
-Threat protection is built-in. NIOS can block malicious domains at the DNS layer, protecting your entire network. Policies are enforced across all Grid Members, so you get consistent behaviour everywhere.
+Threat protection is built-in. Infoblox can block malicious domains at the DNS layer, protecting your entire network. Policies are enforced across all Grid Members, so you get consistent behaviour everywhere.
 
 IPAM is tightly integrated. You're managing your entire IP address space from the same console where you manage DNS. This matters for hybrid environments where on-premises and cloud IP space can easily collide.
 
 This architecture keeps control on-premises. Azure has Grid Members, but the Grid Master stays on-premises. If you've got a team that's comfortable with Infoblox and wants to stay in control, this is the natural path.
 
-### Infoblox BloxOne DDI Best Practices Reference Architecture
-
-BloxOne's official architecture flips the model. Everything is cloud-hosted.
-
-You've got a BloxOne cloud console where you manage all configuration, zones, policies, and forwarding rules. You deploy BloxOne Hosts (virtual appliances) on-premises and in cloud VPCs/VNets. Those hosts are thin clients.
-
-Each BloxOne Host pulls its configuration from the cloud console via encrypted HTTPS APIs. Zones are synchronised to the hosts. Policies are pushed to the hosts. When something changes in the cloud console, it propagates to all hosts.
-
-If a BloxOne Host loses connectivity to the cloud, it keeps running. It continues to serve DNS queries from its local cache. When the connection restores, it syncs any changes it's missed.
-
-The cloud console provides unified management for hybrid and multi-cloud. You've got one place to see all your DNS, DHCP, and IPAM across on-premises, Azure, AWS, and GCP. Integration with cloud provider APIs is native—the console can discover your cloud resources and auto-populate IPAM.
-
-For organisations moving away from on-premises management, this is the way forward. You're not running a Grid Master anymore. You're not managing on-premises appliances as carefully. The cloud platform handles all that for you.
-
 ### AWS Hybrid DNS Architecture
 
 AWS's approach is philosophically similar to Azure's but uses different terminology and different tooling, so it's worth understanding the distinctions.
 
-AWS uses Route 53 Resolver endpoints instead of managed resolver services. Resolver is the default recursive DNS resolver in every VPC, so it's already there—you just configure it with endpoints and forwarding rules.
+AWS uses Route 53 Resolver endpoints instead of managed resolver services. Resolver is the default recursive DNS resolver in every VPC, so it's already there, you just configure it with endpoints and forwarding rules.
 
 Like Azure, AWS distinguishes between inbound and outbound endpoints. An **outbound endpoint** is where your VPC instances send DNS queries for on-premises zones. You configure forwarding rules (conditional forwarding) in Route 53 Resolver: "When you see a query for `corp.local`, forward it to these on-premises DNS server IPs." The outbound endpoint sends that query over your VPN or AWS Direct Connect link.
 
@@ -111,7 +97,7 @@ For larger organisations, AWS recommends Route 53 Profiles. Profiles are a relat
 
 The key difference from Azure is that AWS doesn't have a managed resolver service like Azure DNS Private Resolver. Instead, you're working with a more infrastructure-as-code model where you provision endpoints, configure rules, and manage associations yourself. This gives you more control but also more responsibility for capacity planning (Route 53 Resolver has per-endpoint throughput limits: 10,000 queries per second per network interface) and automation.
 
-Where Infoblox fits in AWS is similar to Azure. You can deploy NIOS Grid Members in AWS (as EC2 instances), and they communicate back to your on-premises Grid Master. Alternatively, you can use BloxOne Hosts in AWS, which sync with the BloxOne cloud console. For on-premises zones, both approaches work—Infoblox becomes the authoritative source, and AWS Route 53 Resolver forwards queries to it via the outbound endpoint.
+Where Infoblox fits in AWS is similar to Azure. You can deploy Infoblox Grid Members in AWS (as EC2 instances), and they communicate back to your on-premises Grid Master. Alternatively, you can use BloxOne Hosts in AWS, which sync with the BloxOne cloud console. For on-premises zones, both approaches work—Infoblox becomes the authoritative source, and AWS Route 53 Resolver forwards queries to it via the outbound endpoint.
 
 The operational model is also similar: you're managing conditional forwarders and zone authorities. Pattern A (Infoblox-centric) still means syncing AWS zones to Infoblox. Pattern B (AWS-primary) means using Route 53 Private Hosted Zones for cloud zones and Infoblox for on-premises. Pattern C (segmented by stability) applies here too, routing high-churn zones through Route 53 and stable zones through Infoblox.
 
@@ -388,8 +374,6 @@ Once you've migrated 70-80% of your zones and validated everything works, you're
 After 1-2 weeks of stable operation, you can retire the old DNS infrastructure. But keep documentation of the migration. When the next person asks "why do we run DNS this way?", you want them to understand the decisions that were made.
 
 ## Best Practices & Lessons Learned
-
-I've done this migration enough times to have learned what works and what doesn't.
 
 The most important thing is understanding zone behaviour before you pick an architecture. If you classify zones by ownership and change frequency first, the design choices become clearer and you avoid expensive mid-project reversals. After that, tune TTLs to match actual change patterns instead of copying defaults from other environments. Stable zones can carry longer TTLs, while fast-moving service zones usually need shorter TTLs.
 
