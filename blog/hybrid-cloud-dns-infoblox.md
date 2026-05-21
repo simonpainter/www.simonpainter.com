@@ -249,6 +249,7 @@ graph TB
     INFOX -.->|Zone Sync<br/>API/Zone Transfer| AzureDNS["Azure DNS"]
     
     style INFOX fill:#4CAF50,stroke:#2E7D32,color:#fff
+```
 
 
 ### Pattern B: Azure-Primary with On-Premises Connector (Cloud-First)
@@ -289,6 +290,7 @@ graph TB
     
     style AzureDNSB fill:#2196F3,stroke:#1565C0,color:#fff
     style INFOB fill:#FF9800,stroke:#E65100,color:#fff
+```
 
 
 ### Pattern C: Segmented by Zone Stability (Hybrid-Optimised)
@@ -338,6 +340,7 @@ graph TB
     style AzureDNSC fill:#2196F3,stroke:#1565C0,color:#fff
     style INFOC fill:#FF9800,stroke:#E65100,color:#fff
     style zoneRegistry fill:#FFC107,stroke:#F57F17,color:#000
+```
 
 
 ## Summary
@@ -398,6 +401,7 @@ graph LR
     style C fill:#FFF3E0,stroke:#FF9800
     style D fill:#FCE4EC,stroke:#E91E63
     style E fill:#F3E5F5,stroke:#9C27B0
+```
 
 
 ### Phase 2: Parallel Running
