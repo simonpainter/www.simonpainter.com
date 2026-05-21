@@ -2,15 +2,13 @@
 title: Hybrid Cloud Reference Architectures: From Active Directory DNS to Infoblox
 authors: simonpainter
 tags:
-  - infoblox
   - dns
-  - hybrid-cloud
   - migration
-  - active-directory
   - azure
+  - cloud
+  - networks
   - architecture
-  - nios
-  - bloxone
+  - high-availability
 date: 2026-05-21
 ---
 
@@ -498,4 +496,3 @@ The three patterns I've described—Infoblox-centric, Azure-primary, and segment
 The organisations I work with that get this right have one thing in common: they understand the operational trade-offs of their chosen pattern and they've planned accordingly. They're not trying to be something they're not.
 
 You'll get there. And once you do, you'll have DNS infrastructure that actually scales with your hybrid cloud, rather than fighting against it.
-
