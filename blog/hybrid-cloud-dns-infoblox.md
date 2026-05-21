@@ -1,10 +1,11 @@
 ---
-title: Hybrid Cloud Reference Architectures: From Active Directory DNS to Infoblox
+title: "Hybrid Cloud Reference Architectures: From Active Directory DNS to Infoblox"
 authors: simonpainter
 tags:
   - dns
   - migration
   - azure
+  - aws
   - cloud
   - networks
   - architecture
@@ -159,7 +160,47 @@ The cloud console provides unified management for hybrid and multi-cloud. You've
 
 For organisations moving away from on-premises management, this is the way forward. You're not running a Grid Master anymore. You're not managing on-premises appliances as carefully. The cloud platform handles all that for you.
 
-## Azure DNS Resolution Strategy: Three Patterns
+### AWS Hybrid DNS Architecture
+
+AWS's approach is philosophically similar to Azure's but uses different terminology and different tooling, so it's worth understanding the distinctions.
+
+AWS uses Route 53 Resolver endpoints instead of managed resolver services. Resolver is the default recursive DNS resolver in every VPC, so it's already there—you just configure it with endpoints and forwarding rules.
+
+Like Azure, AWS distinguishes between inbound and outbound endpoints. An **outbound endpoint** is where your VPC instances send DNS queries for on-premises zones. You configure forwarding rules (conditional forwarding) in Route 53 Resolver: "When you see a query for `corp.local`, forward it to these on-premises DNS server IPs." The outbound endpoint sends that query over your VPN or AWS Direct Connect link.
+
+An **inbound endpoint** is the reverse. It's an IP address (in your VPC's subnets) that on-premises DNS servers can reach and query. You configure it to answer queries for zones hosted in Route 53 Private Hosted Zones. Your on-premises DNS servers point a conditional forwarder at the inbound endpoint IP, and on-premises clients get answers for your AWS-hosted zones.
+
+The multi-account architecture in AWS is more complex than Azure because AWS environments typically use multiple accounts. AWS publishes a recommended pattern that centralises DNS endpoints in a "Shared Services" account. Route 53 Resolver rules and private hosted zones are created there and shared across accounts using AWS Resource Access Manager (RAM). This solves a practical problem: Route 53 quotas limit how many VPCs you can associate with a private hosted zone (300 per zone), so centralising in one account prevents you from hitting those limits as you scale.
+
+For larger organisations, AWS recommends Route 53 Profiles. Profiles are a relatively recent feature that package DNS configurations (private hosted zones, forwarding rules, DNS firewall policies) into a single, shareable unit. Instead of manually associating zones and rules with dozens of VPCs, you create a Profile in your Shared Services account, add your zones and rules to it, share it via RAM, and apply it to target VPCs. This dramatically reduces operational overhead at scale.
+
+The key difference from Azure is that AWS doesn't have a managed resolver service like Azure DNS Private Resolver. Instead, you're working with a more infrastructure-as-code model where you provision endpoints, configure rules, and manage associations yourself. This gives you more control but also more responsibility for capacity planning (Route 53 Resolver has per-endpoint throughput limits: 10,000 queries per second per network interface) and automation.
+
+Where Infoblox fits in AWS is similar to Azure. You can deploy NIOS Grid Members in AWS (as EC2 instances), and they communicate back to your on-premises Grid Master. Alternatively, you can use BloxOne Hosts in AWS, which sync with the BloxOne cloud console. For on-premises zones, both approaches work—Infoblox becomes the authoritative source, and AWS Route 53 Resolver forwards queries to it via the outbound endpoint.
+
+The operational model is also similar: you're managing conditional forwarders and zone authorities. Pattern A (Infoblox-centric) still means syncing AWS zones to Infoblox. Pattern B (AWS-primary) means using Route 53 Private Hosted Zones for cloud zones and Infoblox for on-premises. Pattern C (segmented by stability) applies here too, routing high-churn zones through Route 53 and stable zones through Infoblox.
+
+## AWS and Azure Comparison
+
+The two clouds are more similar than different when it comes to hybrid DNS, but the details matter.
+
+**Naming and terminology:** Azure calls it "DNS Private Resolver" with "inbound/outbound endpoints." AWS calls it "Route 53 Resolver endpoints" with the same concept. Azure has a managed service; AWS gives you more of a configuration service.
+
+**Multi-account/multi-workspace complexity:** Azure's hub-and-spoke model is simpler for most organisations—one hub VNet, one shared services VNet, everything else is spokes. AWS requires thinking about account boundaries and using Shared Services accounts and RAM sharing. This isn't harder, just different.
+
+**Conditional forwarding rules:** Both clouds support it. Azure calls them "DNS Forwarding Rulesets." AWS calls them "Route 53 Resolver Rules." Functionally identical.
+
+**Scalability and performance:** Both have quotas and limits. Azure DNS Private Resolver handles extremely high query volumes by default. AWS Route 53 Resolver can also handle high volumes but you need to monitor per-ENI throughput (10,000 QPS per ENI) and add more ENIs if you exceed that. Both are highly available and multi-AZ by default.
+
+**Cost:** AWS Route 53 Resolver charges per rule, per VPC association, per million queries. Azure DNS Private Resolver charges per hour per endpoint plus queries. At scale, you'll want to model the economics for your query volume. Generally, if you're running massive query volumes across many VPCs, AWS Profiles (for bulk associations) can be more cost-efficient. For smaller environments, Azure's per-endpoint model might be cheaper.
+
+**Managed vs self-service:** Azure manages most of the infrastructure for you. AWS gives you more levers to pull, which is good if you need control and bad if you want things simple.
+
+For hybrid DNS specifically, the architectural principles are identical: on-premises DNS talks to a cloud endpoint (inbound), cloud workloads talk to a resolver that forwards on-premises queries (outbound), and Infoblox can be the source of truth for all zones or just for on-premises zones. The three patterns apply equally to both clouds.
+
+If you're managing a multi-cloud environment (some workloads on AWS, some on Azure), the main operational difference is that you're managing two separate DNS control planes. Azure DNS and Route 53 don't talk to each other. Your zone taxonomy, conditional forwarding rules, and Infoblox sync configuration need to be maintained across both clouds independently. This is manageable but requires discipline.
+
+## DNS Resolution Strategy: Three Patterns
 
 Now here's where it gets interesting. Knowing the official architectures is important, but real organisations need flexibility. Your business isn't "pure Infoblox-centric" or "pure Azure-primary." Your business has legacy systems that don't change often, new Kubernetes workloads that spin up hourly, compliance zones that are stable, and dynamic microservices that change constantly.
 
