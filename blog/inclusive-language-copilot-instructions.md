@@ -8,7 +8,7 @@ tags:
 date: 2026-05-21
 ---
 
-I use a repo-level `copilot-instructions.md` file to keep writing style steady across posts, docs, and code comments. It works well for voice, but it also shows why explicit inclusion rules matter. If you don't write them down, the assistant fills the gaps with its own defaults.
+I use the `.github/copilot-instructions.md` file to keep writing style steady across posts, docs, and code comments. It works well for voice, but it also shows why explicit inclusion rules matter. If you don't write them down, the assistant fills the gaps with its own defaults.
 
 <!-- truncate -->
 
