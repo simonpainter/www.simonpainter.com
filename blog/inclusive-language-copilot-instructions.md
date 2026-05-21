@@ -44,7 +44,7 @@ Drop this into `.github/copilot-instructions.md` and tune it for your team. Keep
 - "normal user" -> "typical user" or "most users"
 - "master branch" -> "main branch" or "trunk"
 - "master/slave" -> "primary/secondary", "leader/follower", or protocol-specific terms
-- "blacklist/whitelist" -> "denylist/allowlist", "block list/allow list"
+- "blacklist/whitelist" -> "denylist/allowlist", "blocklist/allowlist"
 - "blackbox/whitebox" (testing) -> "closed-box/clear-box"
 - "blackhat/whitehat" -> "malicious/ethical"
 - "dummy value" -> "placeholder value"
