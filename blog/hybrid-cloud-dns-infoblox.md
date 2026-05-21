@@ -43,10 +43,6 @@ It also gives you a cleaner operating model for hybrid and multi-cloud. Rather t
 
 Infoblox solutions (both NIOS and BloxOne) understand cloud natively. They integrate with AWS, Azure, and GCP. They support dynamic workloads like Kubernetes. They've got built-in threat protection, analytics, and automation APIs that modern cloud teams expect. Once you're running Infoblox, your teams don't need to maintain domain controllers just for DNS. You don't need separate DNS infrastructure for cloud. You've got a unified platform that scales.
 
-**Enabler for Cloud Adoption**
-
-If you're trying to move more workloads to the cloud, DNS architecture is a blocker. Getting this right removes a major barrier to cloud adoption and lets your teams move faster.
-
 ## Infoblox Solutions: NIOS vs BloxOne
 
 Before we talk about architecture patterns, let's understand the two main Infoblox solutions and how they differ.
