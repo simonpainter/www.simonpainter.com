@@ -1,5 +1,5 @@
 ---
-title: "Hybrid Cloud Reference Architectures: From AD on-premises to hybrid cloud DNS with Infoblox"
+title: "Hybrid Cloud Reference Architectures"
 authors: simonpainter
 tags:
   - dns
@@ -65,6 +65,40 @@ Anchoring your zones against the shared services vnet ensures they can be resolv
 
 This is the official architecture. It's enterprise-grade, highly available, and clean. But it assumes you want Azure to be your primary DNS authority for all cloud zones.
 
+#### Resolution Path Flow
+
+```mermaid
+flowchart LR
+    subgraph OnPrem["On-Premises"]
+        OPClient["Client"]
+        OPDNS["On-Prem DNS"]
+        OPAuth["On-Prem Authoritative Zone"]
+    end
+
+    subgraph Azure["Azure Shared Services"]
+        AZClient["Workload"]
+        FW["DNS Proxy / Firewall"]
+        AZIn["Private Resolver Inbound"]
+        AZOut["Private Resolver Outbound"]
+        AZAuth["Azure Private DNS Zone (Authoritative)"]
+    end
+
+    Internet["Public DNS Upstream"]
+
+    OPClient --> OPDNS
+    OPDNS -->|Conditional forwarder: Azure zones| AZIn
+    AZIn --> AZAuth
+
+    AZClient --> FW
+    FW --> AZIn
+    AZIn -->|Azure zones| AZAuth
+    AZIn -->|On-prem zones via forwarding rules| AZOut
+    AZOut --> OPDNS
+    OPDNS --> OPAuth
+
+    OPDNS -->|External resolution egress| Internet
+```
+
 ### AWS Hybrid DNS Architecture
 
 AWS's approach is philosophically similar to Azure's but uses different terminology and different tooling, so it's worth understanding the distinctions, especially in the [AWS Prescriptive Guidance hybrid DNS reference pattern](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/set-up-dns-resolution-for-hybrid-networks-in-a-multi-account-aws-environment.html).
@@ -86,6 +120,39 @@ That model is powerful, but it shifts day-two work onto your platform team. Capa
 In practice, AWS DNS at scale works best when you treat it like a product, not a one-time setup. Keep resolver endpoints, forwarding rules, and VPC associations in IaC, enforce naming and ownership standards for rules, and monitor query volume per endpoint so scaling decisions are proactive rather than incident-driven.
 
 The operational model is also similar: you're managing conditional forwarders and zone authorities.
+
+#### Resolution Path Flow
+
+```mermaid
+flowchart LR
+    subgraph OnPrem["On-Premises"]
+        OPClient["Client"]
+        OPDNS["On-Prem DNS"]
+        OPAuth["On-Prem Authoritative Zone"]
+    end
+
+    subgraph AWS["AWS"]
+        AWSClient["Workload"]
+        AWSRes["Route 53 Resolver"]
+        AWSIn["Resolver Inbound Endpoint"]
+        AWSOut["Resolver Outbound Endpoint"]
+        AWSAuth["Route 53 Private Hosted Zone (Authoritative)"]
+    end
+
+    Internet["Public DNS Upstream"]
+
+    OPClient --> OPDNS
+    OPDNS -->|Conditional forwarder: AWS zones| AWSIn
+    AWSIn --> AWSAuth
+
+    AWSClient --> AWSRes
+    AWSRes -->|AWS private zones| AWSAuth
+    AWSRes -->|Rule: on-prem zones| AWSOut
+    AWSOut --> OPDNS
+    OPDNS --> OPAuth
+
+    OPDNS -->|External resolution egress| Internet
+```
 
 ## AWS and Azure Comparison
 
@@ -116,3 +183,38 @@ The core model is Grid Master/Member. You deploy a Grid Master (typically on-pre
 You then deploy Grid Members—DNS servers that report to the Grid Master. You've got Grid Members in your on-premises data centres, and you deploy Grid Members (as virtual NIOS instances) in Azure, AWS, and GCP. Every Grid Member synchronises zones with the Grid Master using TSIG-secured zone transfers.
 
 For resilience, Infoblox recommends Anycast IPs. An Anycast IP is a single IP address that multiple DNS servers advertise. Queries to that IP go to the nearest healthy responder. It works [really well using BGP and Azure Route Server](azure-route-server-nios.md) and is easy to set up.
+
+#### Resolution Path Flow
+
+```mermaid
+flowchart LR
+    subgraph Clients["Client Networks"]
+        OPClient["On-Prem Client"]
+        AZClient["Azure Client"]
+        AWSClient["AWS Client"]
+    end
+
+    subgraph Infoblox["Infoblox DNS Layer"]
+        IBX["Infoblox Anycast / Grid Member"]
+        IBXAuth["Infoblox Authoritative Zones"]
+    end
+
+    AZAuth["Azure Private DNS Zone (Authoritative)"]
+    AWSAuth["Route 53 Private Hosted Zone (Authoritative)"]
+    Internet["Public DNS Upstream"]
+
+    OPClient --> IBX
+    AZClient --> IBX
+    AWSClient --> IBX
+
+    IBX -->|Zone authoritative in Infoblox| IBXAuth
+    IBX -->|Conditional forwarder: Azure zones| AZAuth
+    IBX -->|Conditional forwarder: AWS zones| AWSAuth
+    IBX -->|External resolution egress| Internet
+```
+
+The practical design choice in this model is where authority sits for each zone family. Corporate and shared service zones are usually authoritative in Infoblox, so every environment gets one consistent answer for those names. Cloud-native zones can still stay authoritative in Azure Private DNS or Route 53 Private Hosted Zones when service integration or platform behaviour requires it. Infoblox then becomes the policy and control point that decides whether to answer directly or forward to the right cloud authority.
+
+That separation is what makes the model scalable in hybrid environments. Clients keep a simple resolver path, usually to a local Anycast Infoblox endpoint. The complexity sits in controlled forwarding rules and zone ownership policy, not in every application team. In day-to-day operations, your DNS team manages one authoritative workflow for shared zones, one forwarding workflow for cloud-native zones, and one egress policy for external lookups.
+
+Another benefit is operational guardrails. Because everything enters through the Infoblox DNS layer, you can apply consistent controls for logging, threat policy, and change management across on-premises, Azure, and AWS. The trade-off is that this architecture needs mature automation and clear ownership boundaries. If your zone lifecycle, forwarding rules, and cloud onboarding process are not documented and version controlled, drift builds quickly.
