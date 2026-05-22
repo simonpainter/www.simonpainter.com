@@ -21,7 +21,7 @@ If you're planning to migrate to a hybrid cloud environment, it's common to thin
 
 ## Current State: Legacy On-Premises AD DNS
 
-Most organisations I work with have been running Active Directory integrated DNS for fifteen or twenty years, I put a few in back in the early noughties. It's reliable, integrated with their identity infrastructure, and frankly, most people haven't thought about it in a decade. It has led to the anomaly where DNS in many companies lives with the server team or the identity team, not the network team.
+Most organisations I work with have been running Active Directory integrated DNS for fifteen or twenty years. I put a few in back in the early noughties. It's reliable, integrated with their identity infrastructure, and frankly, most people haven't thought about it in a decade. It has led to the anomaly where DNS in many companies lives with the server team or the identity team, not the network team.
 
 But AD DNS has some limitations when you're trying to build a hybrid cloud infrastructure.
 
@@ -31,9 +31,9 @@ The main issue is coupling. With AD integrated zones, DNS is tied to domain cont
 
 Replication delays are usually a consequence of that design, not a separate root cause. If the authoritative path still crosses WAN links, AD replication latency shows up as DNS convergence lag, and cloud and on-prem clients can briefly see different answers. At the same time, teams often introduce split responsibility by hosting some zones in AD DNS and others in cloud DNS platforms, which raises the risk of inconsistent records, harder troubleshooting, and more manual coordination.
 
-Some of this is fixed by tiering your DNS so that you have resolvers for clients that are separate from you authoritative servers. This then introduces the potential for two teams managing different parts of the DNS infrastructure.
+Some of this is fixed by tiering your DNS so that you have resolvers for clients that are separate from your authoritative servers. This then introduces the potential for two teams managing different parts of the DNS infrastructure.
 
-Cloud platforms like Azure DNS, AWS Route 53, and Google Cloud DNS don't speak Active Directory. They speak DNS, but they don't do AD replication. Forwarding resolvers while keeping your AD zones authoritative and on-premises is a mess that just hasn't happened yet.
+Cloud platforms like Azure DNS, AWS Route 53, and Google Cloud DNS don't speak Active Directory. They speak DNS, but they don't do AD replication. Running forwarding resolvers while keeping your AD zones authoritative and on-premises is possible, but it gets messy quickly without clear zone ownership and forwarding standards.
 
 Making sure that on-premises systems can resolve cloud hostnames, and cloud systems can resolve on-premises hostnames, requires careful configuration of conditional forwarders, zone transfers, or custom DNS deployments. Each approach has different security and performance implications.
 
@@ -47,7 +47,7 @@ Microsoft's official hybrid DNS architecture (from their [Azure hybrid DNS infra
 
 First, they recommend a hub-and-spoke topology. You've got a central hub VNet that hosts your connectivity resources (VPN/ExpressRoute gateways, firewalls). The DNS resolver sits in a separate shared services VNet, not in the hub itself. This reduces the blast radius if something goes wrong with your centralised infrastructure.
 
-Second, the resolver itself is an Azure Firewall DNS proxy that forwards queries to an Azure DNS Private Resolver. The resolver is a managed service that abstracts away the underlying infrastructure, so you don't have to worry about scaling or availability. You just configure your forwarding rules and endpoints.
+Second, Azure DNS Private Resolver is the managed resolver service. Azure Firewall DNS proxy is a separate optional component that can forward queries to Private Resolver when you want DNS inspection and FQDN-based policy enforcement in your firewall path.
 
 The reason your queries need to hit the firewall first (and it doesn't have to be an Azure Firewall) is that many firewalls need to see DNS queries to enforce FQDN-based rules. If you put the resolver behind the firewall, you can enforce policies like "block access to `*.malicious.com`" at the firewall layer, which gives you better security and visibility.
 
@@ -59,7 +59,7 @@ The resolver has two endpoints:
 
 For multi-region deployments, Microsoft recommends using a single global private DNS zone (simpler) rather than regional zones. The global zone doesn't depend on any single region's infrastructure. In a catastrophic regional failure, the zone continues to operate. You do deploy one DNS Private Resolver per region, and each resolver's outbound forwarding rules include forwarders to all your on-premises DNS servers (so regional failures don't block on-premises lookups).
 
-Anchoring your zones against the shared services vnet ensures they can be resolved using the shared services inbound resolver.
+Linking your zones to the shared services VNet ensures they can be resolved using the shared services inbound resolver.
 
 > Time for a side note about the difference between the original simple DNS resolver service provided via the [magic IP](azure-magic-ip.md) and the new Azure DNS Private Resolver. The magic IP is the default DNS resolver for all Azure VMs unless you have custom DNS configured. It is reachable from any VNET but is not available from outside of Azure. An inbound resolver can answer queries from on-premises, but the magic IP cannot.
 
@@ -109,9 +109,9 @@ Like Azure, AWS distinguishes between inbound and outbound endpoints. An **outbo
 
 An **inbound endpoint** is the reverse. It's an IP address (in your VPC's subnets) that on-premises DNS servers can reach and query. You configure it to answer queries for zones hosted in Route 53 Private Hosted Zones. Your on-premises DNS servers point a conditional forwarder at the inbound endpoint IP, and on-premises clients get answers for your AWS-hosted zones.
 
-The multi-account architecture in AWS is more complex than Azure because AWS environments typically use multiple accounts. AWS publishes a recommended pattern that centralises DNS endpoints in a "Shared Services" account in its [hybrid multi-account DNS guidance](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/set-up-dns-resolution-for-hybrid-networks-in-a-multi-account-aws-environment.html). Route 53 Resolver rules and private hosted zones are created there and shared across accounts using AWS Resource Access Manager (RAM). This solves a practical problem: Route 53 quotas limit how many VPCs you can associate with a private hosted zone (300 per zone), so centralising in one account prevents you from hitting those limits as you scale.
+The multi-account architecture in AWS is more complex than Azure because AWS environments typically use multiple accounts. AWS publishes a recommended pattern that centralises DNS endpoints in a "Shared Services" account in its [hybrid multi-account DNS guidance](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/set-up-dns-resolution-for-hybrid-networks-in-a-multi-account-aws-environment.html). Route 53 Resolver rules and private hosted zones are created there and shared across accounts using AWS Resource Access Manager (RAM). This helps with governance and consistency at scale, but it doesn't remove private hosted zone association limits on its own.
 
-For larger organisations, AWS recommends Route 53 Profiles. Profiles are a relatively recent feature that package DNS configurations (private hosted zones, forwarding rules, DNS firewall policies) into a single, shareable unit. Instead of manually associating zones and rules with dozens of VPCs, you create a Profile in your Shared Services account, add your zones and rules to it, share it via RAM, and apply it to target VPCs. This dramatically reduces operational overhead at scale.
+For larger organisations, Route 53 Profiles are worth considering. Profiles are a relatively recent feature that package DNS configurations (private hosted zones, forwarding rules, DNS firewall policies) into a single, shareable unit. Instead of manually associating zones and rules with dozens of VPCs, you create a Profile in your Shared Services account, add your zones and rules to it, share it via RAM, and apply it to target VPCs. This can reduce operational overhead at scale.
 
 The key difference from Azure is operational ownership. Azure DNS Private Resolver is a managed resolver platform, while AWS Route 53 Resolver gives you resolver building blocks that you assemble and operate. In AWS, teams usually define endpoint placement, security groups, route reachability, forwarding rules, and VPC associations as code, then manage that lifecycle continuously as accounts and VPCs change.
 
@@ -154,7 +154,7 @@ flowchart LR
     OPDNS -->|External resolution egress| Internet
 ```
 
-## AWS and Azure Comparison
+#### AWS and Azure Comparison
 
 The two clouds are more similar than different when it comes to hybrid DNS, but the details matter.
 
@@ -164,13 +164,13 @@ The two clouds are more similar than different when it comes to hybrid DNS, but 
 
 **Conditional forwarding rules:** Both clouds support it. Azure calls them "DNS Forwarding Rulesets." AWS calls them "Route 53 Resolver Rules." Functionally identical.
 
-**Scalability and performance:** Both have quotas and limits. Azure DNS Private Resolver handles extremely high query volumes by default. AWS Route 53 Resolver can also handle high volumes but you need to monitor per-ENI throughput (10,000 QPS per ENI) and add more ENIs if you exceed that. Both are highly available and multi-AZ by default.
+**Scalability and performance:** Both have quotas and limits. Azure DNS Private Resolver is designed to scale without you managing resolver hosts directly. AWS Route 53 Resolver can also handle high volumes but you need to monitor per-ENI throughput (10,000 QPS per ENI) and add more ENIs if you exceed that. Both can be highly available when you deploy endpoints across multiple availability zones.
 
-**Cost:** AWS Route 53 Resolver charges per rule, per VPC association, per million queries. Azure DNS Private Resolver charges per hour per endpoint plus queries. At scale, you'll want to model the economics for your query volume. Generally, if you're running massive query volumes across many VPCs, AWS Profiles (for bulk associations) can be more cost-efficient. For smaller environments, Azure's per-endpoint model might be cheaper.
+**Cost:** AWS Route 53 Resolver pricing is primarily endpoint-hours (per endpoint ENI) and query volume. Azure DNS Private Resolver pricing is also endpoint-hours plus queries. At scale, you'll want to model the economics for your own query volume, endpoint footprint, and topology. Profiles can simplify operations in AWS, but they are not a direct pricing optimisation feature by themselves.
 
 **Managed vs self-service:** Azure manages most of the infrastructure for you. AWS gives you more levers to pull, which is good if you need control and bad if you want things simple.
 
-For hybrid DNS specifically, the architectural principles are identical: on-premises DNS talks to a cloud endpoint (inbound), cloud workloads talk to a resolver that forwards on-premises queries (outbound), and your own DNS infrastructure can be the source of truth for all zones or just for on-premises zones. The three patterns apply equally to both clouds.
+For hybrid DNS specifically, the architectural principles are very similar: on-premises DNS talks to a cloud endpoint (inbound), cloud workloads talk to a resolver that forwards on-premises queries (outbound), and your own DNS infrastructure can be the source of truth for all zones or just for on-premises zones. The same core pattern applies to both clouds.
 
 If you're managing a multi-cloud environment (some workloads on AWS, some on Azure), the main operational difference is that you're managing two separate DNS control planes. Azure DNS and Route 53 don't talk to each other. Your zone taxonomy, conditional forwarding rules, and Infoblox sync configuration need to be maintained across both clouds independently. This is manageable but requires discipline.
 
