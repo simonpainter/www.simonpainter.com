@@ -18,7 +18,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
+          node-version: '20'
           cache: 'npm'
 
       - name: Install dependencies
@@ -30,6 +30,13 @@ jobs:
           cat build.log  # Print log for visibility in GitHub Actions console
 
       - name: Upload build log
+        if: always()
+        run: |
+          if [ ! -s build.log ]; then
+            echo "No build log was generated." > build.log
+          fi
+
+      - name: Add build log comment
         uses: mshick/add-pr-comment@v2
         if: always()
         with:
