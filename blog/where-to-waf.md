@@ -36,6 +36,8 @@ You should now have something that looks a bit like this:
 
 ```mermaid
 graph TB
+      accTitle: Web applications 101: graph diagram 1
+      accDescr: This graph diagram shows Resource Group, UK South Region, VNet UK South (10.0.0.0/16), and Subnet (10.0.1.0/24).
     subgraph RG["Resource Group"]
         subgraph UKS["UK South Region"]
             subgraph VNETS["VNet UK South (10.0.0.0/16)"]
@@ -60,7 +62,6 @@ style UKS fill:#e1f5fe,stroke:#0288d1
 style VNETS fill:#e8f5e9,stroke:#2e7d32
 
 ```
-
 Giving out three different addresses for your three application instances is going to be troublesome, so at a minimum we'll need to set up some sort of load balancer. In reality, you'd probably want autoscaling groups behind a load balancer, but that's not something we're doing in a lab like this.
 
 > The magic of the Azure Load Balancer is that it operates at Layer 4 (TCP/UDP) and doesn't really work like AWS ones or a typical on-premises load balancer. It works ephemerally within the fabric, so it isn't some sort of VM that terminates connections. Instead, it looks at the first packet, decides where it's going using a 5-tuple hash (source IP, source port, destination IP, destination port, protocol type), and then sends all subsequent traffic to the right place. Because of how it works, Azure Load Balancer is always zone redundant.
@@ -95,6 +96,8 @@ You can slide a WAF capability into the Application Gateway and be home in time 
 ```mermaid
 
 graph TB
+      accTitle: Web applications 101: graph diagram 2
+      accDescr: This graph diagram shows Resource Group, UK South Region, VNet UK South (10.0.0.0/16), and AppGw Subnet (10.0.0.0/27).
     subgraph RG["Resource Group"]
         subgraph UKS["UK South Region"]
             subgraph VNETS["VNet UK South (10.0.0.0/16)"]
@@ -121,7 +124,6 @@ graph TB
     style VNETS fill:#e8f5e9,stroke:#2e7d32
 
 ```
-
 ### Adding another region
 
 There are lots of good reasons why you *do* want another region; I mentioned some above. The simplest way to do that is to duplicate what you just built in another region and use Azure Traffic Manager to direct traffic, using DNS magic, to the right Application Gateway in the right region. 
@@ -133,6 +135,8 @@ In the diagram below, I've added UK West as the secondary region. UK West is a b
 ```mermaid
 
 graph TB
+      accTitle: Adding another region: graph diagram 3
+      accDescr: I dislike diagrams that appear to show traffic going through Azure Traffic Manager, or indeed in the old days an F5 Global Traffic Manager (GTM).
     subgraph RG["Resource Group"]
         TM["Azure Traffic Manager"]
         subgraph UKS["UK South Region"]
@@ -174,7 +178,6 @@ graph TB
     style VNETW fill:#e8f5e9,stroke:#2e7d32
 
 ```
-
 > I dislike diagrams that appear to show traffic going through Azure Traffic
 > Manager, or indeed in the old days an F5 Global Traffic Manager (GTM). DNS
 > is, to network engineers, control plane traffic and should be off to the
@@ -198,6 +201,8 @@ As Front Door terminates the connection at the edge and serves from the edge cac
 ```mermaid
 
 graph TB
+      accTitle: Customers everywhere: graph diagram 4
+      accDescr: This graph diagram shows Resource Group, Azure Front Door with WAF, UK South Region, and VNet UK South (10.0.0.0/16).
     subgraph RG["Resource Group"]
         AFD["Azure Front Door with WAF"]
         subgraph UKS["UK South Region"]
@@ -235,7 +240,6 @@ graph TB
     style VNETW fill:#e8f5e9,stroke:#2e7d32
 
 ```
-
 There are always edge cases where you would need both Front Door and Application Gateway. The main one is where you want to retain the TLS termination that you get in Application Gateway while also benefiting from the edge caching of Front Door. Perhaps you really want WAF both locally and at the edge, but that isn't really a typical architecture. 
 
 For the most part, it's one or the other - use Application Gateway and Azure Traffic Manager to bring customers to you, or use Azure Front Door to bring your application closer to your customers. In both cases, the WAF goes at the very edge as the first thing that the traffic hits, either at the Front Door or the Application Gateway, but rarely both.
