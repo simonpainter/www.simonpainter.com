@@ -33,31 +33,6 @@ If you run hybrid networking with hub-and-spoke in Azure, this is for you. It is
 - you have lots of spokes and want a cleaner on-prem routing view
 - you want tighter control over what Azure advertises upstream
 
-## How to use it
-
-You can set `summarizedGatewayPrefixes` on the hub virtual network. The simplest way to think about it is: choose aggregate CIDRs that intentionally cover the ranges you want advertised.
-
-A Bicep example:
-
-```bicep
-resource hubVnet 'Microsoft.Network/virtualNetworks@2024-05-01' = {
-  name: 'vnet-hub-prod-uks'
-  location: resourceGroup().location
-  properties: {
-    addressSpace: {
-      addressPrefixes: [
-        '10.40.0.0/16'
-      ]
-    }
-    summarizedGatewayPrefixes: [
-      '10.40.0.0/15'
-    ]
-  }
-}
-```
-
-After deployment, validate what is actually being advertised from your gateway BGP peer view and on your on-prem router.
-
 ## Gotchas and limits
 
 A few points are easy to miss:
