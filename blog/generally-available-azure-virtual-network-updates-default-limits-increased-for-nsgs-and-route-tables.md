@@ -32,31 +32,6 @@ If you manage enterprise landing zones, shared services VNets, or centralised in
 
 I also think this helps platform teams that support many app teams. It reduces the need to split resources purely to avoid old ceiling values.
 
-## How to use it
-
-You do not need a migration step. The new defaults apply at the platform level.
-
-A practical next step is to check your current headroom so you can decide whether to simplify existing split-out NSGs or route tables.
-
-```bash
-# Count current custom NSG rules
-az network nsg rule list \
-  --resource-group rg-network \
-  --nsg-name nsg-shared-ingress \
-  --query "length(@)"
-
-# Count current routes in a route table
-az network route-table route list \
-  --resource-group rg-network \
-  --route-table-name rt-spoke-egress \
-  --query "length(@)"
-```
-
-If you also need a refresher on day-to-day operations, these two pages are still the best practical references:
-
-- [Create, change, or delete a network security group](https://learn.microsoft.com/azure/virtual-network/manage-network-security-group)
-- [Create, change, or delete a route table](https://learn.microsoft.com/azure/virtual-network/manage-route-table)
-
 ## Gotchas and limits
 
 Higher limits do not remove design trade-offs. Very large NSGs can still be harder to review, and giant route tables can still increase operational complexity.
