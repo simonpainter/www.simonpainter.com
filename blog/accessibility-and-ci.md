@@ -246,12 +246,39 @@ jobs:
       - run: npx http-server build -p 3000 --silent &
       - run: npx wait-on http://localhost:3000 --timeout 30000
       - run: npx pa11y-ci --config .pa11yci.json
-      - if: always()
-        uses: actions/upload-artifact@v4
+      - if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
         with:
-          name: pa11y-report
-          path: pa11y-report/
-          retention-days: 14
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('node:fs');
+            const marker = '<!-- pa11y-report -->';
+            const body = fs.existsSync('pa11y-report.md')
+              ? `${marker}\n${fs.readFileSync('pa11y-report.md', 'utf8')}`
+              : `${marker}\n## Accessibility report\n\nNo report was generated.`;
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number
+            });
+
+            const existing = comments.find(comment => comment.body && comment.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body
+              });
+            }
 ```
 
 There are a few details here worth calling out.
@@ -262,7 +289,7 @@ Second, `http-server` is deliberately dull. Docusaurus can serve its own build o
 
 Third, `wait-on` saves you from an irritating class of flaky failure. Cold starts happen. Containers get busy. If your scan begins before the local server is listening, you do not have an accessibility problem, you have a race condition pretending to be one.
 
-Fourth, always upload the report artifact. I used `if: always()` because the most useful time to have a report is precisely when the job has failed. Passing jobs are nice. Failing jobs with downloadable evidence are useful.
+Fourth, I no longer upload the report as a downloadable artifact. PR 396 now turns the accessibility output into a sticky pull request comment instead. That keeps the results in the review thread where people are already looking, and it means each new run updates the same comment rather than creating yet another file to click through.
 
 Once you trust the workflow, I think the better long-term pattern is to swap the static URL list for the generated sitemap:
 
