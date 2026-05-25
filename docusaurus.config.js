@@ -1,6 +1,41 @@
 // @ts-check
 import {themes as prismThemes} from 'prism-react-renderer';
 
+// WCAG 2 AA-compliant version of the GitHub light theme.
+// The original theme has 5 token colours that fall below 4.5:1 on its
+// #f6f8fa background; the replacements below all clear that threshold.
+const accessibleGithubTheme = {
+  ...prismThemes.github,
+  styles: prismThemes.github.styles.map((entry) => {
+    switch (entry.style.color) {
+      case '#999988': // comment/prolog/doctype/cdata — was 2.7:1
+        return { ...entry, style: { ...entry.style, color: '#6b7280' } };
+      case '#e3116c': // string/attr-value — was 4.3:1
+        return { ...entry, style: { ...entry.style, color: '#b5195c' } };
+      case '#36acaa': // entity/number/boolean/variable/constant — was 2.6:1
+        return { ...entry, style: { ...entry.style, color: '#187272' } };
+      case '#00a4db': // atrule/keyword/attr-name/selector — was 2.7:1
+        return { ...entry, style: { ...entry.style, color: '#006fa6' } };
+      case '#d73a49': // function/deleted/tag — was 4.3:1
+        return { ...entry, style: { ...entry.style, color: '#b5192d' } };
+      default:
+        return entry;
+    }
+  }),
+};
+
+// WCAG 2 AA-compliant version of the Dracula dark theme.
+// The comment colour rgb(98,114,164) is 3.0:1 on #282A36; replaced with a
+// lighter value that reaches 4.8:1.
+const accessibleDraculaTheme = {
+  ...prismThemes.dracula,
+  styles: prismThemes.dracula.styles.map((entry) =>
+    entry.types.includes('comment')
+      ? { ...entry, style: { ...entry.style, color: 'rgb(136, 150, 188)' } }
+      : entry,
+  ),
+};
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
 
@@ -196,8 +231,8 @@ const config = {
         },
       } : {}),
       prism: {
-        theme: prismThemes.github,
-        darkTheme: prismThemes.dracula,
+        theme: accessibleGithubTheme,
+        darkTheme: accessibleDraculaTheme,
         additionalLanguages: ['bash', 'diff', 'json', 'yaml', 'markdown'],
       },
       tableOfContents: {
