@@ -19,9 +19,9 @@ I have been playing around with [enforza.io](https://enforza.io) for a while and
 
 ```mermaid
 
-accTitle: Network Overview: graph diagram 1
-accDescr: Building the network foundation starts with proper subnet design.
 graph TB
+      accTitle: Network Overview: graph diagram 1
+      accDescr: Building the network foundation starts with proper subnet design.
     Internet([Internet])
     
     subgraph "Azure Virtual Network (10.0.0.0/16)"

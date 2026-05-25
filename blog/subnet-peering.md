@@ -28,9 +28,9 @@ When you peer a pair of VNets, you gain the ability to route between them. The r
 When you peer two VNets, you gain the ability to route between all subnets in those VNets; this is out-of-the-box functionality we've all learned to take for granted. You can [download a lab template](https://github.com/simonpainter/subnet-peering/tree/main/lab1) which creates the VNets and subnets in the diagram below if you want to follow along.
 
 ```mermaid
-accTitle: It's time for a lab: graph diagram 1
-accDescr: We can use the VM NICs in the subnets to verify that they can see the routes for their own local VNet.
 graph TB
+      accTitle: It's time for a lab: graph diagram 1
+      accDescr: We can use the VM NICs in the subnets to verify that they can see the routes for their own local VNet.
     subgraph Azure["Azure Cloud"]
         subgraph VNet1["VNet1 (10.1.0.0/16)"]
             Subnet1_1["Subnet1 (10.1.1.0/24)"]
@@ -130,9 +130,9 @@ az network vnet peering create -n "vnet2-1-to-vnet1-1" -g vnet-demo-rg -o none\
 This establishes the peering in the diagram below. Well actually, it doesn't, or at least that's what I think from the behavior we'll see below.
 
 ```mermaid
-accTitle: Establishing a Subnet Peering: graph diagram 2
-accDescr: A quick look at the routing table on the VM1 NIC, and I can see the subnet range for subnet1 in VNet2 has appeared.
 graph TB
+      accTitle: Establishing a Subnet Peering: graph diagram 2
+      accDescr: A quick look at the routing table on the VM1 NIC, and I can see the subnet range for subnet1 in VNet2 has appeared.
     subgraph Azure["Azure Cloud"]
         subgraph VNet1["VNet1 (10.1.0.0/16)"]
             Subnet1_1["Subnet1 (10.1.1.0/24)"]
@@ -191,9 +191,9 @@ az network vnet peering create -n "vnet2-2-to-vnet1-2" -g vnet-demo-rg -o none\
 ```
 
 ```mermaid
-accTitle: Adding another peering: flowchart diagram 3
-accDescr: The error basically says you already have a peering in place between those VNets.
 flowchart TB
+      accTitle: Adding another peering: flowchart diagram 3
+      accDescr: The error basically says you already have a peering in place between those VNets.
     subgraph Azure["Azure Cloud"]
         subgraph VNet1["VNet1 (10.1.0.0/16)"]
             Subnet1_1["Subnet1 (10.1.1.0/24)"]
@@ -249,9 +249,9 @@ az network vnet peering create -n "vnet2-to-vnet1" -g vnet-demo-rg -o none\
 It's not what I wanted, but it was useful for understanding the behavior and the fact that this is still a VNet peering and not actually a subnet-to-subnet peering construct.
 
 ```mermaid
-accTitle: Full mesh: flowchart diagram 4
-accDescr: Now this peering is up, let's check the routing table again, and there are indeed routes to subnet1 and subnet2.
 flowchart TB
+      accTitle: Full mesh: flowchart diagram 4
+      accDescr: Now this peering is up, let's check the routing table again, and there are indeed routes to subnet1 and subnet2.
     subgraph Azure["Azure Cloud"]
         subgraph VNet1["VNet1 (10.1.0.0/16)"]
             Subnet1_1["Subnet1 (10.1.1.0/24)"]
@@ -301,9 +301,9 @@ I thought I'd check to see if I could use overlapping CIDRs. I was successful in
 I built out a [second lab for download](https://github.com/simonpainter/subnet-peering/tree/main/lab2) with two VNets that have overlapping address space and the same three subnets. I thought I'd try peering subnet1 in VNet1 to subnet2 in VNet2.
 
 ```mermaid
-accTitle: Trying with overlapping CIDRs: graph diagram 5
-accDescr: Although they are not overlapping subnets, the peering command failed because the peering process determined that the VNet CIDRs themselves are overlapping.
 graph TB
+      accTitle: Trying with overlapping CIDRs: graph diagram 5
+      accDescr: Although they are not overlapping subnets, the peering command failed because the peering process determined that the VNet CIDRs themselves are overlapping.
     subgraph Azure["Azure Cloud"]
         subgraph VNet1["VNet1 (10.1.0.0/16)"]
             Subnet1_1["Subnet1 (10.1.1.0/24)"]

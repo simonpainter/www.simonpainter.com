@@ -25,9 +25,9 @@ Azure networking is built to look a lot like on-premise networking, even though 
 
 ```mermaid
 
-accTitle: What problem does it solve?: flowchart diagram 1
-accDescr: Another common anomaly is that the gateway router for a subnet doesn't actually exist in any real sense.
 flowchart LR
+      accTitle: What problem does it solve?: flowchart diagram 1
+      accDescr: Another common anomaly is that the gateway router for a subnet doesn't actually exist in any real sense.
     subgraph "VNet A (Spoke)"
         A[10.1.0.0/16]
     end
@@ -98,9 +98,9 @@ Like a normal NVA, or indeed an Azure Firewall, you need to make sure your spoke
 The documents state that it's for private traffic only, not internet traffic. That's because it has no NAT egress capability.
 
 ```mermaid
-accTitle: How do I use it?: flowchart diagram 2
-accDescr: This flowchart diagram shows Hub VNet, Azure Firewall, VPN/ER Gateway, and Virtual Network, Appliance.
 flowchart TB
+      accTitle: How do I use it?: flowchart diagram 2
+      accDescr: This flowchart diagram shows Hub VNet, Azure Firewall, VPN/ER Gateway, and Virtual Network, Appliance.
     subgraph Hub["Hub VNet"]
         FW["Azure Firewall"]
         GW["VPN/ER Gateway"]
@@ -162,9 +162,9 @@ The alternative is to send all traffic to the appliance and then have the subnet
 The halfway house is to have RFC1918 routes going to the appliance, which sorts out what goes on premise and what goes to another spoke, and then have the default route going to your egress solution. This is a bit more work to set up and manage but it does give you the best of both worlds in terms of control and simplicity. Separating cloud from on premise routes in the AVNA should be fairly straightforward because all the spoke routes will be learned in the hub automagically and everything else in 10/8 can go to your gateway.
 
 ```mermaid
-accTitle: How do I use it?: flowchart diagram 3
-accDescr: I like this option because you also reduce the chance of traffic inadvertently going through the firewall asymmetrically.
 flowchart TB
+      accTitle: How do I use it?: flowchart diagram 3
+      accDescr: I like this option because you also reduce the chance of traffic inadvertently going through the firewall asymmetrically.
     subgraph Hub["Hub VNet"]
         FW["Azure Firewall"]
         GW["VPN/ER Gateway"]

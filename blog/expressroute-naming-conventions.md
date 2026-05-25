@@ -26,9 +26,9 @@ This is a pair of physical ports in a peering location in the Microsoft Enterpri
 Microsoft documents refer to these as ExpressRoute Direct *resources* to either add or remove confusion with [ExpressRoute Direct Circuits](#expressroute-direct-circuit).
 
 ```mermaid
-accTitle: ExpressRoute Direct (ERD) port pair: flowchart diagram 1
-accDescr: ExpressRoute Direct resources are provided as a pair of ports in separate MSEE devices to ensure that maintenance outages or failures on a single MSEE don't cause loss of service.
 flowchart TD
+      accTitle: ExpressRoute Direct (ERD) port pair: flowchart diagram 1
+      accDescr: ExpressRoute Direct resources are provided as a pair of ports in separate MSEE devices to ensure that maintenance outages or failures on a single MSEE don't cause loss of service.
     subgraph PL[Peering Location]
         CR1[Customer Router 1]
         CR2[Customer Router 2]
@@ -93,9 +93,9 @@ Each [ExpressRoute Circuit](#expressroute-circuit) is made up of two links. Thes
 Each [ExpressRoute Circuit](#expressroute-circuit) consists of a pair of [links](#expressroute-link), and each of these can have distinct peerings. A peering is required for each link, and a single circuit can support both [Azure private peerings](#peering-type-azure-private-peering) and [Microsoft peerings](#peering-type-microsoft-peering).
 
 ```mermaid
-accTitle: ExpressRoute Peering: flowchart diagram 2
-accDescr: Azure compute services, such as virtual machines (IaaS) and cloud services (PaaS), deployed within a virtual network can be connected through the private peering domain.
 flowchart LR
+      accTitle: ExpressRoute Peering: flowchart diagram 2
+      accDescr: Azure compute services, such as virtual machines (IaaS) and cloud services (PaaS), deployed within a virtual network can be connected through the private peering domain.
     subgraph Customer[Customer Network]
         CR1[Customer Router 1]
         CR2[Customer Router 2]
@@ -222,9 +222,9 @@ ExpressRoute Metro is a variation of an ExpressRoute Circuit where the separate 
 
 ```mermaid
 
-accTitle: ExpressRoute Metro: flowchart diagram 3
-accDescr: ExpressRoute Metro can be selected when ordering an ExpressRoute Direct, and the metro pair appears like any single peering location on the list of available locations.
 flowchart TD
+      accTitle: ExpressRoute Metro: flowchart diagram 3
+      accDescr: ExpressRoute Metro can be selected when ordering an ExpressRoute Direct, and the metro pair appears like any single peering location on the list of available locations.
     subgraph PL2[Peering Location 2]
         CR2[Customer Router 2]
         MSEE_B[MSEE B]
@@ -251,9 +251,9 @@ flowchart TD
 
 ```mermaid
 
-accTitle: Summary: erDiagram diagram 4
-accDescr: I hope this helps clear up some of the confusion around ExpressRoute terminology.
 erDiagram
+      accTitle: Summary: erDiagram diagram 4
+      accDescr: I hope this helps clear up some of the confusion around ExpressRoute terminology.
     "ExpressRoute Direct Port" ||--o{ "ExpressRoute Direct Port Pair" : "2 ports make"
     "ExpressRoute Direct Port Pair" ||--o{ "ExpressRoute Circuit" : "supports multiple"
     "ExpressRoute Circuit" ||--|{ "ExpressRoute Link" : "has 2"

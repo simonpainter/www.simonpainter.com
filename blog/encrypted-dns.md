@@ -329,9 +329,9 @@ The object is continuously maintained through observed traffic. IPs expire after
 This whole mechanism rests on one non-negotiable dependency: the FortiGate must be able to read the DNS response.
 
 ```mermaid
-accTitle: How wildcard FQDN objects actually work: sequenceDiagram diagram 1
-accDescr: When a client uses DoH, the DNS query and response travel inside HTTPS on port 443, encrypted with TLS.
 sequenceDiagram
+      accTitle: How wildcard FQDN objects actually work: sequenceDiagram diagram 1
+      accDescr: When a client uses DoH, the DNS query and response travel inside HTTPS on port 443, encrypted with TLS.
     participant Client
     participant FortiGate
     participant DNS Resolver
@@ -355,9 +355,9 @@ The failure mode is insidious because it's silent. The client resolves the domai
 Neither outcome is what was intended, and neither is easy to diagnose without knowing to look for empty or under-populated FQDN objects as the root cause.
 
 ```mermaid
-accTitle: The DoH failure mode: sequenceDiagram diagram 2
-accDescr: This sequenceDiagram diagram illustrates the workflow or relationships discussed in the surrounding text.
 sequenceDiagram
+      accTitle: The DoH failure mode: sequenceDiagram diagram 2
+      accDescr: This sequenceDiagram diagram illustrates the workflow or relationships discussed in the surrounding text.
     participant Client
     participant FortiGate
     participant External DoH Resolver

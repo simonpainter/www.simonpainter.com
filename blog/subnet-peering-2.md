@@ -23,9 +23,9 @@ Back then, it was just the equivalent of a prefix list on a normal VNet peering.
 My first test last time was creating multiple peerings. Here's what I'm trying to achieve - Subnet 1 in VNet 1 should reach Subnet 1 in VNet 2, and Subnet 2 in VNet 1 should reach Subnet 2 in VNet 2.
 
 ```mermaid
-accTitle: Revisiting lab 1: flowchart diagram 1
-accDescr: Last time, I managed to create the first peering successfully, but the second one failed.
 flowchart TB
+      accTitle: Revisiting lab 1: flowchart diagram 1
+      accDescr: Last time, I managed to create the first peering successfully, but the second one failed.
     subgraph Azure["Azure Cloud"]
         subgraph VNet1["VNet1 (10.1.0.0/16)"]
             Subnet1_1["Subnet1 (10.1.1.0/24)"]
@@ -132,9 +132,9 @@ In lab 2, I looked at overlapping CIDR ranges (or IP address ranges in Azure spe
 The lab setup is similar to lab 1 but with overlapping IP ranges. Remember, you can't create VNet peerings when there are overlapping IP ranges in the two VNets. This failed last time around.
 
 ```mermaid
-accTitle: Revisiting lab 2: graph diagram 2
-accDescr: Even though the overall IP ranges overlap, I'll try again to peer two subnets that don't overlap from within those ranges.
 graph TB
+      accTitle: Revisiting lab 2: graph diagram 2
+      accDescr: Even though the overall IP ranges overlap, I'll try again to peer two subnets that don't overlap from within those ranges.
     subgraph Azure["Azure Cloud"]
         subgraph VNet1["VNet1 (10.1.0.0/16)"]
             Subnet1_1["Subnet1 (10.1.1.0/24)"]

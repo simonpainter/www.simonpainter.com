@@ -23,9 +23,9 @@ When you type `www.example.com` into your browser, your computer doesn't magical
 The lookup process starts at the top. Your DNS resolver (usually provided by your ISP or a service like `1.1.1.1`) asks a root server: "who's in charge of `.com`?" The root server points you to the `.com` nameservers, those point you to `example.com`'s nameservers, and eventually you get the IP address you need.
 
 ```mermaid
-accTitle: What are root servers anyway?: sequenceDiagram diagram 1
-accDescr: This sequenceDiagram diagram illustrates the workflow or relationships discussed in the surrounding text.
 sequenceDiagram
+      accTitle: What are root servers anyway?: sequenceDiagram diagram 1
+      accDescr: This sequenceDiagram diagram illustrates the workflow or relationships discussed in the surrounding text.
     participant Browser as Stub Resolver
     participant Resolver
     participant RootServer as Root Server

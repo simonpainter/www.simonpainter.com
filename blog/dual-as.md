@@ -28,9 +28,9 @@ Weirdly the biggest problem operationally with changing a site ASN is that you n
 To solve this problem use dual-as which allows you to configure a secondary remote ASN that is accepted in addition to the primary ASN. This means you can change to the new ASN on your end and then raise a ticket with your telco to change their end. Once they have done that you can remove the old ASN from your configuration.
 
 ```mermaid
-accTitle: Dual AS for BGP ASN migrations and changes: graph diagram 1
-accDescr: This graph diagram shows PE Router, IP: 10.0.0.1/30, BGP ASN: 2856 and CE Router, IP: 10.0.0.2/30, BGP ASN: 34444.
 graph LR
+      accTitle: Dual AS for BGP ASN migrations and changes: graph diagram 1
+      accDescr: This graph diagram shows PE Router, IP: 10.0.0.1/30, BGP ASN: 2856 and CE Router, IP: 10.0.0.2/30, BGP ASN: 34444.
     PE["PE Router<br/>IP: 10.0.0.1/30<br/>BGP ASN: 2856"]
     CE["CE Router<br/>IP: 10.0.0.2/30<br/>BGP ASN: 34444"]
     

@@ -188,9 +188,9 @@ Dec Hex ASCII   Dec Hex ASCII   Dec Hex ASCII   Dec Hex ASCII
 Connecting two computers with a serial connection works well, but what if you want to add a third node? The simplest solution is a full mesh topology where each computer has a direct connection to both other computers.
 
 ```mermaid
-accTitle: That's two computers, how about n?: graph diagram 1
-accDescr: This graph diagram shows Node A, Node B, and Node C.
 graph LR
+      accTitle: That's two computers, how about n?: graph diagram 1
+      accDescr: This graph diagram shows Node A, Node B, and Node C.
     A[Node A] --- B[Node B]
     B --- C[Node C]
     A --- C
@@ -198,9 +198,9 @@ graph LR
 This approach doesn't scale well. You need one link for two nodes, three links for three nodes, but six links for four nodes. With five computers in a full mesh, you need ten links.
 
 ```mermaid
-accTitle: That's two computers, how about n?: graph diagram 2
-accDescr: This graph diagram shows Node A, Node B, Node C, and Node D.
 graph TB
+      accTitle: That's two computers, how about n?: graph diagram 2
+      accDescr: This graph diagram shows Node A, Node B, Node C, and Node D.
     A[Node A] --- B[Node B]
     C[Node C] --- D[Node D]
     A --- C
@@ -220,9 +220,9 @@ If we have a shared wire connecting all computers (perhaps using T-shaped splitt
 
 ```mermaid
 %%{init: {'gitGraph': { 'showCommitLabel':true,'mainBranchName': 'Bus Topology'}} }%%
-accTitle: Addressing the problem: gitGraph diagram 3
-accDescr: This gitGraph diagram shows Star Topology, 1, H, and 2.
 gitGraph
+      accTitle: Addressing the problem: gitGraph diagram 3
+      accDescr: This gitGraph diagram shows Star Topology, 1, H, and 2.
     commit id: "Node 1"
     commit id: "Node 2"
     commit id: "Node 3"
@@ -337,9 +337,9 @@ This leaves us 254 usable addresses (10.0.0.1 through 10.0.0.254) for our actual
 As IP packets travel across networks, they carry addressing information in a structured header. This header sits in front of the actual data and contains everything routers need to route the packet correctly. Let's peek inside an IP packet to see how these addresses work:
 
 ```mermaid
-accTitle: Finding the router: --- diagram 4
-accDescr: This --- diagram illustrates the workflow or relationships discussed in the surrounding text.
 ---
+      accTitle: Finding the router: --- diagram 4
+      accDescr: This --- diagram illustrates the workflow or relationships discussed in the surrounding text.
 title: "IP Header"
 ---
 packet-beta
@@ -508,9 +508,9 @@ Once a packet has got to the router the router will then compare it to the route
 We can easily build up routing tables that span a large network by taking each hop. Take the example below where an organisation has networked computers in cities across the world connected by underground or undersea cables.
 
 ```mermaid
-accTitle: Static routing: graph diagram 5
-accDescr: We can simplify the diagram and remove the geography and give each router a name.
 graph LR
+      accTitle: Static routing: graph diagram 5
+      accDescr: We can simplify the diagram and remove the geography and give each router a name.
     NY <---> LON[London]
     CHI[Chicago] <---> NY
     LON <---> EDI[Edinburgh]
@@ -521,9 +521,9 @@ graph LR
 We can simplify the diagram and remove the geography and give each router a name.
 
 ```mermaid
-accTitle: Static routing: graph diagram 6
-accDescr: The routing table for each site's router would be as follows:
 graph LR
+      accTitle: Static routing: graph diagram 6
+      accDescr: The routing table for each site's router would be as follows:
     LN <---> ED
     CH<---> NY
     NY <---> LN
@@ -615,9 +615,9 @@ All traffic (default route) -->LN
 This is great until we want to make changes, or perhaps changes are forced upon us by unexpected failures. Let's say we add in an undersea cable crossing the pacific to connect Tokyo and San Francisco. Many such cables exist and we might want to use it for communications between those two sites. We probably don't want to use it for communications between London and New York though because that cable is shorter.
 
 ```mermaid
-accTitle: Static routing: graph diagram 7
-accDescr: This graph diagram illustrates the workflow or relationships discussed in the surrounding text.
 graph LR
+      accTitle: Static routing: graph diagram 7
+      accDescr: This graph diagram illustrates the workflow or relationships discussed in the surrounding text.
     LN <---> ED
      CH<---> NY
     NY <---> LN
@@ -669,9 +669,9 @@ When networks grow beyond a single organisation, or autonomous system, we find w
 - Maintain stability when other networks have problems
 
 ```mermaid
-accTitle: Peering with other networks: graph diagram 8
-accDescr: Each autonomous sytem for internet peering is assigned a unique number, the Autonomous System Number (ASN).
 graph LR
+      accTitle: Peering with other networks: graph diagram 8
+      accDescr: Each autonomous sytem for internet peering is assigned a unique number, the Autonomous System Number (ASN).
     Title1["Internet Service Provider A<br/>AS Number 65001"] --> ISP_A
     Title2["Internet Service Provider B<br/>AS Number 65002"] --> ISP_B
     
@@ -782,9 +782,9 @@ The word "datagram" in UDP's name gives us a clue about how it works - it's abou
 Looking inside a UDP message reveals a remarkably simple structure. The header contains just four essential pieces of information:
 
 ```mermaid
-accTitle: UDP (User Datagram Protocol): packet-beta diagram 9
-accDescr: This packet-beta diagram illustrates the workflow or relationships discussed in the surrounding text.
 packet-beta
+      accTitle: UDP (User Datagram Protocol): packet-beta diagram 9
+      accDescr: This packet-beta diagram illustrates the workflow or relationships discussed in the surrounding text.
 title UDP Packet
 0-15: "Source Port"
 16-31: "Destination Port"
@@ -819,9 +819,9 @@ The magic begins with what we call the three-way handshake. Imagine you're makin
 Let's peek inside a TCP header to understand how this works. Every TCP segment (that's what we call the individual pieces of a TCP stream) carries a wealth of information in its header:
 
 ```mermaid
-accTitle: TCP (Transmission Control Protocol): --- diagram 10
-accDescr: This --- diagram illustrates the workflow or relationships discussed in the surrounding text.
 ---
+      accTitle: TCP (Transmission Control Protocol): --- diagram 10
+      accDescr: This --- diagram illustrates the workflow or relationships discussed in the surrounding text.
 title: "TCP Packet"
 ---
 packet-beta

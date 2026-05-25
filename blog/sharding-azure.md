@@ -16,9 +16,9 @@ I had a conversation today about sharding in Azure. It's a fairly well-known thi
 Azure Availability Zones are physically separate datacenters within a region, each with independent power, cooling, and networking infrastructure. However, the mapping between logical AZ numbers (1, 2, 3) and physical datacenters isn't static - it's sharded across subscriptions. This means that AZ1 in one subscription might map to a different physical datacenter than AZ1 in another subscription.
 
 ```mermaid
-accTitle: What is AZ Sharding?: graph diagram 1
-accDescr: This graph diagram shows AZ1, AZ2, AZ3, and uksouth-az1.
 graph TB
+      accTitle: What is AZ Sharding?: graph diagram 1
+      accDescr: This graph diagram shows AZ1, AZ2, AZ3, and uksouth-az1.
     subgraph "Subscription A"
         A1[AZ1]
         A2[AZ2]
