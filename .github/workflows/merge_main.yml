@@ -52,12 +52,15 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Sync to Azure Blob Storage
-        uses: azure/CLI@v2
-        with:
-          azcliversion: latest
-          inlineScript: |
+        run: |
+          for attempt in 1 2 3; do
             az storage blob sync \
               --source build/ \
               --container '$web' \
               --account-name ${{ secrets.PROD_AZURE_STORAGE_ACCOUNT }} \
-              --delete-destination true
+              --delete-destination true && break
+            echo "Attempt $attempt failed, retrying in 15s..."
+            sleep 15
+          done
+        env:
+          AZCOPY_CONCURRENCY_VALUE: 10
