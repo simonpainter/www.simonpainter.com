@@ -17,6 +17,4 @@ I've always had a lingering fear that I'll break my site due to the somewhat pre
 
 I've found this addition particularly helpful when working with contributors who might not be familiar with Docusaurus's formatting requirements. Now they can see immediately if their changes would break the build, without having to set up a local development environment.
 
-I've now taken the same approach with my accessibility checks in PR 396. Instead of uploading a downloadable HTML report, the workflow posts the accessibility results straight on the pull request, which keeps the feedback where people are already looking.
-
 Have you implemented any similar automated testing for your static site projects? I'd love to hear about your approach to ensuring content quality when accepting community contributions.
