@@ -15,9 +15,9 @@ I use `ping` a lot, but milliseconds can hide the detail I care about. That's wh
 Under the hood, uping uses `clock_gettime(CLOCK_MONOTONIC)` for accurate timing and reports whole microseconds. It prefers raw sockets for the best signal, then falls back to datagram sockets if you do not have the right privileges. In plain terms: it aims for accuracy first, but it still works when your permissions are limited.
 
 ```mermaid
-flowchart LR
 accTitle: Meet uping: pronounced 'micro ping': flowchart diagram 1
 accDescr: If you like seeing how simple the loop is, this is the mental model:
+flowchart LR
     A[Resolve host] --> B[Start monotonic timer]
     B --> C[Send ICMP echo]
     C --> D[Receive ICMP reply]

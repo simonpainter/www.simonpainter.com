@@ -23,9 +23,9 @@ Organisations already living in the cloud will likely have moved to using terraf
 Terraform allows for a more declarative approach to infrastructure management, enabling teams to define their infrastructure as code and version control it alongside their application code. By aligning your infrastructure code with your business services you can get away from the 'tshirt sizing' of networks and into a more [granular approach where features are turned on and off to create capabilities](modular-networking.md). A large number of terraform providers now exist for on premise networking and key areas around [SDWAN](sdwan-strategic-step-to-ztna.md), on premise access layer, and data center networking are all well covered with strong offerings from the likes of Cisco, Fortinet, Arista, and Juniper. The same principles of Cloud automation with IaC are gradually being applied to on-premise environments as well with the datacentre, SDWAN and finally the access layer targeted.
 
 ```mermaid
-block-beta
 accTitle: Bringing it all together for network automation: block-beta diagram 1
 accDescr: The diagram above shows how a common layer of terraform with multiple providers can be used to manage the various areas of the network.
+block-beta
 columns 1
   TF["Common Terraform Layer"]
   block:TerraformProviders
@@ -64,9 +64,9 @@ Now what for the physical elements of networking? The luxury of the cloud has al
 
 ```mermaid
 
-block-beta
 accTitle: Bringing it all together for network automation: block-beta diagram 2
 accDescr: The workflow for physical changes follows similar to config changes - a branch is created with specifics of the physical changes to be made.
+block-beta
 columns 1
   TF["Common Terraform Layer"]
   block:TerraformProviders
@@ -108,9 +108,9 @@ The workflow for physical changes follows similar to config changes - a branch i
 
 ```mermaid
 
-gitGraph
 accTitle: Bringing it all together for network automation: gitGraph diagram 3
 accDescr: This gitGraph diagram shows request and implementation.
+gitGraph
     commit
     branch request
     checkout request
@@ -129,9 +129,9 @@ While a combination of netbox and self documenting IaC can be good for painting 
 
 ```mermaid
 
-block-beta
 accTitle: Bringing it all together for network automation: block-beta diagram 4
 accDescr: This block-beta diagram shows Common Terraform Layer, Markdown Documentation, Feature Module, and Terraform Provider.
+block-beta
 
 block:Code
 columns 2

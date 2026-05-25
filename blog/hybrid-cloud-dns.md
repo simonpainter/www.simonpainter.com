@@ -68,9 +68,9 @@ This is the official architecture. It's enterprise-grade, highly available, and 
 #### Resolution Path Flow
 
 ```mermaid
-flowchart LR
 accTitle: Resolution Path Flow: flowchart diagram 1
 accDescr: This flowchart diagram shows On-Premises, Client, On-Prem DNS, and On-Prem Authoritative Zone.
+flowchart LR
     subgraph OnPrem["On-Premises"]
         OPClient["Client"]
         OPDNS["On-Prem DNS"]
@@ -125,9 +125,9 @@ The operational model is also similar: you're managing conditional forwarders an
 #### Resolution Path Flow
 
 ```mermaid
-flowchart LR
 accTitle: Resolution Path Flow: flowchart diagram 2
 accDescr: The two clouds are more similar than different when it comes to hybrid DNS, but the details matter.
+flowchart LR
     subgraph OnPrem["On-Premises"]
         OPClient["Client"]
         OPDNS["On-Prem DNS"]
@@ -189,9 +189,9 @@ For resilience, Infoblox recommends Anycast IPs. An Anycast IP is a single IP ad
 #### Resolution Path Flow
 
 ```mermaid
-flowchart LR
 accTitle: Resolution Path Flow: flowchart diagram 3
 accDescr: The practical design choice in this model is where authority sits for each zone family.
+flowchart LR
     subgraph Clients["Client Networks"]
         OPClient["On-Prem Client"]
         AZClient["Azure Client"]

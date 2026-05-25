@@ -373,9 +373,9 @@ Your web origin can delegate HTTPS service metadata without sacrificing MX recor
 This is simpler than trying to fake apex aliasing with CNAMEs, but it still needs realistic deployment hygiene: fallback A/AAAA for legacy clients, ordinary HTTPS redirects and HSTS for browsers that ignore HTTPS RRs, and a clear distinction between resolver-name discovery and `_dns.resolver.arpa` bootstrap DDR.
 
 ```mermaid
-graph TB
 accTitle: Another Concrete Example: Apex Alias with Multiple Endpoints: graph diagram 1
 accDescr: Monitor your HTTP/3 traffic ratio over time.
+graph TB
     A["example.com HTTPS 0"] --> B["svc.example.net"]
     B --> C["HTTPS Priority 1<br/>cdn-primary.provider.net"]
     B --> D["HTTPS Priority 2<br/>cdn-backup.provider.net"]

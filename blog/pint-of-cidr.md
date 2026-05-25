@@ -24,9 +24,9 @@ AWS and Azure share basic networking principles that shape their virtual network
 Remember that when checking for overlaps, particularly in [Azure Subnet Peering](subnet-peering.md), the system looks at the entire CIDR range, not individual subnets within it. The diagram below shows this concept for both AWS VPCs and Azure VNets.
 
 ```mermaid
-graph LR
 accTitle: Peering: graph diagram 1
 accDescr: With AWS, you can selectively add routes across VPC peerings using route tables.
+graph LR
     subgraph VNet1[VNet1 CIDR: 10.0.0.0/16]
         direction TB
         Subnet1[Subnet1: 10.0.1.0/24]
@@ -89,9 +89,9 @@ AWS's handling of reserved IPs at `network +2` and `network +3` is quite strange
 The `network +2` IP of the primary CIDR serves as the DNS IP address for that CIDR. However, the `network +2` IP is also reserved in each subnet, even when it's not the same as the CIDR DNS server IP. Things get even stranger when you consider that 169.254.169.253 also exists as a magical address that responds to DNS queries within your VPCs.
 
 ```mermaid
-graph TB
 accTitle: Reserved IPs: graph diagram 2
 accDescr: When creating an Azure VNet, you're prompted to set up an IP range and a subnet within it.
+graph TB
     subgraph VPC["VPC CIDR: 192.168.0.0/24"]
         DNS["Normal DNS IP</br>192.168.0.2"]
         Meta["Magic DNS IP</br>169.254.169.253"]

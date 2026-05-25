@@ -33,9 +33,9 @@ Instead, I can use inbound NAT rules to share a single public IP across all serv
 
 ```mermaid
 
-flowchart TB
 accTitle: Rule-Based NAT for Inbound Connections: flowchart diagram 1
 accDescr: This flowchart diagram shows Web Client, Admin User, Database Client, and Public IP: 20.1.2.3.
+flowchart TB
     subgraph "Internet"
         Client1[Web Client]
         Client2[Admin User]

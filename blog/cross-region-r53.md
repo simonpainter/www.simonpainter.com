@@ -67,9 +67,9 @@ When it all comes together, the DNS resolution flow works like this:
 8) Response returns through Azure DNS Resolver to VM
 
 ```mermaid
-flowchart LR
 accTitle: The Flow in Action: flowchart diagram 1
 accDescr: The beauty of this setup is that AWS treats the query as originating from the region where its Route 53 Resolver inbound endpoint is located.
+flowchart LR
     subgraph Azure[Azure 172.16.1.0/24]
         VM1[VM]
         DNS[Azure DNS Resolver]

@@ -58,9 +58,9 @@ Second, DDR (Discovery of Designated Resolvers, [RFC 9462](https://datatracker.i
 ## The Protocol Landscape Now
 
 ```mermaid
-timeline
 accTitle: The Protocol Landscape Now: timeline diagram 1
 accDescr: My worry is that the industry will treat DoQ as late to the party and not adopt it as the best option for enterprise encrypted DNS.
+timeline
     title Encrypted DNS: From RFC to Production
     2016 : RFC 7858 - DoT - port 853, TCP+TLS, enterprise-friendly
     2018 : RFC 8484 - DoH - port 443, HTTP/2, browser-default

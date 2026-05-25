@@ -97,9 +97,9 @@ But in big companies, it often falls apart. Large organisations have complex DNS
 Here's a common situation where it fails:
 
 ```mermaid
-flowchart TD
 accTitle: DNS-based FQDN Filtering: A Good Idea With Problems: flowchart diagram 1
 accDescr: In this example, DNS goes through one firewall but web traffic goes through another.
+flowchart TD
     Client[Internal Client] --> Router[Corporate Network]
     
     Router --> |DNS Traffic| FirewallA[Edge Firewall A]

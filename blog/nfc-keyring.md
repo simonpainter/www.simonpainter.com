@@ -42,9 +42,9 @@ This is the easiest part. I used [NFC Tools](https://apps.apple.com/gb/app/nfc-t
 Open the app, tap **Write**, then **Add a record**, and choose **URL/URI**. Enter whatever link you want - I used my [Linktree](https://linktr.ee/simonpainter) page which has links to my LinkedIn, GitHub, and blog. Hit write, hold the phone over the sticker, and you're done. Once you have set the URL you can write as many as you can by pressing the button and tapping the sticker - no need to re-enter the URL each time.
 
 ```mermaid
-flowchart LR
 accTitle: Programming the NFC Sticker: flowchart diagram 1
 accDescr: This flowchart diagram shows Open NFC Tools, Tap Write, Add a record, and URL / URI.
+flowchart LR
     A([Open NFC Tools]) --> B[Tap Write]
     B --> C[Add a record]
     C --> D[URL / URI]

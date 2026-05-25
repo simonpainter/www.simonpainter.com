@@ -20,9 +20,9 @@ The objective was to insert some Juniper SRX firewalls into the traffic flow nor
 
 ```mermaid
 
-graph TD
 accTitle: What we were trying to do: graph diagram 1
 accDescr: This graph diagram shows Telco CE, Nexus 7K - Default VRF, Nexus 7K Switch, and Nexus 7K - External VRF.
+graph TD
     CE[Telco CE] --- N7K1[Nexus 7K - Default VRF]
     
     subgraph NEXUS[Nexus 7K Switch]

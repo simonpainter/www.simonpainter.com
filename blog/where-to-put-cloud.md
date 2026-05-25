@@ -34,9 +34,9 @@ It's very hard to take every scenario into account, particularly when you consid
 The simplest topology is the single site with aspirations to extend to cloud. It's common that a single-site topology has all the connectivity centralised, so extending a VPN over the internet is the first iteration.
 
 ```mermaid
-graph TD
 accTitle: Starting without a WAN: graph diagram 1
 accDescr: This graph diagram shows Site 1, Users + On-Premise Compute and Cloud Provider, AWS/Azure/GCP.
+graph TD
  Site[Site 1<br/>Users + On-Premise Compute] ---|Internet Connection| Internet((Internet<br/>WAN))
  Internet ---|VPN Tunnel| Cloud[Cloud Provider<br/>AWS/Azure/GCP]
  
@@ -55,9 +55,9 @@ To expand this to multicloud you either scale out the VPN connections sideways, 
 The business case for ExpressRoute or Direct Connect rarely stacks up at this scale due to the high monthly costs, but if you were to extend your single site over a fixed link, that would most likely be in conjunction with a carrier-provided WAN link to connect to the CSP peering location.
 
 ```mermaid
-graph TD
 accTitle: Moving to ExpressRoute or Direct Connect: graph diagram 2
 accDescr: This is the first instance where you can connect entirely without the need to have a firewall in place between the on-premise and cloud environments.
+graph TD
  Site[Site 1<br/>Users + On-Premise Compute] ---|Point-to-Point Link| Provider((Provider<br/>WAN))
  Provider ---|ExpressRoute/Direct Connect| Cloud[Cloud Provider<br/>AWS/Azure/GCP]
  
@@ -72,9 +72,9 @@ This is the first instance where you can connect entirely without the need to ha
 For multi-site organisations with an MPLS WAN and dedicated datacentres, it's pretty common for the datacentre to also be the location for the consolidated perimeter. Internet ingress and egress, business to business connectivity and telco connectivity all get consolidated into the datacentres, so the cloud connectivity naturally gets extended from the datacentre - the cloud becomes an extension of the datacentre, either through a direct connection or via a VPN.
 
 ```mermaid
-graph TD
 accTitle: Scaling to WAN Connected Sites: graph diagram 3
 accDescr: This graph diagram shows Site 1, Branch Office, Site 2, Branch Office, Site 3, Branch Office, and Datacentre, Consolidated Perimeter, Internet + B2B + Telco.
+graph TD
  Site1[Site 1<br/>Branch Office] ---|MPLS| MPLS((MPLS<br/>WAN))
  Site2[Site 2<br/>Branch Office] ---|MPLS| MPLS
  Site3[Site 3<br/>Branch Office] ---|MPLS| MPLS
@@ -106,9 +106,9 @@ This works great right up until the point where you realise that you have put mo
 Network-to-Network Interconnect (NNI) represents a direct connection between network providers. Most WAN providers have the ability to provision a high-capacity edge port in the many CNFs that CSPs offer connectivity in. This means that for the modest price of a carrier cross-connect, you can have the cloud provider network directly accessible as another site on your WAN. It's worth noting that in this model you don't have firewalling between your on-premise and cloud environments; however, you can remedy this with cloud hub firewalls or by using a SASE provider like [Cloud Gateway](https://www.cloudgateway.co.uk/services/connectivity/cloud-connectivity/).
 
 ```mermaid
-graph TD
 accTitle: Enter the NNI: graph diagram 4
 accDescr: This graph diagram shows Site 1, Branch Office, Site 2, Branch Office, Datacentre, Primary Site, and CNF Facility, Equinix/Digital Realty, Coresite/etc..
+graph TD
  Site1[Site 1<br/>Branch Office] ---|WAN Connection| WAN((WAN Provider<br/>Network))
  Site2[Site 2<br/>Branch Office] ---|WAN Connection| WAN
  DC[Datacentre<br/>Primary Site] ---|WAN Connection| WAN
@@ -132,9 +132,9 @@ accDescr: This graph diagram shows Site 1, Branch Office, Site 2, Branch Office,
 As the realisation dawns that there's no firewall between the on-premise networks and the cloud, the logical evolution of the above design is to build out a small presence in the CNF with cloud firewalls and perhaps internet egress - dedicated internet access (DIA) is considerably cheaper in a CNF because you can pay less for a cross-connect inside the facility than for miles of fibre under the road.
 
 ```mermaid
-graph TD
 accTitle: Enhanced CNF presence with customer equipment for security and internet breakout: graph diagram 5
 accDescr: This graph diagram shows Site 1, Branch Office, Site 2, Branch Office, Datacentre, Primary Site, and CNF Facility, Equinix/Digital Realty, Coresite/etc..
+graph TD
  Site1[Site 1<br/>Branch Office] ---|WAN Connection| WAN((WAN Provider<br/>Network))
  Site2[Site 2<br/>Branch Office] ---|WAN Connection| WAN
  DC[Datacentre<br/>Primary Site] ---|WAN Connection| WAN
@@ -172,9 +172,9 @@ For organisations that have built out their CNF presence the whole sunk cost fal
 There are many reasons to use an ExpressRoute or Direct Connect circuit; the two biggest cited are predictability of latency and reduction in data egress charges (which can be substantial for bandwidth-intensive workloads). When you move to SD-WAN with the internet as the underlay network, you choose to sacrifice some of that predictability in latency, most likely because you have begun to move away from applications that are sensitive to latency and jitter. The aggregate costs of maintaining hardware in the CNF alongside ER or DC links can easily outweigh the marginally higher egress charges for internet vs ER/DC.
 
 ```mermaid
-graph TD
 accTitle: Migrating to SD-WAN: graph diagram 6
 accDescr: The model expands the perimeter without simplifying the topology; it introduces additional management overhead without removing the reliance on centralised capabilities.
+graph TD
  Site1[Site 1<br/>Branch Office] ---|SD-WAN| SDWAN((SD-WAN<br/>Overlay))
  Site1 ---|Local Internet| Internet1((Local Internet))
  
@@ -213,9 +213,9 @@ The model expands the perimeter without simplifying the topology; it introduces 
 The evolution towards cloud-native networking represents a fundamental shift in thinking. Rather than treating the cloud as a remote extension of the datacentre, modern architectures recognise cloud regions as equivalent network nodes in a distributed system.
 
 ```mermaid
-graph TD
 accTitle: The Cloud is Just Another Place: graph diagram 7
 accDescr: This graph diagram shows Site 1, Branch Office, Site 2, Branch Office, Datacentre, Primary Site, and Cloud Provider, AWS/Azure/GCP, with SD-WAN Hub.
+graph TD
  Site1[Site 1<br/>Branch Office] ---|SD-WAN| SDWAN((SD-WAN<br/>Overlay))
  
  Site2[Site 2<br/>Branch Office] ---|SD-WAN| SDWAN

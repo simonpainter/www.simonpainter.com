@@ -73,9 +73,9 @@ architecture-beta
 ```
 
 ```mermaid
-architecture-beta
 accTitle: Custom icons for Mermaid diagrams in Docusaurus: architecture-beta diagram 1
 accDescr: This architecture-beta diagram shows Git, GitHub, GitHub Action, and S3 Bucket.
+architecture-beta
 
   service git(logos:git-icon)[Git]
   service github(logos:github-icon)[GitHub]

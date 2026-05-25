@@ -95,9 +95,9 @@ def fizzbuzz(n):
 The documentation came first, defining exactly what we wanted. The test validates our understanding, and the code implements the documented behavior. If requirements change, we update the documentation first, then the tests, then the code.
 
 ```mermaid
-flowchart TD
 accTitle: A Simple Example: FizzBuzz Documentation-First: flowchart diagram 1
 accDescr: This flowchart diagram shows Documentation, Tests, Code, and Done.
+flowchart TD
     A[📝 Documentation] --> B[🧪 Tests]
     B --> C[💻 Code]
     C --> D{Pass?}
@@ -119,9 +119,9 @@ Translating this into infrastructure if the ticket says that 'the network is run
 This can be solved by documenting a blueprint for an infrastructure, be it an application hosting environment, a campus office location, or in my favourite realm of retail, a store. This documentation can follow a lifecycle similar to code, the wonderful [documentation as code](https://about.gitlab.com/blog/five-fast-facts-about-docs-as-code-at-gitlab/) approach that uses tools like [github](/tags/github) to manage the documentation and things like [docusaurus](/tags/docusaurus) to make it accessible to anyone that needs it. These blueprints are made up of a collection of business focussed features within the infrastructure and allow the capabilities and limitations of the infrastructure to be easily understood.
 
 ```mermaid
-flowchart LR
 accTitle: Implementation Strategies: flowchart diagram 2
 accDescr: This flowchart diagram shows Initial Docs, WiFi Feature, Merge v2.0, and POS Feature.
+flowchart LR
     A[📄 Initial Docs] --> B[🌐 WiFi Feature]
     B --> C[🔀 Merge v2.0]
     C --> D[💳 POS Feature]

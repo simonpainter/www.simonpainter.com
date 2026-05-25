@@ -35,9 +35,9 @@ echo "Hello, World from UK South, AZ1" > /var/www/html/index.html
 You should now have something that looks a bit like this:
 
 ```mermaid
-graph TB
 accTitle: Web applications 101: graph diagram 1
 accDescr: This graph diagram shows Resource Group, UK South Region, VNet UK South (10.0.0.0/16), and Subnet (10.0.1.0/24).
+graph TB
     subgraph RG["Resource Group"]
         subgraph UKS["UK South Region"]
             subgraph VNETS["VNet UK South (10.0.0.0/16)"]
@@ -95,9 +95,9 @@ You can slide a WAF capability into the Application Gateway and be home in time 
 
 ```mermaid
 
-graph TB
 accTitle: Web applications 101: graph diagram 2
 accDescr: This graph diagram shows Resource Group, UK South Region, VNet UK South (10.0.0.0/16), and AppGw Subnet (10.0.0.0/27).
+graph TB
     subgraph RG["Resource Group"]
         subgraph UKS["UK South Region"]
             subgraph VNETS["VNet UK South (10.0.0.0/16)"]
@@ -134,9 +134,9 @@ In the diagram below, I've added UK West as the secondary region. UK West is a b
 
 ```mermaid
 
-graph TB
 accTitle: Adding another region: graph diagram 3
 accDescr: I dislike diagrams that appear to show traffic going through Azure Traffic Manager, or indeed in the old days an F5 Global Traffic Manager (GTM).
+graph TB
     subgraph RG["Resource Group"]
         TM["Azure Traffic Manager"]
         subgraph UKS["UK South Region"]
@@ -200,9 +200,9 @@ As Front Door terminates the connection at the edge and serves from the edge cac
 
 ```mermaid
 
-graph TB
 accTitle: Customers everywhere: graph diagram 4
 accDescr: This graph diagram shows Resource Group, Azure Front Door with WAF, UK South Region, and VNet UK South (10.0.0.0/16).
+graph TB
     subgraph RG["Resource Group"]
         AFD["Azure Front Door with WAF"]
         subgraph UKS["UK South Region"]

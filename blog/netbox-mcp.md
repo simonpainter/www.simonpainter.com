@@ -173,9 +173,9 @@ I further refined the query to check the dates and format it into a table; it wo
 
 ```mermaid
 
-graph TD
 accTitle: Now for something a bit tougher: graph diagram 1
 accDescr: This graph diagram shows CORE01 (Cisco 9324C-SE1U) and FWL01 (Juniper SRX5800 Firewall).
+graph TD
     subgraph Network Devices
         CORE01["CORE01 (Cisco 9324C-SE1U)"]
         FWL01["FWL01 (Juniper SRX5800 Firewall)"]
