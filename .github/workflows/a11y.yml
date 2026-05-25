@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 jobs:
   pa11y:
@@ -50,96 +51,101 @@ jobs:
       - name: Run accessibility checks
         run: npm run test:a11y
 
-      - name: Generate HTML report
+      - name: Generate PR comment report
         if: always()
         run: |
           node <<'EOF'
           const fs = require('node:fs');
 
           const jsonPath = 'pa11y-report.json';
-          const htmlPath = 'pa11y-report.html';
+          const markdownPath = 'pa11y-report.md';
           const serveLogPath = 'serve.log';
-
-          const escapeHtml = value => String(value ?? '')
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
-
-          const writeHtml = body => {
-            fs.writeFileSync(
-              htmlPath,
-              `<!doctype html>
-          <html lang="en">
-            <head>
-              <meta charset="utf-8">
-              <title>Pa11y CI Report</title>
-              <style>
-                body { font-family: Arial, sans-serif; margin: 2rem; line-height: 1.5; color: #1f2937; }
-                h1, h2 { margin-bottom: 0.5rem; }
-                .summary { margin-bottom: 2rem; padding: 1rem; background: #f3f4f6; border-radius: 0.5rem; }
-                .page { margin-bottom: 2rem; }
-                .issue { margin: 0 0 1rem; padding: 1rem; border-left: 4px solid #dc2626; background: #fef2f2; }
-                .pass { border-left-color: #16a34a; background: #f0fdf4; }
-                code { background: #f3f4f6; padding: 0.125rem 0.25rem; border-radius: 0.25rem; }
-                pre { white-space: pre-wrap; word-break: break-word; background: #111827; color: #f9fafb; padding: 1rem; border-radius: 0.5rem; }
-                ul { padding-left: 1.25rem; }
-              </style>
-            </head>
-            <body>${body}</body>
-          </html>`,
-              'utf8'
-            );
+          const escapeInlineCode = value => String(value ?? '').replace(/`/g, '\\`');
+          const truncate = (value, max = 160) => {
+            const text = String(value ?? '').replace(/\s+/g, ' ').trim();
+            return text.length > max ? `${text.slice(0, max - 3)}...` : text;
           };
 
           if (!fs.existsSync(jsonPath)) {
-            const serveLog = fs.existsSync(serveLogPath)
-              ? `<h2>Local server log</h2><pre>${escapeHtml(fs.readFileSync(serveLogPath, 'utf8'))}</pre>`
-              : '';
-            writeHtml(`<h1>Pa11y CI Report</h1><p>No JSON report was generated.</p>${serveLog}`);
+            let output = '## Accessibility report\n\nNo JSON report was generated.\n';
+            if (fs.existsSync(serveLogPath)) {
+              const serveLog = fs.readFileSync(serveLogPath, 'utf8').trim();
+              output += `\n<details><summary>Local server log</summary>\n\n\`\`\`\n${serveLog}\n\`\`\`\n</details>\n`;
+            }
+            fs.writeFileSync(markdownPath, output, 'utf8');
             process.exit(0);
           }
 
           const report = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
           const pages = Object.entries(report.results || {}).sort(([left], [right]) => left.localeCompare(right));
+          const lines = [];
+          lines.push('## Accessibility report');
+          lines.push('');
+          lines.push(`- Pages tested: ${report.total ?? 0}`);
+          lines.push(`- Pages passed: ${report.passes ?? 0}`);
+          lines.push(`- Violations found: ${report.errors ?? 0}`);
+          lines.push('');
 
-          const pageSections = pages.map(([url, issues]) => {
+          for (const [url, issues] of pages) {
+            lines.push(`### ${url}`);
             if (!issues.length) {
-              return `<section class="page"><h2>${escapeHtml(url)}</h2><div class="issue pass"><strong>No WCAG 2 AA violations found.</strong></div></section>`;
+              lines.push('- No WCAG 2 AA violations found.');
+              lines.push('');
+              continue;
             }
 
-            const issueItems = issues.map(issue => `
-              <article class="issue">
-                <p><strong>${escapeHtml(issue.code || issue.message || 'Accessibility issue')}</strong></p>
-                ${issue.selector ? `<p><strong>Selector:</strong> <code>${escapeHtml(issue.selector)}</code></p>` : ''}
-                ${issue.context ? `<p><strong>Context:</strong> <code>${escapeHtml(issue.context)}</code></p>` : ''}
-                ${issue.message ? `<p>${escapeHtml(issue.message)}</p>` : ''}
-              </article>
-            `).join('');
+            for (const issue of issues.slice(0, 8)) {
+              lines.push(`- \`${escapeInlineCode(issue.code || 'issue')}\` ${truncate(issue.message || 'Accessibility issue')}`);
+              if (issue.selector) {
+                lines.push(`  - selector: \`${escapeInlineCode(issue.selector)}\``);
+              }
+            }
+            if (issues.length > 8) {
+              lines.push(`- ... and ${issues.length - 8} more issue(s) on this page`);
+            }
+            lines.push('');
+          }
 
-            return `<section class="page"><h2>${escapeHtml(url)}</h2>${issueItems}</section>`;
-          }).join('');
-
-          writeHtml(`
-            <h1>Pa11y CI Report</h1>
-            <section class="summary">
-              <ul>
-                <li><strong>Pages tested:</strong> ${escapeHtml(report.total)}</li>
-                <li><strong>Pages passed:</strong> ${escapeHtml(report.passes)}</li>
-                <li><strong>Violations found:</strong> ${escapeHtml(report.errors)}</li>
-              </ul>
-            </section>
-            ${pageSections}
-          `);
+          fs.writeFileSync(markdownPath, `${lines.join('\n')}\n`, 'utf8');
           EOF
 
-      - name: Upload HTML report
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Comment accessibility report on PR
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
         with:
-          name: pa11y-report
-          path: pa11y-report.html
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('node:fs');
+            const path = 'pa11y-report.md';
+            const marker = '<!-- pa11y-report -->';
+            const body = fs.existsSync(path)
+              ? `${marker}\n${fs.readFileSync(path, 'utf8')}`
+              : `${marker}\n## Accessibility report\n\nNo report was generated.`;
+
+            const issue_number = context.issue.number;
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number,
+              per_page: 100
+            });
+
+            const existing = comments.find(comment => comment.body && comment.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number,
+                body
+              });
+            }
 
       - name: Stop local site
         if: always()
