@@ -13,7 +13,7 @@ date: 2026-05-25
 
 Microsoft has put **summarized advertised gateway prefixes** into public preview for Azure hybrid gateways. In plain terms, you can now tell Azure to advertise a smaller, cleaner set of CIDRs to on-prem instead of every hub and spoke prefix.
 
-This matters when your hub-and-spoke estate gets large and your route table starts to look like a junk drawer. Fewer advertised prefixes can reduce operational noise and help you stay under ExpressRoute advertisement limits.
+This matters when your hub-and-spoke estate gets large and your route table starts to look like a junk drawer. Fewer advertised prefixes can reduce operational noise and help you stay under ExpressRoute advertised prefix limits.
 
 The update applies to Azure VPN Gateway and ExpressRoute Gateway scenarios where route advertisement scale and control are both pain points.
 
