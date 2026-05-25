@@ -1,6 +1,6 @@
-import React from 'react';
 import Translate, {translate} from '@docusaurus/Translate';
 import Link from '@docusaurus/Link';
+
 function ReadMoreLabel() {
   return (
     <b>
