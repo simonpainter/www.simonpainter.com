@@ -1,0 +1,149 @@
+name: Accessibility
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  pa11y:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Docusaurus site
+        run: npm run build
+
+      - name: Start local site
+        run: |
+          npm run serve -- --host 127.0.0.1 --port 3000 --no-open > serve.log 2>&1 &
+          echo $! > serve.pid
+
+          for i in {1..30}; do
+            if curl --silent --fail http://127.0.0.1:3000/ > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "The local site did not start in time."
+          cat serve.log
+          exit 1
+
+      - name: Run accessibility checks
+        run: npm run test:a11y
+
+      - name: Generate HTML report
+        if: always()
+        run: |
+          node <<'EOF'
+          const fs = require('node:fs');
+
+          const jsonPath = 'pa11y-report.json';
+          const htmlPath = 'pa11y-report.html';
+          const serveLogPath = 'serve.log';
+
+          const escapeHtml = value => String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+
+          const writeHtml = body => {
+            fs.writeFileSync(
+              htmlPath,
+              `<!doctype html>
+          <html lang="en">
+            <head>
+              <meta charset="utf-8">
+              <title>Pa11y CI Report</title>
+              <style>
+                body { font-family: Arial, sans-serif; margin: 2rem; line-height: 1.5; color: #1f2937; }
+                h1, h2 { margin-bottom: 0.5rem; }
+                .summary { margin-bottom: 2rem; padding: 1rem; background: #f3f4f6; border-radius: 0.5rem; }
+                .page { margin-bottom: 2rem; }
+                .issue { margin: 0 0 1rem; padding: 1rem; border-left: 4px solid #dc2626; background: #fef2f2; }
+                .pass { border-left-color: #16a34a; background: #f0fdf4; }
+                code { background: #f3f4f6; padding: 0.125rem 0.25rem; border-radius: 0.25rem; }
+                pre { white-space: pre-wrap; word-break: break-word; background: #111827; color: #f9fafb; padding: 1rem; border-radius: 0.5rem; }
+                ul { padding-left: 1.25rem; }
+              </style>
+            </head>
+            <body>${body}</body>
+          </html>`,
+              'utf8'
+            );
+          };
+
+          if (!fs.existsSync(jsonPath)) {
+            const serveLog = fs.existsSync(serveLogPath)
+              ? `<h2>Local server log</h2><pre>${escapeHtml(fs.readFileSync(serveLogPath, 'utf8'))}</pre>`
+              : '';
+            writeHtml(`<h1>Pa11y CI Report</h1><p>No JSON report was generated.</p>${serveLog}`);
+            process.exit(0);
+          }
+
+          const report = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+          const pages = Object.entries(report.results || {}).sort(([left], [right]) => left.localeCompare(right));
+
+          const pageSections = pages.map(([url, issues]) => {
+            if (!issues.length) {
+              return `<section class="page"><h2>${escapeHtml(url)}</h2><div class="issue pass"><strong>No WCAG 2 AA violations found.</strong></div></section>`;
+            }
+
+            const issueItems = issues.map(issue => `
+              <article class="issue">
+                <p><strong>${escapeHtml(issue.code || issue.message || 'Accessibility issue')}</strong></p>
+                ${issue.selector ? `<p><strong>Selector:</strong> <code>${escapeHtml(issue.selector)}</code></p>` : ''}
+                ${issue.context ? `<p><strong>Context:</strong> <code>${escapeHtml(issue.context)}</code></p>` : ''}
+                ${issue.message ? `<p>${escapeHtml(issue.message)}</p>` : ''}
+              </article>
+            `).join('');
+
+            return `<section class="page"><h2>${escapeHtml(url)}</h2>${issueItems}</section>`;
+          }).join('');
+
+          writeHtml(`
+            <h1>Pa11y CI Report</h1>
+            <section class="summary">
+              <ul>
+                <li><strong>Pages tested:</strong> ${escapeHtml(report.total)}</li>
+                <li><strong>Pages passed:</strong> ${escapeHtml(report.passes)}</li>
+                <li><strong>Violations found:</strong> ${escapeHtml(report.errors)}</li>
+              </ul>
+            </section>
+            ${pageSections}
+          `);
+          EOF
+
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pa11y-report
+          path: pa11y-report.html
+
+      - name: Stop local site
+        if: always()
+        run: |
+          if [ -f serve.pid ]; then
+            kill "$(cat serve.pid)" || true
+          fi
