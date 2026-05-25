@@ -1,0 +1,31 @@
+{
+  "defaults": {
+    "standard": "WCAG2AA",
+    "includeWarnings": false,
+    "includeNotices": false,
+    "timeout": 30000,
+    "wait": 500,
+    "concurrency": 1,
+    "useIncognitoBrowserContext": true,
+    "chromeLaunchConfig": {
+      "args": [
+        "--no-sandbox"
+      ]
+    },
+    "reporters": [
+      "cli",
+      [
+        "json",
+        {
+          "fileName": "./pa11y-report.json"
+        }
+      ]
+    ]
+  },
+  "urls": [
+    "http://127.0.0.1:3000/tags",
+    "http://127.0.0.1:3000/tags/aws",
+    "http://127.0.0.1:3000/authors",
+    "http://127.0.0.1:3000/hybrid-cloud-dns"
+  ]
+}
