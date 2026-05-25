@@ -25,6 +25,8 @@ Remember that when checking for overlaps, particularly in [Azure Subnet Peering]
 
 ```mermaid
 graph LR
+      accTitle: Peering: graph diagram 1
+      accDescr: With AWS, you can selectively add routes across VPC peerings using route tables.
     subgraph VNet1[VNet1 CIDR: 10.0.0.0/16]
         direction TB
         Subnet1[Subnet1: 10.0.1.0/24]
@@ -45,7 +47,6 @@ graph LR
     style Subnet2 fill:#cce5ff
     style X fill:#ffebee,stroke:#ff0000
 ```
-
 With AWS, you can selectively add routes across VPC peerings using route tables. Azure's default is to add routes for the entire CIDR, but you can use the somewhat misleadingly named [Subnet Peering](subnet-peering.md) to selectively allow specific subnet routes across VNet peering.
 
 ### Prefix Advertisements via BGP
@@ -89,6 +90,8 @@ The `network +2` IP of the primary CIDR serves as the DNS IP address for that CI
 
 ```mermaid
 graph TB
+      accTitle: Reserved IPs: graph diagram 2
+      accDescr: When creating an Azure VNet, you're prompted to set up an IP range and a subnet within it.
     subgraph VPC["VPC CIDR: 192.168.0.0/24"]
         DNS["Normal DNS IP</br>192.168.0.2"]
         Meta["Magic DNS IP</br>169.254.169.253"]
@@ -108,7 +111,6 @@ graph TB
     style Subnet1 fill:#f0f0f0,stroke:#666666
     style Subnet2 fill:#f0f0f0,stroke:#666666
 ```
-
 ### CIDR flexibility
 
 When creating an Azure VNet, you're prompted to set up an IP range and a subnet within it. Later, you can delete or resize these as needed. With AWS, you must create a primary CIDR for your VPC - and once created, you can't delete or resize it.
