@@ -84,12 +84,13 @@ You'll see I have only implemented 4 tools so far and the [Netbox API has many m
 ```mermaid
 
 flowchart LR
+      accTitle: Architectural Overview: flowchart diagram 1
+      accDescr: This flowchart diagram shows Claude Desktop, mcp-remote, Flask MCP Server, and NetBox API.
     A[Claude Desktop] --> B[mcp-remote]
     B --> C[Flask MCP Server]
     C --> D[NetBox API]
 
 ```
-
 >Here's how each component contributes:
 >
 > **Claude Desktop**: The AI interface where users ask natural language questions

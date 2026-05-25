@@ -196,6 +196,8 @@ So I did a bit of testing on some other boxes, sending the query via a bunch of 
 
 ```mermaid
 graph LR
+      accTitle: What's actually happening: graph diagram 1
+      accDescr: When you use dig TXT o-o.myaddr.l.google.com +short the request goes from the VM to the Azure DNS server, which then forwards the request to Google's DNS server.
     VM1[VM1]
     AzureDNS[Azure DNS]
     GoogleDNS[Google DNS]
@@ -211,7 +213,6 @@ graph LR
     style GoogleDNS fill:#4285F4
     style NAT fill:#00BCF2
 ```
-
 When you use `dig TXT o-o.myaddr.l.google.com +short` the request goes from the VM to the Azure DNS server, which then forwards the request to Google's DNS server.
 
 1. Source VM, Destination Azure DNS

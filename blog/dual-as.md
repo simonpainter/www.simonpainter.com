@@ -29,12 +29,14 @@ To solve this problem use dual-as which allows you to configure a secondary remo
 
 ```mermaid
 graph LR
+      accTitle: Dual AS for BGP ASN migrations and changes: graph diagram 1
+      accDescr: This graph diagram shows PE Router, IP: 10.0.0.1/30, BGP ASN: 2856 and CE Router, IP: 10.0.0.2/30, BGP ASN: 34444.
     PE["PE Router<br/>IP: 10.0.0.1/30<br/>BGP ASN: 2856"]
     CE["CE Router<br/>IP: 10.0.0.2/30<br/>BGP ASN: 34444"]
     
     PE o---o CE
 ```
-
+Summary: This graph diagram shows the PE router and the CE router with their point-to-point link and BGP ASNs.
 ```text
 PE Router
 interface FastEthernet0/0
