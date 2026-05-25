@@ -174,6 +174,8 @@ I further refined the query to check the dates and format it into a table; it wo
 ```mermaid
 
 graph TD
+accTitle: Now for something a bit tougher: graph diagram 1
+accDescr: This graph diagram shows CORE01 (Cisco 9324C-SE1U) and FWL01 (Juniper SRX5800 Firewall).
     subgraph Network Devices
         CORE01["CORE01 (Cisco 9324C-SE1U)"]
         FWL01["FWL01 (Juniper SRX5800 Firewall)"]
@@ -183,7 +185,6 @@ graph TD
     
  
 ```
-
 ### The big questions
 
 So is it ready for production use? For most network teams, yes. The MCP server transforms NetBox from a technical database into a conversational interface that non-technical stakeholders can actually use. While the initial setup required some troubleshooting and the error messages could be clearer, the time investment pays off quickly. I was particularly impressed when it generated a comprehensive KTLO roadmap in under two minutes, a task that typically takes me hours and that I genuinely dislike doing.

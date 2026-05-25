@@ -42,6 +42,8 @@ I built an [MCP server](https://github.com/simonpainter/bgp-lg-mcp) that wraps t
 
 ```mermaid
 flowchart LR
+accTitle: Building the Bridge: flowchart diagram 1
+accDescr: Here's how each component works:
     A["Claude Desktop<br/>(Client)"] -->|"1. Natural language<br/>query"| B["Claude LLM<br/>(AI Model)"]
     B -->|"2. Tool call<br/>request"| A
     A -->|"3. Tool call:<br/>route_lookup"| C["BGP MCP Server<br/>(Python)"]
@@ -51,7 +53,6 @@ flowchart LR
     A -->|"7. Tool result"| B
     B -->|"8. Interpreted<br/>answer"| A
 ```
-
 Here's how each component works:
 
 > **Claude Desktop**: The client that manages the MCP connection and executes tool calls based on the LLM's requests

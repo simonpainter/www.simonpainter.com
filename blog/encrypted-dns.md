@@ -330,6 +330,8 @@ This whole mechanism rests on one non-negotiable dependency: the FortiGate must 
 
 ```mermaid
 sequenceDiagram
+accTitle: How wildcard FQDN objects actually work: sequenceDiagram diagram 1
+accDescr: When a client uses DoH, the DNS query and response travel inside HTTPS on port 443, encrypted with TLS.
     participant Client
     participant FortiGate
     participant DNS Resolver
@@ -344,7 +346,6 @@ sequenceDiagram
     Note over FortiGate: Matches *.storage.azure.com policy
     FortiGate->>Cloud Service: Allow
 ```
-
 ### The DoH failure mode
 
 When a client uses DoH, the DNS query and response travel inside HTTPS on port 443, encrypted with TLS. The FortiGate's DNS proxy can't read port 443 traffic without SSL deep packet inspection. Even with full SSL inspection enabled, Fortinet doesn't support using decrypted DoH traffic to populate wildcard FQDN objects. The feature simply isn't implemented that way. Fortinet's own documentation states it: DoH is not supported for wildcard FQDN resolution.
@@ -355,6 +356,8 @@ Neither outcome is what was intended, and neither is easy to diagnose without kn
 
 ```mermaid
 sequenceDiagram
+accTitle: The DoH failure mode: sequenceDiagram diagram 2
+accDescr: This sequenceDiagram diagram illustrates the workflow or relationships discussed in the surrounding text.
     participant Client
     participant FortiGate
     participant External DoH Resolver
@@ -367,7 +370,6 @@ sequenceDiagram
     Note over FortiGate: No match in *.storage.azure.com policy<br/>Falls to implicit deny
     FortiGate->>Client: Connection dropped
 ```
-
 ### DoT: the partial solution
 
 From FortiOS 7.0, DoT is handled more usefully. Because DoT uses port 853 with a dedicated TLS connection, FortiGate can be configured to decrypt and inspect it. The requirement is a firewall policy that allows DNS traffic from clients, with a DNS Filter profile and Deep Packet Inspection applied. With that configuration, the FortiGate terminates the TLS session on port 853, reads the plaintext DNS response, extracts the resolved IPs, populates the wildcard FQDN object, then re-encrypts and forwards the response. The mechanism works.

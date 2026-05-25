@@ -26,6 +26,8 @@ Azure networking is built to look a lot like on-premise networking, even though 
 ```mermaid
 
 flowchart LR
+accTitle: What problem does it solve?: flowchart diagram 1
+accDescr: Another common anomaly is that the gateway router for a subnet doesn't actually exist in any real sense.
     subgraph "VNet A (Spoke)"
         A[10.1.0.0/16]
     end
@@ -43,7 +45,6 @@ flowchart LR
     A x-.-x|"✗ No Route"| C
 
 ```
-
 Another common anomaly is that [the gateway router for a subnet doesn't actually exist in any real sense](https://blog.cloudtrooper.net/2023/01/21/azure-networking-is-not-like-your-on-onprem-network/). Sure there is a default gateway IP address reserved, and that's what the VM will try to send its traffic to, but the virtual NIC knows better and holds the routing table itself so that it can send the traffic directly to the destination in another subnet or a peered VNet without needing to go through another gateway.
 
 What this means to the 'trad networker' is that if you want to put in a routing table entry from one spoke to another, via the hub, the hub itself cannot be the next hop. You need to have some kind of appliance in the hub that can route the traffic between the spokes. This is a problem commonly solved with a third party NVA or a good old Azure Firewall, but there are some limitations to both of those.
@@ -98,6 +99,8 @@ The documents state that it's for private traffic only, not internet traffic. Th
 
 ```mermaid
 flowchart TB
+accTitle: How do I use it?: flowchart diagram 2
+accDescr: This flowchart diagram shows Hub VNet, Azure Firewall, VPN/ER Gateway, and Virtual Network, Appliance.
     subgraph Hub["Hub VNet"]
         FW["Azure Firewall"]
         GW["VPN/ER Gateway"]
@@ -154,13 +157,14 @@ flowchart TB
     style Internet fill:#95a5a6,color:#fff
     style OnPrem fill:#95a5a6,color:#fff
 ```
-
 The alternative is to send all traffic to the appliance and then have the subnet it lives in route to on premise, internet or other spokes, which would be a lot easier to manage; however, the appliance currently has no capability to route to the internet, even if you put a NAT gateway for the appliance subnet. I tried it so you don't have to!
 
 The halfway house is to have RFC1918 routes going to the appliance, which sorts out what goes on premise and what goes to another spoke, and then have the default route going to your egress solution. This is a bit more work to set up and manage but it does give you the best of both worlds in terms of control and simplicity. Separating cloud from on premise routes in the AVNA should be fairly straightforward because all the spoke routes will be learned in the hub automagically and everything else in 10/8 can go to your gateway.
 
 ```mermaid
 flowchart TB
+accTitle: How do I use it?: flowchart diagram 3
+accDescr: I like this option because you also reduce the chance of traffic inadvertently going through the firewall asymmetrically.
     subgraph Hub["Hub VNet"]
         FW["Azure Firewall"]
         GW["VPN/ER Gateway"]
@@ -215,7 +219,6 @@ flowchart TB
     style Internet fill:#95a5a6,color:#fff
     style OnPrem fill:#95a5a6,color:#fff
 ```
-
 I like this option because you also reduce the chance of traffic inadvertently going through the firewall asymmetrically. This is a big problem when you are manually configuring UDRs because if you miss one you end up with one of those really irritating to troubleshoot problems that the SRE team won't thank you for.
 
 Next up is capacity. I started with the 100Gbps option and created a few VMs to throw some traffic through it. Latency and throughput were all very consistent. It's going to take me a bit longer to build out some tests at scale but it's looking good so far. I will update this post with more details on the performance testing when I have it. I also want to know if the appliance scales out or not and how it handles long lived TCP connections but that will also require some more testing.

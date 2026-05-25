@@ -26,6 +26,8 @@ I kept things straightforward. I set up a few small VMs (B1, 1 vCPU, 1 GB RAM) i
 
 ```mermaid
 flowchart TD
+accTitle: My simple test setup: flowchart diagram 1
+accDescr: I connected everything with standard Azure networking - just basic VNET peering between regions, nothing fancy.
     subgraph "UKWest Region"
         subgraph "VNET-UKWest"
             Client3["Cross-Region Client B1 VM"]
@@ -52,7 +54,6 @@ flowchart TD
     %% VNET Peering connection
     VNET-UKWest <-- "VNET Peering" --> VNET-UKSouth
 ```
-
 I connected everything with standard Azure networking - just basic VNET peering between regions, nothing fancy. This gave me a clean slate to work from.
 
 ## How I measured things

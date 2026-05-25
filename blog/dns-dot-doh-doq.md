@@ -59,6 +59,8 @@ Second, DDR (Discovery of Designated Resolvers, [RFC 9462](https://datatracker.i
 
 ```mermaid
 timeline
+accTitle: The Protocol Landscape Now: timeline diagram 1
+accDescr: My worry is that the industry will treat DoQ as late to the party and not adopt it as the best option for enterprise encrypted DNS.
     title Encrypted DNS: From RFC to Production
     2016 : RFC 7858 - DoT - port 853, TCP+TLS, enterprise-friendly
     2018 : RFC 8484 - DoH - port 443, HTTP/2, browser-default
@@ -66,7 +68,6 @@ timeline
     2023 : RFC 9461 and 9462 - SVCB and DDR - automatic discovery
     2026 : DoQ reaches production scale with Quad9 and DoH3
 ```
-
 My worry is that the industry will treat DoQ as late to the party and not adopt it as the best option for enterprise encrypted DNS. Already we've seen Microsoft opt for DoH over DoT; one of the product managers told me they 'had to do one first' and DoH was the one supported on the client end. It would be good to see some joined up thinking with the Windows client and the DNS server teams making an intentional choice to support the protocol offering the best performance and security properties for enterprise use.
 
 I get why 1.1.1.1, 8.8.8.8, 9.9.9.9 and all the other public resolvers have been quick to add DoH support. It's the easiest one to market to end users because it melts into the background of https traffic and is hard to spot, hard to police, and hard to sniff. For privacy conscious end users, DoH is the obvious choice even though it is an abomination of a protocol from a performance, management, and security perspective.

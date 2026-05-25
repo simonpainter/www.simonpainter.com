@@ -43,6 +43,8 @@ Open the app, tap **Write**, then **Add a record**, and choose **URL/URI**. Ente
 
 ```mermaid
 flowchart LR
+accTitle: Programming the NFC Sticker: flowchart diagram 1
+accDescr: This flowchart diagram shows Open NFC Tools, Tap Write, Add a record, and URL / URI.
     A([Open NFC Tools]) --> B[Tap Write]
     B --> C[Add a record]
     C --> D[URL / URI]
@@ -51,7 +53,6 @@ flowchart LR
     F --> G[Hold phone over sticker]
     G --> H([Done ✓])
 ```
-
 Once programmed, anyone with a modern iPhone or Android phone can tap the keyring and get straight to your link. No app required on their end - it just pops up as a notification.
 
 <img src={require('./img/nfc-keyring/nfc-notification.jpeg').default} alt="iPhone notification when tapping the NFC keyring" style={{width: '50%'}} />

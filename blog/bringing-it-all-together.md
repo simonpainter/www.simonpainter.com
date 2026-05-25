@@ -24,6 +24,8 @@ Terraform allows for a more declarative approach to infrastructure management, e
 
 ```mermaid
 block-beta
+accTitle: Bringing it all together for network automation: block-beta diagram 1
+accDescr: The diagram above shows how a common layer of terraform with multiple providers can be used to manage the various areas of the network.
 columns 1
   TF["Common Terraform Layer"]
   block:TerraformProviders
@@ -56,7 +58,6 @@ columns 1
   end
   
 ```
-
 The diagram above shows how a common layer of terraform with multiple providers can be used to manage the various areas of the network. This allows for a consistent approach to managing the network infrastructure, regardless of the vendor or technology in use. To get the best of the situation you can use a version control system such as Github to manage the code pipelines so that approved pull requests automatically commit the configuration changes to the appropriate environment. This helps to ensure that the network infrastructure is always in a known and consistent state, making it easier to manage and troubleshoot.
 
 Now what for the physical elements of networking? The luxury of the cloud has always been that you are divorced from the cables strung across data halls or even for the most part the cross connects and WAN. If you want to extend this model to the physical layer then you need to have a single source of truth for your physical network and its components. [Netbox has a powerful terraform provider](netbox-terraform.md) which can be used to manage your physical connections in the same way as you do your logical ones. If you take a [documentation first approach](documentation-first.md) to your physical network then netbox becomes the single inventory of physical network components, their locations, their physical connectivity and their relationships to other components. It's powerful enough to manage the physical components of your compute layer too and your DC Ops team will thank you for it.
@@ -64,6 +65,8 @@ Now what for the physical elements of networking? The luxury of the cloud has al
 ```mermaid
 
 block-beta
+accTitle: Bringing it all together for network automation: block-beta diagram 2
+accDescr: The workflow for physical changes follows similar to config changes - a branch is created with specifics of the physical changes to be made.
 columns 1
   TF["Common Terraform Layer"]
   block:TerraformProviders
@@ -101,12 +104,13 @@ columns 1
   style TerraformProvider4 fill:#e1f5fe,stroke:#1976d2,stroke-width:3px
 
 ```
-
 The workflow for physical changes follows similar to config changes - a branch is created with specifics of the physical changes to be made. Implementation teams perform the physical cabling or installation work necessary and merge in any additional detail they need to capture (circuit information, patch panel information and the like) and then merge the finished request back into the main branch when complete. The history of the request and its implementation can be tracked through the git history, providing a clear audit trail of changes made to the physical network.
 
 ```mermaid
 
 gitGraph
+accTitle: Bringing it all together for network automation: gitGraph diagram 3
+accDescr: This gitGraph diagram shows request and implementation.
     commit
     branch request
     checkout request
@@ -121,12 +125,13 @@ gitGraph
     merge request
 
 ```
-
 While a combination of netbox and self documenting IaC can be good for painting a picture of your infrastructure there is likely to be some additional documentation required, both for internal consumption and external to application teams and end users. This could include high level architecture diagrams, detailed design documents, and operational runbooks to help teams understand and manage the infrastructure effectively. Combining this into the same workflow with markdown means that changes to the code can be backed with changes to the documentation at the same time. The approval workflow requires both so it never gets lost and the diff in github provides a clear view of what has changed in the documentation as well as the code.
 
 ```mermaid
 
 block-beta
+accTitle: Bringing it all together for network automation: block-beta diagram 4
+accDescr: This block-beta diagram shows Common Terraform Layer, Markdown Documentation, Feature Module, and Terraform Provider.
 
 block:Code
 columns 2
@@ -178,7 +183,6 @@ end
 
   style TerraformModules fill:#e1f5fe,stroke:#1976d2,stroke-width:3px
 ```
-
 Finally organise your code into feature based modules rather than technology or vendor based configuration and you have a structured repository which can be scaled easily.
 
 This approach allows for the physical elements of on premise networking while maintaining workflow patterns similar to cloud and cloud networking. It allows for repeatable [modular networking](modular-networking.md) that can be aligned to business functions rather than tech stacks and it provides a clear path for managing change and documentation across the entire stack.

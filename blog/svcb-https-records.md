@@ -374,6 +374,8 @@ This is simpler than trying to fake apex aliasing with CNAMEs, but it still need
 
 ```mermaid
 graph TB
+accTitle: Another Concrete Example: Apex Alias with Multiple Endpoints: graph diagram 1
+accDescr: Monitor your HTTP/3 traffic ratio over time.
     A["example.com HTTPS 0"] --> B["svc.example.net"]
     B --> C["HTTPS Priority 1<br/>cdn-primary.provider.net"]
     B --> D["HTTPS Priority 2<br/>cdn-backup.provider.net"]
@@ -388,7 +390,6 @@ graph TB
     K["Managed clients"] -->|Known resolver name| L["_dns.resolver.company.example.com"]
     L --> M["Learn DoH/DoT metadata"]
 ```
-
 ### Track Adoption
 
 Monitor your HTTP/3 traffic ratio over time. Most analytics providers show this. When you publish HTTPS records with `alpn="h3,h2"`, you may see HTTP/3 adoption climb noticeably on clients that honour the records.

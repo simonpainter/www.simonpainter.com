@@ -96,6 +96,8 @@ The documentation came first, defining exactly what we wanted. The test validate
 
 ```mermaid
 flowchart TD
+accTitle: A Simple Example: FizzBuzz Documentation-First: flowchart diagram 1
+accDescr: This flowchart diagram shows Documentation, Tests, Code, and Done.
     A[📝 Documentation] --> B[🧪 Tests]
     B --> C[💻 Code]
     C --> D{Pass?}
@@ -103,7 +105,6 @@ flowchart TD
     D -->|Yes| E[✅ Done]
     F[📋 Changes] --> A
 ```
-
 With LLMs becoming more prevalent, good documentation of a feature can easily form the prompt to help create that feature; I think this is far superior to the reverse approach of using an LLM to document the code because the LLM cannot extract the business logic from the code as well as it can extract the code from the business logic.
 
 ### Benefits of Documentation-First Infrastructure
@@ -119,6 +120,8 @@ This can be solved by documenting a blueprint for an infrastructure, be it an ap
 
 ```mermaid
 flowchart LR
+accTitle: Implementation Strategies: flowchart diagram 2
+accDescr: This flowchart diagram shows Initial Docs, WiFi Feature, Merge v2.0, and POS Feature.
     A[📄 Initial Docs] --> B[🌐 WiFi Feature]
     B --> C[🔀 Merge v2.0]
     C --> D[💳 POS Feature]
@@ -126,7 +129,6 @@ flowchart LR
     E --> F[🚨 Hotfix]
     F --> G[🔀 Emergency Update]
 ```
-
 Using a business focussed feature set as the basis for your documentation also allows you to create a business focussed testing criteria which can form the groundwork for a set of dashboards that demonstrate the infrastructure is healthy, not by some arbitrarily defined metrics but by useful capabilities. Gone are the 'is the database server responding' and in comes 'can the store authorise POS transactions'. Out goes 'is there sufficient bandwidth on the WAN' and in comes 'can 1000 people be on teams calls at the same time'.
 
 ## Conclusion

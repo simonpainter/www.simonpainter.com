@@ -69,6 +69,8 @@ This is the official architecture. It's enterprise-grade, highly available, and 
 
 ```mermaid
 flowchart LR
+accTitle: Resolution Path Flow: flowchart diagram 1
+accDescr: This flowchart diagram shows On-Premises, Client, On-Prem DNS, and On-Prem Authoritative Zone.
     subgraph OnPrem["On-Premises"]
         OPClient["Client"]
         OPDNS["On-Prem DNS"]
@@ -98,7 +100,6 @@ flowchart LR
 
     OPDNS -->|External resolution egress| Internet
 ```
-
 ### AWS Hybrid DNS Architecture
 
 AWS's approach is philosophically similar to Azure's but uses different terminology and different tooling, so it's worth understanding the distinctions, especially in the [AWS Prescriptive Guidance hybrid DNS reference pattern](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/set-up-dns-resolution-for-hybrid-networks-in-a-multi-account-aws-environment.html).
@@ -125,6 +126,8 @@ The operational model is also similar: you're managing conditional forwarders an
 
 ```mermaid
 flowchart LR
+accTitle: Resolution Path Flow: flowchart diagram 2
+accDescr: The two clouds are more similar than different when it comes to hybrid DNS, but the details matter.
     subgraph OnPrem["On-Premises"]
         OPClient["Client"]
         OPDNS["On-Prem DNS"]
@@ -153,7 +156,6 @@ flowchart LR
 
     OPDNS -->|External resolution egress| Internet
 ```
-
 #### AWS and Azure Comparison
 
 The two clouds are more similar than different when it comes to hybrid DNS, but the details matter.
@@ -188,6 +190,8 @@ For resilience, Infoblox recommends Anycast IPs. An Anycast IP is a single IP ad
 
 ```mermaid
 flowchart LR
+accTitle: Resolution Path Flow: flowchart diagram 3
+accDescr: The practical design choice in this model is where authority sits for each zone family.
     subgraph Clients["Client Networks"]
         OPClient["On-Prem Client"]
         AZClient["Azure Client"]
@@ -212,7 +216,6 @@ flowchart LR
     IBX -->|Conditional forwarder: AWS zones| AWSAuth
     IBX -->|External resolution egress| Internet
 ```
-
 The practical design choice in this model is where authority sits for each zone family. Corporate and shared service zones are usually authoritative in Infoblox, so every environment gets one consistent answer for those names. Cloud-native zones can still stay authoritative in Azure Private DNS or Route 53 Private Hosted Zones when service integration or platform behaviour requires it. Infoblox then becomes the policy and control point that decides whether to answer directly or forward to the right cloud authority.
 
 That separation is what makes the model scalable in hybrid environments. Clients keep a simple resolver path, usually to a local Anycast Infoblox endpoint. The complexity sits in controlled forwarding rules and zone ownership policy, not in every application team. In day-to-day operations, your DNS team manages one authoritative workflow for shared zones, one forwarding workflow for cloud-native zones, and one egress policy for external lookups.

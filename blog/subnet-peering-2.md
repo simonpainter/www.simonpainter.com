@@ -24,6 +24,8 @@ My first test last time was creating multiple peerings. Here's what I'm trying t
 
 ```mermaid
 flowchart TB
+accTitle: Revisiting lab 1: flowchart diagram 1
+accDescr: Last time, I managed to create the first peering successfully, but the second one failed.
     subgraph Azure["Azure Cloud"]
         subgraph VNet1["VNet1 (10.1.0.0/16)"]
             Subnet1_1["Subnet1 (10.1.1.0/24)"]
@@ -51,7 +53,6 @@ flowchart TB
     class VNet1,VNet2 vnet
     class Subnet1_1,Subnet2_1,Subnet3_1,Subnet1_2,Subnet2_2,Subnet3_2 subnet
 ```
-
 Last time, I managed to create the first peering successfully, but the second one failed. Let's try again:
 
 ```powershell
@@ -132,6 +133,8 @@ The lab setup is similar to lab 1 but with overlapping IP ranges. Remember, you 
 
 ```mermaid
 graph TB
+accTitle: Revisiting lab 2: graph diagram 2
+accDescr: Even though the overall IP ranges overlap, I'll try again to peer two subnets that don't overlap from within those ranges.
     subgraph Azure["Azure Cloud"]
         subgraph VNet1["VNet1 (10.1.0.0/16)"]
             Subnet1_1["Subnet1 (10.1.1.0/24)"]
@@ -159,7 +162,6 @@ graph TB
     class VNet1,VNet2 vnet
     class Subnet1_1,Subnet2_1,Subnet3_1,Subnet1_2,Subnet2_2,Subnet3_2 subnet
 ```
-
 Even though the overall IP ranges overlap, I'll try again to peer two subnets that don't overlap from within those ranges.
 
 ```powershell

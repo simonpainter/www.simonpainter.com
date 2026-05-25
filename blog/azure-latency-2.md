@@ -44,6 +44,8 @@ All tests used the same testing methodology: a simple echo server on port 7 with
 
 ```mermaid
 flowchart TD
+accTitle: The expanded test setup: flowchart diagram 1
+accDescr: This flowchart diagram shows Echo Server B1s VM, Azure Standard Load Balancer, Private Link Service, and Direct Peering Client VM.
     subgraph "Primary Region (West US)"
         subgraph Primary_VNET
             subgraph "Primary Subnet"
@@ -79,7 +81,6 @@ flowchart TD
     Secondary_VNET <-- "VNET Peering" --> Primary_VNET
 
 ```
-
 ## The results that changed my thinking
 
 When I looked at the UK South to West US trans-Atlantic tests, I saw something unexpected:

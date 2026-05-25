@@ -21,6 +21,8 @@ The objective was to insert some Juniper SRX firewalls into the traffic flow nor
 ```mermaid
 
 graph TD
+accTitle: What we were trying to do: graph diagram 1
+accDescr: This graph diagram shows Telco CE, Nexus 7K - Default VRF, Nexus 7K Switch, and Nexus 7K - External VRF.
     CE[Telco CE] --- N7K1[Nexus 7K - Default VRF]
     
     subgraph NEXUS[Nexus 7K Switch]
@@ -32,7 +34,6 @@ graph TD
     SRX --- N7K2
 
 ```
-
 The idea was then, when routing was tested across the Junipers to move the interfaces connected to the CE from the default to the External vrf. Sounded like simple day to day stuff right?
 
 ## The curve balls

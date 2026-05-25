@@ -17,6 +17,8 @@ Azure Availability Zones are physically separate datacenters within a region, ea
 
 ```mermaid
 graph TB
+accTitle: What is AZ Sharding?: graph diagram 1
+accDescr: This graph diagram shows AZ1, AZ2, AZ3, and uksouth-az1.
     subgraph "Subscription A"
         A1[AZ1]
         A2[AZ2]
@@ -55,7 +57,6 @@ graph TB
     %% Layout hints
     direction TB
 ```
-
 The primary reasons for AZ sharding include:
 
 - Load Distribution: By randomising AZ assignments across subscriptions, Azure prevents customers from consistently choosing "AZ1" as their primary zone, which would lead to uneven resource distribution.

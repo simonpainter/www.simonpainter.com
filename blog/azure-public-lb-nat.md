@@ -34,6 +34,8 @@ Instead, I can use inbound NAT rules to share a single public IP across all serv
 ```mermaid
 
 flowchart TB
+accTitle: Rule-Based NAT for Inbound Connections: flowchart diagram 1
+accDescr: This flowchart diagram shows Web Client, Admin User, Database Client, and Public IP: 20.1.2.3.
     subgraph "Internet"
         Client1[Web Client]
         Client2[Admin User]
@@ -123,7 +125,6 @@ flowchart TB
     class API1,API2,API3 external
 
 ```
-
 Load balancer outbound rules can solve this. With multiple public IPs, you can get around 64,000 SNAT ports per IP. That's a massive increase in capacity whilst maintaining your fixed IP pool for allowlisting. You don't get the level of layer 7 filtering you get with a firewall but you do get something that supports long lived TCP connections.
 
 Here's the calculation that matters: if you have 1,000 concurrent connections that each last 30 seconds, plus the TCP TIME_WAIT period of 240 seconds, you need about 9,000 SNAT ports. Azure Firewall's 2,500 port limit won't cut it, but a single load balancer IP gives you more than 10 times that capacity.

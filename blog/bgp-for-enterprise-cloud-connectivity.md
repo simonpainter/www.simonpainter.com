@@ -136,6 +136,8 @@ This is the “textbook” model. Your CE runs eBGP to the provider PE. The prov
 ```mermaid
 %%{init: {'theme':'neutral','flowchart':{'curve':'basis'},'themeVariables':{'fontFamily':'Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial'}}}%%
 flowchart LR
+accTitle: Pattern A: PE/CE eBGP (provider AS visible): flowchart diagram 1
+accDescr: Why this matters for the cloud journey: this is the closest mental model to Direct Connect/ExpressRoute peering.
   classDef enterprise fill:#E8F1FF,stroke:#2F6FED,stroke-width:1px,color:#0B1F44;
   classDef provider fill:#FFF3E0,stroke:#F59E0B,stroke-width:1px,color:#3B2F00;
   classDef edge fill:#F3E8FF,stroke:#8B5CF6,stroke-width:1px,color:#2E1065;
@@ -164,7 +166,6 @@ flowchart LR
 
   %% Provider distributes customer routes inside the VPN routing domain.
 ```
-
 Why this matters for the cloud journey: this is the closest mental model to Direct Connect/ExpressRoute peering.
 
 :::note Pattern B: CE–CE peering over MPLS (customer edges peer with each other)
@@ -267,6 +268,8 @@ In the model we’re using for this post, your routers sit in one (or two) CNFs,
 ```mermaid
 %%{init: {'theme':'neutral','flowchart':{'curve':'basis'},'themeVariables':{'fontFamily':'Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial'}}}%%
 flowchart LR
+accTitle: What’s actually peering with what?: flowchart diagram 2
+accDescr: On the enterprise side, you then need to decide how those routes get back into the rest of your network.
   classDef enterprise fill:#E8F1FF,stroke:#2F6FED,stroke-width:1px,color:#0B1F44;
   classDef cloud fill:#E7F8EF,stroke:#10B981,stroke-width:1px,color:#05361F;
   classDef edge fill:#F3E8FF,stroke:#8B5CF6,stroke-width:1px,color:#2E1065;
@@ -297,7 +300,6 @@ flowchart LR
 
   %% CNF provides an L2 handoff to the cloud peers.
 ```
-
 On the enterprise side, you then need to decide how those routes get back into the rest of your network. That usually means iBGP to a core pair or route reflectors, or redistribution into an IGP (with all the caveats that implies).
 
 :::warning ExpressRoute BGP essentials
@@ -454,6 +456,8 @@ This is the bread-and-butter enterprise requirement. You learn the same (or over
 ```mermaid
 %%{init: {'theme':'neutral','flowchart':{'curve':'basis'},'themeVariables':{'fontFamily':'Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial'}}}%%
 flowchart LR
+accTitle: Pattern: prefer exit A, keep exit B as backup: flowchart diagram 3
+accDescr: Mechanically, you do this by matching the routes you learn from neighbour A and setting a higher LOCALPREF, and leaving neighbour B at a lower LOCALPREF.
   classDef enterprise fill:#E8F1FF,stroke:#2F6FED,stroke-width:1px,color:#0B1F44;
   classDef provider fill:#FFF3E0,stroke:#F59E0B,stroke-width:1px,color:#3B2F00;
   classDef edge fill:#F3E8FF,stroke:#8B5CF6,stroke-width:1px,color:#2E1065;
@@ -465,7 +469,6 @@ flowchart LR
   %% Outbound: set higher LOCAL_PREF on routes learned via Peer A.
   %% Failover: when A withdraws, B remains.
 ```
-
 Mechanically, you do this by matching the routes you learn from neighbour A and setting a higher LOCAL_PREF, and leaving neighbour B at a lower LOCAL_PREF.
 
 ### IOS-XE example (set LOCAL_PREF higher for routes learned from preferred peer)
@@ -576,6 +579,8 @@ This is the classic enterprise ask. Outbound is “prefer circuit A, keep B as b
 ```mermaid
 %%{init: {'theme':'neutral','flowchart':{'curve':'basis'},'themeVariables':{'fontFamily':'Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial'}}}%%
 flowchart LR
+accTitle: Putting it together: two links to the same provider: flowchart diagram 4
+accDescr: This flowchart diagram shows Users / Internet), Provider AS, Your edge A, and Your edge B.
   classDef enterprise fill:#E8F1FF,stroke:#2F6FED,stroke-width:1px,color:#0B1F44;
   classDef provider fill:#FFF3E0,stroke:#F59E0B,stroke-width:1px,color:#3B2F00;
   classDef edge fill:#F3E8FF,stroke:#8B5CF6,stroke-width:1px,color:#2E1065;
@@ -590,7 +595,6 @@ flowchart LR
   %% Inbound: provider decides the path towards you.
   %% Tools: communities (cleanest), MED (if honoured), AS_PATH prepend (portable).
 ```
-
 A pragmatic ordering is:
 
 1. If you have a provider-supported inbound knob (often communities): use that.
@@ -671,6 +675,8 @@ A common pattern is to use two CNFs for physical and geographic diversity, for e
 ```mermaid
 %%{init: {'theme':'neutral','flowchart':{'curve':'basis'},'themeVariables':{'fontFamily':'Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial'}}}%%
 flowchart LR
+accTitle: Two-CNF diversity (why it’s common): flowchart diagram 5
+accDescr: You then decide whether the design is active/active northbound (both CNFs have cloud peers up), or active/passive (one CNF is preferred, and the other is failover).
   classDef enterprise fill:#E8F1FF,stroke:#2F6FED,stroke-width:1px,color:#0B1F44;
   classDef cloud fill:#E7F8EF,stroke:#10B981,stroke-width:1px,color:#05361F;
   classDef edge fill:#F3E8FF,stroke:#8B5CF6,stroke-width:1px,color:#2E1065;
@@ -702,7 +708,6 @@ flowchart LR
 
   %% Two CNFs give physical diversity. BGP policy decides preference and failover.
 ```
-
 You then decide whether the design is active/active northbound (both CNFs have cloud peers up), or active/passive (one CNF is preferred, and the other is failover).
 
 As we mentioned earlier, active/passive is often dictated by the southbound architecture (stateful firewalls, NAT, or policy constraints that require symmetric flow).
@@ -738,6 +743,8 @@ This is also where it becomes crucial to separate what you want for outbound (ea
 ```mermaid
 %%{init: {'theme':'neutral','flowchart':{'curve':'basis'},'themeVariables':{'fontFamily':'Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial'}}}%%
 flowchart LR
+accTitle: Putting it together: “two private ASNs to one remote ASN”: flowchart diagram 6
+accDescr: If you take only one operational lesson from BGP, take this:
   classDef enterprise fill:#E8F1FF,stroke:#2F6FED,stroke-width:1px,color:#0B1F44;
   classDef cloud fill:#E7F8EF,stroke:#10B981,stroke-width:1px,color:#05361F;
   classDef edge fill:#F3E8FF,stroke:#8B5CF6,stroke-width:1px,color:#2E1065;
@@ -767,7 +774,6 @@ flowchart LR
   %% LOCAL_PREF is AS-local, so it helps inside 65001 or 65002, but does not automatically steer the other.
   %% AS_PATH and provider-supported communities are the tools that can travel beyond the edge.
 ```
-
 ## Safety rails
 
 ### Prefix-lists / route filtering
@@ -797,6 +803,8 @@ In this pattern you receive routes from two upstreams, but you only ever adverti
 ```mermaid
 %%{init: {'theme':'neutral','flowchart':{'curve':'basis'},'themeVariables':{'fontFamily':'Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial'}}}%%
 flowchart LR
+accTitle: Example: dual-provider internet peering (don’t become transit): flowchart diagram 7
+accDescr: This flowchart diagram shows Upstreams, ISP A, ISP B, and Your edge router.
   classDef enterprise fill:#E8F1FF,stroke:#2F6FED,stroke-width:1px,color:#0B1F44;
   classDef provider fill:#FFF3E0,stroke:#F59E0B,stroke-width:1px,color:#3B2F00;
   classDef edge fill:#F3E8FF,stroke:#8B5CF6,stroke-width:1px,color:#2E1065;
@@ -819,7 +827,7 @@ flowchart LR
 
   %% Without export filtering you can accidentally become transit (A <-> you <-> B).
 ```
-
+Summary: This flowchart diagram shows Upstreams, ISP A, ISP B, and Your edge router.
 ### IOS-XE (illustrative)
 
 ```ios

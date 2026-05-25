@@ -68,6 +68,8 @@ When it all comes together, the DNS resolution flow works like this:
 
 ```mermaid
 flowchart LR
+accTitle: The Flow in Action: flowchart diagram 1
+accDescr: The beauty of this setup is that AWS treats the query as originating from the region where its Route 53 Resolver inbound endpoint is located.
     subgraph Azure[Azure 172.16.1.0/24]
         VM1[VM]
         DNS[Azure DNS Resolver]
@@ -98,7 +100,6 @@ flowchart LR
     class AWS aws
     class VM1,DNS,Endpoint,VM2,R53Resolver,R53Private component
 ```
-
 The beauty of this setup is that AWS treats the query as originating from the region where its Route 53 Resolver inbound endpoint is located. This means that when Azure UK South forwards its queries to AWS eu-west-2, it receives geographically appropriate responses, making our closest-instance routing possible.
 
 ## The Reality of Implementation

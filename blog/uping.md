@@ -16,13 +16,14 @@ Under the hood, uping uses `clock_gettime(CLOCK_MONOTONIC)` for accurate timing 
 
 ```mermaid
 flowchart LR
+accTitle: Meet uping: pronounced 'micro ping': flowchart diagram 1
+accDescr: If you like seeing how simple the loop is, this is the mental model:
     A[Resolve host] --> B[Start monotonic timer]
     B --> C[Send ICMP echo]
     C --> D[Receive ICMP reply]
     D --> E[Stop timer]
     E --> F[Print RTT in microseconds]
 ```
-
 If you like seeing how simple the loop is, this is the mental model:
 
 ```python

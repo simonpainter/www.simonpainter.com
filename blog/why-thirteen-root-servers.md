@@ -24,6 +24,8 @@ The lookup process starts at the top. Your DNS resolver (usually provided by you
 
 ```mermaid
 sequenceDiagram
+accTitle: What are root servers anyway?: sequenceDiagram diagram 1
+accDescr: This sequenceDiagram diagram illustrates the workflow or relationships discussed in the surrounding text.
     participant Browser as Stub Resolver
     participant Resolver
     participant RootServer as Root Server
@@ -39,7 +41,6 @@ sequenceDiagram
     Auth-->>Resolver: It's at 93.184.216.34
     Resolver-->>Browser: It's at 93.184.216.34
 ```
-
 The root servers are the very first step. Every DNS lookup on the internet ultimately traces back to them. They're the authoritative source for the root zone, the "`.`" at the top of the DNS hierarchy that you never see but is always there.
 
 ## The 512-byte problem
