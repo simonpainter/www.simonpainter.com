@@ -29,6 +29,8 @@ When you peer two VNets, you gain the ability to route between all subnets in th
 
 ```mermaid
 graph TB
+      accTitle: It's time for a lab: graph diagram 1
+      accDescr: We can use the VM NICs in the subnets to verify that they can see the routes for their own local VNet.
     subgraph Azure["Azure Cloud"]
         subgraph VNet1["VNet1 (10.1.0.0/16)"]
             Subnet1_1["Subnet1 (10.1.1.0/24)"]
@@ -51,7 +53,6 @@ graph TB
     class VNet1,VNet2 vnet
     class Subnet1_1,Subnet2_1,Subnet3_1,Subnet1_2,Subnet2_2,Subnet3_2 subnet
 ```
-
 ### Normal VNet peering
 
 We can use the VM NICs in the subnets to verify that they can see the routes for their own local VNet. You'll also see the system-generated Internet route for default internet egress (I should probably get into the habit of including a NAT gateway soon).
@@ -130,6 +131,8 @@ This establishes the peering in the diagram below. Well actually, it doesn't, or
 
 ```mermaid
 graph TB
+      accTitle: Establishing a Subnet Peering: graph diagram 2
+      accDescr: A quick look at the routing table on the VM1 NIC, and I can see the subnet range for subnet1 in VNet2 has appeared.
     subgraph Azure["Azure Cloud"]
         subgraph VNet1["VNet1 (10.1.0.0/16)"]
             Subnet1_1["Subnet1 (10.1.1.0/24)"]
@@ -155,7 +158,6 @@ graph TB
     class VNet1,VNet2 vnet
     class Subnet1_1,Subnet2_1,Subnet3_1,Subnet1_2,Subnet2_2,Subnet3_2 subnet
 ```
-
 A quick look at the routing table on the VM1 NIC, and I can see the subnet range for subnet1 in VNet2 has appeared. This means you can reach that subnet from subnet1 in VNet1. You can test this by putting a hello world apache VM or whatever you like in there and connecting. What I also notice is that I can't route to any of the other subnets in VNet2 from subnet1 in VNet1.
 
 ```text
@@ -190,6 +192,8 @@ az network vnet peering create -n "vnet2-2-to-vnet1-2" -g vnet-demo-rg -o none\
 
 ```mermaid
 flowchart TB
+      accTitle: Adding another peering: flowchart diagram 3
+      accDescr: The error basically says you already have a peering in place between those VNets.
     subgraph Azure["Azure Cloud"]
         subgraph VNet1["VNet1 (10.1.0.0/16)"]
             Subnet1_1["Subnet1 (10.1.1.0/24)"]
@@ -217,7 +221,6 @@ flowchart TB
     class VNet1,VNet2 vnet
     class Subnet1_1,Subnet2_1,Subnet3_1,Subnet1_2,Subnet2_2,Subnet3_2 subnet
 ```
-
 ### ~Subnet Peering~ VNet Peering with prefix filtering
 
 The error basically says you already have a peering in place between those VNets. So this is what I meant when I said it's not really subnet peering; it's more like a VNet peering with the summarization turned off and an explicit allow prefix filter for inbound and outbound.
@@ -247,6 +250,8 @@ It's not what I wanted, but it was useful for understanding the behavior and the
 
 ```mermaid
 flowchart TB
+      accTitle: Full mesh: flowchart diagram 4
+      accDescr: Now this peering is up, let's check the routing table again, and there are indeed routes to subnet1 and subnet2.
     subgraph Azure["Azure Cloud"]
         subgraph VNet1["VNet1 (10.1.0.0/16)"]
             Subnet1_1["Subnet1 (10.1.1.0/24)"]
@@ -275,7 +280,6 @@ flowchart TB
     class VNet1,VNet2 vnet
     class Subnet1_1,Subnet2_1,Subnet3_1,Subnet1_2,Subnet2_2,Subnet3_2 subnet
 ```
-
 Now this peering is up, let's check the routing table again, and there are indeed routes to subnet1 and subnet2. Subnet3 hasn't been able to join the party though.
 
 ```text
@@ -298,6 +302,8 @@ I built out a [second lab for download](https://github.com/simonpainter/subnet-p
 
 ```mermaid
 graph TB
+      accTitle: Trying with overlapping CIDRs: graph diagram 5
+      accDescr: Although they are not overlapping subnets, the peering command failed because the peering process determined that the VNet CIDRs themselves are overlapping.
     subgraph Azure["Azure Cloud"]
         subgraph VNet1["VNet1 (10.1.0.0/16)"]
             Subnet1_1["Subnet1 (10.1.1.0/24)"]
@@ -325,7 +331,6 @@ graph TB
     class VNet1,VNet2 vnet
     class Subnet1_1,Subnet2_1,Subnet3_1,Subnet1_2,Subnet2_2,Subnet3_2 subnet
 ```
-
 Although they are not overlapping subnets, the peering command failed because the peering process determined that the VNet CIDRs themselves are overlapping.
 
 ```powershell

@@ -189,15 +189,18 @@ Connecting two computers with a serial connection works well, but what if you wa
 
 ```mermaid
 graph LR
+      accTitle: That's two computers, how about n?: graph diagram 1
+      accDescr: This graph diagram shows Node A, Node B, and Node C.
     A[Node A] --- B[Node B]
     B --- C[Node C]
     A --- C
 ```
-
 This approach doesn't scale well. You need one link for two nodes, three links for three nodes, but six links for four nodes. With five computers in a full mesh, you need ten links.
 
 ```mermaid
 graph TB
+      accTitle: That's two computers, how about n?: graph diagram 2
+      accDescr: This graph diagram shows Node A, Node B, Node C, and Node D.
     A[Node A] --- B[Node B]
     C[Node C] --- D[Node D]
     A --- C
@@ -205,7 +208,6 @@ graph TB
     A --- D
     B --- C
 ```
-
 > The formula for connections between **n** computer nodes is n(n-1)/2. The key point is that **n** is multiplied by 
 > **n** (well, n-1, but that's nitpicking), creating exponential growth. Exponential growth becomes impractical 
 > quickly - 50 computers in a small office would need 1,225 connections to be set up, configured and maintained.
@@ -219,6 +221,8 @@ If we have a shared wire connecting all computers (perhaps using T-shaped splitt
 ```mermaid
 %%{init: {'gitGraph': { 'showCommitLabel':true,'mainBranchName': 'Bus Topology'}} }%%
 gitGraph
+      accTitle: Addressing the problem: gitGraph diagram 3
+      accDescr: This gitGraph diagram shows Star Topology, 1, H, and 2.
     commit id: "Node 1"
     commit id: "Node 2"
     commit id: "Node 3"
@@ -241,7 +245,6 @@ graph TD
     
     style title fill:none,stroke:none
 ```
-
 ### Frames and MAC addresses
 
 To know where data for each destination starts and ends, we organize it in "frames" - discrete blocks with clear start and end points. Data frames have headers containing source and destination addresses, plus an end marker showing where the data payload finishes. These addresses are just numbers (like everything in networks), but they're very large numbers with trillions of possibilities, ensuring they're unique.
@@ -335,6 +338,8 @@ As IP packets travel across networks, they carry addressing information in a str
 
 ```mermaid
 ---
+      accTitle: Finding the router: --- diagram 4
+      accDescr: This --- diagram illustrates the workflow or relationships discussed in the surrounding text.
 title: "IP Header"
 ---
 packet-beta
@@ -353,7 +358,6 @@ packet-beta
   160-183: "Options"
   184-191: "Padding"
 ```
-
 The source and destination addresses each take up 32 bits - exactly one IP address worth of space. But the header contains much more:
 
 - A Time to Live field prevents packets from circulating forever in routing loops
@@ -505,6 +509,8 @@ We can easily build up routing tables that span a large network by taking each h
 
 ```mermaid
 graph LR
+      accTitle: Static routing: graph diagram 5
+      accDescr: We can simplify the diagram and remove the geography and give each router a name.
     NY <---> LON[London]
     CHI[Chicago] <---> NY
     LON <---> EDI[Edinburgh]
@@ -512,18 +518,18 @@ graph LR
     SF[San Francisco]<---> NY[New York]
 
 ```
-
 We can simplify the diagram and remove the geography and give each router a name.
 
 ```mermaid
 graph LR
+      accTitle: Static routing: graph diagram 6
+      accDescr: The routing table for each site's router would be as follows:
     LN <---> ED
     CH<---> NY
     NY <---> LN
     LN <---> TK
     SF<---> NY
 ```
-
 The routing table for each site's router would be as follows:
 
 ```text
@@ -610,6 +616,8 @@ This is great until we want to make changes, or perhaps changes are forced upon 
 
 ```mermaid
 graph LR
+      accTitle: Static routing: graph diagram 7
+      accDescr: This graph diagram illustrates the workflow or relationships discussed in the surrounding text.
     LN <---> ED
      CH<---> NY
     NY <---> LN
@@ -617,7 +625,6 @@ graph LR
       SF<---> NY
     SF <--Undersea--> TK
 ```
-
 We can update the routing table for the two sites:
 
 ```text
@@ -663,6 +670,8 @@ When networks grow beyond a single organisation, or autonomous system, we find w
 
 ```mermaid
 graph LR
+      accTitle: Peering with other networks: graph diagram 8
+      accDescr: Each autonomous sytem for internet peering is assigned a unique number, the Autonomous System Number (ASN).
     Title1["Internet Service Provider A<br/>AS Number 65001"] --> ISP_A
     Title2["Internet Service Provider B<br/>AS Number 65002"] --> ISP_B
     
@@ -684,7 +693,6 @@ graph LR
     linkStyle 1 stroke:none
 
 ```
-
 Each autonomous sytem for internet peering is assigned a unique number, the Autonomous System Number (ASN). [BGP](/tags/bgp) uses this to track the path a route has taken through different networks to ensure that there are no loops. It also uses the list of ASNs that a route has been through to get a crude estimate of the distance to the destination using the path length; in most cases a route that passes through the fewer networks is considered better than one that passes through more networks.
 Unlike internal routing protocols, [BGP](/tags/bgp) is not designed to focus on finding the shortest path, it is designed to solve a different set of problems:
 
@@ -775,6 +783,8 @@ Looking inside a UDP message reveals a remarkably simple structure. The header c
 
 ```mermaid
 packet-beta
+      accTitle: UDP (User Datagram Protocol): packet-beta diagram 9
+      accDescr: This packet-beta diagram illustrates the workflow or relationships discussed in the surrounding text.
 title UDP Packet
 0-15: "Source Port"
 16-31: "Destination Port"
@@ -782,7 +792,6 @@ title UDP Packet
 48-63: "Checksum"
 64-95: "Data (variable length)"
 ```
-
 The source and destination ports tell us which applications should handle the message at each end. The length field tells us how big the entire package is, and a checksum provides basic error detection. That's all there is to it - UDP adds just enough information to get a packet of data from one application to another.
 
 This simplicity makes UDP perfect for applications where timeliness matters more than perfect reliability. Consider a voice chat application: if a packet containing a fraction of a second of audio gets lost, it's better to skip that tiny bit of sound than to wait for it to be sent again. By the time the lost audio would arrive, the conversation would have moved on, and the delayed sound would be more disruptive than the brief silence from the lost packet.
@@ -811,6 +820,8 @@ Let's peek inside a TCP header to understand how this works. Every TCP segment (
 
 ```mermaid
 ---
+      accTitle: TCP (Transmission Control Protocol): --- diagram 10
+      accDescr: This --- diagram illustrates the workflow or relationships discussed in the surrounding text.
 title: "TCP Packet"
 ---
 packet-beta
@@ -833,7 +844,6 @@ packet-beta
 192-255: "Data (variable length)"
 
 ```
-
 The sequence and acknowledgment numbers are particularly clever. The sequence number identifies each byte in the stream of data being sent, while the acknowledgment number tells the other side which byte is expected next. This system allows TCP to handle lost, duplicated, or out-of-order packets gracefully.
 
 When data starts flowing, TCP doesn't just send everything at once. Instead, it uses a sophisticated flow control mechanism called the sliding window. The "Window" field in the header tells the sender how much data the receiver is willing to accept. This window slides forward as data is acknowledged, preventing any one side from overwhelming the other with too much data too quickly.

@@ -38,6 +38,8 @@ I typically install a web server on the VMs to act like a basic web application 
 ```mermaid
 
 graph TD
+      accTitle: So let's get into it: graph diagram 1
+      accDescr: This graph diagram shows Internet, Azure Public Load Balancer, Frontend IP: 1.1.1.1, VNET 10.0.0.0/16, and Subnet 10.0.1.0/24.
     Internet[Internet] --> LB[Azure Public Load Balancer<br/>Frontend IP: 1.1.1.1]
     
     subgraph Region1
@@ -63,7 +65,6 @@ graph TD
     class Internet internetStyle
 
 ```
-
 As you create a Public Load balancer in the region of your choice you will see the option to make it regional or global.
 
 ![Image of the Load Balancer creation screen](img/azure-public-anycast/lb-regional.png)
@@ -95,6 +96,8 @@ Once you have your regional instances, each with a separate public IP address on
 ```mermaid
 
 graph TD
+      accTitle: Going Global: graph diagram 2
+      accDescr: The diagram above shows the overall architecture - you'll notice that I have represented the Global Load Balancer as two separate entities.
     Internet[Internet] --> GLB1[Azure Global Load Balancer<br/>Frontend IP: 5.5.5.5]
     Internet[Internet] --> GLB2[Azure Global Load Balancer<br/>Frontend IP: 5.5.5.5]
 
@@ -136,7 +139,6 @@ graph TD
     class Internet internetStyle
 
 ```
-
 The diagram above shows the overall architecture - you'll notice that I have represented the Global Load Balancer as two separate entities. This is to illustrate the fact that there does not appear to be central dataplane infrastructure for the Global Load Balancer and each region advertises the anycast IP, the Global Load Balancer frontend IP, independently. This means that traffic from a client is routed to the nearest ingress point to the MSFT Azure backbone and then routed to the closest healthy region.
 
 Creating the Global Load Balancer is very similar to creating a regional one. The first difference is that you select global rather than regional in the initial creation screen under tier.
