@@ -26,6 +26,7 @@
     "http://127.0.0.1:3000/tags",
     "http://127.0.0.1:3000/tags/aws",
     "http://127.0.0.1:3000/authors",
-    "http://127.0.0.1:3000/hybrid-cloud-dns"
+    "http://127.0.0.1:3000/hybrid-cloud-dns",
+    "http://127.0.0.1:3000/accessibility-and-ci"
   ]
 }
