@@ -15,9 +15,9 @@ date: 2026-05-25
 
 I had one of those mildly awkward moments that only bloggers and other people who publish opinions on the internet seem able to engineer for themselves.
 
-I had just signed up for the [Microsoft MVP Accessibility Vanguard](https://aka.ms/MVP/Accessibility-Vanguard), a new MVP engagement group for people who care deeply about building more accessible technology. The scope is exactly the sort of thing I want more of in the community: product accessibility, AI and disability, and the way disabled people are represented in AI systems. It is a space for MVPs to compare notes, hear directly from Microsoft product teams, and, hopefully, nudge things in a better direction.
+I had just been accepted on the Microsoft MVP Accessibility Vanguard, a new MVP engagement group for people who care deeply about building more accessible technology. The scope is exactly the sort of thing I want more of in the community: product accessibility, AI and disability, and the way disabled people are represented in technology systems. It is a space for MVPs to compare notes, hear directly from Microsoft product teams, and, hopefully, nudge things in a better direction.
 
-Then, the following morning, somewhere between coffee and the first scroll through email, I had the uncomfortable thought: I should probably make sure my own blog is not an accessibility skip fire before I start sounding clever about any of this.
+Then, this morning, somewhere between jetwashing the patio and enjoying the sunshine on a rare day off, I had the uncomfortable thought: I should probably make sure my own blog is not an accessibility bin fire before I start sounding clever about any of this.
 
 That thought was annoyingly well aimed. I had already written about [visiting the Microsoft Inclusive Tech Lab](https://www.simonpainter.com/microsoft-inclusive-tech-lab), and more recently about [writing inclusive language rules in Copilot instructions](https://www.simonpainter.com/inclusive-language-copilot-instructions). Both posts were sincere. Both made arguments I still stand by. Neither would carry much weight if the site they lived on was quietly doing the web equivalent of mumbling into the carpet whenever a screen reader turned up.
 
@@ -25,21 +25,19 @@ So I ran an audit on simonpainter.com.
 
 It was not catastrophic. Nobody had committed an autoplaying carousel with white text on a yellow background. But it also was not good enough. I had contrast failures, links that relied on colour alone, a missing level-one heading, vague "Read more" links, and Mermaid diagrams that looked fine to sighted readers while saying next to nothing to assistive tech.
 
-This is the story of fixing that lot, and of putting a GitHub Actions check in front of the site so future Simon does not casually undo present Simon's work the next time I get overconfident with a theme tweak.
+This is how I went about fixing that lot, and of putting a GitHub Actions check in front of the site so future Simon does not casually undo present Simon's work the next time I get overconfident with a theme tweak.
 
 <!-- truncate -->
 
 ## Why this matters for a technical blog
 
-Technical blogs are read by technical people. Technical people include disabled people. That should not be a radical statement in 2026, but the industry still behaves as if accessibility is mainly a public sector procurement checkbox or something only "consumer" products need to care about.
+Technical blogs are read by technical people. Technical people have different abilities, and we shouldn't assume otherwise. That should not be a radical statement in 2026, but the industry still behaves as if accessibility is mainly a public sector procurement checkbox or something only "consumer" products need to care about.
 
-If you publish technical content, your readers will include screen reader users, people with low vision, people with colour blindness, people who navigate by keyboard, people using voice control, and people with cognitive differences who benefit from clearer structure and more predictable presentation. They will also include people reading on a cracked phone in bright sunlight on a train, which is not a disability category but does have a suspicious amount in common with one.
+If you publish technical content, your readers could include screen reader users, people with low vision, people with colour blindness, people who navigate by keyboard, people using voice control, and people with cognitive differences who benefit from clearer structure and more predictable presentation. They will also include people reading on a cracked phone in bright sunlight on a train, which is not a disability category but something you can help with all the same.
 
 The trap is the same one we fall into with any other sort of debt. You tell yourself you'll do it later because the post is live, the code works, the diagram is pretty enough, and nobody has complained. Then "later" becomes a theme refresh, two dozen new posts, and a much larger clean-up than the one you could have done in an afternoon. Accessibility debt compounds just like technical debt. Quietly, consistently, and always at the worst possible moment.
 
 There are selfish reasons too. Better contrast and clearer structure help search engines understand the page. Proper headings improve summaries and indexing. Descriptive links make skim reading easier on mobile. If you publish anything in or around Europe, it is also increasingly foolish to assume accessibility regulation is somebody else's problem. The [UK government's introduction to making a service accessible](https://www.gov.uk/service-manual/helping-people-to-use-your-service/making-your-service-accessible-an-introduction) is worth reading even if you are not in government, and the [W3C WCAG quick reference](https://www.w3.org/WAI/WCAG22/quickref/) is still the best place to ground yourself in the actual criteria rather than in folklore.
-
-That is also why the Accessibility Vanguard appealed to me. It is a new MVP engagement group bringing together people from different disciplines around accessibility, plus harder and more interesting topics such as AI and disability. After [my visit to the Inclusive Tech Lab](https://www.simonpainter.com/microsoft-inclusive-tech-lab) and [my post on inclusive language rules for Copilot](https://www.simonpainter.com/inclusive-language-copilot-instructions), this felt like the obvious next bit of grown-up housekeeping: make sure the blog itself is living up to the standard I keep recommending to everyone else.
 
 ## The audit
 
@@ -50,8 +48,6 @@ Those numbers were useful because they turned a vague feeling of "I should proba
 For anyone new to the standards side of this: WCAG 2 AA is the practical target most teams aim for. Level A is better than nothing but leaves a lot of very real barriers in place. AAA is excellent when you can reach it, but it is not realistic for every page, every component, or every content type. AA is the level that usually maps to "a reasonable person tried to build an accessible site rather than merely hoping for one".
 
 It is also worth saying out loud that automated tools do not finish the job. Depending on who you ask, they catch perhaps 30 to 40 percent of real accessibility issues. That sounds low until you remember that the issues they do catch are often the obvious, repetitive, high-volume ones that would otherwise sit in your site for months. They are a forcing function, not a finish line.
-
-So I treated the scan as a triage tool. I used [axe-core from Deque](https://github.com/dequelabs/axe-core) in browser tooling to pinpoint selectors and states. I checked pages in Lighthouse. I ran manual keyboard tests. I also put "do more real screen reader testing" on the list for VoiceOver and NVDA, because if you stop at green ticks in a dashboard you are not doing accessibility, you are doing paperwork.
 
 ## The five fixes
 
@@ -154,7 +150,7 @@ That is one of my favourite categories of fix: tiny diff, large improvement. Nob
 
 ### 4.5 Mermaid diagrams
 
-This was the one I cared about most, partly because I use Mermaid a lot and partly because [I have already written about bad diagrams](https://www.simonpainter.com/bad-diagrams) and [gone to the trouble of adding custom Mermaid icons to the site](https://www.simonpainter.com/mermaid-icons). It would have been especially silly if the diagrams were good-looking but semantically useless.
+This was the one I liked most, partly because I use Mermaid a lot and partly because [I have already written about bad diagrams](https://www.simonpainter.com/bad-diagrams) and [gone to the trouble of adding custom Mermaid icons to the site](https://www.simonpainter.com/mermaid-icons). It would have been especially silly if the diagrams were good-looking but semantically useless.
 
 The issue is that Mermaid renders diagrams to SVG. Out of the box, that SVG may have no accessible name and no meaningful description. To a screen reader, your lovingly crafted architecture diagram can be basically invisible.
 
@@ -189,7 +185,7 @@ Accessibility regressions are wonderfully easy to introduce and wonderfully hard
 
 That is why I wanted a CI guard rail, not just a one-off clean-up. I already had some experience with build checks on the site from [capturing Docusaurus build output in pull requests](https://www.simonpainter.com/s3-pull-request-build-log). Accessibility deserved the same treatment.
 
-For this sort of static site, I chose [Pa11y](https://pa11y.org/) rather than running axe-core on its own. I still like [axe-core](https://github.com/dequelabs/axe-core), especially in browser tooling, but `pa11y-ci` fits the "run a small set of published pages in CI and get a clean report back" use case very nicely. It is pragmatic, scriptable, and pleasant enough that I am more likely to keep it.
+For this sort of static site, I chose [Pa11y](https://pa11y.org/) rather than running axe-core on its own.
 
 The minimal install is:
 
@@ -286,14 +282,12 @@ That combination is the real lesson: automated checks for the repeatable failure
 
 ## Reflections, and what happens next
 
-The whole exercise took me roughly half a day, which is much less than I had built it up to in my head. That seems to be true of a lot of accessibility work once you stop treating it as a mysterious specialist discipline and start treating it like any other quality problem.
+The whole exercise took me roughly an hour, which is much less than I had built it up to in my head. As usual Agentic AI did a lot of the heavy lifting. That seems to be true of a lot of accessibility work once you stop treating it as a mysterious specialist discipline and start treating it like any other quality problem.
 
 The CI guard rail was the smaller change, but it is the bigger win. Fixing the existing issues was satisfying. Knowing the next theme tweak or component override is less likely to quietly reintroduce them is much more valuable.
 
 It also reinforced something I already suspected: accessibility is not a checklist, it is a practice. The audit caught the obvious stuff. The Mermaid fix needed more thought. Proper screen reader testing is still on my to-do list, because there is no substitute for using the thing the way people actually use it.
 
-That, really, is why the [Microsoft MVP Accessibility Vanguard](https://aka.ms/MVP/Accessibility-Vanguard) matters. It is not about collecting another worthy badge and then carrying on as before. It is about MVPs holding themselves, and each other, to a higher standard; sharing what works; and having harder conversations about topics such as AI and disability that are only going to become more important.
-
-So if you are an MVP and you care about accessibility, go and sign up for the [Accessibility Vanguard](https://aka.ms/MVP/Accessibility-Vanguard). If you are not, but you publish technical content, run an audit anyway. You may get a mildly uncomfortable morning out of it. You will probably get a better site too.
+That, really, is why the Microsoft MVP Accessibility Vanguard matters. It is not about collecting another worthy badge and then carrying on as before. It is about people holding themselves, and each other, to a higher standard; sharing what works; and having harder conversations about topics such as AI and disability that are only going to become more important.
 
 And if you spot accessibility issues on this blog, please open a GitHub issue or send me a message on LinkedIn. Accountability is the point. If you want more context on why I care about this area, [my write-up from the Microsoft Inclusive Tech Lab visit](https://www.simonpainter.com/microsoft-inclusive-tech-lab) and [my guide to inclusive language rules for Copilot](https://www.simonpainter.com/inclusive-language-copilot-instructions) are good places to start.
