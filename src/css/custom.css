@@ -88,14 +88,16 @@ html[data-theme='dark'] {
   --blockquote-background: #1e293b;
   --blockquote-border: #334155;
   
-  /* Slightly adjust primary colors for dark mode */
-  --ifm-color-primary: #3b82f6;
-  --ifm-color-primary-dark: #2563eb;
-  --ifm-color-primary-darker: #1d4ed8;
-  --ifm-color-primary-darkest: #1e40af;
-  --ifm-color-primary-light: #60a5fa;
-  --ifm-color-primary-lighter: #93c5fd;
-  --ifm-color-primary-lightest: #bfdbfe;
+  /* Primary colours shifted one step lighter for dark mode so that links and
+     active indicators reach WCAG 2 AA (4.5:1) on the surface background
+     (#1e293b).  The previous primary (#3b82f6) only reached 3.98:1 there. */
+  --ifm-color-primary: #60a5fa;
+  --ifm-color-primary-dark: #3b82f6;
+  --ifm-color-primary-darker: #2563eb;
+  --ifm-color-primary-darkest: #1d4ed8;
+  --ifm-color-primary-light: #93c5fd;
+  --ifm-color-primary-lighter: #bfdbfe;
+  --ifm-color-primary-lightest: #dbeafe;
 }
 
 /* ===== TYPOGRAPHY ===== */
