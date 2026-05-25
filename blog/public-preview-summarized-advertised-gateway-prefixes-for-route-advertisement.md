@@ -23,7 +23,7 @@ The update applies to Azure VPN Gateway and ExpressRoute Gateway scenarios where
 
 Azure added support for a virtual network property called `summarizedGatewayPrefixes`. You define one or more aggregated CIDR blocks on the gateway VNet, and Azure advertises those summaries to on-prem BGP peers.
 
-By default, Azure advertises the hub address space plus peered spoke address spaces. With summarised prefixes configured, Azure advertises your summary list instead and suppresses covered spoke prefixes.
+By default, Azure advertises the hub address space plus peered spoke address spaces. With summarized prefixes configured, Azure advertises your summary list instead and suppresses covered spoke prefixes.
 
 ## Who should care
 
