@@ -20,6 +20,8 @@ I have been playing around with [enforza.io](https://enforza.io) for a while and
 ```mermaid
 
 graph TB
+      accTitle: Network Overview: graph diagram 1
+      accDescr: Building the network foundation starts with proper subnet design.
     Internet([Internet])
     
     subgraph "Azure Virtual Network (10.0.0.0/16)"
@@ -67,7 +69,6 @@ graph TB
     class VM1,VM2 protected
 
 ```
-
 ### Step 1: Network Foundation - Virtual Network and Subnets
 
 Building the network foundation starts with proper subnet design. I've created three subnets: the firewall subnet for my Enforza instances, the workload subnet for the VMs I want to protect, and a management subnet for admin access. The important setting here is default_outbound_access_enabled = false on the workload subnet. This creates a proper private subnet where VMs have no implicit internet connectivity; this mirrors the upcoming default behaviour for Azure.

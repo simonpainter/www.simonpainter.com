@@ -35,6 +35,8 @@ The simplest topology is the single site with aspirations to extend to cloud. It
 
 ```mermaid
 graph TD
+      accTitle: Starting without a WAN: graph diagram 1
+      accDescr: This graph diagram shows Site 1, Users + On-Premise Compute and Cloud Provider, AWS/Azure/GCP.
  Site[Site 1<br/>Users + On-Premise Compute] ---|Internet Connection| Internet((Internet<br/>WAN))
  Internet ---|VPN Tunnel| Cloud[Cloud Provider<br/>AWS/Azure/GCP]
  
@@ -42,7 +44,6 @@ graph TD
  style Cloud fill:#f3e5f5
  style Internet fill:#fff3e0
 ```
-
 ### Basic single-site topology with VPN over internet
 
 Lowest cost but least predictable performance. This is the bread and butter of the SME world where legacy applications which require private connectivity are rehosted or replatformed into the cloud. The internet is a best-effort network, meaning that there's no guarantee of performance, availability, and certainly not security. This can lead to inconsistent user experiences for low latency or latency sensitive applications.
@@ -55,6 +56,8 @@ The business case for ExpressRoute or Direct Connect rarely stacks up at this sc
 
 ```mermaid
 graph TD
+      accTitle: Moving to ExpressRoute or Direct Connect: graph diagram 2
+      accDescr: This is the first instance where you can connect entirely without the need to have a firewall in place between the on-premise and cloud environments.
  Site[Site 1<br/>Users + On-Premise Compute] ---|Point-to-Point Link| Provider((Provider<br/>WAN))
  Provider ---|ExpressRoute/Direct Connect| Cloud[Cloud Provider<br/>AWS/Azure/GCP]
  
@@ -62,7 +65,6 @@ graph TD
  style Cloud fill:#f3e5f5
  style Provider fill:#e8f5e8
 ```
-
 This is the first instance where you can connect entirely without the need to have a firewall in place between the on-premise and cloud environments. However, it's important to consider the security implications of this approach and ensure that appropriate measures are in place to protect your resources. Unless your cloud maturity is high enough to manage this effectively through cloud-native security controls and network segmentation, it may be worth considering a more traditional approach with a clear demarcation and security policy enforcement between on-premise and cloud resources.
 
 ## Scaling to WAN Connected Sites
@@ -71,6 +73,8 @@ For multi-site organisations with an MPLS WAN and dedicated datacentres, it's pr
 
 ```mermaid
 graph TD
+      accTitle: Scaling to WAN Connected Sites: graph diagram 3
+      accDescr: This graph diagram shows Site 1, Branch Office, Site 2, Branch Office, Site 3, Branch Office, and Datacentre, Consolidated Perimeter, Internet + B2B + Telco.
  Site1[Site 1<br/>Branch Office] ---|MPLS| MPLS((MPLS<br/>WAN))
  Site2[Site 2<br/>Branch Office] ---|MPLS| MPLS
  Site3[Site 3<br/>Branch Office] ---|MPLS| MPLS
@@ -95,7 +99,6 @@ graph TD
  style MPLS fill:#f3e5f5
  style Internet fill:#fff3e0
 ```
-
 This works great right up until the point where you realise that you have put more dependency on your datacentres rather than taking away that dependency. In order to avoid this, the approach is to connect the cloud provider directly into their WAN.
 
 ### Enter the NNI
@@ -104,6 +107,8 @@ Network-to-Network Interconnect (NNI) represents a direct connection between net
 
 ```mermaid
 graph TD
+      accTitle: Enter the NNI: graph diagram 4
+      accDescr: This graph diagram shows Site 1, Branch Office, Site 2, Branch Office, Datacentre, Primary Site, and CNF Facility, Equinix/Digital Realty, Coresite/etc..
  Site1[Site 1<br/>Branch Office] ---|WAN Connection| WAN((WAN Provider<br/>Network))
  Site2[Site 2<br/>Branch Office] ---|WAN Connection| WAN
  DC[Datacentre<br/>Primary Site] ---|WAN Connection| WAN
@@ -122,13 +127,14 @@ graph TD
  style CloudPort fill:#fff8e1
  style WAN fill:#f3e5f5
 ```
-
 ### Enhanced CNF presence with customer equipment for security and internet breakout
 
 As the realisation dawns that there's no firewall between the on-premise networks and the cloud, the logical evolution of the above design is to build out a small presence in the CNF with cloud firewalls and perhaps internet egress - dedicated internet access (DIA) is considerably cheaper in a CNF because you can pay less for a cross-connect inside the facility than for miles of fibre under the road.
 
 ```mermaid
 graph TD
+      accTitle: Enhanced CNF presence with customer equipment for security and internet breakout: graph diagram 5
+      accDescr: This graph diagram shows Site 1, Branch Office, Site 2, Branch Office, Datacentre, Primary Site, and CNF Facility, Equinix/Digital Realty, Coresite/etc..
  Site1[Site 1<br/>Branch Office] ---|WAN Connection| WAN((WAN Provider<br/>Network))
  Site2[Site 2<br/>Branch Office] ---|WAN Connection| WAN
  DC[Datacentre<br/>Primary Site] ---|WAN Connection| WAN
@@ -152,7 +158,6 @@ graph TD
  style WAN fill:#f3e5f5
  style Internet fill:#fff3e0
 ```
-
 In this 'cloud on a stick' model there can be a temptation to put compute and infrastructure services - DDI and such things - into the CNF rack as you are probably paying for a full rack as the minimum unit; that's mostly driven by the desire to move entirely from on-premise to cloud, and the CNF is seen as a halfway house for things that can't live in the cloud.
 I would not recommend building out a dependency on a CNF for any sort of compute services because they are typically more expensive than most other colo datacentres, and are often less flexible. Keep your apps and infrastructure services in a datacentre and keep your CNF for connectivity.
 
@@ -168,6 +173,8 @@ There are many reasons to use an ExpressRoute or Direct Connect circuit; the two
 
 ```mermaid
 graph TD
+      accTitle: Migrating to SD-WAN: graph diagram 6
+      accDescr: The model expands the perimeter without simplifying the topology; it introduces additional management overhead without removing the reliance on centralised capabilities.
  Site1[Site 1<br/>Branch Office] ---|SD-WAN| SDWAN((SD-WAN<br/>Overlay))
  Site1 ---|Local Internet| Internet1((Local Internet))
  
@@ -199,7 +206,6 @@ graph TD
  style Internet3 fill:#fff3e0
  style Internet fill:#fff3e0
 ```
-
 The model expands the perimeter without simplifying the topology; it introduces additional management overhead without removing the reliance on centralised capabilities. However, it does provide the foundation for future simplification as organisations gain confidence in internet-based connectivity.
 
 ### The Cloud is Just Another Place
@@ -208,6 +214,8 @@ The evolution towards cloud-native networking represents a fundamental shift in 
 
 ```mermaid
 graph TD
+      accTitle: The Cloud is Just Another Place: graph diagram 7
+      accDescr: This graph diagram shows Site 1, Branch Office, Site 2, Branch Office, Datacentre, Primary Site, and Cloud Provider, AWS/Azure/GCP, with SD-WAN Hub.
  Site1[Site 1<br/>Branch Office] ---|SD-WAN| SDWAN((SD-WAN<br/>Overlay))
  
  Site2[Site 2<br/>Branch Office] ---|SD-WAN| SDWAN
@@ -222,7 +230,6 @@ graph TD
  style Cloud fill:#f3e5f5
  style SDWAN fill:#e3f2fd
 ```
-
 The direct termination of SD-WAN into the cloud hub simplifies the network architecture because it equalises the hierarchy within the network for client sites, datacentre sites and cloud regions. This approach uses NVA (Network Virtual Appliances) SDWAN hubs rather than physical appliances and extends the overlay and all its benefits right into the cloud hub. This provides managed, scalable connectivity without the need for physical infrastructure.
 
 This forms the last step before the potential removal of traditional SD-WAN entirely as all traffic moves to traverse the internet with application layer encryption and zero-trust security models instead of network layer encryption and the assumption of trust for private networks. In the future state, applications communicate directly over the internet using mutual TLS and other application-layer security protocols, with identity and device trust replacing network location as the primary security boundary.

@@ -98,6 +98,8 @@ Here's a common situation where it fails:
 
 ```mermaid
 flowchart TD
+      accTitle: DNS-based FQDN Filtering: A Good Idea With Problems: flowchart diagram 1
+      accDescr: In this example, DNS goes through one firewall but web traffic goes through another.
     Client[Internal Client] --> Router[Corporate Network]
     
     Router --> |DNS Traffic| FirewallA[Edge Firewall A]
@@ -117,7 +119,6 @@ flowchart TD
     
     FirewallB --- note
 ```
-
 In this example, DNS goes through one firewall but web traffic goes through another. The second firewall has no idea what domain name the IP belongs to, so it can't apply FQDN rules correctly.
 
 ## Looking Deeper: Application-Aware Filtering
