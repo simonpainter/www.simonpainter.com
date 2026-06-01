@@ -45,15 +45,17 @@ DNS-AID does not invent a new naming system. It reuses DNS records and conventio
 
 ### Naming pattern
 
-The project uses a predictable namespace:
+The `-02` draft puts the canonical owner at a flat FQDN under the operator's zone:
 
-`_{agent-name}._{protocol}._agents.{your-domain}`
+`{agent-name}.{your-domain}`
 
 Examples:
 
-- `_chatbot._mcp._agents.example.com`
-- `_search._a2a._agents.example.com`
-- `_index._agents.example.com` for org-level discovery entry
+- `chatbot.example.com`
+- `search.example.com`
+- `_index._agents.example.com` for the org-level discovery entry (this one keeps the underscore convention)
+
+An optional walkable AliasMode is published at `{agent-name}._agents.{your-domain}` for crawlers and zone enumeration; it's an AliasMode SVCB record pointing back at the canonical flat name. The flat form is the canonical owner because `dNSName` SAN entries in publicly-issued x.509 certificates cannot contain underscores (per RFC 5280 / CA-Browser Forum BR preferred-name syntax in RFC 1034). The draft itself names this constraint in §3: *"the TargetName domain name MUST NOT contain underscores as public x.509 certificates will be used in communications."*
 
 ### Minimum record set from the IETF draft
 
@@ -109,8 +111,9 @@ dns-aid discover test.dns-aid.local --backend ddns
 And inspect DNS directly:
 
 ```bash
-dig SVCB _chatbot._mcp._agents.example.com
-dig TXT _index._agents.example.com
+dig SVCB chatbot.example.com                 # canonical flat owner
+dig SVCB chatbot._agents.example.com         # optional walkable AliasMode
+dig TXT  _index._agents.example.com          # org-level index
 ```
 
 ## 4) Trust model: what is proven, what is not
@@ -173,14 +176,14 @@ _index._agents.example.com. 300 IN TXT "chatbot:mcp,search:a2a"
 
 ### What protocol agnostic means in deployment
 
-Protocol agnostic means DNS-AID can carry endpoint metadata for MCP, A2A, HTTPS, or future protocols without changing the substrate. In practice, each protocol suite should be represented by a distinct SVCB record and ALPN set, for example:
+Protocol agnostic means DNS-AID can carry endpoint metadata for MCP, A2A, HTTPS, or future protocols without changing the substrate. Under `-02`, agent-protocol carriage moved into a new `bap` SvcParamKey so `alpn` returns to its RFC 9460 transport role. Each protocol suite is represented by a distinct SVCB record with `bap` naming the agent protocol and `alpn` carrying the TLS transport:
 
 ```dns
-agent-name.example.com. IN SVCB 1 . alpn="mcp,h2,h3"
-agent-name.example.com. IN SVCB 1 . alpn="a2a,h2"
+agent-name.example.com. IN SVCB 1 . alpn="h2,h3" bap="mcp"
+agent-name.example.com. IN SVCB 1 . alpn="h2"    bap="a2a"
 ```
 
-This lets clients choose protocol and endpoint URLs deterministically.
+This lets clients choose agent protocol and TLS transport independently. (`alpn=<agent-protocol>` alone is still permitted by the draft when only one protocol is supported.)
 
 ### How to avoid turning discovery into a data leak
 
