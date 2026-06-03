@@ -93,3 +93,8 @@ If you work on large-scale infrastructure, this is a strong signal that flat exp
 ---
 
 **Source:** Bernardi et al., [*Expanding into Reality: Random Graphs for Datacenter Networks*](https://arxiv.org/abs/2604.15261), arXiv:2604.15261, 2026.
+
+**Further reading:**
+
+- [How AWS networking teams are using random graph theory to modernize data-center network design](https://www.aboutamazon.com/stories/aws-random-graph-theory-data-center-network-design)
+- [How “flat” is replacing “fat” in AWS data center networks](https://www.amazon.science/blog/how-flat-is-replacing-fat-in-aws-data-center-networks)
