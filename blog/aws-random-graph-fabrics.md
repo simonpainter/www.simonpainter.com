@@ -19,7 +19,9 @@ The key idea is simple: move from rigid hierarchy to high-connectivity randomnes
 
 ## Why Clos fabrics hit a wall
 
-A Clos fabric gives a trade-off. I can build for low oversubscription and pay for capacity I rarely use, or I can save money and accept hotspots when traffic lines up in awkward ways.
+A Clos fabric gives a trade-off. I can build for low oversubscription and pay for capacity I rarely use, or I can save money and accept hotspots when traffic lines up in awkward ways. That is still a big step up from the older tiered designs that came before Clos, but both approaches share the same idea: tightly ordered structure as the primary control.
+
+RNG flips that mental model. Instead of enforcing order in the topology, it uses managed higher entropy in the topology and lets routing recover order at forwarding time.
 
 The deeper issue is that capacity in a Clos is not fully fungible. Traffic between any two ToRs can only use a narrow subset of links, so some paths saturate while other links sit idle. Failures can also hurt in a concentrated way: lose a spine and many pairs lose a big chunk of usable bandwidth.
 
