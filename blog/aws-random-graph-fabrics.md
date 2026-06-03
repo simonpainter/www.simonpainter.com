@@ -12,7 +12,7 @@ date: 2026-06-03
 
 ---
 
-AWS is now running production data centre networks that are wired at random and still deliver strong performance. That sounds wrong at first, but the paper *Expanding into Reality: Random Graphs for Datacenter Networks* shows why it works.
+AWS is now running production data centre networks that are wired at random and still deliver strong performance. That sounds wrong at first, but the paper [*Expanding into Reality: Random Graphs for Datacenter Networks*](https://arxiv.org/abs/2604.15261) shows why it works.
 
 The key idea is simple: move from rigid hierarchy to high-connectivity randomness, then design routing and operations around that choice.
 <!-- truncate -->
@@ -90,4 +90,4 @@ If you work on large-scale infrastructure, this is a strong signal that flat exp
 
 ---
 
-**Source:** Bernardi et al., *Expanding into Reality: Random Graphs for Datacenter Networks*, arXiv:2604.15261, 2026. https://arxiv.org/abs/2604.15261
+**Source:** Bernardi et al., [*Expanding into Reality: Random Graphs for Datacenter Networks*](https://arxiv.org/abs/2604.15261), arXiv:2604.15261, 2026.
