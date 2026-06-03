@@ -12,6 +12,8 @@ date: 2026-06-03
 
 ---
 
+A like-minded colleague and I used to look at network topologies and ask one simple question. If there was a traffic-engineering choice to make, could we leave more of the hard work to the routing protocol and simplify everything else?
+
 AWS is now running production data centre networks that are wired at random and still deliver strong performance. That sounds wrong at first, but the paper [*Expanding into Reality: Random Graphs for Datacenter Networks*](https://arxiv.org/abs/2604.15261) shows why it works.
 
 The key idea is simple: move from rigid hierarchy to high-connectivity randomness, then design routing and operations around that choice.
