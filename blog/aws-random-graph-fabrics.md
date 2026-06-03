@@ -64,7 +64,7 @@ Random does not mean unpredictable here. It means statistically stable at scale.
 ## The architectural shift in one picture
 
 ```mermaid
-flowchart LR
+flowchart TB
     subgraph L["Legacy tiered network (strict hierarchy)"]
         direction TB
         L1[Core]
