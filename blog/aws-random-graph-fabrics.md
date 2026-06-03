@@ -4,10 +4,10 @@ title: "Random by design: how AWS made expander-graph data centre fabrics work"
 authors: simonpainter
 tags:
   - aws
-  - networking
-  - datacentres
+  - networks
+  - cloud
   - architecture
-  - routing
+  - routing-protocols
 date: 2026-06-03
 
 ---
