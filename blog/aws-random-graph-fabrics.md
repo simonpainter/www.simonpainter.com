@@ -65,11 +65,35 @@ Random does not mean unpredictable here. It means statistically stable at scale.
 
 ```mermaid
 flowchart LR
-    A[Clos mindset<br/>Structured topology + shortest paths] --> B[Hotspot risk on narrow cuts]
-    C[RNG mindset<br/>Random topology + Spraypoint] --> D[Higher path diversity]
-    D --> E[More fungible capacity]
-    D --> F[Smaller failure blast radius]
-    C --> G[ShuffleBox makes physical rollout practical]
+    subgraph T["Legacy / Clos-style tiered structure (ordered)"]
+        direction TB
+        T1[Core]
+        T2a[Aggregation A]
+        T2b[Aggregation B]
+        T3a[ToR 1]
+        T3b[ToR 2]
+        T3c[ToR 3]
+        T3d[ToR 4]
+        T1 --> T2a
+        T1 --> T2b
+        T2a --> T3a
+        T2a --> T3b
+        T2b --> T3c
+        T2b --> T3d
+    end
+
+    subgraph R["RNG flat sparse mesh (managed higher entropy)"]
+        direction LR
+        R1((R1)) --- R2((R2))
+        R2 --- R3((R3))
+        R3 --- R4((R4))
+        R4 --- R5((R5))
+        R5 --- R6((R6))
+        R6 --- R1
+        R1 --- R4
+        R2 --- R5
+        R3 --- R6
+    end
 ```
 
 ## What AWS says it gains
