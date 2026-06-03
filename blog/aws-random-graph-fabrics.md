@@ -63,55 +63,58 @@ Random does not mean unpredictable here. It means statistically stable at scale.
 
 ## The architectural shift in one picture
 
+### Legacy tiered network (strict hierarchy)
+
 ```mermaid
 flowchart TB
-    subgraph L["Legacy tiered network (strict hierarchy)"]
-        direction TB
-        L1[Core]
-        L2a[Distribution A]
-        L2b[Distribution B]
-        L3a[Access A]
-        L3b[Access B]
-        L3c[Access C]
-        L3d[Access D]
-        L1 --> L2a
-        L1 --> L2b
-        L2a --> L3a
-        L2a --> L3b
-        L2b --> L3c
-        L2b --> L3d
-    end
+    L1[Core]
+    L2a[Distribution A]
+    L2b[Distribution B]
+    L3a[Access A]
+    L3b[Access B]
+    L3c[Access C]
+    L3d[Access D]
+    L1 --> L2a
+    L1 --> L2b
+    L2a --> L3a
+    L2a --> L3b
+    L2b --> L3c
+    L2b --> L3d
+```
 
-    subgraph C["Clos fabric (leaf-spine)"]
-        direction TB
-        C1a[Spine 1]
-        C1b[Spine 2]
-        C2a[Leaf 1]
-        C2b[Leaf 2]
-        C2c[Leaf 3]
-        C2d[Leaf 4]
-        C1a --- C2a
-        C1a --- C2b
-        C1a --- C2c
-        C1a --- C2d
-        C1b --- C2a
-        C1b --- C2b
-        C1b --- C2c
-        C1b --- C2d
-    end
+### Clos fabric (leaf-spine)
 
-    subgraph R["RNG flat sparse mesh (managed higher entropy)"]
-        direction LR
-        R1((R1)) --- R2((R2))
-        R2 --- R3((R3))
-        R3 --- R4((R4))
-        R4 --- R5((R5))
-        R5 --- R6((R6))
-        R6 --- R1
-        R1 --- R4
-        R2 --- R5
-        R3 --- R6
-    end
+```mermaid
+flowchart TB
+    C1a[Spine 1]
+    C1b[Spine 2]
+    C2a[Leaf 1]
+    C2b[Leaf 2]
+    C2c[Leaf 3]
+    C2d[Leaf 4]
+    C1a --- C2a
+    C1a --- C2b
+    C1a --- C2c
+    C1a --- C2d
+    C1b --- C2a
+    C1b --- C2b
+    C1b --- C2c
+    C1b --- C2d
+```
+
+### RNG flat sparse mesh (managed higher entropy)
+
+```mermaid
+flowchart LR
+    R1((R1)) --- R2((R2))
+    R2 --- R3((R3))
+    R3 --- R4((R4))
+    R4 --- R5((R5))
+    R5 --- R6((R6))
+    R6 --- R1
+    R1 --- R4
+    R2 --- R5
+    R3 --- R6
 ```
 
 ## What AWS says it gains
