@@ -27,7 +27,7 @@ The deeper issue is that capacity in a Clos is not fully fungible. Traffic betwe
 
 ## What an expander gives AWS
 
-AWS uses a flat topology based on quasi-random graphs. In plain terms, each router connects to a random set of neighbours with a fixed degree.
+AWS uses a flat topology based on quasi-random graphs. In plain terms, each router connects to an algorithmically generated pseudo-random set of neighbours with a fixed degree.
 
 That randomness creates strong edge expansion: for almost any group of routers, many links still leave that group. There is no easy narrow cut to choke traffic, which makes capacity more fungible and failure impact more local.
 
