@@ -84,6 +84,43 @@ const config = {
         },
       };
     },
+    [
+      '@docusaurus/plugin-content-blog',
+      {
+        id: 'updates',
+        routeBasePath: '/updates',
+        path: './updates',
+        blogTitle: 'Cloud Updates',
+        blogDescription: 'Azure and cloud release notes and announcements',
+        postsPerPage: 'ALL',
+        blogSidebarTitle: 'All updates',
+        blogSidebarCount: 'ALL',
+        showReadingTime: true,
+        sortPosts: 'descending',
+        feedOptions: {
+          xslt: true,
+        },
+      },
+    ],
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        redirects: [
+          {
+            from: '/generally-available-azure-virtual-network-updates-default-limits-increased-for-nsgs-and-route-tables',
+            to: '/updates/generally-available-azure-virtual-network-updates-default-limits-increased-for-nsgs-and-route-tables',
+          },
+          {
+            from: '/launched-generally-available-managed-virtual-network-for-evaluations-in-microsoft-foundry',
+            to: '/updates/launched-generally-available-managed-virtual-network-for-evaluations-in-microsoft-foundry',
+          },
+          {
+            from: '/public-preview-summarized-advertised-gateway-prefixes-for-route-advertisement',
+            to: '/updates/public-preview-summarized-advertised-gateway-prefixes-for-route-advertisement',
+          },
+        ],
+      },
+    ],
   ],
 
   presets: [
@@ -144,6 +181,11 @@ const config = {
             position: 'right',
           },
           {
+            to: '/updates',
+            label: 'Cloud Updates',
+            position: 'left',
+          },
+          {
             href: '/tags/azure',
             label: 'Azure',
             position: 'left',
@@ -184,6 +226,10 @@ const config = {
               {
                 label: 'All Posts',
                 to: '/',
+              },
+              {
+                label: 'Cloud Updates',
+                to: '/updates',
               },
               {
                 label: 'All Tags',
