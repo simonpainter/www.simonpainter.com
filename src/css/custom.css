@@ -1,23 +1,37 @@
-/* Import modern fonts - Inter for body text and JetBrains Mono for code */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap');
+@font-face {
+  font-family: 'DejaVu Serif Condensed';
+  src: url('/fonts/dejavu-serif-condensed-regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DejaVu Serif Condensed';
+  src: url('/fonts/dejavu-serif-condensed-bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 /* Root variables for both light and dark mode */
 :root {
   /* Font settings */
-  --ifm-font-family-base: 'Inter', system-ui, -apple-system, sans-serif;
-  --ifm-font-family-monospace: 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --ifm-font-family-base: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  --ifm-font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --ifm-heading-font-family: 'DejaVu Serif Condensed', Georgia, Cambria, 'Times New Roman', serif;
   
   /* Spacing */
   --ifm-spacing-horizontal: 1.5rem;
   
-  /* Base colors - will be overridden by mode-specific colors */
-  --ifm-color-primary: #2563eb;
-  --ifm-color-primary-dark: #1d4ed8;
-  --ifm-color-primary-darker: #1e40af;
-  --ifm-color-primary-darkest: #1e3a8a;
-  --ifm-color-primary-light: #3b82f6;
-  --ifm-color-primary-lighter: #60a5fa;
-  --ifm-color-primary-lightest: #93c5fd;
+  /* Base colours derived from the site logo */
+  --ifm-color-primary: #355883;
+  --ifm-color-primary-dark: #2e4c72;
+  --ifm-color-primary-darker: #274163;
+  --ifm-color-primary-darkest: #1f3452;
+  --ifm-color-primary-light: #416a9a;
+  --ifm-color-primary-lighter: #4d78aa;
+  --ifm-color-primary-lightest: #d7e3ef;
   
   /* Heading sizes - refined for better readability */
   --ifm-h1-font-size: 2rem;
@@ -47,70 +61,88 @@
   /* Global radii */
   --ifm-global-radius: 6px;
   --ifm-global-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --site-accent-border: rgba(53, 88, 131, 0.18);
+  --site-accent-surface: linear-gradient(135deg, rgba(215, 227, 239, 0.72), rgba(255, 255, 255, 0.92));
+  --site-accent-glow: radial-gradient(circle at top left, rgba(77, 120, 170, 0.16), transparent 34rem);
+  --site-accent-shadow: 0 18px 40px -32px rgba(31, 52, 82, 0.45);
+  --tag-background: #eef4fa;
+  --tag-background-hover: #e2edf7;
+  --tag-color: #274163;
+  --tag-border: rgba(53, 88, 131, 0.2);
 }
 
 /* Light mode specific colors */
 html[data-theme='light'] {
   --ifm-background-color: #ffffff;
-  --ifm-background-surface-color: #f8fafc;
+  --ifm-background-surface-color: #f8fbff;
   --ifm-color-content: #243a5e;
   --ifm-color-content-secondary: #5b6b86;
   --ifm-heading-color: #243a5e;
   --ifm-border-color: #e2e8f0;
   --ifm-toc-border-color: #e2e8f0;
-  --ifm-navbar-background-color: rgba(255, 255, 255, 0.95);
+  --ifm-navbar-background-color: rgba(255, 255, 255, 0.9);
   --ifm-navbar-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
   --ifm-footer-background-color: #f1f5f9;
   --ifm-footer-color: #243a5e;
   --ifm-footer-title-color: #243a5e;
   --ifm-footer-link-color: #243a5e;
-  --ifm-footer-link-hover-color: #1d4ed8;
+  --ifm-footer-link-hover-color: #355883;
   --ifm-code-background: #f1f5f9;
   --ifm-card-background-color: #ffffff;
-  --tag-background: #f1f5f9;
-  --tag-color: #334155;
   --blockquote-background: #f8fafc;
   --blockquote-border: #e2e8f0;
 }
 
 /* Dark mode specific colors */
 html[data-theme='dark'] {
-  --ifm-background-color: #0f172a;
-  --ifm-background-surface-color: #1e293b;
-  --ifm-color-content: #e2e8f0;
-  --ifm-color-content-secondary: #94a3b8;
+  --ifm-background-color: #101828;
+  --ifm-background-surface-color: #172033;
+  --ifm-color-content: #e6edf6;
+  --ifm-color-content-secondary: #a8b6cc;
   --ifm-heading-color: #f8fafc;
-  --ifm-border-color: #334155;
-  --ifm-toc-border-color: #334155;
-  --ifm-navbar-background-color: rgba(15, 23, 42, 0.95);
-  --ifm-navbar-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
-  --ifm-footer-background-color: #1e293b;
-  --ifm-footer-color: #e2e8f0;
+  --ifm-border-color: #2c3b55;
+  --ifm-toc-border-color: #2c3b55;
+  --ifm-navbar-background-color: rgba(16, 24, 40, 0.88);
+  --ifm-navbar-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.16);
+  --ifm-footer-background-color: #172033;
+  --ifm-footer-color: #e6edf6;
   --ifm-footer-title-color: #f8fafc;
-  --ifm-footer-link-color: #e2e8f0;
-  --ifm-footer-link-hover-color: #93c5fd;
-  --ifm-code-background: #1e293b;
-  --ifm-card-background-color: #1e293b;
-  --tag-background: #334155;
-  --tag-color: #e2e8f0;
-  --blockquote-background: #1e293b;
-  --blockquote-border: #334155;
-  
-  /* Primary colours shifted one step lighter for dark mode so that links and
-     active indicators reach WCAG 2 AA (4.5:1) on the surface background
-     (#1e293b).  The previous primary (#3b82f6) only reached 3.98:1 there. */
-  --ifm-color-primary: #60a5fa;
-  --ifm-color-primary-dark: #3b82f6;
-  --ifm-color-primary-darker: #2563eb;
-  --ifm-color-primary-darkest: #1d4ed8;
-  --ifm-color-primary-light: #93c5fd;
-  --ifm-color-primary-lighter: #bfdbfe;
-  --ifm-color-primary-lightest: #dbeafe;
+  --ifm-footer-link-color: #d5e2f2;
+  --ifm-footer-link-hover-color: #c8d8eb;
+  --ifm-code-background: #172033;
+  --ifm-card-background-color: #172033;
+  --ifm-color-primary: #8faacc;
+  --ifm-color-primary-dark: #7893bc;
+  --ifm-color-primary-darker: #6a86af;
+  --ifm-color-primary-darkest: #6682ac;
+  --ifm-color-primary-light: #abc2dd;
+  --ifm-color-primary-lighter: #c8d8eb;
+  --ifm-color-primary-lightest: #dce6f2;
+  --blockquote-background: #172033;
+  --blockquote-border: #2c3b55;
+  --site-accent-border: rgba(143, 170, 204, 0.28);
+  --site-accent-surface: linear-gradient(135deg, rgba(44, 59, 85, 0.86), rgba(23, 32, 51, 0.96));
+  --site-accent-glow: radial-gradient(circle at top left, rgba(171, 194, 221, 0.16), transparent 34rem);
+  --site-accent-shadow: 0 18px 40px -30px rgba(0, 0, 0, 0.6);
+  --tag-background: rgba(143, 170, 204, 0.12);
+  --tag-background-hover: rgba(143, 170, 204, 0.18);
+  --tag-color: #dce6f2;
+  --tag-border: rgba(143, 170, 204, 0.24);
 }
 
 /* ===== TYPOGRAPHY ===== */
 
 /* Improved heading typography */
+.navbar__title,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--ifm-heading-font-family);
+}
+
 .markdown h1 {
   font-size: var(--ifm-h1-font-size);
   font-weight: 700;
@@ -152,8 +184,8 @@ html[data-theme='dark'] {
 
 /* Blog post list styling */
 .blog-list-page article {
-  margin-bottom: 3rem;
-  padding-bottom: 3rem;
+  margin-bottom: 2.25rem;
+  padding-bottom: 2.25rem;
   border-bottom: 1px solid var(--ifm-border-color);
 }
 
@@ -163,7 +195,7 @@ html[data-theme='dark'] {
 
 .blog-list-page h2 {
   font-size: 1.5rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
 }
 
 .blog-list-page h2 a {
@@ -175,6 +207,102 @@ html[data-theme='dark'] {
 
 .blog-list-page h2 a:hover {
   color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+
+.blog-list-page main {
+  background-image: var(--site-accent-glow);
+  background-repeat: no-repeat;
+}
+
+.blog-list-page main > article:first-of-type > header,
+.blog-post-page article > header:first-child {
+  padding: 1.25rem 1.4rem 1rem;
+  margin: 0 0 1rem;
+  border: 1px solid var(--site-accent-border);
+  border-left: 0.35rem solid var(--ifm-color-primary);
+  border-radius: 1rem;
+  background: var(--site-accent-surface);
+  box-shadow: var(--site-accent-shadow);
+}
+
+.blog-list-page article > header > div[class*='container_'] {
+  margin: 0.45rem 0 0.6rem !important;
+  color: var(--ifm-color-content-secondary);
+  font-size: 0.94rem;
+}
+
+.blog-list-page article .row {
+  margin-top: 0.85rem !important;
+  margin-bottom: 0 !important;
+  row-gap: 0.75rem;
+  align-items: center;
+}
+
+.blog-list-page .avatar {
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.35rem 0;
+}
+
+.blog-list-page .avatar__photo {
+  width: 2.75rem;
+  height: 2.75rem;
+  box-shadow: 0 0 0 1px var(--site-accent-border);
+}
+
+.blog-list-page .avatar__name {
+  font-size: 0.94rem;
+  line-height: 1.2;
+}
+
+.blog-list-page .avatar__subtitle,
+.blog-list-page .avatar__intro > :last-child {
+  color: var(--ifm-color-content-secondary);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.blog-list-page footer {
+  margin-top: 0.9rem !important;
+}
+
+.blog-list-page footer b {
+  color: var(--ifm-color-content-secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.blog-list-page footer ul[class*='tags'] {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-left: 0.5rem !important;
+}
+
+.blog-list-page footer li[class*='tag'] {
+  margin: 0;
+}
+
+.blog-list-page footer a[class*='tag'],
+.blog-post-page footer a[class*='tag'] {
+  border: 1px solid var(--tag-border);
+  border-radius: 999px;
+  padding: 0.18rem 0.58rem 0.24rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  background: var(--tag-background);
+  color: var(--tag-color);
+  box-shadow: none;
+}
+
+.blog-list-page footer a[class*='tag']:hover,
+.blog-list-page footer a[class*='tag']:focus-visible,
+.blog-post-page footer a[class*='tag']:hover,
+.blog-post-page footer a[class*='tag']:focus-visible {
+  background: var(--tag-background-hover);
+  border-color: var(--ifm-color-primary);
+  color: var(--tag-color);
   text-decoration: none;
 }
 
@@ -282,6 +410,8 @@ pre code {
 
 /* Navbar styling */
 .navbar {
+  border-bottom: 1px solid var(--site-accent-border);
+  background-image: linear-gradient(90deg, rgba(53, 88, 131, 0.08), transparent 34%);
   backdrop-filter: blur(8px);
 }
 
@@ -291,6 +421,7 @@ pre code {
 
 .navbar__title {
   font-size: 1.75rem;
+  letter-spacing: -0.02em;
 }
 
 .navbar__logo {
@@ -324,11 +455,11 @@ pre code {
 }
 
 .footer--dark {
-  --ifm-footer-background-color: #1e293b;
-  --ifm-footer-color: #e2e8f0;
+  --ifm-footer-background-color: #172033;
+  --ifm-footer-color: #e6edf6;
   --ifm-footer-title-color: #f8fafc;
-  --ifm-footer-link-color: #e2e8f0;
-  --ifm-footer-link-hover-color: #93c5fd;
+  --ifm-footer-link-color: #d5e2f2;
+  --ifm-footer-link-hover-color: #c8d8eb;
 }
 
 .footer__link-item {

@@ -45,6 +45,28 @@ const config = {
 
   url: 'https://www.simonpainter.com',
   baseUrl: '/',
+  headTags: [
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'preload',
+        href: '/fonts/dejavu-serif-condensed-regular.ttf',
+        as: 'font',
+        type: 'font/ttf',
+        crossorigin: 'anonymous',
+      },
+    },
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'preload',
+        href: '/fonts/dejavu-serif-condensed-bold.ttf',
+        as: 'font',
+        type: 'font/ttf',
+        crossorigin: 'anonymous',
+      },
+    },
+  ],
 
   organizationName: 'simonpainter',
   projectName: 'www.simonpainter.com',
