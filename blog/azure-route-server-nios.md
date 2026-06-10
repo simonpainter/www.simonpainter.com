@@ -3,13 +3,9 @@
 title: Integrating Azure Route Server with Infoblox NIOS
 authors: simonpainter
 tags:
-  - azure
-  - networks
   - dns
   - bgp
   - anycast
-  - cloud
-  - load-balancing
 date: 2025-11-18
 
 ---

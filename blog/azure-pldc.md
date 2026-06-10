@@ -3,11 +3,9 @@
 title: "Azure Private Link Direct Connect"
 authors: simonpainter
 tags:
-  - cloud
-  - azure
-  - networks
-  - architecture
   - private-link
+  - azure
+  - cloud
 date: 2025-10-16
 
 ---

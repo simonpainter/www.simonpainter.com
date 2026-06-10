@@ -2,11 +2,9 @@
 title: Selling networks the Mad Men way
 authors: simonpainter
 tags:
-  - networks
-  - business
   - opinion
-  - security
   - educational
+  - business
 date: 2025-10-10
 
 ---

@@ -3,13 +3,9 @@
 title: "Beyond DNS: Implementing Anycast in Azure with Route Server and NVAs"
 authors: simonpainter
 tags:
-  - azure
   - anycast
-  - networks
-  - cloud
   - bgp
   - load-balancing
-  - high-availability
 date: 2024-12-10
 
 ---

@@ -3,11 +3,9 @@
 title: "Exploring Azure Network Latency: The Fundamentals"
 authors: simonpainter
 tags:
+  - performance
   - azure
   - networks
-  - cloud
-  - performance
-  - architecture
 date: 2025-03-20
 
 ---

@@ -3,11 +3,9 @@
 title: "The network documentation pyramid: why your spreadsheets aren't enough"
 authors: simonpainter
 tags:
-  - business
-  - networks
-  - opinion
   - ai
-  - documentation
+  - opinion
+  - business
 date: 2025-09-15
 
 ---

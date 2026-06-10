@@ -3,10 +3,9 @@
 title: "Azure Loadbalancer: The NAT device you didn't know you wanted"
 authors: simonpainter
 tags:
+  - load-balancing
   - azure
   - networks
-  - cloud
-  - load-balancing
 date: 2025-06-08
 
 ---

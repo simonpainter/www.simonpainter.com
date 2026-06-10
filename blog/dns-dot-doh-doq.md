@@ -4,10 +4,8 @@ title: "Quad9 now supports DoQ along with DoH3"
 authors: simonpainter
 tags:
   - dns
-  - security
-  - networks
-  - architecture
   - educational
+  - security
 date: 2026-04-06
 
 ---

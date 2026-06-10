@@ -3,10 +3,9 @@
 title: "169.254.169.254: The Instance Metadata IP Address in Azure"
 authors: simonpainter
 tags:
+  - ipv6
   - azure
   - networks
-  - cloud
-  - ipv6
 date: 2025-10-08
 
 ---

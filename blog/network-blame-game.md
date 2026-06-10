@@ -2,10 +2,9 @@
 title: "From Network Blame to Platform Teams"
 authors: simonpainter
 tags:
+  - monitoring
   - opinion
   - business
-  - networks
-  - monitoring
 date: 2024-11-17
 
 ---

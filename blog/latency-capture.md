@@ -3,14 +3,8 @@
 title: Using packet captures to measure firewall latency
 authors: simonpainter
 tags:
-  - security
   - python
-  - programming
-  - networks
-  - cloud
-  - bash
   - performance
-  - scripting
   - troubleshooting
 date: 2025-02-25
 

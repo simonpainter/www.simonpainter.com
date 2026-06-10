@@ -4,10 +4,8 @@ title: "DNS Service Binding (SVCB) and HTTPS Records: A Practical Guide"
 authors: simonpainter
 tags:
   - dns
-  - security
-  - networks
-  - architecture
   - educational
+  - security
 date: 2026-03-09
 
 ---

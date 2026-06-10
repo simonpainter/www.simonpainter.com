@@ -184,11 +184,6 @@ high-availability:
   permalink: '/high-availability'
   description: 'High availability architectures, redundancy patterns, and resilience strategies'
 
-disaster-recovery:
-  label: 'Disaster Recovery'
-  permalink: '/disaster-recovery'
-  description: 'Disaster recovery planning, backup strategies, and business continuity'
-
 ipv6:
   label: 'IPv6'
   permalink: '/ipv6'

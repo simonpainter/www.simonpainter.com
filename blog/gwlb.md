@@ -2,11 +2,9 @@
 title: A little look at the AWS Gateway Load Balancer
 authors: simonpainter
 tags:
-  - aws
-  - security
-  - labs
   - load-balancing
   - firewall
+  - aws
 date: 2024-02-03
 
 ---

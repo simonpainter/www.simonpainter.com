@@ -3,11 +3,9 @@
 title: BGP Route Server MCP
 authors: simonpainter
 tags:
-  - ai
-  - networks
-  - python
   - mcp
   - bgp
+  - ai
 date: 2026-02-12
 
 ---

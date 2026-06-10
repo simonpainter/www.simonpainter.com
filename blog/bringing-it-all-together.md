@@ -2,13 +2,9 @@
 title: "Bringing it all together for network automation"
 authors: simonpainter
 tags:
-  - cloud
-  - aws
-  - azure
-  - networks
   - terraform
   - automation
-  - architecture
+  - aws
 
 date: 2025-08-18
 

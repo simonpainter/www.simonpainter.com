@@ -3,10 +3,9 @@
 title: "FQDN Filtering"
 authors: simonpainter
 tags:
-  - azure
   - enforza
-  - security
   - firewall
+  - azure
 date: 2024-11-16
 
 ---

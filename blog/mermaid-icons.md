@@ -4,7 +4,6 @@ title: Custom icons for Mermaid diagrams in Docusaurus
 authors: 
   - simonpainter
 tags:
-  - github
   - github-actions
   - docusaurus
   - cicd

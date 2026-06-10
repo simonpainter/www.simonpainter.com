@@ -6,10 +6,8 @@ authors:
   - zainkhan
 tags:
   - dns
-  - bash
-  - networks
-  - scripting
   - troubleshooting
+  - bash
 date: 2024-11-20
 
 ---

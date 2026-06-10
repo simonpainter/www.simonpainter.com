@@ -5,7 +5,6 @@ authors:
   - simonpainter
   - zainkhan
 tags:
-  - azure
   - expressroute
   - bgp
   - ipv6

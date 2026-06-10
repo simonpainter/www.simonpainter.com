@@ -3,13 +3,8 @@
 title: "Vibe code project: Internet Map"
 authors: simonpainter
 tags:
-  - personal
   - bgp
-  - networks
   - python
-  - ai
-  - labs
-  - programming
   - algorithms
 date: 2026-04-19
 

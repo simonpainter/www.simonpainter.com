@@ -3,12 +3,9 @@
 title: "Reducing HIP: This Meeting Could Have Been Code"
 authors: simonpainter
 tags:
-  - personal
-  - networks
   - automation
+  - personal
   - opinion
-  - security
-  - business
 date: 2026-03-21
 
 ---

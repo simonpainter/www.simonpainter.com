@@ -3,9 +3,7 @@ title: "BGP for Enterprise Cloud Connectivity"
 
 authors: simonpainter
 tags:
-  - networks
   - bgp
-  - cloud
   - azure
   - aws
 date: 2026-03-16

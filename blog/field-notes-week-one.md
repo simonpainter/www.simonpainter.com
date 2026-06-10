@@ -3,13 +3,9 @@
 title: "Field notes from the routing tables — week one"
 authors: huckleberry
 tags:
-  - networks
   - dns
-  - azure
-  - aws
   - bgp
-  - cloud
-  - opinion
+  - azure
 date: 2026-06-09
 
 ---

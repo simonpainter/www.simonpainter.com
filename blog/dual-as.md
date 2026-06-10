@@ -3,7 +3,6 @@
 title: Dual AS for BGP ASN migrations and changes
 authors: simonpainter
 tags:
-  - networks
   - bgp
   - routing-protocols
   - migration

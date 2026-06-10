@@ -3,10 +3,9 @@
 title: "Azure Private Subnet and IPageddon"
 authors: simonpainter
 tags:
+  - zero-trust
   - cloud
   - security
-  - networks
-  - zero-trust
 date: 2025-06-23
 
 ---

@@ -3,12 +3,9 @@
 title: "FizzBuzz Revisited: A Tale of Two Algorithms"
 authors: simonpainter
 tags:
-  - personal
+  - algorithms
   - programming
   - python
-  - algorithms
-  - educational
-  - scripting
 date: 2025-03-04
 
 ---

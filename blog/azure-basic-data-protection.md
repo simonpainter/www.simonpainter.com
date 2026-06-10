@@ -3,9 +3,8 @@ title: Azure Basic Data Protection
 authors: simonpainter
 tags:
   - azure
-  - business
-  - disaster-recovery
   - personal
+  - business
 
 date: 2026-01-06
 

@@ -3,9 +3,6 @@
 title: HA internet egress using enforza.io
 authors: simonpainter
 tags:
-  - cloud
-  - security
-  - networks
   - enforza
   - high-availability
   - firewall

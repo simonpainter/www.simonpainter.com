@@ -2,12 +2,9 @@
 title: Azure Firewall Prescaling
 authors: simonpainter
 tags:
-  - security
-  - azure
-  - cloud
-  - networks
   - performance
   - firewall
+  - azure
 
 date: 2025-10-20
 

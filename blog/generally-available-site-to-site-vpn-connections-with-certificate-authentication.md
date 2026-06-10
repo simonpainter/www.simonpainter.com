@@ -2,12 +2,9 @@
 title: "S2S VPN certificate authentication is now generally available"
 authors: simonpainter
 tags:
+  - automation
   - azure
   - networks
-  - security
-  - cloud
-  - architecture
-  - automation
 date: 2026-05-25
 ---
 

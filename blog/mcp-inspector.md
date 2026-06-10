@@ -3,10 +3,9 @@
 title: MCP Inspector
 authors: simonpainter
 tags:
+  - mcp
   - ai
   - python
-  - mcp
-  - scripting
 date: 2025-08-19
 
 ---
