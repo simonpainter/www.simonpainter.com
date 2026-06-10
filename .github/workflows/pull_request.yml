@@ -2,7 +2,7 @@ name: Add build log to PR
 
 on:
   pull_request:
-    types: [opened, reopened]
+    types: [opened, reopened, synchronize]
 
 jobs:
   build-and-comment:
