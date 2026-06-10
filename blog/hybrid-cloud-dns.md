@@ -3,13 +3,8 @@ title: "Hybrid Cloud Reference Architectures"
 authors: simonpainter
 tags:
   - dns
-  - migration
-  - azure
-  - aws
-  - cloud
-  - networks
-  - architecture
   - high-availability
+  - azure
 date: 2026-05-21
 ---
 

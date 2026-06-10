@@ -3,13 +3,9 @@
 title: "Python Route Summarisation"
 authors: simonpainter
 tags:
-  - python
-  - programming
-  - networks
-  - scripting
-  - labs
-  - routing-protocols
   - bgp
+  - routing-protocols
+  - python
 date: 2023-01-07
 
 ---

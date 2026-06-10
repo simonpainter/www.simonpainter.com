@@ -4,12 +4,8 @@ title: "Encrypted DNS: What Microsoft's DNS over HTTPS public preview means for 
 authors: simonpainter
 tags:
   - dns
-  - security
-  - networks
-  - architecture
   - firewall
   - zero-trust
-  - educational
 date: 2026-02-23
 
 ---

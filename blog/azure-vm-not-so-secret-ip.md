@@ -5,11 +5,9 @@ authors:
   - simonpainter
   - zainkhan
 tags:
-  - azure
   - dns
-  - networks
-  - cloud
   - troubleshooting
+  - azure
 date: 2024-11-17
 
 ---

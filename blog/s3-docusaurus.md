@@ -3,8 +3,6 @@
 title: Uploading my Docusaurus site
 authors: simonpainter
 tags:
-  - aws
-  - github
   - github-actions
   - docusaurus
   - cicd

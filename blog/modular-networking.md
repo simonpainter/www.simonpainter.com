@@ -5,9 +5,8 @@ description: How to build networks like Lego blocks, not custom sculptures.
 authors: simonpainter
 tags:
   - terraform
-  - networks
   - automation
-  - architecture
+  - networks
 date: 2025-07-31
 
 ---

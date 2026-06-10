@@ -3,11 +3,9 @@
 title: AWS Egress Security
 authors: simonpainter
 tags:
-  - aws
-  - security
   - dns
-  - cloud
   - firewall
+  - aws
 date: 2025-01-22
 
 ---

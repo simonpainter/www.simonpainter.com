@@ -3,10 +3,9 @@
 title: "Azure Private Link Services: Enabling Secure and Flexible Network Architectures"
 authors: simonpainter
 tags:
+  - private-link
   - azure
   - networks
-  - architecture
-  - private-link
 date: 2024-08-07
 
 ---

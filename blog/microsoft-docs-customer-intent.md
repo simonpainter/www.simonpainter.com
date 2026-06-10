@@ -3,10 +3,8 @@
 title: Microsoft documentation hidden intent
 authors: simonpainter
 tags:
-  - business
-  - cloud
-  - azure
   - github
+  - azure
   - personal
 date: 2025-02-18
 

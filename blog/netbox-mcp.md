@@ -3,12 +3,9 @@
 title: MCP for Netbox
 authors: simonpainter
 tags:
-  - ai
-  - networks
-  - python
   - mcp
+  - ai
   - netbox
-  - scripting
 date: 2025-07-17
 
 ---

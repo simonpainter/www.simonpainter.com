@@ -3,7 +3,6 @@
 title: "IPv8: a late and confused April Fool"
 authors: simonpainter
 tags:
-  - networks
   - ipv6
   - opinion
   - educational

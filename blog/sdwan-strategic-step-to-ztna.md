@@ -3,11 +3,9 @@
 title: "SD-WAN: A Strategic Step Toward Zero Trust"
 authors: simonpainter
 tags:
-  - networks
-  - opinion
-  - business
-  - security
   - zero-trust
+  - opinion
+  - security
 date: 2024-11-17
 
 ---

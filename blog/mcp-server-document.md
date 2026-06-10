@@ -3,11 +3,9 @@
 title: Is MCP the new fad for poor knowledge management?
 authors: simonpainter
 tags:
-  - personal
-  - ai
-  - business
   - mcp
-  - documentation
+  - ai
+  - personal
 date: 2025-06-25
 
 ---

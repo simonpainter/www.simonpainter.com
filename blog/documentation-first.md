@@ -3,12 +3,9 @@
 title: "Infrastructure documentation"
 authors: simonpainter
 tags:
-  - cloud
-  - business
-  - networks
-  - opinion
   - ai
-  - documentation
+  - opinion
+  - business
 date: 2025-06-21
 
 ---

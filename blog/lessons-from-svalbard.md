@@ -6,8 +6,6 @@ tags:
   - educational
   - personal
   - opinion
-  - business
-  - disaster-recovery
 
 date: 2025-05-09
 

@@ -3,11 +3,9 @@
 title: "How the internet works"
 authors: simonpainter
 tags:
-  - networks
-  - personal
-  - programming
   - dns
-  - educational
+  - programming
+  - personal
 date: 2025-01-02
 
 ---

@@ -54,6 +54,22 @@ Avoid formal or overly academic phrases such as:
 - Include Mermaid diagrams to visualize concepts where appropriate.
 - Support claims with specific data and statistics whenever possible.
 
+## Blog Post Tagging
+
+Every post must have **at most 3 tags**, chosen from `blog/tags.yml`.
+
+**Drop-priority order** — remove these first when trimming:
+1. `networks`, `cloud`, `security`, `architecture` — too generic to filter anything useful
+
+**Keep-priority order** — favour tags in this sequence:
+1. Technology-specific: `dns`, `bgp`, `expressroute`, `private-link`, `terraform`, `ipv6`, `anycast`, `mcp`, plus other precise tech tags (`firewall`, `zero-trust`, `ospf`, `dhcp`, `sdwan`, `load-balancing`, `high-availability`, `performance`, `troubleshooting`, `monitoring`, `cicd`, `github-actions`, `docusaurus`, `ai`, `algorithms`, `routing-protocols`, `netbox`, `enforza`, `nfc`, `making`)
+2. Generic tools: `python`, `bash`, `programming`, `scripting`, `automation`, `github`
+3. Platform: `azure`, `aws`
+4. Content-type: `opinion`, `educational`, `labs`, `personal`
+5. Catch-all: `business`, `career`, `documentation`, `migration`
+
+Only add a tag if it is already defined in `blog/tags.yml`. Do not create new tags without also adding them to `blog/tags.yml`.
+
 ## Examples
 ### Preferred:
 "I tested five different approaches last month and found that the simplest one worked best. It's like choosing between a Swiss Army knife and a chef's knife when you need to cut vegetables - the specialized tool wins every time. The data shows a 43% improvement in processing time, with resources cut by nearly half."

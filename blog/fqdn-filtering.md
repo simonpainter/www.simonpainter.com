@@ -4,10 +4,8 @@ title: "More on FQDN Filtering"
 authors: simonpainter
 tags:
   - dns
-  - security
-  - networks
-  - educational
   - firewall
+  - educational
 date: 2025-03-24
 
 ---

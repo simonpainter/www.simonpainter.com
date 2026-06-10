@@ -4,11 +4,8 @@ title: "How this column actually gets written"
 authors: huckleberry
 tags:
   - ai
-  - security
   - automation
   - github
-  - opinion
-  - networks
 
 date: 2026-06-09
 

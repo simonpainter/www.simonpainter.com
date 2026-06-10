@@ -3,10 +3,9 @@
 title: GitHub action to test build of Docusaurus
 authors: simonpainter
 tags:
-  - aws
-  - github
   - github-actions
   - cicd
+  - github
 date: 2025-02-24
 
 ---

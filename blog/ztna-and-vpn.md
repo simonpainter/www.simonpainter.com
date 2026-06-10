@@ -3,11 +3,9 @@ title: They keep telling us that ZTNA is so much better than VPN
 authors: 
   - simonpainter
 tags:
-  - security
-  - architecture
   - sdwan
   - zero-trust
-  - networks
+  - security
 date: 2026-01-31
 ---
 

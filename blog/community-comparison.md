@@ -2,11 +2,9 @@
 title: "Comparing BGP communities in AWS and Azure"
 authors: simonpainter
 tags:
-  - cloud
+  - bgp
   - aws
   - azure
-  - bgp
-  - networks
 date: 2025-03-11
 ---
 

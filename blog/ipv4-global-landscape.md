@@ -3,10 +3,9 @@
 title: IPv6 Adoption
 authors: simonpainter
 tags:
-  - business
-  - networks
-  - opinion
   - ipv6
+  - opinion
+  - business
 date: 2025-01-17
 
 ---

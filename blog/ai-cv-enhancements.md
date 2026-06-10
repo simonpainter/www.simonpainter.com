@@ -3,10 +3,9 @@
 title: Zen and the art of AI CVs
 authors: simonpainter
 tags:
-  - personal
   - ai
+  - personal
   - business
-  - career
 date: 2024-11-20
 
 ---

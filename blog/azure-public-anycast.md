@@ -3,9 +3,6 @@
 title: "Azure Global Load Balancer: It's anycast, Jim!"
 authors: simonpainter
 tags:
-  - azure
-  - networks
-  - cloud
   - anycast
   - load-balancing
   - high-availability

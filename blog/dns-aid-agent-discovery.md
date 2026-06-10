@@ -4,10 +4,8 @@ title: "DNS AID: decentralized AI agent discovery via DNS"
 authors: simonpainter
 tags:
   - dns
-  - ai
-  - security
-  - architecture
   - mcp
+  - ai
 date: 2026-05-28
 
 ---

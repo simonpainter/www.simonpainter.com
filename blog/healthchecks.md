@@ -3,10 +3,9 @@
 title: Checking the health of the Internet
 authors: simonpainter
 tags:
-  - personal
-  - networks
   - monitoring
   - automation
+  - personal
 date: 2025-10-27
 
 ---

@@ -3,12 +3,9 @@
 title: "Azure Latency Surprise: PrivateLink Outperforms VNET Peering"
 authors: simonpainter
 tags:
-  - azure
-  - networks
-  - cloud
-  - performance
-  - architecture
   - private-link
+  - performance
+  - azure
 date: 2025-04-04
 
 ---

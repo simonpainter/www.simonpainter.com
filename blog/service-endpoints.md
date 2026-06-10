@@ -3,10 +3,9 @@
 title: Service Endpoints. Not as good as a Private Endpoint, but better than nothing.
 authors: simonpainter
 tags:
-  - networks
-  - azure
-  - security
   - private-link
+  - azure
+  - networks
 date: 2025-11-05
 
 ---

@@ -3,12 +3,9 @@
 title: Dijkstra in OSPF
 authors: simonpainter
 tags:
-  - networks
-  - programming
   - ospf
   - algorithms
   - routing-protocols
-  - educational
 date: 2025-08-30
 
 ---

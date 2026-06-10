@@ -3,14 +3,9 @@ title: Where to put your cloud
 authors:
   - simonpainter
 tags:
-  - azure
-  - aws
-  - networks
+  - expressroute
   - zero-trust
   - sdwan
-  - expressroute
-  - cloud
-  - architecture
 date: 2025-08-09
 ---
 

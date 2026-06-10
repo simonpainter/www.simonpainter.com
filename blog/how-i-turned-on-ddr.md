@@ -4,10 +4,8 @@ title: "DDR: DNS Discovery and Redirection"
 authors: simonpainter
 tags:
   - dns
-  - security
-  - networks
-  - architecture
   - educational
+  - security
 date: 2026-03-12
 
 ---

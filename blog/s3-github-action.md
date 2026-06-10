@@ -3,12 +3,8 @@
 title: How to set up Github Actions to publish to S3 website
 authors: simonpainter
 tags:
-  - aws
-  - github
   - github-actions
   - docusaurus
-  - cloud
-  - automation
   - cicd
 date: 2024-11-17
 

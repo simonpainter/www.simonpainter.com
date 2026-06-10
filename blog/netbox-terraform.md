@@ -4,10 +4,8 @@ title: Netbox and Terraform
 authors: simonpainter
 tags:
   - terraform
-  - networks
   - netbox
   - github
-  - automation
 date: 2025-07-29
 
 ---

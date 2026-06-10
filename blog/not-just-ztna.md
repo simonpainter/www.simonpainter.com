@@ -3,10 +3,9 @@
 title: It's not just Zero Trust though
 authors: simonpainter
 tags:
-  - networks
-  - security
-  - opinion
   - zero-trust
+  - opinion
+  - security
 
 date: 2025-05-31
 

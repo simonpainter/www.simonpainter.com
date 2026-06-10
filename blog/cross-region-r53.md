@@ -3,10 +3,9 @@
 title: "Using AWS Route 53 instead of Anycast and RouteServer"
 authors: simonpainter
 tags:
-  - aws
-  - azure
   - anycast
   - dns
+  - aws
 date: 2025-01-08
 
 ---

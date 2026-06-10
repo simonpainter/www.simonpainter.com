@@ -3,13 +3,9 @@ title: "Making simonpainter.com WCAG 2 AA compliant, and keeping it that way wit
 slug: accessibility-and-ci
 authors: simonpainter
 tags:
-  - personal
-  - documentation
   - cicd
   - github-actions
   - docusaurus
-  - opinion
-  - educational
 date: 2026-05-25
 ---
 

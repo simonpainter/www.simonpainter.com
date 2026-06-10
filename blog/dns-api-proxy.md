@@ -5,9 +5,7 @@ authors: simonpainter
 tags:
   - dns
   - programming
-  - educational
   - python
-  - scripting
 date: 2026-01-16
 
 ---

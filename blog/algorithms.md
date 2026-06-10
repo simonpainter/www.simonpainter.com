@@ -3,11 +3,9 @@
 title: Summary of common search algorithms
 authors: simonpainter
 tags:
-  - ai
-  - python
-  - programming
   - algorithms
-  - scripting
+  - python
+  - ai
 date: 2024-12-23
 
 ---

@@ -4,13 +4,8 @@ title: My first look at Vercel
 authors: simonpainter
 tags:
   - cicd
-  - automation
-  - programming
-  - github
-  - cloud
   - ai
-  - aws
-  - opinion
+  - automation
 date: 2025-12-15
 
 ---

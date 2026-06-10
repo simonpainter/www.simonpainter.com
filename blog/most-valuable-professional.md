@@ -3,9 +3,8 @@
 title: Microsoft Most Valuable Professional
 authors: simonpainter
 tags:
-  - personal
   - azure
-  - networks
+  - personal
   - career
 date: 2025-06-01
 

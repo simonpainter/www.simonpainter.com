@@ -3,13 +3,9 @@
 title: "Egress Security from Cloud"
 authors: simonpainter
 tags:
-  - cloud
-  - business
-  - security
-  - networks
   - zero-trust
-  - architecture
   - firewall
+  - security
 date: 2024-11-16
 
 ---

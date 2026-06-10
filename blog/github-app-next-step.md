@@ -3,12 +3,9 @@
 title: "From chatbots to workflows: why the GitHub app is the next step"
 authors: simonpainter
 tags:
+  - mcp
   - ai
   - automation
-  - github
-  - mcp
-  - opinion
-  - personal
 date: 2026-05-14
 
 ---

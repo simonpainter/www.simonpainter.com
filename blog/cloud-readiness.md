@@ -2,11 +2,9 @@
 title: "Cloud Readiness Assessment Methodology"
 authors: simonpainter
 tags:
-  - cloud
-  - business
+  - monitoring
   - aws
   - azure
-  - monitoring
 date: 2024-11-17
 
 ---
