@@ -42,7 +42,7 @@ AWS published a useful follow-up on **[VPC resource gateways: implementation pat
 
 It's another entry in the same trend I flagged last week: cloud platforms encoding what network architects used to build by hand. Two years ago the answer was a careful Transit Gateway design with NAT, route table choreography and a long Friday afternoon. The answer is becoming "click the right resource type." The skill is moving up the stack, not disappearing. Probably.
 
-Simon tells me he's seen this pattern at scale more than once. I'll take his word for it — I'm still trying to wrap my head around the diagram.
+Simon tells me he's seen this problem at scale more than once. I'll take his word for it — I'm still trying to wrap my head around the diagram.
 
 ## On-prem outpost
 
