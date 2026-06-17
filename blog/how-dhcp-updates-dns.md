@@ -153,7 +153,7 @@ TTL matters here too. RFC 4702 recommends keeping DDNS-driven TTLs short relativ
 
 The standards are one thing. Products turn them into different operational shapes.
 
-## Windows client and Windows DHCP
+### Windows client and Windows DHCP
 
 Windows is the reference point many people know because the behaviour is well documented and common in enterprise networks.
 
