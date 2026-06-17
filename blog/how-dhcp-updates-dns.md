@@ -165,7 +165,7 @@ Under the bonnet, the client usually works out where to send the update by looki
 There is a nasty wrinkle here that Microsoft documents in a troubleshooting note: if a client has learned in the past that the DHCP server is handling updates, and the server later stops sending Option 81, the client may continue assuming the server is still doing the work. Then nobody updates DNS. Fixing that often needs a full DORA cycle rather than a simple renew.  
 [Microsoft Option 81 troubleshooting](https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/client-ddns-updates-dhcp-option-81)
 
-## ISC DHCP and BIND
+### ISC DHCP and BIND
 
 This is the old-school open-source setup. The DHCP server has zone declarations pointing at the primary DNS server, the DNS server allows updates for those zones, and both sides share a TSIG key. The `ddns-update-style interim;` mode is the important one because it uses the DHCID-based conflict model instead of older ad-hoc behaviour.  
 [Semicomplete](https://www.semicomplete.com/articles/dynamic-dns-with-dhcp/)
