@@ -173,7 +173,7 @@ This is the old-school open-source setup. The DHCP server has zone declarations 
 This setup is simple when it works and maddening when it doesn't. The classic failure is not the key. It is the zone file directory permissions. BIND writes a journal file beside the zone file for dynamic changes. If `named` can't write there, updates fail and the symptom often looks like a DNS problem when it is really a filesystem problem.  
 [Semicomplete](https://www.semicomplete.com/articles/dynamic-dns-with-dhcp/)
 
-## Kea and D2
+### Kea and D2
 
 Kea takes a cleaner architectural route. The DHCP service does not speak to DNS directly in the hot lease path. Instead it emits a **NameChangeRequest** to `kea-dhcp-ddns`, usually called **D2**, and D2 performs the RFC 2136 updates. Kea's own documentation is clear on this split: lease events generate NCRs, and D2 matches them to the right forward and reverse zones before talking to authoritative DNS servers.  
 [Kea ARM](https://kea.readthedocs.io/en/kea-2.2.0/arm/ddns.html)
