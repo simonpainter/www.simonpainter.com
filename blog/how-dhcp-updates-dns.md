@@ -187,7 +187,7 @@ That separation buys you a few things:
 Kea also implements RFC 4703 conflict resolution and supports TSIG per domain or per server. One detail worth knowing if you run dual stack is that shared IPv4 and IPv6 ownership depends on consistent client identity. Kea notes that support for the RFC 4361 style identity needed for a single `DHCID` across both families arrived later than the base feature set.  
 [Kea ARM](https://kea.readthedocs.io/en/kea-2.2.0/arm/ddns.html)
 
-## Infoblox NIOS and BloxOne DDI
+### Infoblox NIOS and BloxOne DDI
 
 Infoblox gives you more policy knobs around RFC behaviour. Their DDNS compliance guidance describes the usual choices: server updates both records, server updates only the reverse record while the client updates forward, or DDNS is disabled. They also surface **Name Protection**, which is basically the productised version of "don't let another client steal this FQDN".  
 [Infoblox NIOS](https://docs.infoblox.com/space/nios85/35481649)  
@@ -195,7 +195,7 @@ Infoblox gives you more policy knobs around RFC behaviour. Their DDNS compliance
 
 In shops with Active Directory, Infoblox also has to straddle both worlds: standards-based TSIG for many DNS targets and secure Windows-style integration where GSS-TSIG or delegated credentials matter.
 
-## Firewall and appliance DHCP
+### Firewall and appliance DHCP
 
 Some appliances act as tiny DHCP servers and can register names too. Cisco's Secure Firewall documentation covers DHCP and DDNS on managed interfaces. That is the same basic model as any other server-driven update: the appliance owns the lease, so it can own the DNS update path as well.  
 [Cisco Secure Firewall](https://www.cisco.com/c/en/us/td/docs/security/secure-firewall/management-center/device-config/730/management-center-device-config-73/interfaces-settings-dhcp-ddns.html)
