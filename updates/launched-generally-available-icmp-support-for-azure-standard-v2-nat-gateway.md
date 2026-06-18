@@ -29,47 +29,6 @@ This is for anyone who runs private workloads behind Azure NAT Gateway and has e
 
 I think platform teams will feel this most. When you centralise outbound access, troubleshooting can feel like trying to listen to one voice in a busy café. A simple `ping` gives you a fast first check before you dig into packet captures or app logs.
 
-## How to use it
-
-If your subnet already has a **StandardV2** NAT Gateway attached, you can test from a workload straight away. There's no ICMP toggle in the portal and no separate policy to enable on the NAT Gateway itself.
-
-If you need to build a new StandardV2 NAT Gateway first, the Azure CLI flow is straightforward:
-
-```azurecli
-az network public-ip create \
-    --resource-group test-rg \
-    --name public-ip-nat \
-    --location eastus \
-    --sku StandardV2 \
-    --allocation-method Static \
-    --version IPv4 \
-    --zone 1 2 3
-
-az network nat gateway create \
-    --resource-group test-rg \
-    --name nat-gateway \
-    --location eastus \
-    --public-ip-addresses public-ip-nat \
-    --idle-timeout 4 \
-    --sku StandardV2 \
-    --zone 1 2 3
-
-az network vnet subnet update \
-    --resource-group test-rg \
-    --vnet-name vnet-1 \
-    --name subnet-1 \
-    --nat-gateway nat-gateway
-```
-
-Then sign in to a VM or other workload in that subnet and run a basic test:
-
-```bash
-ping 8.8.8.8
-ping bing.com
-```
-
-If you get echo replies back, the outbound path through the NAT Gateway is working. Microsoft covers the deployment steps in [Manage a StandardV2 NAT gateway](https://learn.microsoft.com/azure/nat-gateway/manage-nat-gateway-v2) and the service behaviour in [What is Azure NAT Gateway?](https://learn.microsoft.com/azure/nat-gateway/nat-overview).
-
 ## Gotchas and limits
 
 There are a few edges to keep in mind. This is **StandardV2** only, so don't expect the older Standard NAT Gateway SKU to gain the same behaviour.
