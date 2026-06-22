@@ -2,9 +2,8 @@
 title: "Generally Available: ICMP support for Azure StandardV2 NAT Gateway"
 authors: simonpainter
 tags:
-  - azure
-  - networks
   - troubleshooting
+  - azure
 date: 2026-06-18
 ---
 
