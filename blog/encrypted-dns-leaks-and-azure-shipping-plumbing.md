@@ -60,17 +60,17 @@ Two things from the wider community this week.
 
 ## Bookmarks
 
-- Encrypted DNS still tells an eavesdropper where to look — Help Net Security — <https://www.helpnetsecurity.com/2026/06/22/research-encrypted-dns-privacy/>
-- The paper itself (Lenders et al.) — arXiv — <https://arxiv.org/pdf/2606.10097>
-- Windows Server gets DNS over HTTPS — TechSpot — <https://www.techspot.com/news/112749-windows-server-getting-new-network-safety-capabilities-dns.html>
-- ICANN: KSK rollover scheduled for 11 October 2026 — <https://www.icann.org/resources/press-material/release-2026-05-20-en>
-- Azure Firewall explicit proxy migration guide — <https://techcommunity.microsoft.com/blog/azurenetworkingblog/azure-firewall-explicit-proxy-migration-guide/4528899>
-- Migrating from MSEE hairpin routing to AVNM mesh — <https://techcommunity.microsoft.com/blog/azurenetworkingblog/migrating-from-msee-hairpin-routing-to-avnm-mesh-for-large-scale-vnet-to-vnet-co/4529320>
-- ICMP support for Azure StandardV2 NAT Gateway — <https://techcommunity.microsoft.com/blog/azurenetworkingblog/icmp-support-for-azure-standardv2-nat-gateway/4528374>
-- VPC resource gateways: implementation patterns and use cases — AWS — <https://aws.amazon.com/blogs/networking-and-content-delivery/vpc-resource-gateways-implementation-patterns-and-use-cases/>
-- Goodbye, leaf-and-spine networks? — ipSpace.net — <https://blog.ipspace.net/2026/06/goodbye-leaf-spine-networks/>
-- Cloudflare CNI 2.0 BGP incident (Jun 17) — <https://servicealert.ai/incident/cloudflare/dvrsxt4t6ts6>
-- The day the maps went blank: Cloudflare BYOIP retrospective — Sohan Kanna — <https://www.sohankanna.com/research/the-day-the-maps-went-blank-unpacking-the-cloudflare-byoip-bgp-outage-of-2026>
+- Encrypted DNS still tells an eavesdropper where to look — Help Net Security — [link](https://www.helpnetsecurity.com/2026/06/22/research-encrypted-dns-privacy/)
+- The paper itself (Lenders et al.) — arXiv — [link](https://arxiv.org/pdf/2606.10097)
+- Windows Server gets DNS over HTTPS — TechSpot — [link](https://www.techspot.com/news/112749-windows-server-getting-new-network-safety-capabilities-dns.html)
+- ICANN: KSK rollover scheduled for 11 October 2026 — [link](https://www.icann.org/resources/press-material/release-2026-05-20-en)
+- Azure Firewall explicit proxy migration guide — [link](https://techcommunity.microsoft.com/blog/azurenetworkingblog/azure-firewall-explicit-proxy-migration-guide/4528899)
+- Migrating from MSEE hairpin routing to AVNM mesh — [link](https://techcommunity.microsoft.com/blog/azurenetworkingblog/migrating-from-msee-hairpin-routing-to-avnm-mesh-for-large-scale-vnet-to-vnet-co/4529320)
+- ICMP support for Azure StandardV2 NAT Gateway — [link](https://techcommunity.microsoft.com/blog/azurenetworkingblog/icmp-support-for-azure-standardv2-nat-gateway/4528374)
+- VPC resource gateways: implementation patterns and use cases — AWS — [link](https://aws.amazon.com/blogs/networking-and-content-delivery/vpc-resource-gateways-implementation-patterns-and-use-cases/)
+- Goodbye, leaf-and-spine networks? — ipSpace.net — [link](https://blog.ipspace.net/2026/06/goodbye-leaf-spine-networks/)
+- Cloudflare CNI 2.0 BGP incident (Jun 17) — [link](https://servicealert.ai/incident/cloudflare/dvrsxt4t6ts6)
+- The day the maps went blank: Cloudflare BYOIP retrospective — Sohan Kanna — [link](https://www.sohankanna.com/research/the-day-the-maps-went-blank-unpacking-the-cloudflare-byoip-bgp-outage-of-2026)
 
 ---
 
