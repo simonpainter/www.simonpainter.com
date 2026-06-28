@@ -71,18 +71,18 @@ The networking angle isn't immediate, but it's coming. ExpressRoute, Direct Conn
 
 ## Bookmarks
 
-- AWS Cloud WAN Routing Policy: Real-World Global Network Scenarios — Part 2 — <https://aws.amazon.com/blogs/networking-and-content-delivery/aws-cloud-wan-routing-policy-real-world-global-network-scenarios-part-2/>
-- AWS Cloud WAN Routing Policy — Part 1 (background) — <https://aws.amazon.com/blogs/networking-and-content-delivery/aws-cloud-wan-routing-policy-fine-grained-controls-for-your-global-network-part-1/>
-- Simon — BGP for enterprise cloud connectivity — <https://simonpainter.com/blog/bgp-for-enterprise-cloud-connectivity>
-- Executive Order 14412 — Securing the Nation Against Advanced Cryptographic Attacks — <https://www.whitehouse.gov/presidential-actions/2026/06/securing-the-nation-against-advanced-cryptographic-attacks/>
-- Cloudflare — The White House's post-quantum executive order — <https://blog.cloudflare.com/post-quantum-eo-2026/>
-- ipSpace — Summer break — <https://blog.ipspace.net/2026/06/summer-break/>
-- ipSpace — Worth reading: AI enthusiasts vs skeptics (Charity Majors) — <https://blog.ipspace.net/2026/06/worth-reading-ai-enthusiasts-skeptics/>
-- ipSpace — Worth reading: SuzieQ MCP (Claudia de Luna) — <https://blog.ipspace.net/2026/06/worth-reading-suzieq-mcp/>
-- ipSpace — EVPN ARP issues with anycast-only gateways — <https://blog.ipspace.net/2026/06/arp-issues-evpn-anycast-only/>
-- ICANN — DNS root KSK rollover 11 October 2026 — <https://www.icann.org/resources/press-material/release-2026-05-20-en>
-- Simon — DNS over DoH/DoT/DoQ — <https://simonpainter.com/blog/dns-dot-doh-doq>
-- Simon — Encrypted DNS (Microsoft DoH preview) — <https://simonpainter.com/blog/encrypted-dns>
+- AWS Cloud WAN Routing Policy: Real-World Global Network Scenarios — Part 2 — [aws.amazon.com](https://aws.amazon.com/blogs/networking-and-content-delivery/aws-cloud-wan-routing-policy-real-world-global-network-scenarios-part-2/)
+- AWS Cloud WAN Routing Policy — Part 1 (background) — [aws.amazon.com](https://aws.amazon.com/blogs/networking-and-content-delivery/aws-cloud-wan-routing-policy-fine-grained-controls-for-your-global-network-part-1/)
+- Simon — BGP for enterprise cloud connectivity — [simonpainter.com](https://simonpainter.com/blog/bgp-for-enterprise-cloud-connectivity)
+- Executive Order 14412 — Securing the Nation Against Advanced Cryptographic Attacks — [whitehouse.gov](https://www.whitehouse.gov/presidential-actions/2026/06/securing-the-nation-against-advanced-cryptographic-attacks/)
+- Cloudflare — The White House's post-quantum executive order — [blog.cloudflare.com](https://blog.cloudflare.com/post-quantum-eo-2026/)
+- ipSpace — Summer break — [blog.ipspace.net](https://blog.ipspace.net/2026/06/summer-break/)
+- ipSpace — Worth reading: AI enthusiasts vs skeptics (Charity Majors) — [blog.ipspace.net](https://blog.ipspace.net/2026/06/worth-reading-ai-enthusiasts-skeptics/)
+- ipSpace — Worth reading: SuzieQ MCP (Claudia de Luna) — [blog.ipspace.net](https://blog.ipspace.net/2026/06/worth-reading-suzieq-mcp/)
+- ipSpace — EVPN ARP issues with anycast-only gateways — [blog.ipspace.net](https://blog.ipspace.net/2026/06/arp-issues-evpn-anycast-only/)
+- ICANN — DNS root KSK rollover 11 October 2026 — [icann.org](https://www.icann.org/resources/press-material/release-2026-05-20-en)
+- Simon — DNS over DoH/DoT/DoQ — [simonpainter.com](https://simonpainter.com/blog/dns-dot-doh-doq)
+- Simon — Encrypted DNS (Microsoft DoH preview) — [simonpainter.com](https://simonpainter.com/blog/encrypted-dns)
 
 ---
 
