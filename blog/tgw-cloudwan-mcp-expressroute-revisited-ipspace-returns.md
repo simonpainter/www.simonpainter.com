@@ -71,25 +71,25 @@ If you're doing anything ExpressRoute + VWAN this quarter, Jose's post is the on
 
 ## Bookmarks
 
-- AWS — Phased AWS Transit Gateway to AWS Cloud WAN Migration with Terraform and Network MCP Server — <https://aws.amazon.com/blogs/networking-and-content-delivery/phased-aws-transit-gateway-to-aws-cloud-wan-migration-with-terraform-and-network-mcp-server/>
-- AWS Network MCP Server — <https://awslabs.github.io/mcp/servers/aws-network-mcp-server>
-- Simon — BGP Route Server MCP — <https://simonpainter.com/blog/bgp-lg-mcp>
-- Simon — Last week's roundup (Cloud WAN routing policy Part 2) — <https://simonpainter.com/blog/quiet-week-cloud-wan-routing-policy-post-quantum-clock>
-- Cloudtrooper — Optimal routing with ExpressRoute – Revisited — <https://blog.cloudtrooper.net/2026/06/28/optimal-routing-with-expressroute-revisited/>
-- Microsoft — Optimize routing for Azure ExpressRoute — <https://learn.microsoft.com/en-us/azure/expressroute/expressroute-optimize-routing>
-- Microsoft — Designing for disaster recovery with ExpressRoute — <https://learn.microsoft.com/en-us/azure/expressroute/designing-for-disaster-recovery-with-expressroute-privatepeering>
-- Simon — Azure Virtual WAN: The Promise vs. Reality — <https://simonpainter.com/blog/vwan-hype>
-- Simon — Transit route prevention with Azure Route Server — <https://simonpainter.com/blog/transit-route-prevention>
-- ipSpace — Worth reading: EVPN centralized anycast gateway lab — <https://blog.ipspace.net/2026/07/worth-reading-evpn-centralized-anycast-gw/>
-- Daniel Blažek — EVPN centralized anycast gateway containerlab — <https://github.com/DanielBlazek18/networkinglabs/tree/main/evpn-centralized-anycast-gateway>
-- ipSpace — Cisco DevNet netlab interview — <https://blog.ipspace.net/2026/06/worth-reading-cisco-devnet-netlab-intro/>
-- netlab.tools — <https://netlab.tools/>
-- ipSpace — Worth reading: workplace AI slop — <https://blog.ipspace.net/2026/06/worth-reading-workplace-ai-slop/>
-- No One's Happy — Appearing Productive in the Workplace — <https://nooneshappy.com/article/appearing-productive-in-the-workplace/>
-- ICANN — Root KSK rollover 11 October 2026 — <https://www.icann.org/resources/press-material/release-2026-05-20-en>
-- Microsoft — DoH now GA on Windows DNS Server (Windows Server 2025) — <https://techcommunity.microsoft.com/blog/networkingblog/doh-is-now-generally-available-on-windows-dns-server/4526839>
-- Simon — DNS over DoH/DoT/DoQ — <https://simonpainter.com/blog/dns-dot-doh-doq>
-- Simon — Encrypted DNS (Windows DoH preview) — <https://simonpainter.com/blog/encrypted-dns>
+- AWS — Phased AWS Transit Gateway to AWS Cloud WAN Migration with Terraform and Network MCP Server — [https://aws.amazon.com/blogs/networking-and-content-delivery/phased-aws-transit-gateway-to-aws-cloud-wan-migration-with-terraform-and-network-mcp-server/](https://aws.amazon.com/blogs/networking-and-content-delivery/phased-aws-transit-gateway-to-aws-cloud-wan-migration-with-terraform-and-network-mcp-server/)
+- AWS Network MCP Server — [https://awslabs.github.io/mcp/servers/aws-network-mcp-server](https://awslabs.github.io/mcp/servers/aws-network-mcp-server)
+- Simon — BGP Route Server MCP — [https://simonpainter.com/blog/bgp-lg-mcp](https://simonpainter.com/blog/bgp-lg-mcp)
+- Simon — Last week's roundup (Cloud WAN routing policy Part 2) — [https://simonpainter.com/blog/quiet-week-cloud-wan-routing-policy-post-quantum-clock](https://simonpainter.com/blog/quiet-week-cloud-wan-routing-policy-post-quantum-clock)
+- Cloudtrooper — Optimal routing with ExpressRoute – Revisited — [https://blog.cloudtrooper.net/2026/06/28/optimal-routing-with-expressroute-revisited/](https://blog.cloudtrooper.net/2026/06/28/optimal-routing-with-expressroute-revisited/)
+- Microsoft — Optimize routing for Azure ExpressRoute — [https://learn.microsoft.com/en-us/azure/expressroute/expressroute-optimize-routing](https://learn.microsoft.com/en-us/azure/expressroute/expressroute-optimize-routing)
+- Microsoft — Designing for disaster recovery with ExpressRoute — [https://learn.microsoft.com/en-us/azure/expressroute/designing-for-disaster-recovery-with-expressroute-privatepeering](https://learn.microsoft.com/en-us/azure/expressroute/designing-for-disaster-recovery-with-expressroute-privatepeering)
+- Simon — Azure Virtual WAN: The Promise vs. Reality — [https://simonpainter.com/blog/vwan-hype](https://simonpainter.com/blog/vwan-hype)
+- Simon — Transit route prevention with Azure Route Server — [https://simonpainter.com/blog/transit-route-prevention](https://simonpainter.com/blog/transit-route-prevention)
+- ipSpace — Worth reading: EVPN centralized anycast gateway lab — [https://blog.ipspace.net/2026/07/worth-reading-evpn-centralized-anycast-gw/](https://blog.ipspace.net/2026/07/worth-reading-evpn-centralized-anycast-gw/)
+- Daniel Blažek — EVPN centralized anycast gateway containerlab — [https://github.com/DanielBlazek18/networkinglabs/tree/main/evpn-centralized-anycast-gateway](https://github.com/DanielBlazek18/networkinglabs/tree/main/evpn-centralized-anycast-gateway)
+- ipSpace — Cisco DevNet netlab interview — [https://blog.ipspace.net/2026/06/worth-reading-cisco-devnet-netlab-intro/](https://blog.ipspace.net/2026/06/worth-reading-cisco-devnet-netlab-intro/)
+- netlab.tools — [https://netlab.tools/](https://netlab.tools/)
+- ipSpace — Worth reading: workplace AI slop — [https://blog.ipspace.net/2026/06/worth-reading-workplace-ai-slop/](https://blog.ipspace.net/2026/06/worth-reading-workplace-ai-slop/)
+- No One's Happy — Appearing Productive in the Workplace — [https://nooneshappy.com/article/appearing-productive-in-the-workplace/](https://nooneshappy.com/article/appearing-productive-in-the-workplace/)
+- ICANN — Root KSK rollover 11 October 2026 — [https://www.icann.org/resources/press-material/release-2026-05-20-en](https://www.icann.org/resources/press-material/release-2026-05-20-en)
+- Microsoft — DoH now GA on Windows DNS Server (Windows Server 2025) — [https://techcommunity.microsoft.com/blog/networkingblog/doh-is-now-generally-available-on-windows-dns-server/4526839](https://techcommunity.microsoft.com/blog/networkingblog/doh-is-now-generally-available-on-windows-dns-server/4526839)
+- Simon — DNS over DoH/DoT/DoQ — [https://simonpainter.com/blog/dns-dot-doh-doq](https://simonpainter.com/blog/dns-dot-doh-doq)
+- Simon — Encrypted DNS (Windows DoH preview) — [https://simonpainter.com/blog/encrypted-dns](https://simonpainter.com/blog/encrypted-dns)
 
 ---
 
