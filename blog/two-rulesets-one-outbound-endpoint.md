@@ -172,7 +172,7 @@ The portal will happily display both associations once they exist — the endpoi
 
 ## A footnote on Cloud Shell
 
-One hazard encountered along the way that had nothing to do with DNS: PSReadLine's inline prediction in Cloud Shell. Its ghost-text suggestions kept getting accepted mid-edit, splicing fragments like `[outboundendpoint.id]` into commands — and on one occasion inside quoted strings, which would have created a forwarding rule for the literal domain `tmkiln.cloud [tmkiln.cloud].` had the parser not choked on an earlier token first. If you're pasting multi-line commands into Cloud Shell, do yourself a favour first:
+One hazard encountered along the way that had nothing to do with DNS: PSReadLine's inline prediction in Cloud Shell. Its ghost-text suggestions kept getting accepted mid-edit, splicing fragments like `[outboundendpoint.id]` into commands — and on one occasion inside quoted strings, which would have created a forwarding rule for the literal domain `example.com.` had the parser not choked on an earlier token first. If you're pasting multi-line commands into Cloud Shell, do yourself a favour first:
 
 ```powershell
 Set-PSReadLineOption -PredictionSource None
