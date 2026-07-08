@@ -170,16 +170,6 @@ Rule precedence *within* a ruleset is longest-suffix match, which is well define
 
 The portal will happily display both associations once they exist — the endpoint's blade shows its rulesets, provisioning state Succeeded, everything looks intentional. It just won't let you create the second one. Until the portal catches up with its own API, this is a PowerShell, CLI, ARM, or Terraform job. (In Terraform it's trivial: two `azurerm_private_dns_resolver_dns_forwarding_ruleset` resources referencing the same endpoint ID in `private_dns_resolver_outbound_endpoint_ids`. If you've proven it manually first, `terraform import` the second ruleset or delete and recreate.)
 
-## A footnote on Cloud Shell
-
-One hazard encountered along the way that had nothing to do with DNS: PSReadLine's inline prediction in Cloud Shell. Its ghost-text suggestions kept getting accepted mid-edit, splicing fragments like `[outboundendpoint.id]` into commands — and on one occasion inside quoted strings, which would have created a forwarding rule for the literal domain `example.com.` had the parser not choked on an earlier token first. If you're pasting multi-line commands into Cloud Shell, do yourself a favour first:
-
-```powershell
-Set-PSReadLineOption -PredictionSource None
-```
-
-The predictive text is occasionally useful. It is never useful while pasting production DNS changes.
-
 ## Summary
 
 The documentation is right and the portal is wrong: an outbound endpoint supports two forwarding rulesets, and the pattern of one shared egress point carrying separately-scoped rule sets for different VNets works exactly as the component model suggests it should. You just can't click your way to it.
