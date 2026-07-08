@@ -54,6 +54,24 @@ Avoid formal or overly academic phrases such as:
 - Include Mermaid diagrams to visualize concepts where appropriate.
 - Support claims with specific data and statistics whenever possible.
 
+## Inclusive Language Rules
+- Use gender-neutral language by default (for example, "they", "everyone", "folks", "team").
+- Avoid assumptions about age, gender, ethnicity, disability, religion, culture, or family structure.
+- Use people-first language unless a group clearly prefers identity-first language.
+- Prefer globally clear wording over local idioms, slang, or culture-specific references.
+- Describe requirements and behaviours, not personal traits.
+- If user wording may exclude people, suggest a neutral rewrite.
+
+### Preferred alternatives
+- "guys" -> "everyone" or "team"
+- "manpower" or "man-hours" -> "effort", "staffing", or "person-hours"
+- "sanity check" -> "quick check" or "sense check"
+- "normal user" -> "typical user" or "most users"
+- "master/slave" -> "primary/secondary", "leader/follower", or protocol-specific terms
+- "blacklist/whitelist" -> "denylist/allowlist" or "blocklist/allowlist"
+- "dummy value" -> "placeholder value"
+- "grandfathered" -> "legacy status"
+
 ## Blog Post Tagging
 
 Every post must have **at most 3 tags**, chosen from `blog/tags.yml`.
