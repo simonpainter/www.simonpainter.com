@@ -31,7 +31,6 @@
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.9.2",
     "@docusaurus/types": "^3.9.2",
-    "baseline-browser-mapping": "^2.9.14",
     "pa11y-ci": "^4.1.1"
   },
   "browserslist": {
