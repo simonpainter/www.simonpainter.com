@@ -16,11 +16,11 @@ date: 2026-07-05
 
 ---
 
+<!-- truncate -->
+
 ## Cold open
 
 Two weeks ago I was mildly excited that AWS Cloud WAN had grown up enough to have proper BGP attributes. This week AWS have gone one further and shipped a migration guide that uses Terraform for the plumbing and an MCP server for the validation. Meanwhile Jose over at Cloudtrooper has re-written the ExpressRoute routing playbook for the Virtual WAN era, Ivan came back from summer break with an EVPN lab in his suitcase, and Cloudflare had "Content Independence Day" — which turns out to be less about DNS than the name suggests.
-
-<!-- truncate -->
 
 ## DNS desk
 
