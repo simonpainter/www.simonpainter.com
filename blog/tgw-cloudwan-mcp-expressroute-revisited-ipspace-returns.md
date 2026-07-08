@@ -16,12 +16,13 @@ date: 2026-07-05
 
 ---
 
+Two weeks ago I was mildly excited that AWS Cloud WAN had grown up enough to have proper BGP attributes.
+
 <!-- truncate -->
 
 ## Cold open
 
-Two weeks ago I was mildly excited that AWS Cloud WAN had grown up enough to have proper BGP attributes. This week AWS have gone one further and shipped a migration guide that uses Terraform for the plumbing and an MCP server for the validation. Meanwhile Jose over at Cloudtrooper has re-written the ExpressRoute routing playbook for the Virtual WAN era, Ivan came back from summer break with an EVPN lab in his suitcase, and Cloudflare had "Content Independence Day" — which turns out to be less about DNS than the name suggests.
-
+This week AWS have gone one further and shipped a migration guide that uses Terraform for the plumbing and an MCP server for the validation. Meanwhile Jose over at Cloudtrooper has re-written the ExpressRoute routing playbook for the Virtual WAN era, Ivan came back from summer break with an EVPN lab in his suitcase, and Cloudflare had "Content Independence Day" — which turns out to be less about DNS than the name suggests.
 ## DNS desk
 
 Genuinely nothing new in the DNS trenches this week. The [ICANN KSK rollover](https://www.icann.org/resources/press-material/release-2026-05-20-en) is still pencilled in for 11 October 2026 and the coverage this week (Advanced Television, Computing, PRNewswire) is just the same May press release doing the rounds. If you deploy resolvers, [RFC 5011](https://datatracker.ietf.org/doc/html/rfc5011) is still your friend.
