@@ -8,17 +8,17 @@ tags:
 date: 2026-07-08
 ---
 
-Azure DNS Private Resolver has a documented limit that reads like a feature: two DNS forwarding rulesets per outbound endpoint. The portal, however, behaves as though the limit is one. This is the story of proving the documentation right, the portal wrong, and why you might actually want two rulesets on the same endpoint in the first place.
+Azure DNS Private Resolver has a documented limit that reads like a feature: two DNS forwarding rulesets per outbound endpoint. The portal, however, behaves as though the limit is one. I had to try proving the documentation right, the portal wrong, and why you might actually want two rulesets on the same endpoint in the first place.
 
 <!-- truncate -->
 
 ## The problem
 
-A DNS forwarding ruleset in Azure does two jobs that are easy to conflate. It holds the conditional forwarding rules — this domain goes to these DNS servers — and it links to virtual networks, which determines who gets to use those rules. The outbound endpoint association is a third, separate concern: it's just the egress point, the subnet the forwarded queries actually leave Azure from.
+A DNS forwarding ruleset in Azure does two jobs that are easy to conflate. It holds the conditional forwarding rules — this domain goes to these other non Azure DNS servers — and it links to virtual networks, which determines who gets to use those rules. The outbound endpoint association is a third, separate concern: it's the egress point, the delegated subnet the forwarded queries leave Azure from.
 
 Because those are independent axes, an obvious design falls out. Suppose you have a shared services hub with a resolver, and you want workloads in one spoke VNet to resolve a private domain via conditional forwarding, but you *don't* want that rule polluting resolution for every other VNet in the estate. Ruleset links give you exactly that scoping: link a ruleset only to the VNets that should evaluate its rules.
 
-But you don't want a second outbound endpoint just to carry the second ruleset. Outbound endpoints each demand a dedicated delegated subnet, and — more importantly if there's a firewall between Azure and your on-premises DNS servers — each endpoint is a different source subnet that someone has to write an ACL for. One egress point, multiple rule scopes, is the tidy answer.
+But you don't want a second outbound endpoint just to carry the second ruleset. Outbound endpoints each demand a dedicated delegated subnet, and — more importantly if there's a firewall between Azure and your on-premises or other cloud DNS servers — each endpoint is a different source subnet that someone has to write an ACL for. One egress point, multiple rule scopes, is the tidy answer.
 
 This is especially useful when the firewall policy already allows DNS from your existing outbound endpoint to authoritative DNS outside that VNet, whether that's on-premises or in another cloud. Reusing that same endpoint avoids adding another source subnet and another round of firewall changes just to separate who can resolve which domains.
 
@@ -41,9 +41,7 @@ graph TB
     subgraph vnet-b["dns-vnet-b (10.2.0.0/24)"]
         vmb["Workloads"]
     end
-    subgraph vnet-c["dns-vnet-c (10.3.0.0/24)"]
-        vmc["Workloads<br/>(no ruleset link — control group)"]
-    end
+
 
     rsA["Ruleset A<br/>azure.simonpainter.com → 10.0.0.1"]
     rsB["Ruleset B<br/>azureb.simonpainter.com → 10.0.0.2"]
@@ -139,7 +137,7 @@ Two details worth knowing. The domain name needs the trailing dot — `azureb.si
 
 ## What actually happens to a query
 
-The part of this that trips up people arriving from traditional DNS infrastructure: the VNet doesn't point at the resolver. There's no custom DNS server setting involved. Linked VNets keep the default Azure-provided DNS (168.63.129.16), and the ruleset evaluation happens inside the Azure DNS platform.
+The part of this that trips up people arriving from traditional DNS infrastructure: the VNet doesn't point at the resolver. With Azure-provided DNS (168.63.129.16), ruleset evaluation happens inside the Azure DNS platform. If a VNet is configured to use custom DNS servers instead, queries are sent there first.
 
 ```mermaid
 sequenceDiagram
@@ -168,7 +166,7 @@ And the linked VNet doesn't need peering to the resolver's VNet for any of this 
 
 ## The caveats
 
-The two-per-endpoint limit is a hard one, so this pattern buys you exactly one extra scope per endpoint. If you need finer-grained per-VNet rule scoping than two buckets, you're into additional outbound endpoints (maximum five per resolver, so ten rulesets in total) or rethinking the design.
+The two-per-endpoint limit is a hard one, so this pattern buys you exactly one extra scope per endpoint. If you need finer-grained per-VNet rule scoping than two buckets, you're into additional outbound endpoints (maximum five per resolver, with up to two rulesets associated per endpoint) or rethinking the design.
 
 Rule precedence *within* a ruleset is longest-suffix match, which is well defined. Precedence *across* two rulesets linked to the same VNet is not documented at all. Keep the namespaces disjoint between rulesets sharing a VNet — don't put `example.com` in one and `corp.example.com` in the other and hope.
 
