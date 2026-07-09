@@ -20,6 +20,10 @@ Because those are independent axes, an obvious design falls out. Suppose you hav
 
 But you don't want a second outbound endpoint just to carry the second ruleset. Outbound endpoints each demand a dedicated delegated subnet, and — more importantly if there's a firewall between Azure and your on-premises DNS servers — each endpoint is a different source subnet that someone has to write an ACL for. One egress point, multiple rule scopes, is the tidy answer.
 
+This is especially useful when the firewall policy already allows DNS from your existing outbound endpoint to authoritative DNS outside that VNet, whether that's on-premises or in another cloud. Reusing that same endpoint avoids adding another source subnet and another round of firewall changes just to separate who can resolve which domains.
+
+My use case was a third-party integration. I needed that third party to resolve a very small set of specific domains through forwarding, but I didn't want that integration to gain visibility of every internal zone. A second ruleset linked only to their VNet gave me narrow resolution scope while keeping the same approved egress path.
+
 The documentation says this works: two rulesets per outbound endpoint, 1,000 rules each. The portal says otherwise — try to associate a second ruleset with an endpoint that already has one and the option is simply not available. There's even a footnote buried in the limits documentation admitting that "different limits might be enforced by the Azure portal until the portal is updated," which is a polite way of saying the portal hasn't kept up with the API.
 
 So: lab it.
