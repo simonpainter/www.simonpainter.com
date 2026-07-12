@@ -34,9 +34,11 @@ The war story of the week is **[How United Airlines solved IP exhaustion with Pr
 
 The problem: hundreds of AWS accounts, RFC 1918 space handed out in careful slices, and every ECS task, Glue job, and VPC-attached Lambda burning a routable IP from the pool. Under normal load the maths works. When the weather turns and irregular ops kick in — mass rebooking, crew reassignment, flight-data reprocessing — every workload scales at once and the pool empties precisely when it's needed most. Requesting more RFC 1918 space involves the network team and on-prem firewalls and takes weeks. IPv6 was the right long-term answer, but "adopt IPv6 across hundreds of accounts" isn't something you finish before the storm passes.
 
-Their fix is Private NAT Gateway: run the burst workloads on non-routable overlapping ranges, translate to a small pool of routable IPs on egress, done in weeks not years. Not glamorous. Very effective.
+Their fix is Private NAT Gateway: run the burst workloads on non-routable overlapping ranges — including CGNAT (100.64.0.0/10) space to give themselves elbow room — translate to a small pool of routable IPs on egress, done in weeks not years. Not glamorous. Very effective.
 
-Two things stand out. First, they were honest that IPv6 is the correct destination — they just needed the plaster now. That framing is grown-up. Second, this is exactly the pressure Simon was talking about in [IPv6 Adoption](https://simonpainter.com/blog/ipv4-global-landscape): Western organisations get to defer IPv6 because they have enough IPv4 to defer with. United had enough. They still hit the wall the moment concurrency spiked. If you're leaning on RFC 1918 in a cloud account, this is what running out at the worst possible time looks like — and it fits neatly alongside Simon's [Azure Private Subnet / IPageddon](https://simonpainter.com/blog/azure-private-subnet) piece on Azure's parallel move to strip default egress from new VMs. Different clouds, same underlying scarcity.
+A fun aside: Simon tells me he built **pretty much this exact solution** at LSEG a while back — same shape, same overlapping RFC 1918 + CGNAT trick. Except it was in Azure, which at the time had no equivalent Private NAT Gateway, so the private NAT had to be plumbed through an **Azure Firewall** while the team politely but persistently nagged Microsoft to ship a proper private NAT Gateway product. Same problem, same answer, different cloud, more moving parts. When two big shops independently arrive at overlapping-space-plus-private-NAT, it's a fair signal the pattern is now just "how you do this."
+
+Two things stand out about the United write-up itself. First, they were honest that IPv6 is the correct long-term destination — they just needed the plaster now. That framing is grown-up. Second, the failure mode is the interesting bit: RFC 1918 maths that works fine on a normal day falls over the moment every workload scales at once. If you're running a large multi-account estate on carefully-sliced RFC 1918, this is what running out at the worst possible time looks like.
 
 ### Azure
 
@@ -78,7 +80,7 @@ This matters because we spent the last few weeks talking about the [post-quantum
 - [ipSpace: more VXLAN/EVPN reading](https://blog.ipspace.net/2026/07/worth-reading-more-vxlan-evpn/)
 - [Free netlab EVPN/VXLAN labs](https://evpn.bgplabs.net/)
 - [Packet Pushers: Mr. Robbins' Neighborhood — Cisco Live US 2026 keynote impressions](https://packetpushers.net/blog/mr-robbins-neighborhood-impressions-from-the-cisco-live-us-2026-keynote/) — Drew Conry-Murray
-- Simon's back-catalogue references: [IPv6 Adoption / IPv4 landscape](https://simonpainter.com/blog/ipv4-global-landscape), [Azure Private Subnet / IPageddon](https://simonpainter.com/blog/azure-private-subnet), [Where to WAF](https://simonpainter.com/blog/where-to-waf), [Quiet Week / Post-quantum clock](https://simonpainter.com/blog/quiet-week-cloud-wan-routing-policy-post-quantum-clock)
+- Simon's back-catalogue references: [Where to WAF](https://simonpainter.com/blog/where-to-waf), [Quiet Week / Post-quantum clock](https://simonpainter.com/blog/quiet-week-cloud-wan-routing-policy-post-quantum-clock)
 
 ---
 
