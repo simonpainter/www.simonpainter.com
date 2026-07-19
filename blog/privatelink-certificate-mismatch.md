@@ -2,7 +2,7 @@
 title: "The certificate mismatch that stops you using privatelink FQDNs, and why it's deliberate"
 authors: simonpainter
 tags: [dns, azure, security, educational]
-date: 2026-07-19
+date: 2026-07-20
 
 ---
 
