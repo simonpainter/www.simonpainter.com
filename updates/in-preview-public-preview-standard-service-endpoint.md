@@ -5,6 +5,7 @@ tags:
   - private-link
   - azure
   - networks
+  - security
 date: 2026-07-25
 ---
 
@@ -130,7 +131,7 @@ Repeat this for each subnet and each service type (`Microsoft.Storage`, `Microso
 
 ### Configure the network security perimeter
 
-Create a network security perimeter, add your PaaS resource to it, and create an inbound access rule that allows traffic from the network identifier's IP prefix:
+Create a network security perimeter, add a profile, associate your PaaS resource, and create an inbound access rule that allows traffic from the network identifier's public IP prefix range (not the individual `/32` — the prefix is what the perimeter matches on):
 
 ```bash
 # Create the perimeter
@@ -139,15 +140,29 @@ az network perimeter create \
   --name my-nsp \
   --location eastus2
 
-# Add inbound rule matching the network identifier prefix
+# Create a profile inside the perimeter
+az network perimeter profile create \
+  --resource-group my-rg \
+  --perimeter-name my-nsp \
+  --name my-profile
+
+# Look up the IP prefix range you allocated for the identifier
+PREFIX_RANGE=$(az network public-ip prefix show \
+  --resource-group my-rg \
+  --name service-ep-prefix \
+  --query ipPrefix --output tsv)
+
+# Add inbound rule matching the network identifier's prefix range
 az network perimeter profile access-rule create \
   --resource-group my-rg \
   --perimeter-name my-nsp \
   --profile-name my-profile \
-  --name allow-service-endpoint \
+  --access-rule-name allow-service-endpoint \
   --direction Inbound \
-  --address-prefixes "203.0.113.10/32"
+  --address-prefixes "$PREFIX_RANGE"
 ```
+
+You also need to associate your PaaS resource (storage account, key vault, etc.) with the perimeter using `az network perimeter association create` before the rule takes effect — see the Learn walkthrough for the full association command.
 
 Once associated, the PaaS resource accepts service endpoint traffic from any subnet tagged with that identifier.
 
