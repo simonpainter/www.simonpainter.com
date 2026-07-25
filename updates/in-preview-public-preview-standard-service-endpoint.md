@@ -5,6 +5,8 @@ tags:
   - private-link
   - azure
   - networks
+  - service-endpoints
+  - network-security-perimeter
 date: 2026-07-25
 ---
 
@@ -139,15 +141,29 @@ az network perimeter create \
   --name my-nsp \
   --location eastus2
 
-# Add inbound rule matching the network identifier prefix
+# Create a profile inside the perimeter
+az network perimeter profile create \
+  --resource-group my-rg \
+  --perimeter-name my-nsp \
+  --name my-profile
+
+# Grab the public IP prefix range that owns the network identifier
+PREFIX=$(az network public-ip prefix show \
+  --resource-group my-rg \
+  --name service-ep-prefix \
+  --query ipPrefix --output tsv)
+
+# Add inbound rule allowing the whole public IP prefix range
 az network perimeter profile access-rule create \
   --resource-group my-rg \
   --perimeter-name my-nsp \
   --profile-name my-profile \
-  --name allow-service-endpoint \
+  --access-rule-name allow-service-endpoint \
   --direction Inbound \
-  --address-prefixes "203.0.113.10/32"
+  --address-prefixes "[$PREFIX]"
 ```
+
+Allowing the public IP *prefix range* rather than a hard-coded `/32` matches Microsoft's Learn walkthrough and means you don't have to update the NSP rule if you later add another identifier from the same prefix.
 
 Once associated, the PaaS resource accepts service endpoint traffic from any subnet tagged with that identifier.
 
