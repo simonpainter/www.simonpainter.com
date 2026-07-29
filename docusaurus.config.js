@@ -67,6 +67,7 @@ const config = {
   clientModules: [require.resolve('./src/scripts/mermaid_icons.js')],
 
   plugins: [
+    'docusaurus-plugin-copy-page-button',
     function suppressVscodeLanguageServerTypesWarning() {
       return {
         name: 'suppress-vscode-languageserver-types-warning',
