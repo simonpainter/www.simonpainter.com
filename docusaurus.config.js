@@ -71,6 +71,7 @@ const config = {
       'docusaurus-plugin-copy-page-button',
       {
         placement: 'article',
+        enabledActions: ['copy', 'view'],
       },
     ],
     function suppressVscodeLanguageServerTypesWarning() {
