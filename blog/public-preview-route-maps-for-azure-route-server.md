@@ -217,7 +217,7 @@ Route summarisation is incredibly useful, but I treat it with care: a single `/3
 
 
 
-| Property |	Action	| Value |	Interpretation |
+| Property | Action | Value | Interpretation |
 |---|---|---|---|
 | Route-prefix | Drop | 10.3.0.0/8, 10.4.0.0/8 | The routes specified in the rule are dropped. |
 | Route-prefix | Replace | 10.0.0.0/8, 192.168.0.0/16 | Replace all the matched routes with the routes specified in the rule. |
