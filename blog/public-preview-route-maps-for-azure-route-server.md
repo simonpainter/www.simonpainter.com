@@ -60,7 +60,6 @@ graph TB
  VM2 ==>|eBGP multihop 2| RS1
  VM2 ==>|eBGP multihop 2| RS2
 
- VM1 <-. "branch_to_branch = true" .-> VM2
 ```
 
 > **`branch_to_branch_traffic_enabled`** tells Route Server to re-advertise routes it learns from one BGP peer to all its other BGP peers. With it on, VM1 sees VM2's routes and vice versa, even though the two NVAs have no direct peering. Without it, each NVA only sees routes from its own VNet. This is where Route Maps becomes interesting: you can apply an inbound or outbound policy on a per-peer basis to control exactly what gets re-advertised. Worth noting that Azure deliberately blocks onward propagation of branch-to-branch routes out to ExpressRoute and VPN gateways to prevent transit routing across the Microsoft backbone; I wrote about that mechanism in detail in [this transit route prevention post](/transit-route-prevention/).
