@@ -1,5 +1,5 @@
 ---
-title: "Route Maps for Azure Route Server is now in Public Preview"
+title: "Route Maps for Azure Route Server are now in Public Preview"
 authors: simonpainter
 tags:
   - azure
