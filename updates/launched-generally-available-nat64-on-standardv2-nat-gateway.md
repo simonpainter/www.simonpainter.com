@@ -91,26 +91,6 @@ Once NAT64 is enabled on the gateway, configure your IPv6 subnet's DNS settings 
 
 **UDR interaction.** User-defined routes to a virtual appliance or virtual network gateway take precedence over NAT Gateway for outbound internet traffic. If you route `0.0.0.0/0` elsewhere, NAT Gateway won't see the traffic and NAT64 won't apply.
 
-## How NAT64 works (the quick version)
-
-Here's the flow in pseudocode form:
-
-```
-# Client sends traffic to an IPv4-only destination (e.g. example.com)
-dns_response = dns64_resolver.query("example.com", record_type="AAAA")
-# DNS64 sees only an A record exists, so it synthesizes an AAAA record
-synthesized_ipv6 = embed_in_prefix(ipv4_address="93.184.216.34", prefix="64:ff9b::/96")
-# Returns 64:ff9b::5db8:d822 to the client
-
-# Client sends IPv6 packet to 64:ff9b::5db8:d822
-# NAT Gateway recognizes the 64:ff9b::/96 prefix
-translated_dest = extract_ipv4_from_prefix(packet.dst)  # returns 93.184.216.34
-packet_ipv4 = translate_ipv6_to_ipv4(packet, src=nat_gateway_public_ip, dst=translated_dest)
-send_to_internet(packet_ipv4)
-
-# Response arrives as IPv4, NAT Gateway translates back to IPv6 and returns to client
-```
-
 ## Quick takeaway
 
 NAT64 on StandardV2 NAT Gateway fills a real gap for IPv6-first designs. If your subnets are IPv6-only, you can now reach IPv4-only internet destinations through a clean, managed Azure service rather than running your own translation appliance.
