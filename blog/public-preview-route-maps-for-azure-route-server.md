@@ -149,7 +149,7 @@ If you've read my earlier post on [how Azure Route Server counts the prefix limi
 
 Route Maps gives you a practical mitigation for this. If you're running an SD-WAN or any scenario where many prefixes flow through Route Server, outbound summarisation can collapse those individual routes into aggregates before they hit the limit. You're not reducing what's real in your network; you're reducing what Azure propagates.
 
-It's not a silver bullet. Summarisation strips BGP Community and AS-PATH attributes from the resulting aggregate, so if downstream systems rely on those, you'll need to think carefully about where you apply it. But for organisations that have been managing a careful head count of their routes to stay clear of that 1,000 route limit, this is genuinely useful.
+It's not a silver bullet. Summarisation strips BGP Community and AS-PATH attributes from the resulting aggregate, so if downstream systems rely on those, you'll need to think carefully about where you apply it. That said, Route Maps itself gives you the tools to put them back: you can add community values or prepend AS-PATH on the same route map that performs the summarisation. It's a bit more work, but it does mean the limitation is workable rather than a hard blocker. For organisations that have been managing a careful head count of their routes to stay clear of that 1,000 route limit, this is genuinely useful.
 
 ## Applying route maps to a peering
 
