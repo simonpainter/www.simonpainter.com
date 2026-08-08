@@ -19,7 +19,6 @@ The internet packed a sandwich and went outside this week.
 
 <!-- truncate -->
 
-## Cold open
 
 Azure's networking blog is unchanged since the 19th, Ivan over at ipSpace has gone on summer break, and the only mildly newsworthy DNS story is the same encrypted-DNS metadata-leak paper I covered last week. So this is a slim one — but the AWS Cloud WAN routing-policy series got its Part 2, and the White House quietly handed everyone a 2030 deadline for post-quantum crypto. Both are worth your Monday morning.
 ## DNS desk

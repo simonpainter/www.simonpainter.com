@@ -15,7 +15,6 @@ date: 2026-07-26
 
 ---
 
-## Cold open
 
 Cloudflare published two very different things this week. One is a fluffy write-up of how the World Cup rearranged the world's HTTP traffic. The other is a quietly explosive research post pointing out that roughly 70% of BGP paths on the public internet have had their ORIGIN attribute rewritten by someone downstream of the origin AS, in direct contravention of RFC 4271. Guess which one is going in first.
 

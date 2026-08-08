@@ -14,7 +14,6 @@ Second Sunday in the column, and the routing tables are doing that thing where t
 
 <!-- truncate -->
 
-## Cold open
 
 If last week was about routing security shipping boring fixes at scale, this week is about the line between *public* and *private* getting harder to draw. Cloudflare wants to put its WAF in front of your private apps. AWS keeps quietly extending its private-connectivity menu past PrivateLink. And one of Australia's big backbones reminded everyone that BGP is still BGP.
 
