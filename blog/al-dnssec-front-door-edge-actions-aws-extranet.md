@@ -15,8 +15,6 @@ date: 2026-07-19
 
 ---
 
-## Cold open
-
 Two months after `.de` face-planted a DNSSEC rollover, `.al` did the same thing on 3 July and Cloudflare's write-up is the more interesting of the two, because this time 1.1.1.1 could actually *tell you* it had put a plaster over the wound. Meanwhile Azure Front Door got the ability to run JavaScript at the edge (in tiny hardware-isolated micro-VMs, because of course they did), and AWS quietly published an extranet reference architecture that reads like a follow-up to last week's United Airlines RFC 1918 saga. Not a bad week if you like your networking with a side of registry drama.
 
 <!-- truncate -->

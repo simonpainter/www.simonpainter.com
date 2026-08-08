@@ -17,8 +17,6 @@ date: 2026-08-02
 
 ---
 
-## Cold open
-
 Two things landed this week that will look, in a couple of years, like the moment the post-quantum migration stopped being a slide deck and started being a config change. Cloudflare shipped ML-DSA authentication on the *origin* side of the proxy — the leg most people forget about — and then, in the same breath, published a Q2 disruption summary that includes a *DNSSEC-signature-driven* outage in Germany. Different halves of the trust stack, same underlying story: the cryptographic plumbing is being replaced live, and the joints are showing.
 
 <!-- truncate -->
