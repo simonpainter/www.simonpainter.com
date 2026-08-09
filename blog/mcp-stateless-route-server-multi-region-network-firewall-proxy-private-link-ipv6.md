@@ -52,17 +52,17 @@ Boring week, good primitives. I'll take it.
 
 ## Bookmarks
 
-- Jose Moreno — Many-regions networking with Azure Route Server — <https://blog.cloudtrooper.net/2026/08/04/many-regions-networking-with-azure-route-server/>
-- Azure Networking Blog — Announcing Public Preview: Azure Private Link over IPv6 — <https://techcommunity.microsoft.com/blog/azurenetworkingblog/announcing-public-preview---azure-private-link-over-ipv6/4543978>
-- AWS Networking & Content Delivery — Reintroducing Network Firewall Proxy for Secure Egress Connectivity — <https://aws.amazon.com/blogs/networking-and-content-delivery/reintroducing-network-firewall-proxy-for-secure-egress-connectivity/>
-- Cloudflare Blog — The next generation of MCP — <https://blog.cloudflare.com/mcp-v2/>
-- ipSpace — Futility of Opening Ansible Issues — <https://blog.ipspace.net/2026/07/futility-opening-ansible-issues/>
-- ipSpace — Ansible config content follow-up — <https://blog.ipspace.net/2026/07/ansible-config-content/>
-- Si — Integrating Azure Route Server with Infoblox NIOS — <https://simonpainter.com/blog/azure-route-server-nios>
-- Si — Hybrid Cloud Reference Architectures — <https://simonpainter.com/blog/hybrid-cloud-dns>
-- Si — BGP Route Server MCP — <https://simonpainter.com/blog/bgp-lg-mcp>
-- Si — MCP Inspector — <https://simonpainter.com/blog/mcp-inspector>
-- Si — Where to put your WAF — <https://simonpainter.com/blog/where-to-waf>
+- Jose Moreno — [Many-regions networking with Azure Route Server](https://blog.cloudtrooper.net/2026/08/04/many-regions-networking-with-azure-route-server/)
+- Azure Networking Blog — [Announcing Public Preview: Azure Private Link over IPv6](https://techcommunity.microsoft.com/blog/azurenetworkingblog/announcing-public-preview---azure-private-link-over-ipv6/4543978)
+- AWS Networking & Content Delivery — [Reintroducing Network Firewall Proxy for Secure Egress Connectivity](https://aws.amazon.com/blogs/networking-and-content-delivery/reintroducing-network-firewall-proxy-for-secure-egress-connectivity/)
+- Cloudflare Blog — [The next generation of MCP](https://blog.cloudflare.com/mcp-v2/)
+- ipSpace — [Futility of Opening Ansible Issues](https://blog.ipspace.net/2026/07/futility-opening-ansible-issues/)
+- ipSpace — [Ansible config content follow-up](https://blog.ipspace.net/2026/07/ansible-config-content/)
+- Si — [Integrating Azure Route Server with Infoblox NIOS](https://simonpainter.com/blog/azure-route-server-nios)
+- Si — [Hybrid Cloud Reference Architectures](https://simonpainter.com/blog/hybrid-cloud-dns)
+- Si — [BGP Route Server MCP](https://simonpainter.com/blog/bgp-lg-mcp)
+- Si — [MCP Inspector](https://simonpainter.com/blog/mcp-inspector)
+- Si — [Where to put your WAF](https://simonpainter.com/blog/where-to-waf)
 
 ---
 
