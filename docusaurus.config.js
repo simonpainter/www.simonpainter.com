@@ -103,6 +103,25 @@ const config = {
       },
     ],
     [
+      '@docusaurus/plugin-content-blog',
+      {
+        id: 'field-notes',
+        routeBasePath: '/field-notes',
+        path: './field-notes',
+        authorsMapPath: './authors.yml',
+        blogTitle: "Huckleberry's Field Notes",
+        blogDescription: "Huckleberry's weekly networking field notes and roundups",
+        postsPerPage: 'ALL',
+        blogSidebarTitle: 'All field notes',
+        blogSidebarCount: 'ALL',
+        showReadingTime: true,
+        sortPosts: 'descending',
+        feedOptions: {
+          xslt: true,
+        },
+      },
+    ],
+    [
       '@docusaurus/plugin-client-redirects',
       {
         redirects: [
@@ -117,6 +136,50 @@ const config = {
           {
             from: '/public-preview-summarized-advertised-gateway-prefixes-for-route-advertisement',
             to: '/updates/public-preview-summarized-advertised-gateway-prefixes-for-route-advertisement',
+          },
+          {
+            from: '/field-notes-week-one',
+            to: '/field-notes/field-notes-week-one',
+          },
+          {
+            from: '/how-huck-writes-this-column',
+            to: '/field-notes/how-huck-writes-this-column',
+          },
+          {
+            from: '/bgp-origin-cloudflare-internal-dns-azure-ddos',
+            to: '/field-notes/bgp-origin-cloudflare-internal-dns-azure-ddos',
+          },
+          {
+            from: '/private-origins-and-an-australian-bgp-wobble',
+            to: '/field-notes/private-origins-and-an-australian-bgp-wobble',
+          },
+          {
+            from: '/mcp-stateless-route-server-multi-region-network-firewall-proxy-private-link-ipv6',
+            to: '/field-notes/mcp-stateless-route-server-multi-region-network-firewall-proxy-private-link-ipv6',
+          },
+          {
+            from: '/post-quantum-origins-cloudflare-q2-disruptions-afd-edge-actions',
+            to: '/field-notes/post-quantum-origins-cloudflare-q2-disruptions-afd-edge-actions',
+          },
+          {
+            from: '/quiet-week-cloud-wan-routing-policy-post-quantum-clock',
+            to: '/field-notes/quiet-week-cloud-wan-routing-policy-post-quantum-clock',
+          },
+          {
+            from: '/tgw-cloudwan-mcp-expressroute-revisited-ipspace-returns',
+            to: '/field-notes/tgw-cloudwan-mcp-expressroute-revisited-ipspace-returns',
+          },
+          {
+            from: '/encrypted-dns-leaks-and-azure-shipping-plumbing',
+            to: '/field-notes/encrypted-dns-leaks-and-azure-shipping-plumbing',
+          },
+          {
+            from: '/united-airlines-nat-front-door-tenant-isolation-ml-dsa-pragmatism',
+            to: '/field-notes/united-airlines-nat-front-door-tenant-isolation-ml-dsa-pragmatism',
+          },
+          {
+            from: '/al-dnssec-front-door-edge-actions-aws-extranet',
+            to: '/field-notes/al-dnssec-front-door-edge-actions-aws-extranet',
           },
         ],
       },
@@ -186,6 +249,11 @@ const config = {
             position: 'left',
           },
           {
+            to: '/field-notes',
+            label: 'Field Notes',
+            position: 'left',
+          },
+          {
             href: '/tags/azure',
             label: 'Azure',
             position: 'left',
@@ -230,6 +298,10 @@ const config = {
               {
                 label: 'Cloud Updates',
                 to: '/updates',
+              },
+              {
+                label: 'Field Notes',
+                to: '/field-notes',
               },
               {
                 label: 'All Tags',
