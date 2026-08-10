@@ -23,6 +23,8 @@ Because it runs on specialised hardware rather than general-purpose VMs, you get
 
 The official announcement is here: [Generally Available: Azure Virtual Network routing appliance](https://azure.microsoft.com/updates?id=568605). The how-to guide is on Microsoft Learn: [Create a Routing Appliance - Azure Virtual Network](https://learn.microsoft.com/en-us/azure/virtual-network/how-to-create-virtual-network-routing-appliance).
 
+If you want the longer version, I wrote up a fuller take on what changed at GA, where it fits in a hub design, and why I still would not use it for internet egress in [Azure Virtual Network Routing Appliance goes GA](/blog/azure-virtual-network-routing-appliance-ga).
+
 ## Who should care
 
 If you run a hub-and-spoke design with heavy east-west traffic between spokes, this matters. The appliance gives you a scalable transit point without stitching together load balancers and NVA scale sets.
