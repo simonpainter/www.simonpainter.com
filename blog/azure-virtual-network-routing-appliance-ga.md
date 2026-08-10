@@ -11,6 +11,8 @@ draft: true
 
 Azure Virtual Network Routing Appliance has moved from [awkward public preview](azure-virtual-network-appliance.md) to general availability. That matters because the preview post left a few open questions: how it would be priced, whether metrics would exist, how much capacity it could really take, and whether it was even remotely ready for production use.
 
+If you want the shorter news version first, I also wrote up the launch notes in [Generally Available: Azure Virtual Network routing appliance](/updates/launched-generally-available-azure-virtual-network-routing-appliance).
+
 <!--truncate-->
 
 ## TL;DR
