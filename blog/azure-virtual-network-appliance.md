@@ -104,13 +104,13 @@ flowchart TB
     subgraph Hub["Hub VNet"]
         FW["Azure Firewall"]
         GW["VPN/ER Gateway"]
-        AVNA["Virtual Network<br/>Appliance"]
-        subgraph AVNART["AVNA Route Table"]
-            AVNART1["Learned Routes<br/>to Spokes"]
+        VNRA["Virtual Network<br/>Appliance"]
+        subgraph VNRART["VNRA Route Table"]
+            VNRART1["Learned Routes<br/>to Spokes"]
         end
     end
     
-    AVNA -.-> AVNART
+    VNRA -.-> VNRART
     
     subgraph SpokeA["Spoke A VNet"]
         subgraph SubnetA1["Workload Subnet A"]
@@ -120,7 +120,7 @@ flowchart TB
             direction LR
             RTA1["Default Route<br/>(Firewall)"]
             RTA2["On Premise Prefixes<br/>(Gateway)"]
-            RTA3["Cloud Prefixes<br/>(AVNA)"]
+            RTA3["Cloud Prefixes<br/>(VNRA)"]
         end
     end
     
@@ -132,7 +132,7 @@ flowchart TB
             direction LR
             RTB1["Default Route<br/>(Firewall)"]
             RTB2["On Premise Prefixes<br/>(Gateway)"]
-            RTB3["Cloud Prefixes<br/>(AVNA)"]
+            RTB3["Cloud Prefixes<br/>(VNRA)"]
         end
     end
     
@@ -141,17 +141,17 @@ flowchart TB
     
     RTA1 --> FW
     RTA2 --> GW
-    RTA3 --> AVNA
+    RTA3 --> VNRA
     RTB1 --> FW
     RTB2 --> GW
-    RTB3 --> AVNA
+    RTB3 --> VNRA
     
     FW -->|"Internet<br/>Egress"| Internet((Internet))
     GW -->|"ExpressRoute/<br/>VPN"| OnPrem((On-Premise))
     
     style FW fill:#e74c3c,color:#fff
     style GW fill:#9b59b6,color:#fff
-    style AVNA fill:#3498db,color:#fff
+    style VNRA fill:#3498db,color:#fff
     style VMA fill:#27ae60,color:#fff
     style VMB fill:#27ae60,color:#fff
     style Internet fill:#95a5a6,color:#fff
@@ -159,7 +159,7 @@ flowchart TB
 ```
 The alternative is to send all traffic to the appliance and then have the subnet it lives in route to on premise, internet or other spokes, which would be a lot easier to manage; however, the appliance currently has no capability to route to the internet, even if you put a NAT gateway for the appliance subnet. I tried it so you don't have to!
 
-The halfway house is to have RFC1918 routes going to the appliance, which sorts out what goes on premise and what goes to another spoke, and then have the default route going to your egress solution. This is a bit more work to set up and manage but it does give you the best of both worlds in terms of control and simplicity. Separating cloud from on premise routes in the AVNA should be fairly straightforward because all the spoke routes will be learned in the hub automagically and everything else in 10/8 can go to your gateway.
+The halfway house is to have RFC1918 routes going to the appliance, which sorts out what goes on premise and what goes to another spoke, and then have the default route going to your egress solution. This is a bit more work to set up and manage but it does give you the best of both worlds in terms of control and simplicity. Separating cloud from on premise routes in the VNRA should be fairly straightforward because all the spoke routes will be learned in the hub automagically and everything else in 10/8 can go to your gateway.
 
 ```mermaid
 flowchart TB
@@ -168,10 +168,10 @@ flowchart TB
     subgraph Hub["Hub VNet"]
         FW["Azure Firewall"]
         GW["VPN/ER Gateway"]
-        AVNA["Virtual Network<br/>Appliance"]
-        subgraph AVNART["AVNA Route Table"]
-            AVNART1["On Premise Prefixes<br/>(Gateway)"]
-            AVNART2["Learned Routes<br/>to Spokes"]
+        VNRA["Virtual Network<br/>Appliance"]
+        subgraph VNRART["VNRA Route Table"]
+            VNRART1["On Premise Prefixes<br/>(Gateway)"]
+            VNRART2["Learned Routes<br/>to Spokes"]
         end
     end
     
@@ -182,7 +182,7 @@ flowchart TB
         subgraph RTA["Route Table"]
             direction LR
             RTA1["Default Route<br/>(Firewall)"]
-            RTA2["RFC1918 Prefixes<br/>(AVNA)"]
+            RTA2["RFC1918 Prefixes<br/>(VNRA)"]
         end
     end
     
@@ -193,7 +193,7 @@ flowchart TB
         subgraph RTB["Route Table"]
             direction LR
             RTB1["Default Route<br/>(Firewall)"]
-            RTB2["RFC1918 Prefixes<br/>(AVNA)"]
+            RTB2["RFC1918 Prefixes<br/>(VNRA)"]
         end
     end
     
@@ -201,19 +201,19 @@ flowchart TB
     SubnetB1 -.-> RTB
     
     RTA1 --> FW
-    RTA2 --> AVNA
+    RTA2 --> VNRA
     RTB1 --> FW
-    RTB2 --> AVNA
+    RTB2 --> VNRA
     
-    AVNA -.-> AVNART
-    AVNART1 --> GW
+    VNRA -.-> VNRART
+    VNRART1 --> GW
     
     FW -->|"Internet<br/>Egress"| Internet((Internet))
     GW -->|"ExpressRoute/<br/>VPN"| OnPrem((On-Premise))
     
     style FW fill:#e74c3c,color:#fff
     style GW fill:#9b59b6,color:#fff
-    style AVNA fill:#3498db,color:#fff
+    style VNRA fill:#3498db,color:#fff
     style VMA fill:#27ae60,color:#fff
     style VMB fill:#27ae60,color:#fff
     style Internet fill:#95a5a6,color:#fff
