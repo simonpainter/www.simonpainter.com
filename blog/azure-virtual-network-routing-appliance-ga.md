@@ -21,7 +21,7 @@ Azure now has a managed routing layer for hub-and-spoke traffic that is built fo
 
 The preview version of this article covered the basic shape of the service: a resource that lives in a hub VNet, forwards private traffic between spokes, and sits somewhere between Azure Firewall and a third-party NVA.
 
-I made the same mistake many did in assuming this followed the same model as many other Azure services: a glorified NVA in a load balancer sandwich. [Jose Moreno's post](https://blog.cloudtrooper.net/2026/03/07/what-is-the-azure-virtual-network-routing-appliance/) on the architecture of VNRA was a revelation, and he knows more about what is under the hood than most.
+I made the same mistake as many did in assuming this followed the same model as many other Azure services: a glorified NVA in a load balancer sandwich. [Jose Moreno's post](https://blog.cloudtrooper.net/2026/03/07/what-is-the-azure-virtual-network-routing-appliance/) on the architecture of VNRA was a revelation, and he knows more about what is under the hood than most.
 
 The rest of the post still holds. The GA release mostly fills in the gaps.
 
