@@ -30,9 +30,9 @@
   --ifm-container-width-xl: 1320px;
   
   /* Navbar styling */
-  --ifm-navbar-height: 4rem;
-  --ifm-navbar-padding-vertical: 0.75rem;
-  --ifm-navbar-padding-horizontal: 1.5rem;
+  --ifm-navbar-height: 3.5rem;
+  --ifm-navbar-padding-vertical: 0.5rem;
+  --ifm-navbar-padding-horizontal: 1rem;
   --ifm-navbar-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
   
   /* Link styling */
@@ -294,13 +294,18 @@ pre code {
 }
 
 .navbar__logo {
-  height: 48px;
-  margin-left: 0.5rem;
+  height: 42px;
+  margin-left: 0;
 }
 
 .navbar__link {
+  font-size: 0.95rem;
   font-weight: 500;
   position: relative;
+}
+
+.navbar__item {
+  padding: 0 0.35rem;
 }
 
 .navbar__link--active {
