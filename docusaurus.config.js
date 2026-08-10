@@ -231,7 +231,6 @@ const config = {
       ],
       navbar: {
         hideOnScroll: false,
-        title: 'Simon Painter',
         logo: {
           alt: 'Simon Painter Logo',
           src: 'img/mvp.png',
@@ -239,9 +238,10 @@ const config = {
         },
       items: [
           {
-            href: '/tags',
-            label: 'All Tags',
-            position: 'right',
+            to: '/',
+            label: 'Home',
+            position: 'left',
+            exact: true,
           },
           {
             to: '/updates',
@@ -274,13 +274,8 @@ const config = {
             position: 'left',
           },
           {
-            href: 'https://github.com/simonpainter',
-            label: 'GitHub',
-            position: 'right',
-          },
-          {
-            href: 'https://www.linkedin.com/in/sipainter/',
-            label: 'LinkedIn',
+            to: '/authors/simonpainter',
+            label: 'About me',
             position: 'right',
           },
         ],
