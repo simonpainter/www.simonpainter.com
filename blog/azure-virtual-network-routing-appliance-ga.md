@@ -6,7 +6,6 @@ tags:
   - performance
   - ipv6
 date: 2026-08-10
-draft: true
 ---
 
 Azure Virtual Network Routing Appliance has moved from [awkward public preview](azure-virtual-network-appliance.md) to general availability. That matters because the preview post left a few open questions: how it would be priced, whether metrics would exist, how much capacity it could really take, and whether it was even remotely ready for production use.
