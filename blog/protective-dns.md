@@ -82,7 +82,7 @@ There's also an operational benefit. When a PDNS service blocks a query, you get
 
 ## Integration with Azure and Cloud-Native Deployments
 
-If you're running in Azure, [Microsoft's Defender for DNS](https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-dns-introduction) provides PDNS-like capabilities as part of Defender for Cloud. It monitors queries from Azure resources and detects suspicious activities including data exfiltration via DNS tunneling, malware command and control communications, and attacks against malicious DNS resolvers. The advantage here is that there are no agents to deploy—the monitoring happens at the Azure DNS layer itself.
+If you're running in Azure, [Microsoft's Defender for DNS](https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-dns-introduction) provides PDNS-like capabilities as part of Defender for Cloud. It monitors queries from Azure resources and detects suspicious activities including data exfiltration via DNS tunnelling, malware command and control communications, and attacks against malicious DNS resolvers. The advantage here is that there are no agents to deploy—the monitoring happens at the Azure DNS layer itself.
 
 But Defender for DNS is specific to Azure resources. If you're running multi-cloud or hybrid cloud, you need something that spans across all your environments. This is where commercial PDNS services or the NCSC's offering become more attractive. They protect everything from remote workers to cloud instances to on-premises servers with a single, unified configuration.
 
