@@ -62,7 +62,7 @@ The NSA in the United States runs something similar, though their Protective DNS
 
 For organisations that don't qualify for government services, commercial options exist. [Cisco Umbrella](https://umbrella.cisco.com/) is one of the most established, offering comprehensive PDNS as part of its broader security platform. You get real-time threat intelligence, the ability to investigate threats through their Umbrella Investigate tool, and cloud-native deployment that can scale globally.
 
-[Vercara](https://vercara.com/protective-dns) offers UltraDDR (Ultra DNS Domain Response) as a standalone PDNS service. [BlueCat Networks](https://bluecatnetworks.com/) provides PDNS capabilities as part of their DNS management platform. [Infoblox](https://www.infoblox.com/) includes PDNS functionality in their security solutions. [DNSFilter](https://www.dnsfilter.com/) operates specifically as a PDNS provider with emphasis on real-time AI-based domain classification.
+[BlueCat Networks](https://bluecatnetworks.com/) provides PDNS capabilities as part of their DNS management platform. [Infoblox](https://www.infoblox.com/) includes PDNS functionality in their security solutions. [DNSFilter](https://www.dnsfilter.com/) operates specifically as a PDNS provider with emphasis on real-time AI-based domain classification.
 
 These services operate on a subscription model, and pricing scales based on the volume of queries or the number of protected users. Most require an upfront evaluation to determine the right pricing tier.
 
