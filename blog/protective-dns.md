@@ -72,7 +72,7 @@ Some organisations, particularly those with significant on-premises DNS infrastr
 
 ## Why This Matters for Network Engineers
 
-From a network engineering perspective, PDNS is interesting because it solves problems at a layer that hasn't traditionally had security controls. We've had firewalls, IDS/IPS systems, and web proxies handling traffic inspection for decades. But DNS queries were often treated as something that just worked, without much scrutiny.
+From a network engineering perspective, PDNS is interesting because it solves problems at a layer that hasn't traditionally had security controls. We've had firewalls, intrusion detection/prevention systems (IDS/IPS), and web proxies handling traffic inspection for decades. But DNS queries were often treated as something that just worked, without much scrutiny.
 
 The shift to PDNS reflects a fundamental change in how we think about network security. Rather than trying to filter everything at the perimeter, PDNS works everywhere—on the network, in the cloud, on remote devices. It's agnostic to your network topology, which is increasingly important as workloads become distributed.
 
