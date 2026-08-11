@@ -24,7 +24,7 @@ The elegance of this approach lies in where it operates. DNS queries happen befo
 
 This is genuinely powerful. The NSA conducted testing and found that using secure DNS would reduce the ability for 92 percent of malware attacks to utilise command and control infrastructure. Not 92 percent of attacks would be blocked entirely—but 92 percent of attacks that did happen would have their command and control capabilities crippled. That's a huge impact from a single control.
 
-Think back to the example I used before with file transfer attempts over DNS tunneling or the Pokémon GO DNS poisoning scenario. Both of those were relatively trivial exploits that showed just how easily DNS can be abused. PDNS is essentially the bouncer at the door, checking IDs and saying "no, that domain isn't getting through."
+Think back to the examples I've covered before: my [txtft tool](https://github.com/simonpainter/txtft) that trivially exfiltrates data over DNS queries, or the [DNS API proxy](/dns-api-proxy) that lets you use DNS as a covert channel for API calls. Both of those were relatively straightforward demonstrations of just how easily DNS can be abused to move data in and out of an organisation without triggering any conventional security controls. PDNS is essentially the bouncer at the door, checking IDs and saying "no, that domain isn't getting through."
 
 ## How It Works: Response Policy Zones
 
