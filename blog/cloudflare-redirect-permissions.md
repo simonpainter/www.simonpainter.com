@@ -10,6 +10,8 @@ date: 2026-08-13
 
 I hit a Cloudflare authorisation error while creating a redirect ruleset in Terraform. The error was correct: the token did not have enough rights.
 
+<!-- truncate -->
+
 The confusing part was not the error itself. It was finding which permission was missing. I had `Zone -> DNS -> Edit` and other zone permissions that looked right for a zone `cloudflare_ruleset` with `phase = "http_request_dynamic_redirect"`, but apply still failed.
 
 This was the anonymised error:
