@@ -62,16 +62,16 @@ I'm allowed to be a bit smug this week: I was told AI-in-networking was mostly s
 
 ## Bookmarks
 
-- Cloudflare DDoS Threat Report H1 2026 — DNS floods dominate, 519% Q-on-Q surge in 1 Tbps attacks — <https://blog.cloudflare.com/ddos-threat-report-2026-h1/>
-- Cloudflare Certificate Transparency Monitoring GA — filters out Cloudflare's own certificates so alerts mean something — <https://blog.cloudflare.com/certificate-transparency-monitoring-ga/>
-- Cloudflare: How Cloudflare detects MCP traffic and helps secure it — Gateway signals for shadow MCP, MCP Server Portals — <https://blog.cloudflare.com/mcp-security-updates/>
-- Cloudtrooper: Azure Route Server route maps — more than a feature — <https://blog.cloudtrooper.net/2026/08/10/azure-route-server-route-maps-more-than-a-feature/>
-- Cloudtrooper: The square design with hub-and-spoke — ExpressRoute Local + BIRD NVA + ARS — <https://blog.cloudtrooper.net/2026/08/12/the-square-design-with-hub-and-spoke/>
-- Cloudtrooper: Azure SRE Agent for Networking — fault-injection lab, containerlab OSPF, worked callback path — <https://blog.cloudtrooper.net/2026/08/14/azure-sre-agent-for-networking/>
-- AWS: Zero-trust networking for agentic AI with Amazon VPC Lattice — SigV4-signed, IAM-authorised cross-account service network — <https://aws.amazon.com/blogs/networking-and-content-delivery/zero-trust-networking-for-agentic-ai-with-amazon-vpc-lattice/>
-- ipSpace: netlab release 26.08 — ArcOS, VPP, SONiC, ACLs in the routing module — <https://blog.ipspace.net/2026/08/netlab-26-08/>
-- ipSpace: The futility of opening Ansible issues — a chronicle — <https://blog.ipspace.net/2026/07/futility-opening-ansible-issues/>
-- Router Jockey: Prompt engineering for network engineers — <https://routerjockey.com/prompt-engineering-for-network-engineers/>
+- Cloudflare DDoS Threat Report H1 2026 — DNS floods dominate, 519% Q-on-Q surge in 1 Tbps attacks — [Source](https://blog.cloudflare.com/ddos-threat-report-2026-h1/)
+- Cloudflare Certificate Transparency Monitoring GA — filters out Cloudflare's own certificates so alerts mean something — [Source](https://blog.cloudflare.com/certificate-transparency-monitoring-ga/)
+- Cloudflare: How Cloudflare detects MCP traffic and helps secure it — Gateway signals for shadow MCP, MCP Server Portals — [Source](https://blog.cloudflare.com/mcp-security-updates/)
+- Cloudtrooper: Azure Route Server route maps — more than a feature — [Source](https://blog.cloudtrooper.net/2026/08/10/azure-route-server-route-maps-more-than-a-feature/)
+- Cloudtrooper: The square design with hub-and-spoke — ExpressRoute Local + BIRD NVA + ARS — [Source](https://blog.cloudtrooper.net/2026/08/12/the-square-design-with-hub-and-spoke/)
+- Cloudtrooper: Azure SRE Agent for Networking — fault-injection lab, containerlab OSPF, worked callback path — [Source](https://blog.cloudtrooper.net/2026/08/14/azure-sre-agent-for-networking/)
+- AWS: Zero-trust networking for agentic AI with Amazon VPC Lattice — SigV4-signed, IAM-authorised cross-account service network — [Source](https://aws.amazon.com/blogs/networking-and-content-delivery/zero-trust-networking-for-agentic-ai-with-amazon-vpc-lattice/)
+- ipSpace: netlab release 26.08 — ArcOS, VPP, SONiC, ACLs in the routing module — [Source](https://blog.ipspace.net/2026/08/netlab-26-08/)
+- ipSpace: The futility of opening Ansible issues — a chronicle — [Source](https://blog.ipspace.net/2026/07/futility-opening-ansible-issues/)
+- Router Jockey: Prompt engineering for network engineers — [Source](https://routerjockey.com/prompt-engineering-for-network-engineers/)
 - Si's related pieces — [Route Maps for Azure Route Server: public preview](https://www.simonpainter.com/public-preview-route-maps-for-azure-route-server), [Protective DNS](https://www.simonpainter.com/protective-dns), [BGP looking glass over MCP](https://www.simonpainter.com/bgp-lg-mcp)
 
 ---
