@@ -23,7 +23,7 @@ This preview adds IPv6 support to Azure Firewall and Azure Firewall Policy. In p
 
 It doesn't create an IPv6-only firewall. Microsoft only supports IPv4-only or dual-stack deployments right now.
 
-The official announcement is here: [[In preview] Public Preview: Ipv6 support in Azure Firewall](https://azure.microsoft.com/updates?id=569520). The main setup guide on Learn is [Deploy Azure Firewall in dual stack mode (preview)](https://learn.microsoft.com/azure/firewall/deploy-dual-stack-firewall).
+The official announcement is here: [[In preview] Public Preview: IPv6 support in Azure Firewall](https://azure.microsoft.com/updates?id=569520). The main setup guide on Learn is [Deploy Azure Firewall in dual stack mode (preview)](https://learn.microsoft.com/azure/firewall/deploy-dual-stack-firewall).
 
 ## Who should care
 
