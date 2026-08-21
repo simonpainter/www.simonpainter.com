@@ -63,7 +63,7 @@ const config = {
         onBrokenMarkdownLinks: 'warn',
       },
   },
-  themes: ['@docusaurus/theme-mermaid'],
+  themes: ['@docusaurus/theme-mermaid', 'docusaurus-theme-github-codeblock'],
   clientModules: [require.resolve('./src/scripts/mermaid_icons.js')],
 
   plugins: [
@@ -216,6 +216,11 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      codeblock: {
+        showGithubLink: true,
+        githubLinkLabel: 'View on GitHub',
+        showRunmeLink: false,
+      },
       colorMode: {
         defaultMode: 'light',
         disableSwitch: false,
