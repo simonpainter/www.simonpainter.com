@@ -41,7 +41,7 @@ Right now, Microsoft only supports configuration through Azure CLI and PowerShel
 
 ### Azure CLI example
 
-This example upgrades an existing firewall to dual stack:
+This example upgrades an existing firewall to dual stack (note: `--address-prefixes` replaces the existing list, so include any prefixes you need to keep):
 
 ```bash
 az network vnet update \
