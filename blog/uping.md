@@ -41,11 +41,8 @@ while keep_running:
 
 Getting started is as small as the tool itself:
 
-```bash
-make
-./uping 1.1.1.1
-./uping -c 10 -i 0.5 google.com
-./uping -W 1 -6 ipv6.google.com
+```bash reference title="uping usage (README.md)"
+https://github.com/simonpainter/uping/blob/main/README.md#L9-L13
 ```
 
 Install is one command (`sudo make install`), with a small platform note. On Linux, `setcap` can let you run it without `sudo`. On macOS, if you want raw-socket accuracy without `sudo`, you can use the same setuid-root pattern as system `ping`.
