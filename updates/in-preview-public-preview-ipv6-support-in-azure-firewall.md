@@ -6,7 +6,7 @@ tags:
   - networks
   - firewall
   - ipv6
-date: 2026-08-19
+date: 2026-08-21
 ---
 
 Azure Firewall now supports IPv6 in public preview. You can run the service in dual-stack mode, attach an IPv6 public IP, and inspect IPv6 traffic with network rules instead of forcing everything back through IPv4.
