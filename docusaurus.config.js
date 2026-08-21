@@ -84,6 +84,7 @@ const config = {
         },
       };
     },
+    'docusaurus-plugin-backlinks',
     [
       '@docusaurus/plugin-content-blog',
       {

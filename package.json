@@ -23,6 +23,7 @@
     "@iconify-json/logos": "^1.2.9",
     "@mdx-js/react": "^3.0.0",
     "clsx": "^2.0.0",
+    "docusaurus-plugin-backlinks": "^1.0.7",
     "lodash-es": "^4.18.1",
     "prism-react-renderer": "^2.3.0",
     "react": "^18.0.0",
