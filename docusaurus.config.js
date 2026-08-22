@@ -1,5 +1,6 @@
 // @ts-check
 import {themes as prismThemes} from 'prism-react-renderer';
+import backlinksPlugin from 'docusaurus-plugin-backlinks';
 
 // WCAG 2 AA-compliant version of the GitHub light theme.
 // The original theme has 5 token colours that fall below 4.5:1 on its
@@ -35,6 +36,28 @@ const accessibleDraculaTheme = {
       : entry,
   ),
 };
+
+function quietBacklinksPlugin(context, options) {
+  const plugin = backlinksPlugin(context, options);
+  return {
+    ...plugin,
+    async postBuild(params) {
+      const originalWarn = console.warn;
+      console.warn = (...args) => {
+        if (typeof args[0] === 'string' &&
+          args[0].includes('[backlinks-plugin] postBuild hook, NOT resolved Url')) {
+          return;
+        }
+        originalWarn(...args);
+      };
+      try {
+        await plugin.postBuild?.(params);
+      } finally {
+        console.warn = originalWarn;
+      }
+    },
+  };
+}
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -84,6 +107,7 @@ const config = {
         },
       };
     },
+    quietBacklinksPlugin,
     [
       '@docusaurus/plugin-content-blog',
       {
