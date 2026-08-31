@@ -9,7 +9,7 @@ tags:
 date: 2026-08-31
 ---
 
-In January 2024 I was at an AWS event and found myself talking to one of the product managers. I suggested, with the confidence of someone who would never have to build the thing themselves, that AWS already peer directly with the other hyperscalers, so should allow direct private peering, like a back-to-back ER/DX, and sell us the cross connect as a managed service. No colo cage, no LOA-CFA, no smart hands ticket at three in the morning.
+In January 2024 I was at an AWS event and found myself talking to one of the product managers. I suggested, with the confidence of someone who would never have to build the thing themselves, that AWS already peers directly with the other hyperscalers, so should allow direct private peering, like a back-to-back ER/DX, and sell us the cross connect as a managed service. No colo cage, no LOA-CFA, no smart hands ticket at three in the morning.
 
 He smiled and gave me that knowing look that people give you when something is already in the works and they are contractually obliged to say nothing. It has taken over two years, but as of today it is real: Azure Multicloud Interconnect is in preview, it pairs with AWS Interconnect on the other side, and with Google Cloud already on board the same fabric now spans all three of the big hyperscalers.
 
