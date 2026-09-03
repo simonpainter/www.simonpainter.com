@@ -10,11 +10,13 @@ date: 2026-09-01
 
 Azure Multicloud Interconnect is now in public preview. It gives you a managed, private connection between Azure and another cloud provider — starting with AWS — without touching the public internet or wrestling with manual cross-provider provisioning.
 
+<!-- truncate -->
+
 If you've ever tried to stitch together an AWS Direct Connect and an Azure ExpressRoute circuit on your own, you'll know the pain: separate commercial relationships, separate operational processes, and a lot of careful coordination just to get a private pipe between two clouds. This service collapses that into a single, cloud-native workflow inside Azure.
 
-The feature builds on open industry APIs, so the two clouds can talk to each other about provisioning without you acting as the translator. At preview launch, you get 1 Gbps of dedicated bandwidth and a choice of four Azure regions.
+If you want the deeper architecture and operational view behind that problem, I covered it in detail here: [The cross-connect I didn't have to build](/the-cross-connect-i-didnt-have-to-build).
 
-<!-- truncate -->
+The feature builds on open industry APIs, so the two clouds can talk to each other about provisioning without you acting as the translator. At preview launch, you get 1 Gbps of dedicated bandwidth and a choice of four Azure regions.
 
 ## What it is
 
