@@ -24,15 +24,9 @@ Azure Multicloud Interconnect is a managed connectivity service. You create a co
 
 Under the covers, Azure and AWS use standardised Open API specifications to handle provisioning between themselves. The result is a private, dedicated path that stays off the public internet.
 
-```mermaid
-flowchart LR
-    AzureVNet["Azure VNet"]
-    MCI["Azure Multicloud\nInterconnect"]
-    AWS["AWS VPC"]
+![Azure Multicloud Interconnect architecture: an AWS VPC and an Azure VNet joined by a single interconnect made up of four redundant links across two sites, with BGP and ECMP between the AWS Interconnect and Azure peering locations](img/azure-multicloud-interconnect/multicloud-interconnect-architecture.png)
 
-    AzureVNet -- "private path" --> MCI
-    MCI -- "dedicated circuit" --> AWS
-```
+A single interconnect is backed by four links spread across two physically separate sites on each side. BGP and ECMP run between the two clouds, so you get path diversity without configuring any of it yourself.
 
 Think of it like a managed ExpressRoute circuit, but instead of pointing at your on-premises network, it points at another cloud. The same enterprise-grade reliability and performance model, just aimed sideways rather than downwards.
 
