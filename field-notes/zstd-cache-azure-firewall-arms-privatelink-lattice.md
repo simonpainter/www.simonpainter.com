@@ -59,8 +59,6 @@ Two patterns are presented as alternatives:
 
 The Lattice pattern is the interesting one. Because consumers reach the shared endpoints via a Lattice service network rather than routed IP, you get service-level access without the "everything reaches everything" side-effect that TGW gives you. It's PrivateLink used as it was always meant to be — access to specific resources — rather than as a workaround for VPC peering limits.
 
-Si's back-catalogue talks to both sides of this: [Azure Private Link Services](https://www.simonpainter.com/blog/private-link-services) explains why the pattern exists in the first place ("the glue you never knew you needed"), and [the privatelink certificate mismatch post](https://www.simonpainter.com/blog/privatelink-certificate-mismatch) covers what happens when you try to be too clever with the intermediate hostname. The AWS post doesn't hit the same TLS trap because it uses custom domain names for resources — consumers still resolve the standard service names — but the underlying principle is the same. Private Link is DNS plumbing plus access control. Don't try to make it be more.
-
 ## On-prem outpost
 
 Ivan is back from the ITNOG summer with **[SR-MPLS in a BGP-free core](https://blog.ipspace.net/2026/09/sr-mpls-bgp-free/)** — a drop-in demonstration of the pattern where PE routers run BGP but the P router doesn't need to, because SR-MPLS labels take care of forwarding across the transport core. Same trick that's been around since [the 2012 BGP-free service provider core post](https://blog.ipspace.net/2012/01/bgp-free-service-provider-core-in/), just with the LDP/RSVP control plane swapped for segment routing. The netlab topology is one file, three groups, and it works across Arista, FRR, and SR Linux.
