@@ -39,6 +39,8 @@ Traffic enters your VNets through an ordinary ExpressRoute virtual network gatew
 
 The interesting part is the list of things you do not configure: no provider circuits, no cross connects, no VLANs, no point-to-point addressing, and no BGP peering sessions. All of it is managed between the two clouds. A single interconnect is backed by four redundant links across physically separate facilities, MACsec is enabled by default on the physical links, and the clouds coordinate path diversity between themselves.
 
+![Azure Multicloud Interconnect architecture: an AWS VPC and an Azure VNet joined by a single interconnect made up of four redundant links across two sites, with BGP and ECMP between the AWS Interconnect and Azure peering locations](img/the-cross-connect-i-didnt-have-to-build/multicloud-interconnect-architecture.png)
+
 Microsoft is talking about four nines availability and bandwidth up to 100 Gbps at general availability. That is a substantial chunk of the traditional multicloud network engineering job description quietly absorbed into a managed service.
 
 The preview scope is modest but usable:
