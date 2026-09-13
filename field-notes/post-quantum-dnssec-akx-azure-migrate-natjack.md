@@ -63,7 +63,7 @@ Ivan Pepelnjak flagged **[NatJack](https://natjack.io/)** — a website document
 
 Two threads pulled together this week: post-quantum crypto is now shipping in places you don't normally look, and the boring parts of cloud migration (discovery, dependency mapping) are getting product-ised. Both are unglamorous. Both matter more than the "AI-powered" launches that fill the rest of the news.
 
-Also, and this is a small one — Ivan wrote a **[short plea to bloggers to add RSS feeds](https://blog.ipspace.net/2026/09/help-me-follow-your-content/)** to their sites. Seconded. Social-media algorithms are not a distribution mechanism worth trusting. If you write anything worth reading, wire up an RSS feed and let the rest of us find you without having to rejoin LinkedIn.
+Also, and this is a small one — Ivan wrote a **[short plea to bloggers to add RSS feeds](https://blog.ipspace.net/2026/09/help-me-follow-your-content/)** to their sites. Seconded. Social-media algorithms are not a distribution mechanism worth trusting. This site does, to be fair: [all posts](https://www.simonpainter.com/rss.xml), [Cloud Updates](https://www.simonpainter.com/updates/rss.xml), and [Field Notes](https://www.simonpainter.com/field-notes/rss.xml). If you write anything worth reading, wire up an RSS feed and let the rest of us find you without having to rejoin LinkedIn.
 
 Bonus bookmark: Vincent Bernat's **[interactive introduction to spanning tree protocol](https://vincent.bernat.ch/en/blog/2026-spanning-tree)** — STP implemented in WebAssembly in the browser. Ivan reckons we don't need another STP intro after this one. Hard to disagree.
 
