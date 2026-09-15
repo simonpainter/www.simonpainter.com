@@ -13,9 +13,9 @@ date: 2026-09-15
 
 Someone asked me a deceptively simple question the other day: with Azure Firewall TLS inspection enabled, how does traffic get inspected, what certificates do the resources need, and how is the trust chain established? I gave a reasonable answer in a few paragraphs and then realised it was the sort of thing I'd rather write down once than keep reconstructing from memory. So here it is.
 
-This is a summary of how the mechanism works, what you need to have in place, and a curated set of links for when you want the detail. It isn't a click-by-click deployment guide because Microsoft already wrote one and it's fine.
-
 <!-- truncate -->
+
+This is a summary of how the mechanism works, what you need to have in place, and a curated set of links for when you want the detail. It isn't a click-by-click deployment guide because Microsoft already wrote one and it's fine.
 
 ## The short version
 
@@ -52,7 +52,7 @@ flowchart TB
 
 For a public website the leaf chains up to one of a handful of public roots that ship pre-installed in browsers and operating systems. For an internal service you'd run your own PKI (Active Directory Certificate Services or similar) with a protected root and one or more intermediates. Your managed endpoints trust that root because you pushed it out via Group Policy, Intune, or whatever your fleet management tooling is.
 
-> OK, quick aside. How can the root certificate be super secured and yet still be present on every client device's trust store? The answer here is that certificates are in two parts: the public and the private keys. Asymmetric cryptography allows the public key to be widely distributed for encryption and verification, while the private key remains secret for decryption and signing. The root certificate's public key is what gets installed in trust stores, not the private key.
+> OK, quick aside. How can the root certificate be super secured and yet still be present on every client device's trust store? The answer here is that a certificate and its private key are two separate things. The certificate holds the public key, the identity, and the issuer's signature. The private key is a separate secret, even when a PFX file bundles the two together. Asymmetric cryptography lets you hand out the public key freely for encryption and signature checking, while the private key stays locked away for decryption and signing. What gets installed in trust stores is the root certificate with its public key, never the private key.
 
 TLS inspection reuses that second model. Your firewall becomes, in effect, another issuing CA in your private PKI.
 
@@ -96,7 +96,7 @@ There are two trust decisions happening and you want to keep them separate in yo
 
 **Client to firewall.** The client must trust *your* root CA. This is the bit you control and the bit that goes wrong most often, usually because the root hasn't been deployed to some device, or the application uses its own certificate store rather than the operating system's.
 
-**Firewall to destination.** The firewall must trust the *destination's* certificate. Azure Firewall validates it against its own list of trusted public roots, and if the destination presents something untrusted the firewall drops the connection as though the server had closed it. Self-signed certificates on internal services will fail here, which brings us to east-west.
+**Firewall to destination.** The firewall must trust the *destination's* certificate. Azure Firewall validates it against its own list of trusted public roots, and if the destination presents something untrusted the firewall drops the connection as though the server had closed it. Self-signed certificates and certificates from your own enterprise CA will both fail here, which brings us to east-west.
 
 ## Outbound versus east-west
 
@@ -113,7 +113,7 @@ flowchart LR
         FW[Azure Firewall Premium<br/>TLS inspection]
     end
     subgraph Spoke2["Spoke VNet B"]
-        S[Internal web service<br/>needs a cert the firewall trusts]
+        S[Internal web service<br/>needs a publicly trusted cert]
     end
     subgraph Internet
         W[Public website<br/>public CA cert]
@@ -123,7 +123,9 @@ flowchart LR
     FW -- "session 2" --> W
 ```
 
-For east-west inspection the internal service needs a server certificate the firewall can validate. In practice that means a certificate from a public CA, or a certificate from your enterprise CA where the root is trusted by the firewall. The [enterprise CA deployment guide](https://learn.microsoft.com/en-us/azure/firewall/premium-deploy-certificates-enterprise-ca) covers the case where you're issuing everything from Active Directory Certificate Services, and it's the route I'd take for anything beyond a lab.
+For east-west inspection the internal service needs a server certificate the firewall can validate, and this is where people get caught out. The firewall checks the destination's certificate against its own list of well-known public CAs. There's no way to add your enterprise root to that list, and giving the firewall an intermediate CA from your PKI doesn't make it trust anything issued by that PKI on the destination side. Those are two separate jobs. So the internal service needs a certificate from a publicly trusted CA, or you exclude it from TLS inspection and let the firewall pass it through as an ordinary network rule.
+
+Your enterprise PKI still has a role here, but it's on the client-facing side. The [enterprise CA deployment guide](https://learn.microsoft.com/en-us/azure/firewall/premium-deploy-certificates-enterprise-ca) covers issuing the firewall's intermediate from Active Directory Certificate Services, and it's the route I'd take for anything beyond a lab.
 
 The client side is unchanged: it still sees a leaf minted by the firewall and still needs to trust your root.
 
@@ -139,7 +141,7 @@ flowchart LR
     subgraph Azure
         AG[Application Gateway + WAF<br/>Public cert for your domain<br/>Terminates inbound TLS]
         FW[Azure Firewall Premium<br/>Inspects AG to backend leg<br/>as east-west]
-        B[Backend<br/>Cert trusted by firewall]
+        B[Backend<br/>Publicly trusted cert]
     end
     U -- "TLS with public cert" --> AG
     AG -- "re-encrypted, inspected" --> FW
@@ -162,11 +164,11 @@ Philip Street has [written up the certificate wrinkles](https://blog.philipstree
 - Valid for at least a year forward.
 - Exportable.
 
-**A Key Vault holding that certificate.** The firewall reads it through the Secrets interface. You can import via the Certificates blade (which is nicer because you get expiry alerts) and Key Vault will create the backing secret for you, but the firewall's identity needs `Get` and `List` on *secrets* either way. Key Vault access policies only; RBAC authorisation for this integration isn't currently supported. Azure Firewall is a [Key Vault trusted service](https://learn.microsoft.com/en-us/azure/key-vault/general/overview-vnet-service-endpoints#trusted-services) so you can keep the vault's own firewall locked down.
+**A Key Vault holding that certificate.** The firewall reads it through the Secrets interface. You can import via the Certificates blade (which is nicer because you get expiry alerts) and Key Vault will create the backing secret for you, but the firewall's identity needs `Get` and `List` on *secrets* either way. Both Key Vault authorisation models work: Azure RBAC (grant the identity **Key Vault Secrets User** on the vault) or the older access policy model. Azure Firewall is a [Key Vault trusted service](https://learn.microsoft.com/en-us/azure/key-vault/general/overview-vnet-service-endpoints#trusted-services) so you can keep the vault's own firewall locked down.
 
 **A user-assigned managed identity** with those Key Vault permissions, attached to the firewall policy.
 
-**Your root CA certificate deployed to every client that will pass through the firewall.** Group Policy, Intune, or configuration management for IaaS. Don't forget applications with their own trust stores: Firefox, Java, Python's `certifi`, and a long tail of others will ignore the operating system store and fail with certificate errors that look nothing like a firewall problem.
+**Your root CA certificate deployed to every client that will pass through the firewall.** Group Policy, Intune, or configuration management for IaaS. Don't forget applications with their own trust stores: Java, Python's `certifi`, and a long tail of others will ignore the operating system store and fail with certificate errors that look nothing like a firewall problem. Firefox used to be the classic example, but on Windows and macOS it now imports enterprise roots from the operating system by default. On Linux, or where policy has turned that off, you still need to load the root into Firefox separately.
 
 **Application rules with TLS inspection enabled.** Inspection is per rule, not global. Enabling it on the policy makes it available; the rule decides whether a given flow is intercepted. This is also how you carve out exceptions for destinations that break under inspection (certificate pinning, mutual TLS, and so on).
 
