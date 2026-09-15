@@ -19,7 +19,7 @@ This is a summary of how the mechanism works, what you need to have in place, an
 
 ## The short version
 
-TLS inspection on Azure Firewall Premium is a sanctioned interception. It's the same trick as a man-in-the-middle attack, done on purpose and with your permission. The firewall terminates the client's TLS session, decrypts the traffic, does whatever inspection the policy calls for (URL filtering, IDPS, web categories), and then opens a separate TLS session to the real destination. Two sessions, two certificates, one firewall in the middle pretending to be the website.
+TLS inspection on [Azure Firewall Premium](https://learn.microsoft.com/en-us/azure/firewall/premium-features) is a sanctioned interception. It's the same trick as a man-in-the-middle attack, done on purpose and with your permission. The firewall terminates the client's TLS session, decrypts the traffic, does whatever inspection the policy calls for (URL filtering, IDPS, web categories), and then opens a separate TLS session to the real destination. Two sessions, two certificates, one firewall in the middle pretending to be the website.
 
 For that to work without every browser in the estate screaming about certificate errors, the firewall needs to be able to issue certificates that your clients trust. That means you give it an intermediate CA certificate, complete with private key, from a PKI whose root your devices already trust.
 
@@ -31,7 +31,9 @@ It helps to be precise about which certificate is which, because the Azure docum
 
 **Root CA certificate.** The top of the tree. Self-signed, long-lived, and ideally sitting on an offline machine that nobody touches. Its only job is to sign intermediate CA certificates. If this is compromised you rebuild your PKI, so you protect it accordingly.
 
-**Intermediate CA certificate.** Issued by the root. This is the working certificate that does the day-to-day signing. If it's compromised you revoke it and issue a new one from the root, which is a much smaller disaster. This is the certificate you hand to Azure Firewall.
+> I remember an organisation that had its root CA on a server, took the hard drives out (properly labelled in order for the RAID 5 set) and secured them in a fireproof safe that had a whole ceremony around it for access. Someone helpfully cleaned up the server room one day and saw a server with no drives in it that looked a bit old so sent it to the shredder. Hilarity ensued.
+
+**Intermediate CA certificate.** Issued by the root. This is the working certificate that does the day-to-day signing. If it's compromised you revoke it and issue a new one from the root, which is a much smaller disaster. This is the certificate you hand to Azure Firewall. The idea here is compartmentalisation. You limit the blast radius of a compromise by having specific dedicated intermediates for different purposes.
 
 **Server (leaf) certificate.** Issued by an intermediate for a specific hostname. This is what a web server presents to a browser. In the TLS inspection case, the firewall generates these itself, on the fly, for every destination it intercepts.
 
@@ -49,6 +51,8 @@ flowchart TB
 ```
 
 For a public website the leaf chains up to one of a handful of public roots that ship pre-installed in browsers and operating systems. For an internal service you'd run your own PKI (Active Directory Certificate Services or similar) with a protected root and one or more intermediates. Your managed endpoints trust that root because you pushed it out via Group Policy, Intune, or whatever your fleet management tooling is.
+
+> OK, quick aside. How can the root certificate be super secured and yet still be present on every client device's trust store? The answer here is that certificates are in two parts: the public and the private keys. Asymmetric cryptography allows the public key to be widely distributed for encryption and verification, while the private key remains secret for decryption and signing. The root certificate's public key is what gets installed in trust stores, not the private key.
 
 TLS inspection reuses that second model. Your firewall becomes, in effect, another issuing CA in your private PKI.
 
@@ -125,7 +129,7 @@ The client side is unchanged: it still sees a leaf minted by the firewall and st
 
 ## Inbound is not the firewall's job
 
-The original question asked about inbound as well, and the honest answer is that Azure Firewall Premium doesn't do inbound TLS inspection. It supports outbound and east-west, and the documentation is explicit that the inbound case is handled by Azure Web Application Firewall on Application Gateway.
+The original question asked about inbound as well, and the honest answer is that Azure Firewall Premium doesn't do inbound TLS inspection. It supports outbound and east-west, and [the documentation](https://learn.microsoft.com/en-us/azure/firewall/premium-features) is explicit that the inbound case is handled by Azure Web Application Firewall on Application Gateway. There's also a [Microsoft Q&A thread](https://learn.microsoft.com/en-us/answers/questions/1095951/azure-firewall-inbound-ssl-inspection) confirming the position, and an older [Journey of the Geek post](https://journeyofthegeek.com/2021/07/05/azure-firewall-and-tls-inspection/) that walks through discovering the limitation the hard way.
 
 That isn't a gap so much as a sensible division of labour. Inbound TLS inspection means presenting a certificate to an unknown internet client for a hostname you own, which is a reverse proxy problem, not a forward proxy problem. Application Gateway terminates the public TLS session with a real public certificate for your domain, optionally runs WAF, and then re-encrypts to the backend. If the firewall sits between Application Gateway and the backend, that second leg is just east-west traffic and can be inspected as above.
 
@@ -142,13 +146,13 @@ flowchart LR
     FW --> B
 ```
 
-Philip Street has written up the certificate wrinkles in exactly this pattern, including a Terraform limitation around setting `BasicConstraints` path length on Key Vault certificates. Read it before you try to automate it. Link in the resources section.
+Philip Street has [written up the certificate wrinkles](https://blog.philipstreet.co.uk/TLS-Inspection-for-DMZ-Azure-Application-Gateway-and-Azure-Firewall/) in exactly this pattern, including a Terraform limitation around setting `BasicConstraints` path length on Key Vault certificates. Read it before you try to automate it.
 
 ## What you need to have in place
 
 **Azure Firewall Premium.** Standard SKU doesn't do TLS inspection. If you have Standard, this article is a shopping list.
 
-**An intermediate CA certificate with its private key.** The requirements are specific and the firewall will reject anything that doesn't meet them:
+**An intermediate CA certificate with its private key.** The [requirements](https://learn.microsoft.com/en-us/azure/firewall/premium-certificates) are specific and the firewall will reject anything that doesn't meet them:
 
 - Password-less PFX (PKCS#12) containing the certificate and private key. PEM isn't accepted.
 - A single certificate, not the chain.
@@ -158,7 +162,7 @@ Philip Street has written up the certificate wrinkles in exactly this pattern, i
 - Valid for at least a year forward.
 - Exportable.
 
-**A Key Vault holding that certificate.** The firewall reads it through the Secrets interface. You can import via the Certificates blade (which is nicer because you get expiry alerts) and Key Vault will create the backing secret for you, but the firewall's identity needs `Get` and `List` on *secrets* either way. Key Vault access policies only; RBAC authorisation for this integration isn't currently supported. Azure Firewall is a Key Vault trusted service so you can keep the vault's own firewall locked down.
+**A Key Vault holding that certificate.** The firewall reads it through the Secrets interface. You can import via the Certificates blade (which is nicer because you get expiry alerts) and Key Vault will create the backing secret for you, but the firewall's identity needs `Get` and `List` on *secrets* either way. Key Vault access policies only; RBAC authorisation for this integration isn't currently supported. Azure Firewall is a [Key Vault trusted service](https://learn.microsoft.com/en-us/azure/key-vault/general/overview-vnet-service-endpoints#trusted-services) so you can keep the vault's own firewall locked down.
 
 **A user-assigned managed identity** with those Key Vault permissions, attached to the firewall policy.
 
