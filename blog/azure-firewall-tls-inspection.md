@@ -178,16 +178,15 @@ One operational note: when you rotate the intermediate certificate in Key Vault,
 
 A reader asked the obvious follow-up: how does the root certificate get onto the end device in the first place? I'd waved at "Group Policy, Intune, or whatever" above, which is true but not much use. The honest answer is that it depends entirely on how you manage your devices, so here's a tour of the main routes.
 
-```mermaid
-flowchart LR
-    W1["Domain-joined Windows"] --> GPO["Group Policy<br/>or AD CS auto-enrolment"]
-    W2["Entra-joined, BYOD,<br/>macOS, iOS, Android"] --> INT["Intune trusted<br/>certificate profile"]
-    M["macOS in a Jamf estate"] --> JAMF["Jamf configuration profile"]
-    S1["Azure VMs and<br/>Arc-enabled servers"] --> MC["Machine Configuration<br/>or Arc extension script"]
-    S2["Linux servers"] --> CM["Ansible, Puppet, Chef, Salt<br/>into the distro trust store"]
-    K["Containers"] --> IMG["Bake into the image<br/>or mount at runtime"]
-    APP["Apps with their own store"] --> ENV["Environment variable<br/>or keytool import"]
-```
+| Device or workload | How the root gets there |
+| --- | --- |
+| Domain-joined Windows | Group Policy or AD CS auto-enrolment |
+| Entra-joined, BYOD, macOS, iOS, Android | Intune trusted certificate profile |
+| macOS in a Jamf estate | Jamf configuration profile |
+| Azure VMs and Arc-enabled servers | Machine Configuration or Arc extension script |
+| Linux servers | Ansible, Puppet, Chef, Salt into the distro trust store |
+| Containers | Bake into the image or mount at runtime |
+| Apps with their own trust store | Environment variable or keytool import |
 
 **Active Directory Group Policy.** For domain-joined Windows this is the classic route. Import the root under Computer Configuration, Windows Settings, Security Settings, Public Key Policies, Trusted Root Certification Authorities, and every machine in scope picks it up at the next policy refresh. Microsoft's guide on [distributing certificates to client computers using Group Policy](https://learn.microsoft.com/en-us/windows-server/identity/ad-fs/deployment/distribute-certificates-to-client-computers-by-using-group-policy) walks through it.
 
