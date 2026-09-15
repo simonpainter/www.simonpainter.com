@@ -174,6 +174,41 @@ Philip Street has [written up the certificate wrinkles](https://blog.philipstree
 
 One operational note: when you rotate the intermediate certificate in Key Vault, you need to update the TLS setting on the firewall policy yourself. It doesn't pick up the new version on its own.
 
+## Getting the root onto the clients
+
+A reader asked the obvious follow-up: how does the root certificate get onto the end device in the first place? I'd waved at "Group Policy, Intune, or whatever" above, which is true but not much use. The honest answer is that it depends entirely on how you manage your devices, so here's a tour of the main routes.
+
+```mermaid
+flowchart LR
+    W1["Domain-joined Windows"] --> GPO["Group Policy<br/>or AD CS auto-enrolment"]
+    W2["Entra-joined, BYOD,<br/>macOS, iOS, Android"] --> INT["Intune trusted<br/>certificate profile"]
+    M["macOS in a Jamf estate"] --> JAMF["Jamf configuration profile"]
+    S1["Azure VMs and<br/>Arc-enabled servers"] --> MC["Machine Configuration<br/>or Arc extension script"]
+    S2["Linux servers"] --> CM["Ansible, Puppet, Chef, Salt<br/>into the distro trust store"]
+    K["Containers"] --> IMG["Bake into the image<br/>or mount at runtime"]
+    APP["Apps with their own store"] --> ENV["Environment variable<br/>or keytool import"]
+```
+
+**Active Directory Group Policy.** For domain-joined Windows this is the classic route. Import the root under Computer Configuration, Windows Settings, Security Settings, Public Key Policies, Trusted Root Certification Authorities, and every machine in scope picks it up at the next policy refresh. Microsoft's guide on [distributing certificates to client computers using Group Policy](https://learn.microsoft.com/en-us/windows-server/identity/ad-fs/deployment/distribute-certificates-to-client-computers-by-using-group-policy) walks through it.
+
+If your root is an AD CS enterprise root you may not need the GPO at all. Enterprise CAs publish themselves into the configuration naming context of the forest (the NTAuth and AIA containers), and domain-joined Windows machines pull those into their trust store on their own. It's one of the quieter reasons to issue the firewall's intermediate from your existing enterprise PKI rather than inventing a new root.
+
+**Microsoft Intune.** For Entra-joined devices, BYOD, and anything that isn't Windows, Intune's [trusted certificate device configuration profile](https://learn.microsoft.com/en-us/intune/device-configuration/certificates/trusted-root-profiles) does the job across Windows, macOS, iOS and iPadOS, and Android. You upload the public `.cer` file only, assign the profile to a group, and the device installs the root into its system store. This is the natural route for anywhere your users' devices aren't sat on the domain.
+
+**Azure Arc and Azure VMs.** For servers, [Azure Machine Configuration](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview/01-overview-concepts) (the successor to Azure Policy guest configuration) can audit and enforce a certificate being present, and it works the same way for Azure VMs and for [Arc-enabled servers](https://learn.microsoft.com/en-us/azure/azure-arc/servers/overview) sat on-premises or in another cloud. If you'd rather keep it simple, the [Arc VM extensions](https://learn.microsoft.com/en-us/azure/azure-arc/servers/manage-vm-extensions) let you run a script or DSC configuration that imports the certificate, and Automanage can wrap that up as part of a machine profile.
+
+**Linux and containers.** Each distro family has its own trust store and a command to rebuild it. On Debian and Ubuntu you drop the `.crt` into `/usr/local/share/ca-certificates/` and run `update-ca-certificates`. On the RHEL family it goes into `/etc/pki/ca-trust/source/anchors/` followed by `update-ca-trust`. For containers, bake the root into the base image with the same commands, or mount it in at runtime as a volume or ConfigMap.
+
+**Everything else.** Jamf handles macOS fleets through a configuration profile. Ansible, Puppet, Chef, and Salt all have modules or recipes for dropping a file into the trust store and triggering the rebuild. Chrome and Edge follow the operating system store, but their enterprise policies let you manage it explicitly where that isn't enough.
+
+### Applications that bring their own trust
+
+The operating system store isn't the whole story, and this is where most of the support tickets come from. Java keeps its own `cacerts` file, so you import the root with `keytool -importcert -cacerts -alias corp-root -file root.crt`. Python's `requests` uses `certifi` rather than the system store, so point `REQUESTS_CA_BUNDLE` (or the more general `SSL_CERT_FILE`) at a bundle that includes your root. Node reads `NODE_EXTRA_CA_CERTS` and appends whatever it finds there. Firefox on Linux needs the root loaded into its own profile, or the `security.enterprise_roots.enabled` preference set so it reads the system store as it does on Windows and macOS.
+
+### What you're actually distributing
+
+Whichever channel you use, the thing travelling to the devices is the public certificate, the `.cer` or `.crt`, and nothing else. The private key never leaves the root CA, which is why the root can sit offline while its certificate lives on every laptop. The certificate itself is trivial; the distribution channel is the real work. That's also why a self-signed lab root doesn't scale: you'd be building all of the above from scratch for a root that only the firewall has ever heard of.
+
 ## Lab shortcuts
 
 For a lab, Microsoft's [certificates page](https://learn.microsoft.com/en-us/azure/firewall/premium-certificates) includes `openssl` scripts that generate a self-signed root and a compliant intermediate PFX in one go. There's also an auto-generation option in the portal that creates a managed identity, a Key Vault, and a self-signed root for you. Both are fine for proving the mechanism and neither is something you should run in production, because the root distribution problem is the hard part and a self-signed root nobody else trusts doesn't solve it.
@@ -186,6 +221,10 @@ Microsoft documentation:
 - [Azure Firewall Premium features](https://learn.microsoft.com/en-us/azure/firewall/premium-features). Covers TLS inspection alongside IDPS, URL filtering, and web categories, and spells out the outbound and east-west scope.
 - [Deploy and configure Enterprise CA certificates for Azure Firewall](https://learn.microsoft.com/en-us/azure/firewall/premium-deploy-certificates-enterprise-ca). The production route using Active Directory Certificate Services.
 - [Key Vault trusted services](https://learn.microsoft.com/en-us/azure/key-vault/general/overview-vnet-service-endpoints#trusted-services). Why you can lock the vault down and still let the firewall in.
+- [Distribute certificates to client computers by using Group Policy](https://learn.microsoft.com/en-us/windows-server/identity/ad-fs/deployment/distribute-certificates-to-client-computers-by-using-group-policy). Pushing the root to domain-joined Windows.
+- [Intune trusted certificate profiles](https://learn.microsoft.com/en-us/intune/device-configuration/certificates/trusted-root-profiles). The root distribution route for Entra-joined, BYOD, macOS, iOS, and Android devices.
+- [Azure Machine Configuration overview](https://learn.microsoft.com/en-us/azure/governance/machine-configuration/overview/01-overview-concepts). Enforcing certificate presence on Azure VMs and Arc-enabled servers.
+- [Azure Arc-enabled servers](https://learn.microsoft.com/en-us/azure/azure-arc/servers/overview) and [Arc VM extensions](https://learn.microsoft.com/en-us/azure/azure-arc/servers/manage-vm-extensions). Bringing non-Azure servers under the same management plane.
 
 Community write-ups:
 
