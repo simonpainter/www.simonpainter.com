@@ -148,7 +148,7 @@ If I were placing bets, I'd expect the next moves to be AWS extending flat-rate 
 
 ## What I would do with it
 
-If you have dedicated 10 Gbps or 100 Gbps ports today, go and look at last month's Direct Connect data transfer out line. If it's above about 250 TB per port-pair, or if you've been running a single port because the second one never got approved, switch. The billing mode is per connection and reversible, so the downside of trying it is one month of paying for headroom.
+For the worked 10 Gbps Tier 1 example, break-even is about 235 TB/month for a two-port pay-as-you-go pair; calculate the threshold for your bandwidth, location, tier and current port count before switching, and make sure the pair's single-port capacity is enough for your traffic.
 
 If you have a Transit Gateway or Cloud WAN behind a Direct Connect gateway, work out which Regions can actually source traffic over the connection before you pick a tier, and then get someone at AWS to confirm in writing what "transit traffic is not covered" means for your topology. That sentence in the FAQ is the one that will bite.
 
