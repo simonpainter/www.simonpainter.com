@@ -111,8 +111,6 @@ Here's the bit I actually wanted to write about.
 
 For most of the first decade of hybrid cloud, the pricing model for a private circuit was the same everywhere: a port fee plus a per-gigabyte data transfer out charge. The private circuit's per-gigabyte rate was much lower than internet egress, which was the whole sales pitch, but it was still a meter, and meters make people nervous.
 
-> **Sidebar: the meter nobody modelled**
->
 > The canonical cautionary tale is NASA. In 2019 the agency picked AWS to host the Earthdata Cloud, a repository for Earth science data that was expected to grow from 32 PB to almost 250 PB by 2025 as new missions came online producing over 100 TB a day. The plan was to consolidate twelve on-prem archive centres into one cloud store so researchers could get at everything in one place.
 >
 > Then the [Inspector General's audit](https://www.oversight.gov/sites/default/files/oig-reports/IG-20-011.pdf) landed in March 2020 and pointed out the thing nobody had put in the spreadsheet. When a scientist downloaded data from an on-prem archive, it cost NASA nothing beyond running the building. When they downloaded the same data from AWS, NASA paid egress on every byte, and the audit found the programme hadn't built a cost model for it at all. The report warned that "scientific data may become less available to end users if NASA imposes limitations on the amount of data egress for cost control reasons", which is a polite way of saying the agency might have to ration access to its own public data to afford the bill. [Computing's write-up](https://www.computing.co.uk/news/4012760/nasa-egress-costs-aws) at the time put it more bluntly.
