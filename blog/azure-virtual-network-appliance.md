@@ -157,7 +157,7 @@ flowchart TB
     style Internet fill:#95a5a6,color:#fff
     style OnPrem fill:#95a5a6,color:#fff
 ```
-The alternative is to send all traffic to the appliance and then have the subnet it lives in route to on premise, internet or other spokes, which would be a lot easier to manage; however, the appliance currently has no capability to route to the internet, even if you put a NAT gateway for the appliance subnet. I tried it so you don't have to!
+The alternative is to send all traffic to the appliance and then have the subnet it lives in route to on premise, internet or other spokes, which would be a lot easier to manage. A NAT gateway on the appliance subnet won't do it — I tried that, and it doesn't egress. But pointing the appliance subnet's default route at a firewall does work, which I originally got wrong. See the [correction in the GA post](azure-virtual-network-routing-appliance-ga.md#what-i-tested-in-the-lab) for what I missed.
 
 The halfway house is to have RFC1918 routes going to the appliance, which sorts out what goes on premise and what goes to another spoke, and then have the default route going to your egress solution. This is a bit more work to set up and manage but it does give you the best of both worlds in terms of control and simplicity. Separating cloud from on premise routes in the VNRA should be fairly straightforward because all the spoke routes will be learned in the hub automagically and everything else in 10/8 can go to your gateway.
 
