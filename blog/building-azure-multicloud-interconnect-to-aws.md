@@ -11,7 +11,7 @@ date: 2026-09-19
 
 A few weeks ago I wrote about [the cross connect I didn't have to build](/the-cross-connect-i-didnt-have-to-build), which was me being pleased that Azure Multicloud Interconnect had finally landed in preview. Being pleased about a product announcement is not the same as having built the thing, so this weekend I sat down and built it.
 
-Credit where it's due: I was prompted to stop reading and start clicking by [Ken Ogura's hands-on write-up on blog.aimless.jp](https://blog.aimless.jp/archives/2026/09/azure-multicloud-interconnect/), which beat me to the lab by a fortnight. If you read Japanese, go and read the original. It's a tidy piece of work and it saved me an afternoon of guessing. What follows is my own build and, in rather greater quantity than planned, my own mistakes.
+Credit where it's due: I was prompted to stop reading and start clicking by [Yusuke Matsumoto's hands-on write-up on blog.aimless.jp](https://blog.aimless.jp/archives/2026/09/azure-multicloud-interconnect/), which beat me to the lab by a fortnight. If you read Japanese, go and read the original. It's a tidy piece of work and it saved me an afternoon of guessing. What follows is my own build and, in rather greater quantity than planned, my own mistakes.
 
 <!-- truncate -->
 
@@ -299,7 +299,7 @@ Reader, the first time round I did not do item 2. I had the interconnect attache
 
 ### It behaves like a Local circuit
 
-Ken's first attempt was to connect his `useast` circuit to a gateway in Japan East, and the error he got back is worth reading properly:
+Matsumoto's first attempt was to connect his `useast` circuit to a gateway in Japan East, and the error he got back is worth reading properly:
 
 ```
 ErrorCode: InvalidParameter
@@ -313,7 +313,7 @@ So Multicloud Interconnect behaves like a Local SKU circuit. It reaches the Azur
 
 Microsoft's product page words this as a preview limitation: connections only to gateways in the local region, no cross-region. I'm less sure it's a wrinkle to wait out. Local SKU circuits don't charge for outbound data, and Microsoft is unlikely to carry AWS traffic across their backbone for free. Plan for it: the interconnect lands in a region, and if you want other Azure regions to use it, that's what VNet peering and your hub design are for.
 
-I'd read Ken's post, so my gateway was already in Germany West Central alongside the circuit. That was the last thing to go smoothly.
+I'd read Matsumoto's post, so my gateway was already in Germany West Central alongside the circuit. That was the last thing to go smoothly.
 
 ### What the portal did
 
@@ -505,7 +505,7 @@ Neighbor    ASN    State      ConnectedDuration    RoutesReceived    MessagesSen
 10.10.1.7   12076  Connected  00:06:57.2261057     1                 18              18
 ```
 
-That matches what Ken saw, and it fits the four-link architecture Microsoft draws in the overview. Genuine path redundancy without having ordered two of anything. On a traditional build that's two circuits, two cross connects and two sets of BGP config.
+That matches what Matsumoto saw, and it fits the four-link architecture Microsoft draws in the overview. Genuine path redundancy without having ordered two of anything. On a traditional build that's two circuits, two cross connects and two sets of BGP config.
 
 The weight of 32769 on the learned routes against 32768 on the connected VNet range is standard ExpressRoute behaviour. The local VNet prefix still wins for local destinations, as it should.
 
@@ -674,4 +674,4 @@ I spent years explaining to people why connecting two clouds privately was a six
 
 The thing I keep coming back to is what this says about the market. The received wisdom was always that each cloud wants to pull your workloads in and make leaving awkward. A managed, first-party, private path to a competitor is the opposite instinct. It's both vendors accepting that you're going to run things in both places, and deciding they'd rather make that easy than pretend it isn't happening.
 
-Thanks again to [Ken Ogura](https://blog.aimless.jp/archives/2026/09/azure-multicloud-interconnect/) for the nudge and for publishing the resource definition before I had to reverse engineer it. Go and read the original if you can.
+Thanks again to [Yusuke Matsumoto](https://blog.aimless.jp/archives/2026/09/azure-multicloud-interconnect/), who writes as kongou_ae, for the nudge and for publishing the resource definition before I had to reverse engineer it. Go and read the original if you can.
