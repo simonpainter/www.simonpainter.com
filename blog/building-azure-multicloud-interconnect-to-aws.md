@@ -616,35 +616,58 @@ So I used [echo_test](https://github.com/simonpainter/echo_test), a small tool I
 ```
 Simon@vm-bird-interconnect:~/echo_test/client$ python3 echo_client.py 10.0.1.61 7
 ECHO 10.0.1.61:7 (64 bytes of data)
-64 bytes from 10.0.1.61:7: seq=1 time=1690.791 μs
-64 bytes from 10.0.1.61:7: seq=2 time=1888.653 μs
-64 bytes from 10.0.1.61:7: seq=3 time=1928.551 μs
+64 bytes from 10.0.1.61:7: seq=1 time=1934.220 μs
+64 bytes from 10.0.1.61:7: seq=2 time=1931.004 μs
+64 bytes from 10.0.1.61:7: seq=3 time=1882.203 μs
 ...
-64 bytes from 10.0.1.61:7: seq=8 time=3638.821 μs
-...
-64 bytes from 10.0.1.61:7: seq=42 time=1959.807 μs
-64 bytes from 10.0.1.61:7: seq=43 time=1825.229 μs
 ^C
 
 --- 10.0.1.61:7 echo statistics ---
-43 packets transmitted, 43 received, 0.0% packet loss
-rtt min/avg/max/stddev = 1690.791/1943.330/3638.821/268.642 μs
+323 packets transmitted, 323 received, 0.0% packet loss
+rtt min/avg/max/stddev = 1848.183/2102.906/3251.470/103.988 μs
 ```
 
 Side by side with the ping, over the same path:
 
 | | ICMP ping | TCP echo |
 |---|---|---|
-| Minimum | 2.683 ms | 1.691 ms |
-| Average | 5.236 ms | 1.943 ms |
-| Maximum | 18.482 ms | 3.639 ms |
-| Deviation | 5.136 ms | 0.269 ms |
+| Minimum | 2.683 ms | 1.848 ms |
+| Average | 5.236 ms | 2.103 ms |
+| Maximum | 18.482 ms | 3.251 ms |
+| Deviation | 5.136 ms | 0.104 ms |
 
-The real number is 1.9 ms, not 5.2 ms, and the spread is twenty times tighter. Forty-three samples, no loss, and a single outlier at 3.6 ms that is almost certainly the VM being descheduled rather than anything in the network.
+The real number is 2.1 ms, not 5.2 ms, and the spread is fifty times tighter. Over 323 samples there's no loss at all and a worst case of 3.25 ms, which is the sort of consistency you'd hope for from a circuit inside one building, never mind between two clouds.
 
-That's the useful result. Sub-2 ms between clouds, consistently, across a managed interconnect I didn't configure. For comparison, 1.9 ms is roughly what you'd expect from two datacentres in the same metro with a few router hops between them, which is exactly what this is: both Frankfurt regions, joined at the edge. It's well inside the budget for synchronous database replication or a chatty API crossing between clouds, which is the sort of thing that would have been off the table over an internet VPN.
+That's the useful result. Around 2 ms between clouds, consistently, across a managed interconnect I didn't configure. For comparison, 2 ms is roughly what you'd expect from two datacentres in the same metro with a few router hops between them, which is exactly what this is: both Frankfurt regions, joined at the edge. It's well inside the budget for synchronous database replication or a chatty API crossing between clouds, which is the sort of thing that would have been off the table over an internet VPN.
 
 The wider point is about method. If you're benchmarking a path and the numbers look noisy, check whether you're measuring the network or the control plane. ICMP is convenient and it's the first thing everyone reaches for, but a long-lived TCP connection tells you what your traffic will really see.
+
+### Does it hold up under load?
+
+A quiet link being fast is unremarkable. The question is what happens to that 2.1 ms when something fills the pipe. So I ran a saturating transfer and the latency test at the same time.
+
+```
+64 bytes from 10.0.1.61:7: seq=8 time=1888.001 μs
+64 bytes from 10.0.1.61:7: seq=9 time=1709.649 μs
+64 bytes from 10.0.1.61:7: seq=10 time=3133.667 μs
+64 bytes from 10.0.1.61:7: seq=11 time=1715.788 μs
+64 bytes from 10.0.1.61:7: seq=12 time=9143.621 μs
+64 bytes from 10.0.1.61:7: seq=13 time=1670.731 μs
+64 bytes from 10.0.1.61:7: seq=14 time=1761.545 μs
+...
+64 bytes from 10.0.1.61:7: seq=47 time=1683.701 μs
+64 bytes from 10.0.1.61:7: seq=48 time=1757.188 μs
+```
+
+Latency went *down*. The median under load settled around 1730 μs against an idle baseline of 2103 μs, and stayed there for the rest of the run.
+
+That isn't the network getting faster. It's the hosts staying awake: with traffic arriving constantly the CPU never drops into a deep idle state and the NIC stays in a hot polling path, so the echo gets serviced sooner. It's an endpoint effect, and a good reminder that an idle baseline can flatter or penalise you depending on which direction the power management falls.
+
+What matters is what isn't there. No sustained climb. If the interconnect had deep buffers, a full pipe would fill them and you'd watch RTT march into the tens of milliseconds and stay there. That's bufferbloat, and it's what makes a saturated link feel broken to interactive traffic even though throughput looks fine.
+
+Instead there are two outliers, 3.1 ms and 9.1 ms, both early in the run while TCP ramps up, and then a flat line. Shallow queues, no standing buffer. The mean of 1969 μs and the stddev of 1080 μs are both artefacts of those two samples; the median is the honest figure.
+
+So a bulk transfer and latency-sensitive traffic can share this circuit without the transfer ruining the latency. That's not guaranteed, and it's worth checking on any path where you intend to run replication alongside anything interactive.
 
 ### How much of the gigabit do you get?
 
@@ -671,23 +694,124 @@ TCP window size: 16.0 KByte (default)
 
 Nearly 5 GB moved in a minute, and the variance across the whole run is about 6%. Whatever shaping sits on that circuit, it isn't fighting me.
 
-So why 713 Mbits/sec and not 1000? Because this is one TCP stream, and a single stream rarely fills a pipe. The ceiling is the bandwidth-delay product: a sender can only have one window of unacknowledged data outstanding, so throughput is capped at window size divided by round trip time.
+Which leaves the obvious question: why 713 and not 1000? The fix, I assumed, was more streams. I was half right, and the half I got wrong turned out to be the interesting part.
+
+### The bandwidth-delay product theory, and why it was wrong
+
+The obvious explanation for 713 is the bandwidth-delay product. A sender can only have one window of unacknowledged data in flight, so a single stream is capped at window divided by round trip time.
 
 ```
     def max_single_stream_throughput(window_bytes, rtt_seconds):
         return (window_bytes * 8) / rtt_seconds
 
-    # 713 Mbits/sec at the 3.5 ms RTT iperf measured during setup
-    # implies a window that grew to roughly 310 KB
+    # 713 Mbits/sec at roughly 3 ms implies a window near 310 KB
 ```
 
-Note the `TCP window size: 16.0 KByte (default)` in the header. At 3.5 ms that would cap you at about 37 Mbits/sec, so clearly it didn't stay there. Linux window autotuning scaled it up to around 310 KB over the life of the connection. It got most of the way to line rate, but a single stream ramping through slow start and then probing for more is always going to leave something on the table in sixty seconds.
+That arithmetic works, which is exactly why it's a trap. It's a plausible number produced by a plausible mechanism, and I nearly left it there. The test that separates theory from coincidence is to force a bigger window and see if anything changes.
 
-The fix, if you need the rest of it, is more streams. `iperf -P 8` will generally get much closer to 1 Gbps, because eight windows in flight beat one. That matters for how you think about the circuit: a single large file transfer won't saturate it, but a real workload with many concurrent connections will get much nearer the number on the tin.
+```
+Simon@vm-bird-interconnect:~$ iperf -c 10.0.1.61 -t 60 -w 1M
+TCP window size:  416 KByte (WARNING: requested 1.00 MByte)
+[  1] 0.0000-60.0067 sec  5.00 GBytes   715 Mbits/sec
+```
 
-One loose end. The `irtt=3532` in that header is 3.5 ms, where echo_test measured 1.9 ms. The handshake RTT is a single sample taken at connection setup, before anything has warmed up, so it's measuring roughly what the first echo_test packet measured. It's the same reason that tool sends a warmup packet before it starts timing. Don't read a latency figure off a throughput tool.
+416 KB of window, and 715 Mbits/sec. Identical. So it was never the window, and the bandwidth-delay product had nothing to do with it. There's a per-flow ceiling at roughly 715 Mbits/sec and no amount of buffer will move it.
 
-Taken together, the two tests say the same thing from opposite directions. Sub-2 ms and sub-0.3 ms of jitter on the latency side, 713 Mbits/sec on a single stream with 6% variance on the throughput side. For plumbing I provisioned with an activation key and never configured, that's a better result than I expected.
+### Where the ceiling actually is
+
+Adding streams tells you where the limit lives. Two flows:
+
+```
+[  1] 0.0000-60.0665 sec  5.01 GBytes   717 Mbits/sec
+[  2] 0.0000-60.0664 sec  5.03 GBytes   719 Mbits/sec
+[SUM] 0.0000-60.0214 sec  10.0 GBytes  1.44 Gbits/sec
+```
+
+Both flows got the full 715-ish, and the total came out at 1.44 Gbits/sec. On a circuit I bought as 1 Gbps.
+
+Four flows:
+
+```
+[  4] 0.0000-60.0405 sec  5.04 GBytes   721 Mbits/sec
+[  3] 0.0000-60.0407 sec  5.02 GBytes   718 Mbits/sec
+[  1] 0.0000-60.0412 sec  4.98 GBytes   712 Mbits/sec
+[  2] 0.0000-60.0898 sec  1.69 GBytes   241 Mbits/sec
+[SUM] 0.0000-60.0112 sec  16.7 GBytes  2.39 Gbits/sec
+```
+
+Three flows at the per-flow ceiling, one at 241, and an aggregate of 2.39 Gbits/sec. Eight flows produced exactly the same aggregate, 2.39 Gbits/sec, just divided up more unevenly.
+
+Two numbers fall out of that, and they're both worth writing down. There's a **per-flow ceiling around 715 Mbits/sec**, and an **aggregate ceiling around 2.39 Gbits/sec**, and neither of them is 1 Gbps.
+
+The aggregate figure is the surprising one. I provisioned a 1 Gbps interconnect and pushed nearly two and a half times that through it, sustained, for a minute. Whatever is enforcing the purchased rate during preview, it isn't a policer on this path.
+
+I'd be careful what you conclude from that. The most likely reading is that preview simply hasn't wired up rate enforcement yet, and that a 1 Gbps circuit will start behaving like one at GA. The per-flow and aggregate ceilings look more like VM and platform limits than anything to do with the interconnect: Azure VM sizes have their own network caps, and 715 Mbits/sec per flow is the sort of number that comes from a host rather than a circuit. Do not design anything around getting 2.39 Gbits/sec out of a 1 Gbps purchase.
+
+What it does tell you is that the underlying fabric has plenty of headroom, which fits the four redundant links the routing showed earlier. The constraint is a billing construct, not a physical one.
+
+### UDP, and knowing when your test is lying
+
+TCP backs off politely and hides the edges of a link. UDP doesn't, so it's the usual way to find a policer. It's also the easiest test to misread, and this one misled me for a few minutes.
+
+| Offered | Sender achieved | Receiver saw | Loss | Jitter |
+|---|---|---|---|---|
+| 500 Mbits/sec | 524 Mbits/sec | 522 Mbits/sec | 0.38% | 0.018 ms |
+| 700 Mbits/sec | 734 Mbits/sec | 245 Mbits/sec | 67% | 0.015 ms |
+| 900 Mbits/sec | 944 Mbits/sec | 247 Mbits/sec | 74% | 0.010 ms |
+| 1100 Mbits/sec | 1.15 Gbits/sec | 738 Mbits/sec | 36% | 0.010 ms |
+
+Read the loss column on its own and you'd conclude the circuit falls apart somewhere above 500 Mbits/sec. Then look at the last row: offering *more* traffic produced *three times* the delivered throughput of the 900 Mbits/sec run. A policer doesn't behave like that. A policer is monotonic: you get the policed rate and the excess is discarded, every time.
+
+Non-monotonic results like these are the signature of the receiver being the bottleneck, not the network. Single-stream UDP at high packet rates lands the entire receive path on one core, and once the socket buffer overflows the kernel drops datagrams before iperf ever counts them. The 208 KB default buffer in the header is the giveaway. Those loss figures describe a saturated Linux host, not the interconnect.
+
+So I'd throw the loss column away. The two columns worth keeping are jitter and reordering, and both are excellent: **10 to 18 microseconds of jitter** across every run, and between 10 and 26 out-of-order datagrams out of as many as 2.9 million. That's essentially perfect sequencing.
+
+The reordering figure is worth a moment, given we know there are four parallel links. A single UDP flow has one 5-tuple, so the ECMP hash pins it to one link and ordering is preserved. If the interconnect were spraying packets across links per-packet rather than per-flow, that counter would be enormous. It isn't, which confirms flow-based hashing and means you don't need to worry about reordering hurting TCP performance.
+
+The lesson is the one from the ICMP section, arriving from a different direction: before you believe a measurement, work out what it's actually measuring. A number that moves the wrong way when you change the input is telling you about your instrument.
+
+### What about MTU?
+
+One thing I'd assumed would bite turned out fine. The `mss=1398` in every iperf header implies a 1438-byte MTU, which isn't the 1500 you'd expect from either ExpressRoute private peering or an AWS private virtual interface. A reduced path MTU is a classic source of the "small requests work, large uploads hang" fault, so it's worth five minutes to check properly.
+
+```
+Simon@vm-bird-interconnect:~$ ping -M do -s 1472 10.0.1.61
+PING 10.0.1.61 (10.0.1.61) 1472(1500) bytes of data.
+1480 bytes from 10.0.1.61: icmp_seq=1 ttl=62 time=7.78 ms
+1480 bytes from 10.0.1.61: icmp_seq=2 ttl=62 time=3.20 ms
+```
+
+`-M do` sets the don't-fragment bit, and 1472 bytes of payload plus 8 bytes of ICMP header plus 20 bytes of IP header is exactly 1500. It goes through. The path carries full-size frames end to end with no fragmentation and no black hole.
+
+Anything larger fails locally rather than in the network:
+
+```
+Simon@vm-bird-interconnect:~$ ping -M do -s 1499 10.0.1.61
+ping: local error: message too long, mtu=1500
+```
+
+That's my own NIC refusing to build an oversized frame, not the interconnect dropping it. The distinction matters: a local error means you never got on the wire, while a path MTU problem shows up as silence or an ICMP fragmentation-needed message from somewhere in the middle.
+
+So the path is a clean 1500 and PMTUD isn't being black-holed. The MSS of 1398 is something else: TCP MSS clamping, where a device rewrites the MSS option in the SYN to a value below what the path could carry. I haven't pinned down which device does it or why the number is 62 bytes short, and I'd want a packet capture at both ends to say more than that.
+
+Being clamped below path MTU is the safe direction to be wrong in. It costs you about 4% more packets for the same payload and nothing else. It's the opposite case, an MSS larger than the path can carry, that hangs connections. Still, if you're chasing a performance problem over one of these, knowing the path does 1500 while TCP has settled on 1438 is the sort of detail that saves an afternoon.
+
+### The summary
+
+| Measurement | Result |
+|---|---|
+| Latency, idle | 2.103 ms average, 0.104 ms deviation, 323 samples, no loss |
+| Latency, under load | Median around 1.73 ms, no sustained increase |
+| Jitter | 10 to 18 μs |
+| Reordering | Up to 26 datagrams in 2.9 million |
+| Throughput, single flow | 715 Mbits/sec, window-independent |
+| Throughput, aggregate | 2.39 Gbits/sec on a 1 Gbps circuit |
+| Path MTU | 1500, clean, no fragmentation |
+| Negotiated MSS | 1398, clamped below path MTU |
+
+One loose end I'll flag because it's an easy trap. The `irtt` iperf prints at connection setup, around 3 ms here, is not your latency. It's a single sample from the handshake before anything has warmed up, which is roughly what the first echo_test packet sees and why that tool sends a warmup packet before it starts timing. Don't read a latency figure off a throughput tool.
+
+For plumbing I provisioned with an activation key and never configured, that's a better set of numbers than I expected.
 
 ## What I'd think about before using it properly
 
@@ -695,7 +819,9 @@ The lab works. Production is a different conversation, and there are a few thing
 
 **Regional gravity.** The Local SKU behaviour means your interconnect is anchored to a region. If your Azure estate is a hub and spoke with a single hub per region, that's fine. If you've got workloads scattered and you were hoping one interconnect would serve the lot, you'll be routing via VNet peering, and you should model what that does to your east-west charges before you commit. The same is true on the AWS side: virtual private gateways and transit gateways only work with an interconnect in their local region, and it takes Cloud WAN to reach further.
 
-**Bandwidth is a purchase decision, not a dial.** Preview gives you 1 Gbps and no other choice. Whatever options arrive later, changing bandwidth is a circuit change, with the usual caveats about what that means for an in-service connection. Size it with some headroom, and remember that the number you bought is the aggregate across everything using the circuit, not what any one connection will see.
+**Bandwidth is a purchase decision, not a dial.** Preview gives you 1 Gbps and no other choice. Whatever options arrive later, changing bandwidth is a circuit change, with the usual caveats about what that means for an in-service connection. Size it with some headroom, and remember that the number you bought is the aggregate across everything using the circuit, not what any one connection will see. My single-flow ceiling was 715 Mbits/sec, so a workload with one big transfer will see roughly 70% of a 1 Gbps circuit no matter how you tune it.
+
+**Don't trust preview rate enforcement.** I pushed 2.39 Gbits/sec through a circuit I bought as 1 Gbps, sustained for a minute. That's preview not policing yet rather than a bonus you get to keep, and I'd expect a 1 Gbps circuit to start behaving like one at GA. If you size a workload against what the link currently delivers, you're sizing against a number that's likely to disappear.
 
 **Pricing at GA is the open question.** Preview waives the Azure service charge and Azure egress, which is generous and explicitly temporary. What replaces it is the interesting part. I [argued a few days ago](/direct-connect-goes-flat-rate) that private connectivity pricing is converging on flat rate, and the AWS end of this exact link is already there: AWS Interconnect multicloud launched with tiered hourly pricing and no per-gigabyte charge at all. It would be an odd outcome for one end of a managed cross-cloud circuit to be flat and the other metered, and I'd be surprised if Microsoft went that way.
 
