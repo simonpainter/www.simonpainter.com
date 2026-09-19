@@ -589,7 +589,23 @@ Worth noting if you've ever hand-built a Direct Connect VIF: this is *not* the A
 
 So remember the peering object from earlier that claimed to be `Disabled` with a peer ASN of zero? Here's its actual configuration, leaking out through ICMP time exceeded messages.
 
-**Then silence.** Nothing beyond hop 2 answers. The AWS side doesn't decrement and reply the way a chain of routers would, and the destination doesn't respond to traceroute's default UDP probes because the security group only allows ICMP. `traceroute -I` will get you the final hop. The ping TTL of 125 says only a few hops are being counted end to end, which fits what the traceroute shows: a Microsoft edge, an AWS edge, and not much else admitting to being there.
+**Then silence.** Nothing beyond hop 2 answers. The destination doesn't respond to traceroute's default UDP probes, because the security group only allows ICMP.
+
+So I went back and tested that, rather than leaving it as an assertion:
+
+```
+Simon@vm-bird-interconnect:~$ sudo traceroute 10.0.1.78 -I
+traceroute to 10.0.1.78 (10.0.1.78), 30 hops max, 60 byte packets
+ 1  10.10.1.5 (10.10.1.5)  1.614 ms  1.597 ms  1.582 ms
+ 2  169.254.255.13 (169.254.255.13)  1.626 ms  1.622 ms  1.614 ms
+ 3  10.0.1.78 (10.0.1.78)  3.556 ms  3.548 ms  3.541 ms
+```
+
+Three hops, end to end, no gaps. The silence was the security group all along, not the AWS side declining to decrement TTL.
+
+That's a remarkably short path between two clouds. A Microsoft edge router, the link-local hop across to AWS, and then the instance itself. Nothing in AWS between the interconnect and the destination announces itself at all: the Direct Connect gateway and the virtual private gateway are both logical constructs rather than hops, so there's nothing there to reply. It also matches the ping TTL of 125, three short of the Linux default of 128.
+
+One difference worth spotting. The earlier UDP run gave three different addresses for hop 1 as each probe hashed onto a different link. This ICMP run gave 10.10.1.5 three times. ICMP echo probes vary the sequence number rather than the port, and the ECMP hash on the Microsoft edge clearly doesn't take that into account, so all three probes followed the same path. The load balancing is still there, it's just that this particular tool stopped revealing it. If you want to see the spread, the UDP version is the better instrument.
 
 ## What I'd think about before using it properly
 
