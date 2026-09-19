@@ -646,13 +646,56 @@ That's the useful result. Sub-2 ms between clouds, consistently, across a manage
 
 The wider point is about method. If you're benchmarking a path and the numbers look noisy, check whether you're measuring the network or the control plane. ICMP is convenient and it's the first thing everyone reaches for, but a long-lived TCP connection tells you what your traffic will really see.
 
+### How much of the gigabit do you get?
+
+Latency is only half the question. The circuit is sold as 1 Gbps, so the other half is whether it delivers one.
+
+```
+Simon@vm-bird-interconnect:~/echo_test/client$ iperf -c 10.0.1.61 -t 60 -i 5
+------------------------------------------------------------
+Client connecting to 10.0.1.61, TCP port 5001
+TCP window size: 16.0 KByte (default)
+------------------------------------------------------------
+[  1] local 10.10.0.5 port 52600 connected with 10.0.1.61 port 5001 (icwnd/mss/irtt=13/1398/3532)
+[ ID] Interval       Transfer     Bandwidth
+[  1] 0.0000-5.0000 sec   415 MBytes   697 Mbits/sec
+[  1] 5.0000-10.0000 sec   409 MBytes   686 Mbits/sec
+[  1] 10.0000-15.0000 sec   430 MBytes   722 Mbits/sec
+...
+[  1] 50.0000-55.0000 sec   436 MBytes   731 Mbits/sec
+[  1] 55.0000-60.0000 sec   429 MBytes   720 Mbits/sec
+[  1] 0.0000-60.0428 sec  4.99 GBytes   713 Mbits/sec
+```
+
+713 Mbits/sec sustained over a minute, with every five second sample landing between 686 and 731. That's a flat line by the standards of anything crossing a network boundary, and there's no sawtooth, no collapse and no recovery, which is what congestion or policing would look like.
+
+Nearly 5 GB moved in a minute, and the variance across the whole run is about 6%. Whatever shaping sits on that circuit, it isn't fighting me.
+
+So why 713 Mbits/sec and not 1000? Because this is one TCP stream, and a single stream rarely fills a pipe. The ceiling is the bandwidth-delay product: a sender can only have one window of unacknowledged data outstanding, so throughput is capped at window size divided by round trip time.
+
+```
+    def max_single_stream_throughput(window_bytes, rtt_seconds):
+        return (window_bytes * 8) / rtt_seconds
+
+    # 713 Mbits/sec at the 3.5 ms RTT iperf measured during setup
+    # implies a window that grew to roughly 310 KB
+```
+
+Note the `TCP window size: 16.0 KByte (default)` in the header. At 3.5 ms that would cap you at about 37 Mbits/sec, so clearly it didn't stay there. Linux window autotuning scaled it up to around 310 KB over the life of the connection. It got most of the way to line rate, but a single stream ramping through slow start and then probing for more is always going to leave something on the table in sixty seconds.
+
+The fix, if you need the rest of it, is more streams. `iperf -P 8` will generally get much closer to 1 Gbps, because eight windows in flight beat one. That matters for how you think about the circuit: a single large file transfer won't saturate it, but a real workload with many concurrent connections will get much nearer the number on the tin.
+
+One loose end. The `irtt=3532` in that header is 3.5 ms, where echo_test measured 1.9 ms. The handshake RTT is a single sample taken at connection setup, before anything has warmed up, so it's measuring roughly what the first echo_test packet measured. It's the same reason that tool sends a warmup packet before it starts timing. Don't read a latency figure off a throughput tool.
+
+Taken together, the two tests say the same thing from opposite directions. Sub-2 ms and sub-0.3 ms of jitter on the latency side, 713 Mbits/sec on a single stream with 6% variance on the throughput side. For plumbing I provisioned with an activation key and never configured, that's a better result than I expected.
+
 ## What I'd think about before using it properly
 
 The lab works. Production is a different conversation, and there are a few things I'd want settled first.
 
 **Regional gravity.** The Local SKU behaviour means your interconnect is anchored to a region. If your Azure estate is a hub and spoke with a single hub per region, that's fine. If you've got workloads scattered and you were hoping one interconnect would serve the lot, you'll be routing via VNet peering, and you should model what that does to your east-west charges before you commit. The same is true on the AWS side: virtual private gateways and transit gateways only work with an interconnect in their local region, and it takes Cloud WAN to reach further.
 
-**Bandwidth is a purchase decision, not a dial.** Preview gives you 1 Gbps and no other choice. Whatever options arrive later, changing bandwidth is a circuit change, with the usual caveats about what that means for an in-service connection. Size it with some headroom.
+**Bandwidth is a purchase decision, not a dial.** Preview gives you 1 Gbps and no other choice. Whatever options arrive later, changing bandwidth is a circuit change, with the usual caveats about what that means for an in-service connection. Size it with some headroom, and remember that the number you bought is the aggregate across everything using the circuit, not what any one connection will see.
 
 **Pricing at GA is the open question.** Preview waives the Azure service charge and Azure egress, which is generous and explicitly temporary. What replaces it is the interesting part. I [argued a few days ago](/direct-connect-goes-flat-rate) that private connectivity pricing is converging on flat rate, and the AWS end of this exact link is already there: AWS Interconnect multicloud launched with tiered hourly pricing and no per-gigabyte charge at all. It would be an odd outcome for one end of a managed cross-cloud circuit to be flat and the other metered, and I'd be surprised if Microsoft went that way.
 
