@@ -147,7 +147,7 @@ The surprise here is that there isn't a new resource type. Multicloud Interconne
 
 This matters later, so I'll say it now: because there is no separate resource type, there is nothing else to go looking for. [Microsoft's overview](https://learn.microsoft.com/azure/multicloud-interconnect/overview#how-you-set-up-an-interconnect) describes setup as four stages, the first being "create an ExpressRoute circuit and select the port type" and the second being "create the Azure Multicloud Interconnect resource", which reads like two things. It isn't. Follow the create article and both stages happen in the same form. I spent a while convinced I'd missed the second one. A Resource Graph query for anything with `interconnect` or `multicloud` in the type returns zero rows, and that is the correct answer. The circuit is the interconnect.
 
-On the SKU family: `MeteredData` implies outbound data charges on top of the circuit. During preview [Microsoft says](https://learn.microsoft.com/azure/multicloud-interconnect/availability-limits#pricing) there is no interconnect service charge and no Azure egress charge, so for now the name tells you more about the future than about the bill.
+On the SKU family: `MeteredData` implies outbound data charges on top of the circuit. During preview [Microsoft says](https://learn.microsoft.com/azure/multicloud-interconnect/availability-limits#pricing) there is no interconnect service charge and no Azure egress charge, so the name isn't describing the bill I'm getting. Whether it describes the bill anyone gets at GA is a more interesting question, and I come back to it at the end.
 
 ## Step 2: accept it in AWS
 
@@ -654,7 +654,9 @@ The lab works. Production is a different conversation, and there are a few thing
 
 **Bandwidth is a purchase decision, not a dial.** Preview gives you 1 Gbps and no other choice. Whatever options arrive later, changing bandwidth is a circuit change, with the usual caveats about what that means for an in-service connection. Size it with some headroom.
 
-**Egress won't stay free.** This removes the colo, the cross connects and the NaaS subscription. Preview also waives the charges on both sides, which is generous and temporary. Run the numbers again when GA pricing lands, because a `MeteredData` family circuit plus AWS data transfer out can land in a surprising place if you're moving serious volume.
+**Pricing at GA is the open question.** Preview waives the Azure service charge and Azure egress, which is generous and explicitly temporary. What replaces it is the interesting part. I [argued a few days ago](/direct-connect-goes-flat-rate) that private connectivity pricing is converging on flat rate, and the AWS end of this exact link is already there: AWS Interconnect multicloud launched with tiered hourly pricing and no per-gigabyte charge at all. It would be an odd outcome for one end of a managed cross-cloud circuit to be flat and the other metered, and I'd be surprised if Microsoft went that way.
+
+The one piece of evidence pointing the other direction is sitting in the SKU family: `MeteredData`. I'd be careful reading much into it. The resource type is shared with ExpressRoute, so the SKU family enum is inherited from a product where metered and unlimited plans have existed for years, and `MultiCloud_MeteredData` may simply be the value that already fitted the schema. If a `MultiCloud_UnlimitedData` turns up alongside it, that tells you Microsoft intends the distinction to mean something here. If it never does, the name was always just the enum. Either way, don't build a business case on preview pricing.
 
 **Preview connections get deleted.** AWS says preview 1 Gbps connections will be removed from your account as the pairing approaches general availability. Don't hang anything you care about off this.
 
