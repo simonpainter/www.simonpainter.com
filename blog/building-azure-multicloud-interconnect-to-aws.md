@@ -548,7 +548,7 @@ aws ec2 describe-route-tables --region eu-central-1 \
 Put a VM at each end, open ICMP in the NSG and the security group, and ping across.
 
 ```
-Simon@vm-bird-interconnect:~$ ping 10.0.1.78
+simon@az-interconnect:~$ ping 10.0.1.78
 64 bytes from 10.0.1.78: icmp_seq=1 ttl=125 time=2.68 ms
 64 bytes from 10.0.1.78: icmp_seq=2 ttl=125 time=3.52 ms
 64 bytes from 10.0.1.78: icmp_seq=3 ttl=125 time=18.5 ms
@@ -566,7 +566,7 @@ A floor of about 2.7 ms between a VM in Germany West Central and an instance in 
 ### The traceroute is the interesting bit
 
 ```
-Simon@vm-bird-interconnect:~$ traceroute 10.0.1.78
+simon@az-interconnect:~$ traceroute 10.0.1.78
 traceroute to 10.0.1.78 (10.0.1.78), 30 hops max, 60 byte packets
  1  10.10.1.5 (10.10.1.5)  4.702 ms 10.10.1.4 (10.10.1.4)  2.257 ms 10.10.1.6 (10.10.1.6)  6.400 ms
  2  169.254.255.13 (169.254.255.13)  4.650 ms 169.254.255.5 (169.254.255.5)  2.215 ms  6.287 ms
@@ -594,7 +594,7 @@ So remember the peering object from earlier that claimed to be `Disabled` with a
 So I went back and tested that, rather than leaving it as an assertion:
 
 ```
-Simon@vm-bird-interconnect:~$ sudo traceroute 10.0.1.78 -I
+simon@az-interconnect:~$ sudo traceroute 10.0.1.78 -I
 traceroute to 10.0.1.78 (10.0.1.78), 30 hops max, 60 byte packets
  1  10.10.1.5 (10.10.1.5)  1.614 ms  1.597 ms  1.582 ms
  2  169.254.255.13 (169.254.255.13)  1.626 ms  1.622 ms  1.614 ms
@@ -614,7 +614,7 @@ Ping told me roughly 2.7 ms, but the average was 5.2 ms and the mdev over 5 ms, 
 So I used [echo_test](https://github.com/simonpainter/echo_test), a small tool I wrote for exactly this. It opens a long-lived TCP connection to an echo service on port 7 and bounces payloads across it, timing each round trip in microseconds. Because the connection stays open, every measurement after the first is pure forwarding: no handshake, no ARP, no connection setup. That's data plane traffic, handled in hardware, which is what your applications will actually experience.
 
 ```
-Simon@vm-bird-interconnect:~/echo_test/client$ python3 echo_client.py 10.0.1.61 7
+simon@az-interconnect:~/echo_test/client$ python3 echo_client.py 10.0.1.61 7
 ECHO 10.0.1.61:7 (64 bytes of data)
 64 bytes from 10.0.1.61:7: seq=1 time=1934.220 μs
 64 bytes from 10.0.1.61:7: seq=2 time=1931.004 μs
@@ -674,7 +674,7 @@ So a bulk transfer and latency-sensitive traffic can share this circuit without 
 Latency is only half the question. The circuit is sold as 1 Gbps, so the other half is whether it delivers one.
 
 ```
-Simon@vm-bird-interconnect:~/echo_test/client$ iperf -c 10.0.1.61 -t 60 -i 5
+simon@az-interconnect:~/echo_test/client$ iperf -c 10.0.1.61 -t 60 -i 5
 ------------------------------------------------------------
 Client connecting to 10.0.1.61, TCP port 5001
 TCP window size: 16.0 KByte (default)
@@ -710,7 +710,7 @@ The obvious explanation for 713 is the bandwidth-delay product. A sender can onl
 That arithmetic works, which is exactly why it's a trap. It's a plausible number produced by a plausible mechanism, and I nearly left it there. The test that separates theory from coincidence is to force a bigger window and see if anything changes.
 
 ```
-Simon@vm-bird-interconnect:~$ iperf -c 10.0.1.61 -t 60 -w 1M
+simon@az-interconnect:~$ iperf -c 10.0.1.61 -t 60 -w 1M
 TCP window size:  416 KByte (WARNING: requested 1.00 MByte)
 [  1] 0.0000-60.0067 sec  5.00 GBytes   715 Mbits/sec
 ```
@@ -775,7 +775,7 @@ The lesson is the one from the ICMP section, arriving from a different direction
 One thing I'd assumed would bite turned out fine. The `mss=1398` in every iperf header implies a 1438-byte MTU, which isn't the 1500 you'd expect from either ExpressRoute private peering or an AWS private virtual interface. A reduced path MTU is a classic source of the "small requests work, large uploads hang" fault, so it's worth five minutes to check properly.
 
 ```
-Simon@vm-bird-interconnect:~$ ping -M do -s 1472 10.0.1.61
+simon@az-interconnect:~$ ping -M do -s 1472 10.0.1.61
 PING 10.0.1.61 (10.0.1.61) 1472(1500) bytes of data.
 1480 bytes from 10.0.1.61: icmp_seq=1 ttl=62 time=7.78 ms
 1480 bytes from 10.0.1.61: icmp_seq=2 ttl=62 time=3.20 ms
@@ -786,7 +786,7 @@ PING 10.0.1.61 (10.0.1.61) 1472(1500) bytes of data.
 Anything larger fails locally rather than in the network:
 
 ```
-Simon@vm-bird-interconnect:~$ ping -M do -s 1499 10.0.1.61
+simon@az-interconnect:~$ ping -M do -s 1499 10.0.1.61
 ping: local error: message too long, mtu=1500
 ```
 
