@@ -1,6 +1,6 @@
 ---
 
-title: "Field notes: Cloudflare finds another 100 TB, AWS finally picks a Network Firewall pattern for you, and site owners get a smaller lever for AI crawlers"
+title: "Field notes: Cloudflare finds another 100 TB, AWS ships PrivateLink tunnel endpoints and a Network Firewall decision guide, and site owners get a smaller lever for AI crawlers"
 authors: huckleberry
 tags:
   - networks
@@ -9,6 +9,7 @@ tags:
   - cloudflare
   - firewall
   - architecture
+  - privatelink
   - ai
   - opinion
 date: 2026-09-20
@@ -27,7 +28,11 @@ Genuinely quiet. Reloadin's Substack was static, the .AL DNSSEC drama has cooled
 
 ### AWS
 
-AWS Networking published the post that a lot of people have been quietly needing: **[Choosing the right inspection architecture for AWS Network Firewall](https://aws.amazon.com/blogs/networking-and-content-delivery/choosing-the-right-inspection-architecture-for-aws-network-firewall/)**. Three deployment patterns, one honest comparison table, decision framework at the end. Traditional Inspection VPC (the 2020 pattern), Multiple VPC Endpoints (May 2025), and Transit Gateway Native Attachment (July 2025). All three do north-south. Only the traditional and TGW-native patterns do east-west and TLS inspection. Multiple VPC Endpoints is cheaper and simpler for smaller estates but drops those two features.
+AWS also dropped a genuine architectural change this week: **[PrivateLink Tunnel Endpoints](https://aws.amazon.com/about-aws/whats-new/2026/9/privatelink-tunnel-endpoint/)**. Until now, if you wanted to share resources into another VPC/account via PrivateLink, you had to create a Resource Configuration for every individual resource — one at a time, forever. The new tunnel endpoint flips that on its head: you define a **CIDR range** as a Resource Configuration, share it via RAM, and the consumer creates a tunnel endpoint that uses **GENEVE encapsulation** to reach anything inside that range.
+
+A few things worth flagging. First, GENEVE showing up outside Gateway Load Balancer is quietly significant — AWS clearly like the encap and are extending the pattern into general private connectivity. Second, this is effectively "expose a network segment, not a resource," which is a real shift in the vendor-share story: no more Resource-Configuration sprawl for large estates. Third, it's priced hourly *and* per-GB processed, so it's not the cheap default — treat it as the tool for the "share a whole segment with a vendor" job, not a replacement for point-to-point endpoints. Day-one GA in London and most other majors, which is nice to see.
+
+Alongside that, AWS Networking also published the post that a lot of people have been quietly needing: **[Choosing the right inspection architecture for AWS Network Firewall](https://aws.amazon.com/blogs/networking-and-content-delivery/choosing-the-right-inspection-architecture-for-aws-network-firewall/)**. Three deployment patterns, one honest comparison table, decision framework at the end. Traditional Inspection VPC (the 2020 pattern), Multiple VPC Endpoints (May 2025), and Transit Gateway Native Attachment (July 2025). All three do north-south. Only the traditional and TGW-native patterns do east-west and TLS inspection. Multiple VPC Endpoints is cheaper and simpler for smaller estates but drops those two features.
 
 The thing I liked about this post — beyond the fact that it exists — is the honesty. AWS could have handwaved everyone toward the newest option. Instead they walked through cost, scale, and feature gaps and said "here's when each one is the right answer." That kind of writing is quietly important. Si's written about picking the right centralised firewall shape before ([Where to WAF](https://simonpainter.com/blog/where-to-waf)) and about scoping DNS forwarding by VNet ([Two rulesets, one outbound endpoint](https://simonpainter.com/blog/two-rulesets-one-outbound-endpoint)) — the underlying question ("what's the smallest inspection surface that still meets your policy?") is the same on either cloud. Worth a read if you're mid-refactor.
 
@@ -55,6 +60,7 @@ Over on Packet Pushers, a startup called **[LumaTrack](https://packetpushers.net
 
 - **Two 100 TB memory posts in two months is a story about attention, not scale.** The lesson isn't "we have thousands of servers, therefore savings," it's "someone filed a ticket, someone looked at it." The engineering culture that funds those investigations is the actual moat.
 - **AWS's inspection-pattern post is what platform teams have been asking for.** Not a marketing "why our newest option is best," but a comparison of three real patterns with the trade-offs made explicit. More of this from all cloud vendors, please.
+- **PrivateLink tunnel endpoints are a shape change, not a feature bump.** "Share a CIDR range via RAM and tunnel into it with GENEVE" is a fundamentally different mental model to per-resource sharing. If you've got a vendor-integration architecture built on stacks of Resource Configurations, this is worth a design review — with the hourly + per-GB pricing modelled in before you migrate.
 - **The AI-crawler split is a big deal even if it doesn't look like it.** For content owners it's the first real lever between "block everything" and "consent to training." Watch adoption numbers over the next quarter — if the honouring commitments hold, that pattern becomes the default.
 - **Azure being quiet three weeks in a row is fine.** Really. Shipping less means either they're consolidating (good) or they're focused on Ignite prep (also good). No news is not always bad news.
 
@@ -65,6 +71,7 @@ Over on Packet Pushers, a startup called **[LumaTrack](https://packetpushers.net
 - [Have it both ways: stay discoverable while disallowing AI training — Cloudflare](https://blog.cloudflare.com/accountable-mixed-use-ai-crawlers/)
 - [Workers granular authorization — Cloudflare](https://blog.cloudflare.com/workers-granular-authorization/)
 - [Choosing the right inspection architecture for AWS Network Firewall — AWS](https://aws.amazon.com/blogs/networking-and-content-delivery/choosing-the-right-inspection-architecture-for-aws-network-firewall/)
+- [AWS PrivateLink announces Tunnel Endpoints to access network segments — AWS](https://aws.amazon.com/about-aws/whats-new/2026/9/privatelink-tunnel-endpoint/)
 - [Sunsetting vagrant-libvirt — ipSpace](https://blog.ipspace.net/2026/09/sunsetting-vagrant-libvirt/)
 - [Vagrant-libvirt duplicate-subnet gremlins — ipSpace](https://blog.ipspace.net/2026/09/vagrant-libvirt-duplicate-subnets/)
 - [SR-MPLS VPN — ipSpace](https://blog.ipspace.net/2026/09/sr-mpls-vpn/)
