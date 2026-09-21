@@ -1,78 +1,44 @@
-# Blog Writing Tone Guide
+# Writing for this site
 
-## Style Elements
-- Use UK English spellings and grammar.
-- Use clear, direct language and avoid complex terminology.
-- Aim for a Flesch reading score of 80 or higher.
-- Use the active voice.
-- Avoid adverbs.
-- Avoid buzzwords and instead use plain English.
-- Use jargon where relevant but always explain it clearly.
-- Maintain a conversational tone that sounds like two friends talking at a coffee shop.
-- Format content in Markdown.
-- Use contractions (don't, won't, can't, etc.) to maintain a conversational flow.
-- Use first-person singular pronouns (I, my, me) rather than plural.
-- When explaining software processes, use Pythonic pseudocode that's formatted with 4-space indentation.
-- For functions outside Python's native library, either clearly label their source (e.g., math.sqrt()) or create self-explanatory function names (e.g., calculate_network_latency()).
+## Tone and voice
 
-## Emotional Tone
-- Avoid being salesy or overly enthusiastic.
-- Express calm confidence to establish expertise.
-- Be informative without being pedantic.
-- Maintain a friendly, approachable voice.
-- Use analogies and metaphors to explain complex concepts.
+The tone guide lives in a separate repo so it can be shared:
+**https://github.com/simonpainter/tone/blob/main/blog/AGENTS.md**
 
-## Phrases to Avoid
-Avoid formal or overly academic phrases such as:
-- "it is worth noting"
-- "furthermore"
-- "consequently"
-- "in terms of"
-- "one may argue"
-- "it is imperative"
-- "this suggests that"
-- "thus"
-- "it is evident that"
-- "notwithstanding"
-- "pertaining to"
-- "therein lies"
-- "utilize" (use "use" instead)
-- "be advised"
-- "hence"
-- "indicate"
-- "facilitate"
-- "subsequently"
-- "moreover"
-- "it can be seen that"
-- "in the ever changing world of"
+Read it before writing or editing any post. It covers voice, UK English, structure,
+banned phrases, inclusive language, and how to open and close a post. It also links to a
+common guide at `common/AGENTS.md` in the same repo — read that too.
 
-## Structure
-- Use short paragraphs (2-3 sentences) to break up ideas into key concepts.
-- Include subheadings to break up text.
-- Avoid overusing bullet points - use paragraphs to explain concepts.
-- Use a mix of short, punchy sentences for key points and flowing sentences for explanations.
-- Include Mermaid diagrams to visualize concepts where appropriate.
-- Support claims with specific data and statistics whenever possible.
+Everything below is plumbing specific to this Docusaurus site.
 
-## Inclusive Language Rules
-- Use gender-neutral language by default (for example, "they", "everyone", "folks", "team").
-- Avoid assumptions about age, gender, ethnicity, disability, religion, culture, or family structure.
-- Use people-first language unless a group clearly prefers identity-first language.
-- Prefer globally clear wording over local idioms, slang, or culture-specific references.
-- Describe requirements and behaviours, not personal traits.
-- If user wording may exclude people, suggest a neutral rewrite.
+## Frontmatter
 
-### Preferred alternatives
-- "guys" -> "everyone" or "team"
-- "manpower" or "man-hours" -> "effort", "staffing", or "person-hours"
-- "sanity check" -> "quick check" or "sense check"
-- "normal user" -> "typical user" or "most users"
-- "master/slave" -> "primary/secondary", "leader/follower", or protocol-specific terms
-- "blacklist/whitelist" -> "denylist/allowlist" or "blocklist/allowlist"
-- "dummy value" -> "placeholder value"
-- "grandfathered" -> "legacy status"
+Blog posts live in `blog/` and start with frontmatter:
 
-## Blog Post Tagging
+```markdown
+---
+title: "Multiple prefixes on a subnet"
+authors: simonpainter
+tags:
+  - azure
+  - networks
+date: 2025-03-07
+---
+```
+
+## Truncate marker
+
+Every post needs a `<!-- truncate -->` marker. It goes straight after the opening
+paragraph, before the first subheading, with no blank line between the paragraph and
+the marker. Everything above it becomes the excerpt on the blog index, so that paragraph
+has to stand on its own and make someone want to click.
+
+## Mermaid diagrams
+
+Mermaid is enabled on this site, so use fenced ` ```mermaid ` blocks for diagrams rather
+than images. Use a diagram where it replaces a chunk of explanation, not for decoration.
+
+## Tagging
 
 Every post must have **at most 3 tags**, chosen from `blog/tags.yml`.
 
@@ -86,11 +52,5 @@ Every post must have **at most 3 tags**, chosen from `blog/tags.yml`.
 4. Content-type: `opinion`, `educational`, `labs`, `personal`
 5. Catch-all: `business`, `career`, `documentation`, `migration`
 
-Only add a tag if it is already defined in `blog/tags.yml`. Do not create new tags without also adding them to `blog/tags.yml`.
-
-## Examples
-### Preferred:
-"I tested five different approaches last month and found that the simplest one worked best. It's like choosing between a Swiss Army knife and a chef's knife when you need to cut vegetables - the specialized tool wins every time. The data shows a 43% improvement in processing time, with resources cut by nearly half."
-
-### Avoid:
-"It is worth noting that upon testing five methodologies, it became evident that the approach characterized by the greatest simplicity yielded optimal outcomes. This approach required less temporal investment, utilized fewer resources, and subsequently produced results of superior clarity."
+Only add a tag if it is already defined in `blog/tags.yml`. Do not create new tags without
+also adding them to `blog/tags.yml`.
