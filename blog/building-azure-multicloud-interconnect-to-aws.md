@@ -31,7 +31,7 @@ er_conn["ExpressRoute Connection"]
 dxgw["Direct Connect Gateway"]
 
 subgraph peering["Dual Peering Locations"]
-  er_int["ExpressRoute type Interconnect"]
+  er_int["Azure Multicloud Interconnect<br>(ExpressRoute circuit)"]
   dx_int["AWS Interconnect - multicloud"]
 end
 subgraph vpc["AWS VPC<br>10.0.0.0/16"]
