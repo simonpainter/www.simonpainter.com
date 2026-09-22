@@ -20,7 +20,7 @@ Credit where it's due: I was prompted to stop reading and start clicking by [Yus
 The topology is simple, which is the whole point. There's a VNet in Azure with an ExpressRoute gateway, a VPC in AWS with a Direct Connect gateway, and a managed interconnect in the middle that neither of us has to rack.
 
 ```mermaid
-flowchart LR
+graph LR
 
 
 subgraph vnet["Azure VNET<br>10.10.0.0/16"]
