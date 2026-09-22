@@ -20,24 +20,31 @@ Credit where it's due: I was prompted to stop reading and start clicking by [Yus
 The topology is simple, which is the whole point. There's a VNet in Azure with an ExpressRoute gateway, a VPC in AWS with a Direct Connect gateway, and a managed interconnect in the middle that neither of us has to rack.
 
 ```mermaid
-graph LR
-    subgraph Azure["Azure: Germany West Central"]
-        VNET["VNet<br/>10.10.0.0/16"] --- ERGW["ExpressRoute<br/>Gateway"]
-    end
+flowchart LR
 
-    subgraph MCI["Managed by the clouds"]
-        CIRCUIT["Multicloud Interconnect<br/>(MultiCloud SKU)"]
-        AWSIC["AWS Interconnect"]
-        CIRCUIT === AWSIC
-    end
 
-    subgraph AWSCloud["AWS: eu-central-1"]
-        DXGW["Direct Connect<br/>Gateway"] --- VGW["Virtual Private<br/>Gateway"]
-        VGW --- VPC["VPC<br/>10.0.0.0/16"]
-    end
+subgraph vnet["Azure VNET<br>10.10.0.0/16"]
+   ergw["ExpressRoute Gateway"]
+end
 
-    ERGW --- CIRCUIT
-    AWSIC --- DXGW
+er_conn["ExpressRoute Connection"]
+dxgw["Direct Connect Gateway"]
+
+subgraph peering["Dual Peering Locations"]
+  er_int["Azure Multicloud Interconnect<br>(ExpressRoute circuit)"]
+  dx_int["AWS Interconnect - multicloud"]
+end
+subgraph vpc["AWS VPC<br>10.0.0.0/16"]
+   vpg["Virtual Private Gateway"]
+end
+
+ergw --- er_conn
+er_conn --- er_int
+er_int ---|"This is where the magic happens"| dx_int
+dx_int --- dxgw
+dxgw --- vpg
+
+
 ```
 
 The bit in the middle used to be a colo cage, a pair of my routers and a monthly cross connect bill. Now it's two resources and an activation key.
