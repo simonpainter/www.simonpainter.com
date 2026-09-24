@@ -121,7 +121,7 @@ The gap is Control 10, malware defences. It's the closest fit for prompt injecti
 
 ## Ingress looks like publishing an API
 
-Once the baseline is in place, it helps to split MCP traffic by direction, because the two directions have very different threat shapes. Ingress is external agents connecting to MCP servers you host. Egress is your own agents and users connecting to MCP servers someone else hosts.
+Once the baseline is in place, it helps to split MCP traffic by direction, because the threats run in opposite directions too. Ingress is external agents connecting to MCP servers you host. Egress is your own agents and users connecting to MCP servers someone else hosts.
 
 ```mermaid
 flowchart LR
@@ -148,7 +148,7 @@ Ingress is familiar territory. It's the same job as putting an API on the intern
 | Response control | Response filtering | DLP on tool output |
 | Downstream access | Service accounts | Token exchange, never passthrough |
 
-The main risk here is your server being misused: returning more data than it should, or being turned into a confused deputy. Anyone who's secured a public API knows the flavour of this.
+The main risk here is your server being misused: returning more data than it should, or being turned into a confused deputy. Anyone who's secured a public API will recognise this.
 
 ## Egress looks like letting users browse the internet
 
