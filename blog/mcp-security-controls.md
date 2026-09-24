@@ -171,7 +171,7 @@ Two rows are worth dwelling on. Outbound DLP flips direction compared with ingre
 
 Most organisations I talk to have a reasonable handle on ingress, because it looks like API security and API security is a solved-ish problem. Egress is where I see almost nothing in place, and it's where the "agent obeys" problem bites hardest.
 
-On ingress, the worst a hostile agent can do is ask your server for things. Your server decides what to hand over. On egress, a hostile or compromised third-party server gets to put words straight into the context of an agent that holds your users' credentials and has access to your other tools. That's a malicious web page driving the browser rather than being displayed in it, and without the tab sandbox to stop it.
+On ingress, a hostile agent can exercise whatever your server exposes - including tool side effects, resource exhaustion, and vulnerabilities in the server or its backends. Your server still decides what to hand over, but that is only one part of the threat.
 
 Semantic inspection helps, but it's probabilistic. A classifier that catches most injection attempts is useful and still not a control I'd bet a customer database on. So the realistic approach is to assume some injection will get through and limit what it can reach: tight per-tool scopes, no agent holding more credentials than its task needs, human approval for anything destructive, and a registry that keeps the number of third-party servers small enough to assess.
 
