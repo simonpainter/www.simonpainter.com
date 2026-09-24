@@ -82,7 +82,7 @@ The transport has changed across spec revisions. In versions 2025-03-26 through 
 
 ## Identity is OAuth, with sharper edges
 
-The MCP authorisation spec leans on standards that anyone who's secured an API will recognise. The MCP server is an OAuth 2.1 resource server, PKCE is mandatory, and the server advertises where to get a token using Protected Resource Metadata (RFC 9728).
+The MCP authorisation spec covers protected HTTP transports and leans on standards that anyone who's secured an API will recognise. In that flow, the MCP server acts as an OAuth 2.1 resource server, PKCE is mandatory for clients, and the server advertises where to get a token using Protected Resource Metadata (RFC 9728).
 
 The sharp edges are in how tokens move. Clients must send a resource indicator (RFC 8707) so each token is bound to one specific MCP server, and servers must reject tokens issued for anyone else. Token passthrough, where the MCP server forwards the client's token to a backend API, is forbidden. If the server needs to call a backend on the user's behalf, it should do a token exchange (RFC 8693) or an on-behalf-of flow and get a token of its own.
 
