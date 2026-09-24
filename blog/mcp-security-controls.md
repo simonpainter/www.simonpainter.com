@@ -117,7 +117,7 @@ Mapping all of this to CIS Controls v8.1 was more comfortable than I expected. I
 
 The gap is Control 10, malware defences. It's the closest fit for prompt injection, but everything it assumes is about code: signatures, sandboxing, behavioural detection of executables. An instruction written in plain English isn't malware in any sense that tooling recognises. I've mapped injection scanning to Control 10 because there's nowhere better, but it's a stretch, and I'd expect frameworks to grow a proper home for it.
 
-> For the curious: the sandboxing half of Control 10 does have an MCP shape, if you squint. It looks like a detonation chamber for text. Take the untrusted string, hand it to a second model running with no tools, no credentials and no network, and wrap it in a prompt that tells that model to assess the text for intent rather than follow it. The model reads an instruction to exfiltrate a customer list, notices it, and can't act on it even if it wanted to, because there's nothing in reach. The verdict comes back as a structured classification, never as free text, so the injection can't ride out of the sandbox in the answer. It's the same logic as detonating an attachment in a VM before it reaches a mailbox, and it has the same weakness: the wrapper is itself a prompt, so it's a boundary made of the material it's trying to contain.
+> For the curious: the sandboxing half of Control 10 does have an MCP candidate, if you squint. It looks like a detonation chamber for text. Take the untrusted string, hand it to a second model running with no tools, no credentials and no network, and wrap it in a prompt that tells that model to assess the text for intent rather than follow it. The model reads an instruction to exfiltrate a customer list, notices it, and can't act on it even if it wanted to, because there's nothing in reach. The verdict comes back as a structured classification, never as free text, so the injection can't ride out of the sandbox in the answer. It's the same logic as detonating an attachment in a VM before it reaches a mailbox, and it has the same weakness: the wrapper is itself a prompt, so it's a boundary made of the material it's trying to contain.
 
 ## Ingress looks like publishing an API
 
@@ -135,7 +135,7 @@ flowchart LR
     EG --> TP[Third-party MCP server]
 ```
 
-The diagram shows two gateways doing opposite jobs: one protecting your servers from inbound agents, the other protecting your agents from outbound servers.
+The diagram shows two gateways doing opposite jobs: one protecting your servers from inbound agents, the other protecting your agents from outbound servers. This is your WAF vs your web proxy.
 
 Ingress is familiar territory. It's the same job as putting an API on the internet, with an OAuth flavour.
 
@@ -148,7 +148,7 @@ Ingress is familiar territory. It's the same job as putting an API on the intern
 | Response control | Response filtering | DLP on tool output |
 | Downstream access | Service accounts | Token exchange, never passthrough |
 
-The main risk here is your server being misused: returning more data than it should, or being turned into a confused deputy. Anyone who's secured a public API knows the shape of this.
+The main risk here is your server being misused: returning more data than it should, or being turned into a confused deputy. Anyone who's secured a public API knows the flavour of this.
 
 ## Egress looks like letting users browse the internet
 
