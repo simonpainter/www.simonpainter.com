@@ -78,7 +78,7 @@ The WAF is the first thing to struggle. A REST API has meaningful paths and meth
 
 TLS inspection has a similar problem. You need to see inside the payload to inspect it, but SSE streams are long-lived and many proxies buffer responses before inspecting them. A buffering proxy and a streaming protocol don't get on. In practice this pushes inspection onto an MCP-aware gateway rather than a general-purpose forward proxy.
 
-Two details in the MCP transport spec catch people out. The `Mcp-Session-Id` header identifies a session, but it must never be treated as authentication. And servers must validate the `Origin` header, because a local MCP server listening on a port is a tempting target for DNS rebinding from a malicious web page. Local servers should bind to 127.0.0.1 and nothing else.
+The transport has changed across spec revisions. In versions 2025-03-26 through 2025-11-25, the `Mcp-Session-Id` header identified a session but was never authentication; the 2026-07-28 revision removed protocol-level sessions and that header. Servers must validate the `Origin` header, because a local MCP server listening on a port is a tempting target for DNS rebinding from a malicious web page. Local servers should bind to 127.0.0.1 and nothing else.
 
 ## Identity is OAuth, with sharper edges
 
