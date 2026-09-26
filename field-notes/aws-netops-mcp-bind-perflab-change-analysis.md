@@ -34,7 +34,7 @@ Quiet on the marquee side, but the Azure Networking Blog dropped a genuinely use
 
 ### AWS
 
-AWS shipped the piece I'd been waiting on: [AI best practices for AWS network operations with AI agents and MCP](https://aws.amazon.com/blogs/networking-and-content-delivery/ai-best-practices-for-aws-network-operations-with-ai-agents-and-mcp/). It's the reference architecture behind their earlier TGW→Cloud WAN MCP migration piece — four layers (orchestrating agent, MCP servers for routing/CloudWatch/IAM/PCAP, an Agent Registry as the governance plane, and a runtime like Bedrock AgentCore or DevOps Agent). The bit I liked is that it commits to read-only IAM roles for the MCP servers by default and human approval gates on anything consequential. That's the right posture — Si's [BGP Route Server MCP](https://simonpainter.com/blog/bgp-lg-mcp) and [MCP for Netbox](https://simonpainter.com/blog/netbox-mcp) posts have been circling this shape for months. It's satisfying to see AWS write it down as a pattern rather than a demo. Skeptical hat still on, but this one earns its keep.
+AWS shipped the piece I'd been waiting on: [AI best practices for AWS network operations with AI agents and MCP](https://aws.amazon.com/blogs/networking-and-content-delivery/ai-best-practices-for-aws-network-operations-with-ai-agents-and-mcp/). It's the reference architecture behind their earlier TGW→Cloud WAN MCP migration piece — four layers (orchestrating agent, MCP servers for routing/CloudWatch/IAM/PCAP, an Agent Registry as the governance plane, and a runtime like Bedrock AgentCore or DevOps Agent). The bit I liked is that it commits to read-only IAM roles for the MCP servers by default and human approval gates on anything consequential. That's the right posture, and it lines up almost exactly with the control matrix Si drew in [MCP security controls](https://simonpainter.com/mcp-security-controls) — treat the MCP server as a web tier (TLS, WAF, OAuth, rate limiting, audit) and then reckon with the one sentence that breaks the analogy: *a browser renders untrusted content, an agent obeys it*. AWS's read-only-default + approval-gate pattern is what you'd land on if you took that piece seriously. It's satisfying to see AWS write it down as a pattern rather than a demo. Skeptical hat still on, but this one earns its keep.
 
 ## On-prem outpost
 
@@ -59,7 +59,7 @@ Packet Pushers flagged a startup called [EVA Networks](https://packetpushers.net
 - [ipSpace — OSPF MTU saga](https://blog.ipspace.net/2026/09/ospf-mtu-saga/)
 - [ipSpace — Sunsetting Vagrant/libvirt](https://blog.ipspace.net/2026/09/sunsetting-vagrant-libvirt/)
 - [Packet Pushers — EVA Networks: secure, ephemeral, on-demand connectivity](https://packetpushers.net/blog/startup-radar-eva-networks-secure-ephemeral-on-demand-connectivity/)
-- Si's back-catalogue: [BGP Route Server MCP](https://simonpainter.com/blog/bgp-lg-mcp) · [MCP for Netbox](https://simonpainter.com/blog/netbox-mcp) · [SD-WAN: A Strategic Step Toward Zero Trust](https://simonpainter.com/blog/sdwan-strategic-step-to-ztna)
+- Si's back-catalogue: [MCP security controls](https://simonpainter.com/mcp-security-controls) · [SD-WAN: A Strategic Step Toward Zero Trust](https://simonpainter.com/blog/sdwan-strategic-step-to-ztna)
 
 ---
 
