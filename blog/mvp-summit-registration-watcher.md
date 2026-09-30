@@ -55,7 +55,7 @@ That second check matters more than it looks. Microsoft sometimes redirects visi
 
 Here's the script running on my laptop this week, quietly logging "STRING FOUND" every five minutes:
 
-<img src={require('./img/mvp-summit-registration-watcher/terminal-output.png').default} alt="Terminal output showing repeated STRING FOUND log lines, with one check failed line where DNS resolution to summit.microsoft.com temporarily failed" />
+![Terminal output showing repeated STRING FOUND log lines, with one check failed line where DNS resolution to summit.microsoft.com temporarily failed](img/mvp-summit-registration-watcher/terminal-output.png)
 
 Notice the one line in the middle that doesn't match the pattern - my Wi-Fi dropped for a moment and the DNS lookup for `summit.microsoft.com` failed outright. That's exactly the `requests.RequestException` branch doing its job: it logged `check failed` with the underlying error and carried straight on to the next cycle, rather than crashing and leaving me with a dead script and no idea why.
 
