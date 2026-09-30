@@ -10,28 +10,33 @@ date: 2026-03-01
 
 ---
 
-[MVP Summit](/most-valuable-professional) registration for in-person places opens with no warning whatsoever. No countdown, no email, no "registration opens Tuesday at 9am" - the page just quietly changes one day and the places go on a first come, first served basis. I booked my flights before getting my spot last year, so I wrote a small Python script to watch the page for me. It's back on duty again this year, so here's how it works.
+[MVP Summit](/most-valuable-professional) registration for in-person places opens with no warning whatsoever. No countdown, no email, no "registration opens Tuesday at 9am" - the page quietly changes one day and the places go on a first come, first served basis. I booked my flights before getting my spot last year, so I wrote a small Python script to watch the page for me. It's back on duty again this year, so here's how it works.
 <!-- truncate -->
 
 ## The Problem It Solves
 
 The [Summit site](https://summit.microsoft.com/) carries a holding message until registration opens, something like "Registration coming soon." When that phrase disappears, it means the form has gone live and the clock is ticking on a limited number of seats. Sitting there hitting refresh every few minutes for days on end isn't a great use of anyone's time, and it's exactly the kind of repetitive checking a computer is better at than I am.
 
-> This is, of course, also a great example of something an AI agent could also do: it could monitor the page and interpret the intent behind any content changes. It's also a reminder that not every automation needs to be AI-powered; sometimes a simple deterministic script is enough to solve a simple deterministic problem.
+> An AI agent could monitor the page and interpret the intent behind content changes. It's also a reminder that not every automation needs to be AI-powered; sometimes a deterministic script is enough to solve a deterministic problem.
 
 So the script does the boring bit: it fetches the page on a timer, looks for the phrase, and only bothers me the moment it's gone.
 
 ```mermaid
 flowchart LR
+    accTitle: MVP Summit registration watcher
+    accDescr: The script checks the Summit page every five minutes. While the registration message remains, it waits and checks again. When the message disappears, it sends one Pushover notification, then waits and checks again without sending duplicate alerts.
     request-url["request https://summit.microsoft.com"]
     is-string-found{"Is the string 'Registration coming soon' found"}
+    alert-sent{"Has an alert already been sent"}
     sleep-300["Sleep for 5 minutes"]
     send-notification["Send notification via Pushover"]
 
     request-url ---> is-string-found
     is-string-found--->|Yes|sleep-300
     sleep-300--->request-url
-    is-string-found--->|No|send-notification
+    is-string-found--->|No|alert-sent
+    alert-sent--->|Yes|sleep-300
+    alert-sent--->|No|send-notification
     send-notification ---> sleep-300
 ```
 
@@ -43,7 +48,7 @@ The core loop is deliberately unexciting. Every five minutes it makes a plain HT
 response = requests.get(URL, timeout=20)
 ```
 
-There are a couple of safety checks around that call worth pointing out. First, it wraps the request in a `try/except` for `requests.RequestException`, so a dropped connection or a timeout just gets logged and the script quietly waits for the next cycle rather than crashing at 3am. Second, it checks the HTTP status code and the final URL the browser was redirected to:
+There are a couple of safety checks around that call worth pointing out. First, it wraps the request in a `try/except` for `requests.RequestException`, so a dropped connection or a timeout gets logged and the script quietly waits for the next cycle rather than crashing at 3am. Second, it checks the HTTP status code and the final URL the browser was redirected to:
 
 ```python
 if response.url not in EXPECTED_URLS:
@@ -75,7 +80,7 @@ I could have used a proper HTML parser to target a specific element, but a plain
 
 ## Sending a Push Notification
 
-This is the bit that actually gets me out of a meeting and onto my laptop. The script uses [Pushover](https://pushover.net/), a paid but very cheap service that sends a notification straight to my phone from a simple API call:
+This is the bit that actually gets me out of a meeting and onto my laptop. The script uses [Pushover](https://pushover.net/), a low-cost paid service that sends a notification straight to my phone from a simple API call:
 
 ```python
 response = requests.post(
@@ -93,7 +98,7 @@ if not isinstance(result, dict) or result.get("status") != 1:
     raise ValueError("Pushover did not accept the alert")
 ```
 
-The credentials for that call - an app token and a user key - come from either environment variables or a local `.pushover.json` file that never gets committed anywhere. `get_credentials()` checks the environment first and only falls back to the file if the variables aren't set, which makes it just as happy running on my own machine as it would in a scheduled cloud job.
+The credentials for that call - an app token and a user key - come from either environment variables or a local `.pushover.json` file that never gets committed anywhere. `get_credentials()` checks the environment first and only falls back to the file if the variables aren't set, which makes it as happy running on my own machine as it would in a scheduled cloud job.
 
 There's also an `alert_sent` flag threaded through the whole loop. Once a notification has gone out successfully, the script stops sending more on every subsequent check - I only need to know once, not every five minutes until I register.
 
@@ -112,6 +117,6 @@ This skips the actual page fetch, pretends the phrase is missing, and fires a re
 
 ## Running It
 
-The whole thing sits in a `while True` loop with a five-minute sleep, wrapped in a `try/except KeyboardInterrupt` so it shuts down cleanly with a Ctrl-C rather than a stack trace. I run it in a terminal on a machine that's on anyway, and the Pushover notification means I don't have to be watching that terminal at all - just my phone.
+The whole thing sits in a `while True` loop with a five-minute sleep, wrapped in a `try/except KeyboardInterrupt` so it shuts down cleanly with a Ctrl-C rather than a stack trace. I run it in a terminal on a machine that's on anyway, and the Pushover notification means I can leave the terminal alone and watch my phone.
 
 It's a small script, and that's rather the point. The problem was narrow - tell me the instant one specific sentence disappears from one specific page - so the solution didn't need to be anything more than a loop, a string check, and a phone notification. Fingers crossed it does its job again this year as I've gone and booked my flights again already.
