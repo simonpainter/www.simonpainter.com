@@ -24,20 +24,21 @@ So the script does the boring bit: it fetches the page on a timer, looks for the
 ```mermaid
 flowchart LR
     accTitle: MVP Summit registration watcher
-    accDescr: The script checks the Summit page every five minutes. While the registration message remains, it waits and checks again. When the message disappears, it sends one Pushover notification, then waits and checks again without sending duplicate alerts.
+    accDescr: The script checks the Summit page every five minutes. While the registration message remains, it waits and checks again. When the message disappears, it sends one Pushover notification and stops. If the notification fails to send, it waits and tries again on the next check.
     request-url["request https://summit.microsoft.com"]
     is-string-found{"Is the string 'Registration coming soon' found"}
-    alert-sent{"Has an alert already been sent"}
     sleep-300["Sleep for 5 minutes"]
     send-notification["Send notification via Pushover"]
+    notification-sent{"Did the notification send"}
+    stop(["Stop - job done"])
 
     request-url ---> is-string-found
     is-string-found--->|Yes|sleep-300
     sleep-300--->request-url
-    is-string-found--->|No|alert-sent
-    alert-sent--->|Yes|sleep-300
-    alert-sent--->|No|send-notification
-    send-notification ---> sleep-300
+    is-string-found--->|No|send-notification
+    send-notification ---> notification-sent
+    notification-sent--->|Yes|stop
+    notification-sent--->|No|sleep-300
 ```
 
 ## Fetching the Page
