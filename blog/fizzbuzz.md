@@ -6,7 +6,7 @@ tags:
   - algorithms
   - programming
   - python
-date: 2025-03-04
+date: 2026-09-30
 
 ---
 
@@ -14,9 +14,9 @@ date: 2025-03-04
 
 FizzBuzz has long been a staple of programming interviews. The problem is deceptively simple: print numbers from 1 to n, but replace multiples of 3 with "Fizz", multiples of 5 with "Buzz", and multiples of both with "FizzBuzz". It's not meant to be a challenging algorithmic puzzle; most candidates with basic programming knowledge should solve it without difficulty.
 
-So why does this trivial problem persist in the interview landscape? Because I believe FizzBuzz's true value isn't in filtering out candidates who can't code; it's in opening discussions about complexity, language characteristics, optimisation, and the subtle costs of different operations. The best interviewers don't just ask candidates to solve FizzBuzz; they use it as a starting point for a deeper technical conversation.
+So why does this trivial problem persist in the interview landscape? Because I believe FizzBuzz's true value isn't in filtering out candidates who can't code; it's in opening discussions about complexity, language characteristics, and the subtle costs of different operations. The best interviewers don't just ask candidates to solve FizzBuzz; they use it as a starting point for a deeper technical conversation.
 <!-- truncate -->
-In this article, I'll explore two common FizzBuzz implementations, benchmark them in both Python and C, and share some surprising results that highlight why seemingly trivial problems can reveal profound insights about programming languages and performance optimisation.
+In this article, I'll explore two common FizzBuzz implementations, count the actual work each one does, and then benchmark them in Python and C to see whether intuition and arithmetic agree. I got the arithmetic wrong the first time I wrote this post, which turned out to be a better lesson than the one I set out to write.
 
 ## Two Approaches to FizzBuzz
 
@@ -59,15 +59,19 @@ def fizz_buzz_concatenation(n):
 
 ## The Simple vs. Complex Discussion
 
-At first glance, these approaches appear to have different computational characteristics. The conditional approach seems more efficient because in the best case, it requires only one modulo operation (for numbers not divisible by 3), while in the worst case it needs two (for potential FizzBuzz numbers). Meanwhile, the concatenation approach always performs two modulo operations, regardless of the number.
+At first glance, the conditional approach looks like the efficient one. It short-circuits: surely it can skip a check once it finds a match, so most numbers only need one or two modulo operations rather than the concatenation approach's fixed two. That was my assumption when I first wrote this article, and it's wrong.
 
-Many developers (including me at one point) intuitively lean toward the conditional approach because of this apparent efficiency. After all, only one-third of numbers are divisible by 3, and only one-fifth are divisible by 5, so the short-circuit logic seems advantageous. It's the kind of micro-optimisation that I've felt quite pleased about in the past.
+Work it through case by case. Of every 15 consecutive numbers, only one is a multiple of 15 and gets away with a single modulo operation. Four are multiples of 3 (but not 15), costing two operations. Two are multiples of 5 (but not 15), costing three operations, because the cascade has to fail the 15 check and the 3 check first. The remaining eight numbers, the ones divisible by neither 3 nor 5, are the most common case in the whole set, and they fail all three checks: `i % 15`, `i % 3`, and `i % 5`, before falling through to `str(i)`. That's three modulo operations for the majority case.
 
-But is this intuition correct? Let's extend our problem to find out.
+Add it up: (1x1 + 4x2 + 2x3 + 8x3) / 15 = 39 / 15 = 2.6 modulo operations per number, on average, for the conditional approach.
+
+The concatenation approach, meanwhile, always evaluates exactly `i % 3` and `i % 5`. No branching, no short-circuiting, just two operations every time.
+
+So the conditional approach doesn't do less work in the common case. It does more, on average, because the most frequent outcome (no match at all) is the most expensive path through the cascade. My original intuition had the comparison backwards.
 
 ## Extending FizzBuzz: Enter "Jazz"
 
-To explore the scalability of each approach, I decided to add a third rule: Multiples of 7 should include "Jazz". This creates a variety of new combinations: "Fizz" for multiples of 3 only, "Buzz" for multiples of 5 only, "Jazz" for multiples of 7 only, "FizzBuzz" for multiples of both 3 and 5, "FizzJazz" for 3 and 7, "BuzzJazz" for 5 and 7, and finally "FizzBuzzJazz" for numbers divisible by all three.
+To explore the scalability of each approach, I decided to add a third rule: multiples of 7 should include "Jazz". This creates a variety of new combinations: "Fizz" for multiples of 3 only, "Buzz" for multiples of 5 only, "Jazz" for multiples of 7 only, "FizzBuzz" for multiples of both 3 and 5, "FizzJazz" for 3 and 7, "BuzzJazz" for 5 and 7, and finally "FizzBuzzJazz" for numbers divisible by all three.
 
 The conditional approach now requires a much more complex branching structure:
 
@@ -108,84 +112,124 @@ def fizz_buzz_jazz_concatenation(n):
             result = str(i)
 ```
 
-The difference in complexity is now apparent. The conditional approach grows exponentially with the number of rules (2^n possible combinations), while the concatenation approach grows linearly. But complexity doesn't always translate directly to performance. Let's measure both approaches and see what happens.
+The gap between the two approaches gets worse, not better. Numbers coprime to 3, 5, and 7 make up 48 out of every 105, and each one now has to fail seven modulo checks (`105`, `15`, `21`, `35`, `3`, `5`, `7`) before landing on `str(i)`. Working through the same case-by-case sum as before gives an average of 617 / 105, or roughly 5.9 modulo operations per number for the conditional approach, against a flat 3 for concatenation.
 
-## Benchmarking Methodology
+The conditional approach also grows combinatorially with the number of rules, since every new divisor multiplies the number of branches, while the concatenation approach grows linearly: one new `if` per rule. Let's measure both approaches and see whether the numbers back up the arithmetic.
 
-To test these implementations, I created benchmarks in both Python and C, processing numbers from 1 to 1,000,000. I timed the execution of each approach, calculated their relative performance differences, and examined how they scaled when adding the "Jazz" rule.
+## Benchmark Methodology
 
-My benchmark code avoided I/O operations during timing to prevent them from affecting measurements. For C, I managed memory carefully with fixed-size buffers and used appropriate string handling functions. I also ran multiple tests to ensure consistent results.
+I ran both languages on the same machine: an Apple M1 MacBook Pro running macOS, using Python 3.13.7 and Apple clang 21.0.0 (`gcc -O2`). Each function processes numbers from 1 to 1,000,000 and accumulates the length of the result string into a running total, so the string is actually used and the compiler can't optimise the work away.
 
-## Python Results: A Clear Winner
+For Python, I ran all four functions 11 times each, shuffling the run order on every repeat with `random.shuffle` so no single function is consistently advantaged by running first or last, then took the mean and standard deviation:
 
-Running the Python benchmark multiple times revealed a consistent pattern. The concatenation approach consistently outperformed the conditional method for standard FizzBuzz, taking about 0.099 seconds compared to 0.112 seconds, making it about 13% faster. 
+```python
+import random
+import statistics
+import time
 
-When I added the Jazz rule, this performance gap widened considerably. The concatenation method completed in around 0.130 seconds, while the conditional method needed 0.204 seconds, making concatenation about 57% faster for the more complex problem.
+N = 1_000_000
+REPEATS = 11
 
-What about scaling? The concatenation approach slowed down by only about 31% when adding the Jazz rule, while the conditional approach became a whopping 82% slower. This scaling factor underscores the efficiency of the concatenation approach as complexity increases.
+def fizz_buzz_conditional(n):
+    total = 0
+    for i in range(1, n + 1):
+        if i % 15 == 0:
+            result = "FizzBuzz"
+        elif i % 3 == 0:
+            result = "Fizz"
+        elif i % 5 == 0:
+            result = "Buzz"
+        else:
+            result = str(i)
+        total += len(result)
+    return total
 
-These results challenged my initial intuition. Despite performing more modulo operations in the common case, the concatenation approach consistently outperforms the conditional one in Python. 
+# ...the other three functions follow the same pattern...
 
-Why does this happen? Several factors come into play. Modern CPUs struggle with unpredictable branching patterns, and the conditional approach presents the processor with multiple branches having different probabilities, making prediction difficult. The concatenation approach offers a more consistent execution pattern that the Python interpreter can optimise more effectively. And while the concatenation method does perform more modulo operations, this cost is outweighed by the benefits of simpler control flow.
+FUNCS = {
+    "fizzbuzz_conditional": fizz_buzz_conditional,
+    "fizzbuzz_concatenation": fizz_buzz_concatenation,
+    "fizzbuzzjazz_conditional": fizz_buzz_jazz_conditional,
+    "fizzbuzzjazz_concatenation": fizz_buzz_jazz_concatenation,
+}
 
-## C Results: A Plot Twist
+results = {name: [] for name in FUNCS}
+for _ in range(REPEATS):
+    order = list(FUNCS.items())
+    random.shuffle(order)
+    for name, func in order:
+        start = time.perf_counter()
+        func(N)
+        results[name].append(time.perf_counter() - start)
 
-When I ran the same benchmarks in C, I encountered some truly surprising results. For standard FizzBuzz, the concatenation approach maintained its advantage, completing in about 0.035 seconds compared to 0.057 seconds for the conditional approach, making it roughly 61% faster.
+for name, times in results.items():
+    print(name, statistics.mean(times), statistics.stdev(times))
+```
 
-But here's where things get interesting. For FizzBuzzJazz, the conditional approach actually became faster, taking around 0.031 seconds compared to 0.033 seconds for concatenation. The conditional approach was now about 8% faster!
+For C, I used a `volatile long sink` that every function adds its result into, so the compiler cannot prove the loop's output goes unused and eliminate it. I shuffled run order with `srand(42)` and a Fisher-Yates shuffle, using `clock_gettime(CLOCK_MONOTONIC, ...)` for timing, across 21 repeats per function.
 
-Even more remarkably, adding the Jazz rule actually made the conditional method faster in C than the original FizzBuzz implementation. The FizzBuzzJazz version took only about 54% of the time required by the standard conditional FizzBuzz. That's right: adding more complexity made the code run faster.
+I've kept the full scripts short enough to paste inline above; the complete versions (with all four functions and the shuffle logic) are straightforward extensions of what's shown. If you want to check my working, the arithmetic in the previous sections and the code above are all you need to reproduce this.
 
-This counter-intuitive result wasn't a fluke. I ran the test over a dozen times and found this pattern remained consistent across nearly all runs. Something fascinating was happening under the hood.
+## Python Results
+
+Running the harness gave these means and standard deviations, in seconds, over 11 randomised runs:
+
+| Function | Mean (s) | Stdev (s) |
+|---|---|---|
+| FizzBuzz conditional | 0.1568 | 0.0030 |
+| FizzBuzz concatenation | 0.1342 | 0.0029 |
+| FizzBuzzJazz conditional | 0.2430 | 0.0056 |
+| FizzBuzzJazz concatenation | 0.1734 | 0.0025 |
+
+Concatenation beats conditional by about 14% for plain FizzBuzz, and by about 29% once the Jazz rule is added. That's the arithmetic from the last section showing up directly in wall-clock time: concatenation does a flat 2 or 3 modulo operations per number, conditional does 2.6 rising to roughly 5.9, and CPython pays for every one of those extra operations because each `%` is a bytecode dispatch through the interpreter loop.
+
+There's no branch prediction story here worth telling. CPython doesn't compile the if-elif cascade down to machine branches the way C does; it interprets bytecode, and interpreter dispatch plus repeated `str(i)` calls dominate the timing far more than anything the CPU's branch predictor is doing underneath. And even if it did matter at the hardware level, the divisibility pattern here repeats with a period of 15 (or 105 for the Jazz version), which is about as predictable a pattern as a branch predictor will ever see. The honest explanation is simpler and less exciting: the conditional approach loses because it does more modulo operations, not fewer.
+
+## C Results
+
+The same four functions, compiled with `gcc -O2`, over 21 randomised runs:
+
+| Function | Mean (s) | Stdev (s) |
+|---|---|---|
+| FizzBuzz conditional | 0.0264 | 0.0011 |
+| FizzBuzz concatenation | 0.0331 | 0.0010 |
+| FizzBuzzJazz conditional | 0.0260 | 0.0009 |
+| FizzBuzzJazz concatenation | 0.0333 | 0.0012 |
+
+This is where my original article went wrong. In an earlier, less careful benchmark I only ran each function once per language, in a fixed order, and got numbers that looked like conditional FizzBuzzJazz (0.031s) beating conditional FizzBuzz (0.033s), a roughly 6% gap on a 30-millisecond run. I wrote a few paragraphs about the compiler restructuring the branch cascade and CPU pipelines rewarding "the right kind of complexity". None of that was justified. A 6% difference on a run that short, measured once, with no variance data, is well within the range you'd expect from timer granularity, a cold first run in a fixed benchmark order, or the compiler eliding work whose result is never read. I hadn't ruled any of those out, so I shouldn't have written it up as a genuine optimisation phenomenon.
+
+With a volatile sink forcing every result to be used, and 21 randomised runs per function, the picture is far less dramatic. Adding the Jazz rule makes no measurable difference to either implementation: conditional stays at roughly 0.026s whether it's checking three divisors or seven, and concatenation stays at roughly 0.033s. The 0.0004s gap between the two conditional means is smaller than either one's own standard deviation, so it's noise, not a trend.
+
+What is real, and consistent across every run I did, is that the conditional approach is about 20% faster than concatenation in C, for both rule sets. I'd originally put this down to `strcat()` needing to scan for the end of the buffer before appending, while `strcpy()` in the conditional branch just writes from the start. With an empty destination buffer that scan costs almost nothing, so I don't think that's carrying much of the difference either. The more likely explanation is `sprintf("%d", i)`, which every function calls for the numeric case: it's the most expensive single operation in the loop, and it gets called on exactly the same numbers in every implementation, so it can't explain a difference between them. What can: the conditional cascade's early exits are genuine branches that a compiled, optimised C binary can predict and pipeline well, in a way an interpreted Python loop never gets the chance to. Consistency across my runs rules out random noise as the explanation for that 20% gap; it doesn't rule out some other systematic effect I haven't isolated, and I'd want disassembly output before claiming more than that.
 
 ## Python vs C: A Tale of Two Languages
 
-When I place the Python and C results side by side, I see a fascinating contrast. In both languages, concatenation wins for standard FizzBuzz. But for FizzBuzzJazz, Python strongly favours concatenation while C gives a slight edge to the conditional approach.
+Put the two languages side by side and a simpler pattern emerges than my first draft suggested. In Python, concatenation wins in both rule sets, and the gap widens as the operation count for conditional climbs from 2.6 to 5.9 modulo operations per number. In C, conditional wins in both rule sets, by a fairly stable 20%, and neither approach is measurably affected by adding the Jazz rule once you account for noise.
 
-Most striking is how the two languages handle the addition of more rules. In Python, both approaches slow down as expected, though concatenation degrades more gracefully. In C, the concatenation approach slows down slightly, but the conditional approach actually speeds up, defying conventional logic.
-
-These dramatic differences reveal the underlying nature of these two languages. Python, as an interpreted language, provides highly optimised string operations but doesn't apply complex branch optimisations. Its performance generally degrades predictably as code complexity increases. The concatenation approach benefits from Python's efficient string handling and simpler control flow.
-
-C, on the other hand, operates much closer to the metal. The C compiler performs remarkable optimisations on predictable branch patterns and can recognise when operations share common factors. String operations in C behave differently too: `strcpy()` used in the conditional approach is very efficient for complete string assignments, while `strcat()` used in the concatenation approach must first find the end of the string before appending, adding overhead that doesn't exist in Python.
-
-## The "Faster With More Work" Paradox
-
-The most intriguing aspect of my findings is that in C, the conditional approach actually gets faster when adding the Jazz rule. This seems to violate common sense: how can doing more work take less time?
-
-The answer lies in the C compiler's optimisation capabilities. When our code checks divisibility by various combinations of 3, 5, and 7, the compiler recognises patterns that allow it to optimise calculations. The more structured conditional checks in FizzBuzzJazz create a more predictable branch pattern that allows the CPU to better utilise its instruction pipeline and reduce pipeline stalls.
-
-I think of it like planning a road trip with multiple stops. Sometimes, planning a more complex route with more destinations can actually be faster if those destinations are arranged in a more logical sequence that avoids backtracking. The C compiler essentially rearranges our complex branching code into a more efficient journey through the CPU's execution units.
-
-The consistency of this result across multiple runs rules out measurement error or system fluctuations. It's a genuine optimisation phenomenon that reveals the sophisticated capabilities of modern compilers.
+The lesson isn't that C defies the arithmetic while Python obeys it. It's that Python's interpreter overhead is large enough that extra modulo operations show up directly in the timing, while C's compiled, branch-predicted execution absorbs that same arithmetic difference almost entirely, leaving room for other factors (cascade structure, instruction-level parallelism) to dominate instead. Neither result required a compiler doing something clever with the modulo operations themselves. I don't have disassembly to back up a stronger claim than that, so I'm not making one.
 
 ## Lessons from a Simple Problem
 
-My FizzBuzz adventure has taught me several important lessons about software development. First, our intuition about performance can be misleading. What seems more efficient at first glance may not be in practice, and the only way to know for sure is to measure.
+My FizzBuzz adventure taught me to count operations before trusting intuition, and then to measure before trusting the count. My first instinct (fewer modulo calls in the common case for the conditional approach) was wrong on the arithmetic before it ever got near a stopwatch. Working through the case-by-case sum would have told me that in about five minutes, no benchmark required.
 
-Second, language matters profoundly. The same algorithm can behave entirely differently depending on the language it's implemented in. What's optimal in Python may be suboptimal in C, and vice versa.
+Second, once the arithmetic is right, language still matters. The same operation-count difference produces a clear win for concatenation in Python and barely registers in C, because the two languages pay for that arithmetic in very different ways.
 
-Third, how an algorithm scales with increasing complexity can be more important than its performance on simpler problems. The concatenation approach scaled beautifully in Python, while in C, the conditional approach showed remarkable scaling properties.
+Third, "the numbers looked consistent across a dozen runs" isn't the same as "the effect is real". Consistency rules out random noise. It says nothing about systematic error: a fixed run order, a cold cache on the first execution, or a compiler quietly discarding work whose result you never read. I made that mistake in the original version of this article, and the fix was a volatile sink and a shuffled run order, not a cleverer theory.
 
-Fourth, modern hardware and compilers introduce complexities that can't be understood through simple reasoning about operation counts. Branch prediction, cache behaviour, and compiler optimisations can dramatically affect performance in ways that aren't obvious from the source code.
-
-And finally, sometimes more complexity can paradoxically improve performance, as I saw with the conditional approach in C. The right kind of complexity can enable optimisations that actually make code run faster.
+Fourth, and most usefully for an interview: asking a candidate to count the operations in their own solution, out loud, before running anything, tells you more about how they think than the working code does.
 
 ## FizzBuzz: More Than Meets the Eye
 
-This exploration demonstrates why I believe FizzBuzz remains valuable in interviews despite its simplicity. It starts as a basic programming exercise but opens doors to deeper discussions about language characteristics, algorithm scaling, and performance optimisation.
+This exploration demonstrates why I believe FizzBuzz remains valuable in interviews despite its simplicity. It starts as a basic programming exercise but opens doors to deeper discussions about operation counts, language characteristics, and what a benchmark can and can't tell you.
 
-The next time you interview a candidate with FizzBuzz, don't stop at the first working solution. Ask them to compare alternative implementations. Discuss how different approaches might scale if additional rules were added. Explore how the solution might differ in another programming language. These discussions will yield far more insight into a candidate's abilities than the basic solution alone.
+The next time you interview a candidate with FizzBuzz, don't stop at the first working solution. Ask them to count the operations each branch performs. Ask how that count changes if you add a third or fourth rule. Ask how they'd prove a performance claim rather than just asserting it. These discussions will yield far more insight into a candidate's abilities than the basic solution alone.
 
 ## Conclusion: The Devil in the Details
 
-FizzBuzz may seem like a trivial problem, but my extensive benchmarking reveals it can teach us profound truths about programming. Performance characteristics are often counter-intuitive and heavily dependent on language, compiler, and hardware.
+FizzBuzz may seem like a trivial problem, but getting its analysis wrong taught me more than getting it right would have. Performance characteristics are language-dependent and worth measuring properly, but the first thing worth getting right is the arithmetic you're trying to explain.
 
-In Python, the concatenation approach consistently wins and scales better as complexity increases. Both implementations slow down when adding rules, as you might expect.
+In Python, the concatenation approach wins clearly, and the gap grows as extra rules push the conditional approach's average operation count higher. In C, the conditional approach wins by a stable margin in both rule sets, and adding rules doesn't move either implementation's timing outside its own noise.
 
-In C, the story is more complex. The concatenation approach wins for simple FizzBuzz, but for FizzBuzzJazz, the conditional approach takes the lead. Most surprisingly, the conditional approach in C actually gets faster when handling more complex rules, a testament to the power of compiler optimisation.
+So the next time someone dismisses FizzBuzz as too simple for interviews, remember this tale of two algorithms, and how a wrong assumption about modulo operations, followed by an honest correction, taught me more than the original benchmark ever did. In programming, as in life, the devil is often in the details, and the details are worth checking twice.
 
-These dramatically different behaviours highlight why empirical testing is essential when making performance decisions. What's efficient in one context may be inefficient in another, and sometimes adding complexity can paradoxically improve performance.
-
-So the next time someone dismisses FizzBuzz as too simple for interviews, remember this tale of two algorithms, and how much we can learn from even the most elementary problems when we take the time to look deeper. In programming, as in life, the devil is often in the details, and simplicity on the surface can hide remarkable complexity underneath.
-
-Have you encountered similar counter-intuitive performance results in your programming work? I'd love to hear about your experiences with optimisation paradoxes!
+Have you caught yourself publishing a confident explanation that didn't survive a second look? I'd love to hear about it.
