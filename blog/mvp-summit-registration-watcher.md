@@ -100,7 +100,7 @@ if not isinstance(result, dict) or result.get("status") != 1:
 
 The credentials for that call - an app token and a user key - come from either environment variables or a local `.pushover.json` file that never gets committed anywhere. `get_credentials()` checks the environment first and only falls back to the file if the variables aren't set, which makes it as happy running on my own machine as it would in a scheduled cloud job.
 
-There's also an `alert_sent` flag threaded through the whole loop. Once a notification has gone out successfully, the script stops sending more on every subsequent check - I only need to know once, not every five minutes until I register.
+There's also an `alert_sent` flag threaded through the whole loop. Once a notification has gone out successfully, `check_once` stops sending more on every subsequent check - I only need to know once, not every five minutes until I register. Originally the main loop ignored that flag entirely and just kept polling forever with `while True`, which meant the script carried on checking a page it already knew had changed, long after there was any point. I've since fixed that to `while not alert_sent`, so the script does its job and then actually stops.
 
 ## Testing It Without Waiting for the Real Thing
 
@@ -117,6 +117,15 @@ This skips the actual page fetch, pretends the phrase is missing, and fires a re
 
 ## Running It
 
-The whole thing sits in a `while True` loop with a five-minute sleep, wrapped in a `try/except KeyboardInterrupt` so it shuts down cleanly with a Ctrl-C rather than a stack trace. I run it in a terminal on a machine that's on anyway, and the Pushover notification means I can leave the terminal alone and watch my phone.
+The main loop now reads:
+
+```python
+alert_sent = False
+while not alert_sent:
+    alert_sent = check_once(alert_sent, app_token, user_key)
+    time.sleep(INTERVAL_SECONDS)
+```
+
+It's wrapped in a `try/except KeyboardInterrupt` so it also shuts down cleanly with a Ctrl-C rather than a stack trace, but with `while not alert_sent` it shouldn't need one - the script exits by itself the moment the alert's gone out. I run it in a terminal on a machine that's on anyway, and the Pushover notification means I can leave the terminal alone and watch my phone.
 
 It's a small script, and that's rather the point. The problem was narrow - tell me the instant one specific sentence disappears from one specific page - so the solution didn't need to be anything more than a loop, a string check, and a phone notification. Fingers crossed it does its job again this year as I've gone and booked my flights again already.
