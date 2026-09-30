@@ -114,4 +114,4 @@ This skips the actual page fetch, pretends the phrase is missing, and fires a re
 
 The whole thing sits in a `while True` loop with a five-minute sleep, wrapped in a `try/except KeyboardInterrupt` so it shuts down cleanly with a Ctrl-C rather than a stack trace. I run it in a terminal on a machine that's on anyway, and the Pushover notification means I don't have to be watching that terminal at all - just my phone.
 
-It's a small script, and that's rather the point. The problem was narrow - tell me the instant one specific sentence disappears from one specific page - so the solution didn't need to be anything more than a loop, a string check, and a phone notification. Fingers crossed it does its job again this year.
+It's a small script, and that's rather the point. The problem was narrow - tell me the instant one specific sentence disappears from one specific page - so the solution didn't need to be anything more than a loop, a string check, and a phone notification. Fingers crossed it does its job again this year as I've gone and booked my flights again already.
