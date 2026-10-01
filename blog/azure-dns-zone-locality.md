@@ -93,6 +93,8 @@ Private Link services get their private IP address via a DNS override: a zone li
 
 The limitation shows up when two VNets need the *same* Private Link hostname to resolve to *different* private endpoints. Say VNet A has its own private endpoint for a storage account, and VNet B has a completely separate one. If there's a single centralised DNS zone for `privatelink.blob.core.windows.net`, it can only hold one A record for that hostname. Whichever endpoint's address lands in that zone is the one every VNet gets, whether that's correct for them or not.
 
+> Why would two VNets want separate endpoints for the same service in the first place? Cost and bandwidth, usually. Traffic over a Private Link connection often works out cheaper than routing it through VNet peering and a hub firewall, and the gap gets noticeable fast on high-volume traffic crossing regions. If every spoke-to-spoke byte is also being inspected and charged for by a hub firewall, a dedicated private endpoint per spoke can be the difference between a sensible bill and a surprising one - and it sidesteps the firewall's own bandwidth ceiling too.
+
 ```mermaid
 flowchart TB
     accTitle: One centralised Private Link zone can only hold one answer
