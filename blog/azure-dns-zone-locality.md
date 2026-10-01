@@ -5,7 +5,7 @@ tags:
   - dns
   - azure
   - private-link
-date: 2026-07-22
+date: 2026-10-01
 ---
 
 I wrote about [168.63.129.16, Azure's magic IP](azure-magic-ip.md), a while back, and one detail buried in there deserves its own post: queries to that address only ever come from inside the VNet that's asking, and whatever private DNS zones are linked to that VNet are the only ones it can see. That locality is the whole model. Everything else in Azure DNS - inbound resolvers, outbound resolvers, Private Link zones - is either working with that locality or working around it.
