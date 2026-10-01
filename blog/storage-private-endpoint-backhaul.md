@@ -119,7 +119,7 @@ There are some reasons why you might want to have a public and a private endpoin
 
 ### Resource instance rules
 
-Some first-party Azure resources - an Azure Data Factory, a Logic App, an API Management instance - can't be placed inside a subnet, so neither IP rules nor VNet rules apply to them. Resource instance rules let you allow a specific resource instance by its resource ID instead, scoped by Entra role assignment rather than by network location.
+Some Azure resource instances can't be isolated through a virtual network or IP address rule. Resource instance rules let you allow one of these instances by its resource ID instead, with its permitted operations scoped by Entra role assignments rather than network location.
 
 ```bash
 az storage account network-rule add \
