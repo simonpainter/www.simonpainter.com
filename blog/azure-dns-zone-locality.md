@@ -89,7 +89,7 @@ Same query, same domain name, two completely different outcomes depending on whi
 
 ## Private Link is where centralised DNS runs out of road
 
-Private Link services get their private IP address via a DNS override: a zone like `privatelink.blob.core.windows.net` gets a record pointing your storage account's public hostname at the private endpoint's IP instead of its public one. That override lives in a private DNS zone, and a private DNS zone - like everything else here - is linked to specific VNets.
+Private endpoints expose supported services at private IP addresses; DNS then makes clients use those addresses. For example, a zone such as `privatelink.blob.core.windows.net` holds a record that resolves a storage account's private-link hostname to the private endpoint's IP. That override lives in a private DNS zone, and a private DNS zone - like everything else here - is linked to specific VNets.
 
 The limitation shows up when two VNets need the *same* Private Link hostname to resolve to *different* private endpoints. Say VNet A has its own private endpoint for a storage account, and VNet B has a completely separate one. If there's a single centralised DNS zone for `privatelink.blob.core.windows.net`, it can only hold one A record for that hostname. Whichever endpoint's address lands in that zone is the one every VNet gets, whether that's correct for them or not.
 
