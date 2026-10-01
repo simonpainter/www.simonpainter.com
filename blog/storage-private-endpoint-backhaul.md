@@ -161,14 +161,6 @@ graph LR
 
 ### Picking the right one
 
-```mermaid
-graph TB
-    accTitle: A realistic combined setup, no firewall backhaul in sight
-    accDescr: Application traffic reaches the storage account over a private endpoint, Azure Data Factory is allowed in by resource instance rule, and Microsoft Defender for Storage reaches it as a trusted service, all with public network access disabled and no perimeter firewall in the data path.
-    App[App subnet] -->|private IP| PE[Private endpoint]
-    ADF[Azure Data Factory] -->|resource instance rule| Storage
-    Defender[Microsoft Defender for Storage] -->|trusted service| Storage
-    PE --> Storage[(Storage account<br/>public access: Disabled)]
-```
+There's no right answer, but plenty of wrong ones. The key is to understand what you're trying to secure and how each control affects your threat model. It may also make a difference what data type your protecting and who is using it. Consider the trade-offs between manageability, security, and cost for each approach before making a decision.
 
 The tell that you've over-built this is a diagram where storage traffic enters through a firewall and then is routed on to a private endpoint. If both exist, one of them is redundant - decide whether the account needs to be privately reachable at all, and pick the matching control from this list instead of stacking all of them for reassurance.
