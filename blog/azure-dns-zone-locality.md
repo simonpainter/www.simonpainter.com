@@ -13,7 +13,7 @@ I wrote about [168.63.129.16, Azure's magic IP](azure-magic-ip.md), a while back
 
 ## The magic IP only knows its own VNet
 
-Every VM in Azure gets 168.63.129.16 as its default DNS server. When a query hits that address, Azure answers using whatever private DNS zones are linked to the VNet the query came from. A zone linked to VNet A is invisible to a query from VNet B, even if the two VNets are peered and can otherwise talk to each other freely.
+When a VNet uses Azure-provided DNS, its VMs receive 168.63.129.16 as the default DNS server. When a query hits that address, Azure answers using whatever private DNS zones are linked to the VNet the query came from. A zone linked to VNet A is invisible to a query from VNet B, even if the two VNets are peered and can otherwise talk to each other freely.
 
 ```mermaid
 flowchart LR
