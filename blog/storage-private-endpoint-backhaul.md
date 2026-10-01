@@ -12,7 +12,7 @@ date: 2026-10-01
 
 I am rarely surprised with the misunderstandings and mistakes I seen in customer architectures but I am consistently frustrated by the same recurring pattern when it does exactly the opposite of the goal it sets out to achieve.
 
-I recently saw a customer architecture that was such an anomaly that I spent some time with someone senior at Microsoft trying to understand the reasoning behind it. We both had to draw a blank in the end. The pattern is as follows: a storage account gets a private endpoint so it "isn't public any more", but the public endpoint is still open behind a perimeter firewall, with associated NAT, and internet traffic is deliberately routed in through that firewall, onto the private network, and across to the storage account's private IP. Internet in, through a firewall with all the charges that incurs, into a VNet, out to a SaaS control plane. That's not zero trust, it's a very expensive game of pass the parcel.
+I recently saw a customer architecture that was such an anomaly that I spent some time with someone senior at Microsoft trying to understand the reasoning behind it. We both had to draw a blank in the end. The pattern is as follows: a storage account gets a private endpoint so it "isn't public any more", but the public endpoint is still open behind a perimeter firewall, with associated NAT, and internet traffic is deliberately routed in through that firewall, onto the private network, and across to the storage account's private IP. Internet in, through a firewall with all the charges that incurs, into a VNet, and then to the storage service's data plane. That's not zero trust, it's a very expensive game of pass the parcel.
 <!-- truncate -->
 
 ```mermaid
