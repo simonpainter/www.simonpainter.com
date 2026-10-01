@@ -60,7 +60,7 @@ The endpoint is still scoped to one VNet - it can only answer with zones linked 
 
 Inbound endpoints solve resolution into Azure. Outbound endpoints solve the opposite direction: a VNet needing to resolve something Azure doesn't know about, like an on-premises domain or another cloud's private zone.
 
-An outbound endpoint doesn't do anything by itself. It egresses queries that match a rule in a DNS forwarding ruleset, and that ruleset only applies to VNets it's explicitly linked to. No link, no rules, full stop.
+An outbound endpoint doesn't do anything by itself. It egresses queries that match a rule in a DNS forwarding ruleset. For workloads using Azure-provided DNS, that ruleset only applies to VNets it's explicitly linked to. VNets using custom DNS send queries to those servers first, so a ruleset link alone doesn't put their queries through the endpoint. No link, no platform-applied rules.
 
 ```mermaid
 flowchart LR
