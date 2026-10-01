@@ -72,17 +72,21 @@ flowchart LR
     subgraph VNetB["VNet B (no ruleset link)"]
         ClientB["Client"]
     end
+    AzDNSA["Azure DNS (VNet A)"]
+    AzDNSB["Azure DNS (VNet B)"]
     OEP["Outbound endpoint"]
     Ruleset["Ruleset: corp.local -> on-prem DNS"]
     OnPrem["On-premises DNS"]
     PublicDNS["Public DNS"]
 
-    ClientA -->|query corp.local| OEP
+    ClientA -->|query corp.local| AzDNSA
     Ruleset -. linked .-> VNetA
-    OEP --> Ruleset
-    Ruleset --> OnPrem
+    AzDNSA --> Ruleset
+    Ruleset --> OEP
+    OEP --> OnPrem
 
-    ClientB -->|query corp.local| PublicDNS
+    ClientB -->|query corp.local| AzDNSB
+    AzDNSB --> PublicDNS
 ```
 
 Same query, same domain name, two completely different outcomes depending on which VNet asked. VNet A gets a forwarded answer from on-premises DNS. VNet B, with no ruleset link, falls through to public DNS and probably gets NXDOMAIN or a wildcard certificate warning page, because `corp.local` means nothing to the outside world. This is the pattern I went into in more detail in [two rulesets, one outbound endpoint](two-rulesets-one-outbound-endpoint.md), where I used exactly this scoping to give one third party visibility of a handful of domains without exposing everything else behind the same egress point.
