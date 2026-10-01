@@ -107,7 +107,7 @@ graph LR
 
 There are some reasons why you might want to have a public and a private endpoint simultaneously. Mostly though you'll just want to turn that off. There is a cost associated with maintaining the private IP for your storage account vs using a service endpoint or relying on public access, so weigh that against what problem you are actually trying to solve.
 
-**Pros**: the strongest isolation on offer - the storage account has no routable public IP at all, so there's no internet-facing attack surface to filter in the first place. It also plays nicely with on-premises access over ExpressRoute or VPN, since the private endpoint is just another IP in your routable space.
+**Pros**: the strongest isolation on offer - disabling public network access rejects internet traffic through the public endpoint, so there's no internet-facing path to filter. It also plays nicely with on-premises access over ExpressRoute or VPN, since the private endpoint is just another IP in your routable space.
 
 > Again, network controls aside all of these configurations are on top of a solid foundation of authentication and authorization. The main justification for some of the more bonkers versions of this setup are either the misuse of the term 'defence in depth' or a misunderstanding of where real security comes from. With many recent attacks targetting identity providers and credentials it's good to have some sort of multi-layered approach, but the layers need to be meaningful and not just for show. If an attacker has got control of your identity provider then they can potentially bypass many of these network controls anyway so focus on the fundamentals of good identity managmement rather than hoping the network will bail you out of a compromise.
 
