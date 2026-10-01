@@ -128,6 +128,35 @@ flowchart TB
 
 That's trivial with native Azure Private DNS zones because the zone-to-VNet link is a first-class resource you can create as many times as you need. It gets considerably harder with a centralised third-party DNS platform (Infoblox, BIND, whatever) acting as the single source of truth, because now you need that platform to serve different answers for the identical zone name depending on which VNet asked - which usually means views, split-horizon configuration, or some other layer of complexity the platform may or may not support cleanly. Centralising DNS authority is often the right call for corporate zones, but Private Link zones are a case where per-VNet locality is the feature, not a limitation to engineer around.
 
+There's a wrinkle worth calling out if your centralised platform is holding those privatelink zones instead of Azure Private DNS. Most Azure VMs still use 168.63.129.16 as their resolver by default, and the magic IP has never heard of your centralised DNS platform - it only knows Azure private zones linked to its own VNet. So resolving anything hosted centrally, privatelink zones included, needs a per-VNet outbound endpoint and ruleset link forwarding those queries out to the central platform. Miss that step and the host's query dead-ends at the magic IP with an NXDOMAIN, regardless of how correctly the centralised side is configured. That requirement is really the tell for which of two prevailing DNS architectures a given estate is running, and it's worth setting them side by side.
+
+## Magic IP first, or custom DNS first
+
+Most Azure hybrid DNS designs land on one of two shapes, and the difference is simply which resolver a host asks first.
+
+**Azure-first** keeps the default: VNets use Azure-provided DNS, so every host's first stop is 168.63.129.16. Azure zones resolve natively and immediately. Anything else - on-premises domains, a centralised DNS platform's zones - needs an outbound endpoint and a ruleset, linked per VNet, forwarding those specific namespaces onward. This is the architecture the rest of this post has assumed throughout.
+
+**Custom-DNS-first** flips the order. You set custom DNS servers at the VNet level - the same idea as supplying a custom DHCP option set in AWS - pointing every host at your centralised platform (BIND, Infoblox, AD-integrated DNS) before Azure ever sees the query. That platform becomes responsible for everything, and it conditional-forwards only the namespaces it doesn't own - your Azure private zones - back in through an inbound endpoint.
+
+```mermaid
+flowchart TB
+    accTitle: Azure-first versus custom-DNS-first resolution order
+    accDescr: In the Azure-first design, a host asks the magic IP first, which resolves Azure zones natively and forwards everything else outward via an outbound endpoint. In the custom-DNS-first design, a host asks the centralised platform first, which resolves everything itself and forwards only Azure zone queries back in via an inbound endpoint.
+    subgraph AzureFirst["Azure-first"]
+        HostA["Host"] -->|"1 query"| MagicIP["168.63.129.16"]
+        MagicIP -->|"Azure zones"| AzureZones["Azure private zones"]
+        MagicIP -->|"everything else, via outbound endpoint + ruleset"| CentralA["Centralised DNS / on-prem"]
+    end
+    subgraph CustomFirst["Custom-DNS-first"]
+        HostB["Host"] -->|"1 query, VNet custom DNS setting"| CentralB["Centralised DNS platform (owns everything else)"]
+        CentralB -->|"Azure zones, via inbound endpoint"| AzureZonesB["Azure private zones"]
+    end
+```
+
+The practical difference shows up the moment you ask what happens to a plain internet hostname - `www.example.com`, nothing private about it at all. In the Azure-first design, that query falls straight through to Azure-provided DNS and resolves to the public internet without anyone having to think about it. In the custom-DNS-first design, every single one of those queries now depends on the centralised platform having its own working path to the public internet, because every Azure host is asking it first for everything.
+
+That's precisely the risk behind the wildcard rule caveat below, just arrived at from the other direction. A wildcard forwarding rule in an Azure-first design reroutes unauthoritative queries to a platform that needs public resolution. A custom-DNS-first design has made that same dependency permanent and total from day one - there's no fallback path, because Azure-provided DNS was never in the loop to begin with. Neither architecture is wrong, but know which one you've built before an Azure service's hidden public-DNS dependency tells you the hard way.
+
 ## The wildcard rule caveat that bites
 
 One more thing worth flagging because it's genuinely dangerous if you miss it. A DNS forwarding rule can use `.` as the domain name - a wildcard that catches anything not matched by a more specific rule, forwarding all otherwise-unauthoritative queries to whatever DNS server you name.
