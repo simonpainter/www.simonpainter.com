@@ -115,6 +115,8 @@ There are some reasons why you might want to have a public and a private endpoin
 
 **Use it when**: the storage account holds sensitive data and all legitimate consumers already live inside, or are reachable from, your private network. This is the correct replacement for "private endpoint plus firewall", with the firewall part simply deleted.
 
+> I saw a variant of this that was almost as convoluted as the firewall backhaul: a customer had stood up a [virtual network data gateway for Power BI](https://learn.microsoft.com/en-us/data-integration/vnet/use-data-gateways-sources-power-bi), then peered that gateway's VNet globally to another VNet just to traverse the peering and reach a private endpoint for a storage account. The gateway already does the job of letting Power BI reach private resources directly - the extra peering hop added a second network boundary to manage, a second place for routes to silently break, and no additional security. If the gateway's VNet can host the private endpoint itself, or reach it through a single hub, that's the whole solution.
+
 ### Resource instance rules
 
 Some first-party Azure resources - an Azure Data Factory, a Logic App, an API Management instance - can't be placed inside a subnet, so neither IP rules nor VNet rules apply to them. Resource instance rules let you allow a specific resource instance by its resource ID instead, scoped by Entra role assignment rather than by network location.
