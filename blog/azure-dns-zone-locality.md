@@ -105,7 +105,7 @@ flowchart TB
     PEB["Private endpoint in VNet B (10.2.1.5)"]
     Hostname --> CentralZone
     CentralZone -->|the only answer everyone gets| PEA
-    PEB -.not resolvable via this zone.-> CentralZone
+    CentralZone -.not resolvable via this zone.-> PEB
 ```
 
 Azure Private DNS makes the fix straightforward: create a separate `privatelink.blob.core.windows.net` zone per VNet (or per group of VNets that should share an answer), each linked only to the VNets that should see it. Same hostname, same zone name, different zone resources, each scoped by its own VNet links - so VNet A's query resolves through its zone to its endpoint, and VNet B's resolves through a different zone instance to a different endpoint entirely.
@@ -114,11 +114,11 @@ Azure Private DNS makes the fix straightforward: create a separate `privatelink.
 flowchart TB
     accTitle: Per-VNet Private Link zones resolve independently
     accDescr: VNet A is linked to its own privatelink zone pointing at its private endpoint, and VNet B is linked to a separate zone instance of the same name pointing at its own private endpoint.
-    subgraph ZoneA["privatelink.blob.core.windows.net (zone instance A, linked to VNet A)"]
-        RecA["A record -> 10.1.1.5"]
+    subgraph ZoneA["privatelink.blob.core.windows.net<br>(zone instance A, linked to VNet A)"]
+        RecA["mystoreaccount A record -> 10.1.1.5"]
     end
-    subgraph ZoneB["privatelink.blob.core.windows.net (zone instance B, linked to VNet B)"]
-        RecB["A record -> 10.2.1.5"]
+    subgraph ZoneB["privatelink.blob.core.windows.net<br>(zone instance B, linked to VNet B)"]
+        RecB["mystoreaccount A record -> 10.2.1.5"]
     end
     VNetA["VNet A"] --> ZoneA
     VNetB["VNet B"] --> ZoneB
