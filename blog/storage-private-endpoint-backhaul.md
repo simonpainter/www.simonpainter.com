@@ -55,7 +55,7 @@ graph LR
 
 **Pros**: no infrastructure to build, no latency penalty, works in minutes, and it's enforced by Microsoft on the storage data plane rather than something you have to patch and scale.
 
-**Cons**: it only accepts public internet ranges - RFC 1918 addresses are rejected outright, so you can't use it to describe your own private network. Rules max out at 400 per account, and /31 or /32 prefixes aren't supported (use individual host rules instead). It also has no effect on traffic from the same Azure region as the storage account, so it won't protect you from another workload sat next to you in the same region. That's what your authentication and authorization controls are for.
+**Cons**: it only accepts public internet ranges - RFC 1918 addresses are rejected outright, so you can't use it to describe your own private network. Rules max out at 400 per account, and /31 or /32 prefixes aren't supported (use individual host rules instead). Same-region Azure workloads don't present a public source IP that an IP rule can match, so use a virtual network or resource instance rule when those workloads need access.
 
 **Use it when**: a known, stable set of external IPs - an office, an on-premises NAT range, a partner's egress IP - needs access to a storage account that otherwise has no business being internet-facing. This is the direct replacement for "put it behind the firewall", minus the firewall.
 
