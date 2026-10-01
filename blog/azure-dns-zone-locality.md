@@ -80,7 +80,7 @@ flowchart LR
     PublicDNS["Public DNS"]
 
     ClientA -->|query corp.local| AzDNSA
-    Ruleset -. linked .-> VNetA
+    VNetA -.-|linked| Ruleset
     AzDNSA --> Ruleset
     Ruleset --> OEP
     OEP --> OnPrem
