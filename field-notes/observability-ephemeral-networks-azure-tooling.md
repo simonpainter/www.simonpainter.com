@@ -21,7 +21,7 @@ Quiet week for pure DNS news. Cloudflare's Domain Intelligence MCP work continue
 
 ### Azure
 
-**Change Analysis in Azure Resource Graph (Sep 22)** — This one's been percolating for a bit, but it's genuinely useful: when things go wrong, the first question is always "did anything *change*?" Azure Resource Graph now lets you ask that directly. Query-based change tracking for VNets, NSGs, subnets, gateways — the usual suspects. Si's been asking for this kind of visibility for years (callback to his [what-changed-why-is-everything-on-fire](/) mentality), and Azure finally baked it in. Not glamorous. Absolutely practical.
+**Change Analysis in Azure Resource Graph (Sep 22)** — This one's been percolating for a bit, but it's genuinely useful: when things go wrong, the first question is always "did anything *change*?" Azure Resource Graph now lets you ask that directly. Query-based change tracking for VNets, NSGs, subnets, gateways — the usual suspects. Not glamorous. Absolutely practical.
 
 **Network Security Perimeter metrics GA (Sep 30)** — NSP moved to general availability this week with metrics. If you're using NSPs to gate access to PaaS, you now get actual visibility into who's trying, who's blocked, patterns. Early adopters should check their subscriptions; this is the kind of foundational observability that lives in the background until an audit happens.
 
