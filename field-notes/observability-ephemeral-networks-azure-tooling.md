@@ -37,6 +37,8 @@ Quiet week for pure DNS news. Cloudflare's Domain Intelligence MCP work continue
 
 **EVA Networks: ephemeral connectivity (Packet Pushers, Sep 21)** — A startup's angle on ZTNA: don't stand up permanent network connections at all. Instead, spin them up on demand and tear them down when the job's done. It's not exactly new (Cloudflare's had similar concepts around Tunnels), but EVA's pitch is specifically for that on-prem→cloud→on-prem dance where you want zero standing access. Interesting architectural posture — whether it works at scale is the real question. But the idea deserves attention in the zero-trust rethink.
 
+**Weft: SD-WAN on WireGuard, built by one network consultant** — Stephen McConnell [posted on LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7512176146416050176/) about [Weft](https://weftnetworks.com/), a WireGuard-based SD-WAN for small and mid-sized orgs: offices, cloud networks, and laptops joined into one encrypted mesh, any Ubuntu 24.04 box (or now a Docker/Proxmox container) becoming a site with one command. The interesting bit for ops folk: changes roll out to one site first and only propagate once that site reports healthy, and every site continuously checks what's actually installed against what it was told. Standard parts underneath — WireGuard, BGP EVPN, FRR — nothing proprietary on the wire. It's early (one person, actively asking for operators to break it), but that staged-rollout-plus-drift-detection combo is the kind of thing bigger SD-WAN vendors charge a lot more to get wrong.
+
 ## Field notes
 
 **The consolidation pattern:** Cloudflare bundling observability, Azure adding "what changed," vendors everywhere realizing their feature matrix is unmaintainable — this is healthy. It means the industry is past the "throw features at the wall" phase and into "does anyone actually use this together?" It makes for quieter press releases but better products.
@@ -53,6 +55,7 @@ Quiet week for pure DNS news. Cloudflare's Domain Intelligence MCP work continue
 - **Azure Network Security Perimeter metrics GA** — https://techcommunity.microsoft.com/blog/azurenetworkingblog/network-security-perimeter-metrics-are-now-generally-available-in-public-cloud/4561244
 - **Subnet peering and AGP interaction (Cloudtrooper)** — https://blog.cloudtrooper.net/2026/10/02/an-unexpected-friendship-subnet-peering-and-advertised-gateway-prefixes/
 - **EVA Networks: ephemeral connectivity** — https://packetpushers.net/blog/startup-radar-eva-networks-secure-ephemeral-on-demand-connectivity/
+- **Weft (SD-WAN on WireGuard)** — https://weftnetworks.com/
 - **ipSpace netlab 26.10 release** — https://blog.ipspace.net/2026/09/netlab-26-09/
 - **ipSpace sunsetting Vagrant/libvirt** — https://blog.ipspace.net/2026/09/sunsetting-vagrant-libvirt/
 
