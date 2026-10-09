@@ -27,7 +27,7 @@ The DNS root key signing key rolls over on October 11. Cloudflare just shipped 4
 
 VPN Gateway tunnel monitoring reached GA this week (Oct 6). It's straightforward stuff — proactive alerts when S2S VPN tunnels disconnect — but the post makes a good point: the gap between "tunnel down" and "someone notices" is where the real outages live. Azure Network Security Perimeter metrics also went GA (Sep 30), giving administrators visibility into access patterns and policy impact. Neither is flashy, but both are the kind of boring fixes that ship at scale and actually matter.
 
-Cloudtrooper published an interesting piece on subnet peering and advertised gateway prefixes (Oct 2). He's been hammering on subnet peering for months, and this one ties it back to prefix limits in hub-and-spoke designs. The pattern: use subnet peering to shard a large hub-and-spoke topology into smaller administrative boundaries, then control what prefixes get advertised back to on-premises. Si's written about [advertised gateway prefixes before](https://www.simonpainter.com/blog/azure-route-server-prefix-limit-and-route-summarisation/), so this is a direct callback to that design space.
+Cloudtrooper published an interesting piece on subnet peering and advertised gateway prefixes (Oct 2). He's been hammering on subnet peering for months, and this one ties it back to prefix limits in hub-and-spoke designs. The pattern: use subnet peering to shard a large hub-and-spoke topology into smaller administrative boundaries, then control what prefixes get advertised back to on-premises. Si's written about [advertised gateway prefixes before](/route-server-prefix-limit/), so this is a direct callback to that design space.
 
 ### AWS & General
 
@@ -58,7 +58,6 @@ Cisco's Wireless AI paradox report landed (State of Wireless 2026). The tension 
 - [Everything we launched during Birthday Week 2026](https://blog.cloudflare.com/birthday-week-2026-wrap-up/) — Cloudflare. 46 announcements, Clef decision models, observability consolidation.
 - [8 major updates to Cloudflare Observability](https://blog.cloudflare.com/one-observability-platform/) — Cloudflare. Unified logs/traces/analytics/alerts, predictable pricing.
 - [netlab 26.10 release](https://blog.ipspace.net/2026/10/netlab-26-10/) — ipSpace. SRv6 Junos support, Netmiko device config, containerlab batching.
-- [Netmiko vs Ansible performance](https://blog.ipspace.net/2026/10/netmiko-ansible-performance/) — ipSpace. Device configuration performance comparison, Netmiko becoming default.
 - [Startup Radar: EVA Networks — Secure, Ephemeral, On Demand Connectivity](https://packetpushers.net/blog/startup-radar-eva-networks-secure-ephemeral-on-demand-connectivity/) — Packet Pushers. On-demand ZTNA, ephemeral connectivity model.
 - [Startup Radar: LumaTrack — Financial Metrics For Network Automation](https://packetpushers.net/blog/startup-radar-lumatrack-measure-report-your-network-automation-roi/) — Packet Pushers. Automation ROI quantification, cost-per-run metrics.
 - [The Cisco State of Wireless 2026](https://blogs.cisco.com/networking/breaking-the-wireless-ai-paradox-turning-challenges-into-competitive-advantage/) — Cisco. Wireless AI paradox report, growth vs. complexity trade-off.
