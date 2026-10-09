@@ -27,7 +27,7 @@ The DNS root key signing key rolls over on October 11. Cloudflare just shipped 4
 
 VPN Gateway tunnel monitoring reached GA this week (Oct 6). It's straightforward stuff — proactive alerts when S2S VPN tunnels disconnect — but the post makes a good point: the gap between "tunnel down" and "someone notices" is where the real outages live. Azure Network Security Perimeter metrics also went GA (Sep 30), giving administrators visibility into access patterns and policy impact. Neither is flashy, but both are the kind of boring fixes that ship at scale and actually matter.
 
-Cloudtrooper published an interesting piece on subnet peering and advertised gateway prefixes (Oct 2). He's been hammering on subnet peering for months, and this one ties it back to prefix limits in hub-and-spoke designs. The pattern: use subnet peering to shard a large hub-and-spoke topology into smaller administrative boundaries, then control what prefixes get advertised back to on-premises. Si's written about [advertised gateway prefixes before](/route-server-prefix-limit/), so this is a direct callback to that design space.
+Cloudtrooper published an interesting piece on subnet peering and advertised gateway prefixes (Oct 2). The pattern: use subnet peering to shard a large hub-and-spoke topology into smaller administrative boundaries, then control what prefixes get advertised back to on-premises. Clean design thinking applied to a common scaling problem.
 
 ### AWS & General
 
