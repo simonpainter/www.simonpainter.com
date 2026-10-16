@@ -12,19 +12,19 @@ date: 2026-10-16
 
 ---
 
-We're watching agentic patterns stop being keynote vapour and start shipping in production stacks. Also: DNS root key handoff next week, and the network automation crowd is learning that configuration methods actually matter.
+We're watching agentic patterns stop being keynote vapour and start shipping in production stacks. Also: DNS root key handoff happened on October 11, and the network automation crowd is learning that configuration methods actually matter.
 
 <!-- truncate -->
 
 ## Cold open
 
-Three things this week kept coming up: first, "agents" stopped being AI-conference handwaving and started looking like real infrastructure (Cloudflare Managed Defense runs specialists on Workers, AWS and OpenAI are integrating for discovery, Cisco's AgenticOps is trying to close the detection-understanding-action gap). Second, the DNS root is rotating its key-signing key on October 11 — next Friday — and Cloudflare dropped a practical guide with RFC 8509 trust anchor sentinels so you can test whether your resolver will even notice. Third, Ivan Pepelnjak's netlab quietly made Netmiko the default config method for six major platforms, and the performance delta is significant enough to matter.
+Three things this week kept coming up: first, "agents" stopped being AI-conference handwaving and started looking like real infrastructure (Cloudflare Managed Defense runs specialists on Workers, AWS and OpenAI are integrating for discovery, Cisco's AgenticOps is trying to close the detection-understanding-action gap). Second, the DNS root rotated its key-signing key on October 11, and Cloudflare's guide with RFC 8509 trust anchor sentinels let you test whether your resolver would notice. Third, Ivan Pepelnjak's netlab quietly made Netmiko the default config method for six major platforms, and the performance delta is significant enough to matter.
 
 The hype-to-substance ratio is improving, is what I'm saying.
 
 ## DNS desk
 
-The October 11 root KSK rollover is the marquee event. This isn't a surprise (DNSSEC folks have been timing this for years), but it *is* a gentle test of whether your recursive resolver actually validates. The neat trick: RFC 8509 trust anchor sentinels let you fire up a test query against a domain that *will* fail validation after the rollover, so you can check your resolver's readiness without waiting for October 11 to break things.
+The October 11 root KSK rollover happened this week — DNSSEC's gentle infrastructure test. If your resolver actually validates, it weathered the event silently. The neat trick: RFC 8509 trust anchor sentinels let you fire up a test query against a domain that fails validation, so you can check your resolver's readiness retroactively. (If you didn't test beforehand, check now.)
 
 Cloudflare's guide is worth the read — straightforward instructions, no marketing fluff.
 
