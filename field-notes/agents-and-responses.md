@@ -54,7 +54,7 @@ Quiet as well. The real news is what *Cloudflare and OpenAI* are doing together 
 
 - Hammering your origin every request (Cloudflare's caching + discovery helps here)
 - Exfiltrating data they shouldn't see (programmable gateway + DLP + Workers)
-- Breaking things by accident (full transaction WAF catches the dangerous stuff)
+- Breaking things by accident (scoped permissions, tool allowlists, and approval for destructive actions)
 
 The pattern: agents need visibility, tools, and guardrails. Not special network primitives.
 
