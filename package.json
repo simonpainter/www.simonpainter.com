@@ -33,7 +33,7 @@
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.9.2",
     "@docusaurus/types": "^3.9.2",
-    "pa11y-ci": "^4.1.1"
+    "pa11y-ci": "^5.0.0"
   },
   "browserslist": {
     "production": [
