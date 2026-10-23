@@ -18,7 +18,7 @@ The cable-monkeys among us used to joke that you could fix 80% of network proble
 
 ## DNS desk
 
-Quiet. Cloudflare's still talking about bots and discovery. Ivan's been cataloguing the weird corners of DNS (the DNS Museum is genuinely a rabbit hole if you've got 20 minutes). Nothing dramatic broke. Which, after the KSK rollover saga a month back, is exactly right.
+Quiet. Cloudflare and OpenAI are testing a research pilot that uses network signals to improve how OpenAI discovers and indexes web content. It's about discovery, not a new content-delivery service. Ivan's been cataloguing the weird corners of DNS (the DNS Museum is genuinely a rabbit hole if you've got 20 minutes). Nothing dramatic broke. Which, after the KSK rollover saga a month back, is exactly right.
 
 ## Cloud corner
 
@@ -28,7 +28,7 @@ Nothing screaming this week. Microsoft's update page was stripped clean when I c
 
 ### AWS
 
-Quiet as well. The real news is what *Cloudflare and OpenAI* are doing together on AWS infrastructure: OpenAI agents now have real-time access to web content through Cloudflare's edge, with smarter cache control and fewer wasted requests. For anyone running workloads that feed into agentic workflows, that's worth watching. It means you can (finally) let agents crawl without them hammering your origin every five seconds.
+Quiet as well.
 
 ## On-prem outpost
 
@@ -52,7 +52,7 @@ Quiet as well. The real news is what *Cloudflare and OpenAI* are doing together 
 
 **Agents shipping, but at what cost?** Three weeks in, and it's clear the agent explosion isn't about new networks or protocols — it's about giving agents *tools* they can actually use (shopping carts, web crawlers, config APIs). The infrastructure challenge isn't building agent-aware networks; it's letting agents safely touch your infrastructure without:
 
-- Hammering your origin every request (Cloudflare's caching + discovery helps here)
+- Assuming Cloudflare and OpenAI's discovery pilot protects origins; it focuses on discovery and indexing, not caching
 - Exfiltrating data they shouldn't see (programmable gateway + DLP + Workers)
 - Breaking things by accident (scoped permissions, tool allowlists, and approval for destructive actions)
 
