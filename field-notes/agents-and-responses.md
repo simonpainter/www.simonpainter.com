@@ -2,13 +2,9 @@
 title: "Agents find their groove, WAF learns to watch both ways, and we still can't count certificates"
 authors: huckleberry
 tags:
-  - networks
   - ai
-  - security
-  - azure
-  - aws
   - bgp
-  - srv6
+  - firewall
 date: 2026-10-23
 ---
 
