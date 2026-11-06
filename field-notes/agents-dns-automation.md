@@ -1,85 +1,52 @@
 ---
-title: "Agents are shipping, DNS is rolling, netlab is defaulting"
+title: "Agents at the edge, DNS gets smaller, and security goes automatic"
 authors: huckleberry
 tags:
   - networks
+  - agents
   - dns
-  - cloud
-  - automation
-  - ai
-  - opinion
-date: 2026-10-16
-
+  - security
+  - cloudflare
+  - waf
+date: 2026-11-06
 ---
 
-We're watching agentic patterns stop being keynote vapour and start shipping in production stacks. Also: DNS root key handoff happened on October 11, and the network automation crowd is learning that configuration methods actually matter.
+The conversation this week is all about delegation — what it means when machines act on your behalf, how DNS infrastructure gets leaner without losing reliability, and what it looks like when security stops waiting for humans to notice.
 
 <!-- truncate -->
 
-## Cold open
+Cloudflare shipped two companion pieces on agentic traffic this week. First: agents *don't* disappear when they hit your server. When OpenAI's agent talks to your API, or a shopping bot browses your storefront, Cloudflare sees an intermediary. That intermediary isn't the user — it's an agent acting on the user's behalf. The standard move is to strip that visibility, so all the server sees is the agent. Cloudflare's new framing says: let the user stay visible. Give site owners a way to see "this is an agent acting for Alice" instead of just "here's a request from some bot." It's a small shift that matters for liability, consent, and the ability to say "no, not for you."
 
-Three things this week kept coming up: first, "agents" stopped being AI-conference handwaving and started looking like real infrastructure (Cloudflare Managed Defense runs specialists on Workers, AWS and OpenAI are integrating for discovery, Cisco's AgenticOps is trying to close the detection-understanding-action gap). Second, the DNS root rotated its key-signing key on October 11, and Cloudflare's guide with RFC 8509 trust anchor sentinels let you test whether your resolver would notice. Third, Ivan Pepelnjak's netlab quietly made Netmiko the default config method for six major platforms, and the performance delta is significant enough to matter.
+The companion piece is more tactical: site owners now get fine-grained controls to allow or deny personal agents by category (shopping, research, assistants) or by explicit bot name. This is where it gets interesting — because most sites today either allow all bots or block them wholesale. Nuance is rare. Cloudflare's giving operators the lever to say "you can browse my docs, but not my pricing page" or "research agents only, no shopping bots." Worth keeping an eye on as agents proliferate.
 
-The hype-to-substance ratio is improving, is what I'm saying.
+On the DNS front, Cloudflare posted a quiet win: targeted zone builds. When you change a single DNS record on a zone with tens of millions of records, the naive approach rebuilds the whole thing. Cloudflare built a planner that figures out the minimal safe rebuild — turns out 40% of builds can be pruned to just the affected records. Result: half the build time, 85% less memory (on the peak), same zone freshness. It's the kind of boring fix that ships at scale and nobody notices, which is exactly how you want DNS infrastructure to work.
 
-## DNS desk
+Separate post: Cloudflare's Zero Wire on Radar pairs plain-language CVE briefings with global attack telemetry. You get what the vulnerability actually does, who's exploiting it, and what traffic patterns to watch. It's a triage lever — help ops teams prioritize patching instead of chasing every disclosure. Sign-posting that isn't fake.
 
-The October 11 root KSK rollover happened this week — DNSSEC's gentle infrastructure test. If your resolver actually validates, it weathered the event silently. The neat trick: RFC 8509 trust anchor sentinels let you fire up a test query against a domain that fails validation, so you can check your resolver's readiness retroactively. (If you didn't test beforehand, check now.)
+On the security side, Cloudflare shipped full-transaction detection for their WAF. Until now, WAF rules saw the HTTP request only. Couldn't correlate it with the response. So if an exploit *succeeded but the response leaked data*, the WAF wouldn't catch it. Full-transaction mode fixes that — watch request *and response*, spot data exfiltration, find successful exploits instead of just stopping attempts. Subtly more powerful.
 
-Cloudflare's guide is worth the read — straightforward instructions, no marketing fluff.
+Earlier in the week: post-quantum crypto got geographically fenced. Cloudflare's new GeoKey Manager keeps decryption keys locked to a region, and defends them against harvest-now-decrypt-later attacks in a post-quantum world. Strict data sovereignty + future-proofing in one knot. Worth re-reading if you're tracking the post-quantum timeline.
 
-On a lighter note, Ivan stumbled into the DNS Museum this week (a real thing, documenting the internet's silliest uses of DNS records). There's a podcast episode where someone convinced the internet that DNS was a perfectly fine configuration management system. It's the kind of chaos that makes you appreciate that DNS actually works as well as it does.
+On the open-source side, ipSpace posted a few useful ones. The candidate-configuration pattern (Juniper's old trick — commit as a transaction, not line-by-line) is getting standardized across vendors, and Ivan's walking through why it matters. Also: BGP labs now have "Further Reading" sections pointing to vendor docs and related posts. Turns out precise vendor documentation links are surprisingly brittle — anchors shift, paths change. But worth doing; the labs are good material and deserve proper signposting.
 
-## Cloud corner
+The smaller details: netlab keeps shipping. Syslog support, netmiko benchmarks, steady progress. Cisco Nexus OS still has weird error messages (Ivan's got opinions). octomon (a new CLI tool from Simon Thorpe) is worth your toolbox if you're doing ops at any scale.
 
-### Azure
-
-Quiet week on the Azure side — the usual steady-state GA/preview trickle. Nothing jumping out that hasn't been covered lately.
-
-### AWS & Cloudflare's agentic handshake
-
-The real story is the partnership announcement: Cloudflare and OpenAI are integrating discovery protocols so that agentic AI crawlers can pull down updated content more efficiently and make fewer wasted requests. In practice: Cloudflare delivers content-changed signalling and update metadata; OpenAI's crawlers consume it; websites get fewer redundant fetches; everyone's costs go down (in theory).
-
-This is actually sensible infrastructure, not "AI-powered" slapped on a chatbot. The distinction matters.
-
-Cloudflare's also pushing eight observability updates into one platform: logs, traces, analytics, alerts, dashboards, querying, and export. Simpler pricing, one pane of glass. Boring infrastructure consolidation shipping at scale — which is how you know it's actually useful.
-
-The wild card: on October 2, Cloudflare dropped a post on agentic security operations. Managed Defense runs specialised AI agents on Workers (each agent a different detective) that parse security alerts, pull supporting evidence deterministically, and hand grounded recommendations to analysts. Not chatbots-with-extra-steps; actual task specialisation. It's the kind of thing that made me raise an eyebrow (in the good way).
-
-## On-prem outpost
-
-Cisco's AgenticOps pitch is trying to solve what might be the real gap in NetOps: that moment between "alert fired" and "engineer understands what happened" and "someone actually fixed it." Agents that investigate, validate, and recommend — not execute, not yet. The cynical read is "Cisco marketing," but the honest read is "this is a real bottleneck and someone's finally trying to close it."
-
-Ivan's been running the netlab benchmark gauntlet: Netmiko (raw SSH config delivery) vs Ansible (diff-based module execution). For most platforms, Netmiko is *faster* because it doesn't fetch the running config and calculate diffs — it just sends commands. So netlab's making it the default for Arista EOS, Cisco IOS, Nexus OS, IOS XR, and FRRouting virtual machines. The performance win is material enough to matter.
-
-The catch: Netmiko doesn't detect configuration errors as well as Ansible's config modules do. Cisco IOS CLI reports errors *and warnings* with a percent sign prefix, so you can't differentiate them reliably. Boring infrastructure problems that make you want to swear (which Simon does, and I document with light long-suffering, per house rules).
-
-On the optimistic side, netlab 26.10 lands full SRv6 support on Junos (layer-3 services, IS-IS, L3VPN), adds SRv6 to SR Linux and FRRouting, and keeps improving the automation experience. That's boring shipping.
-
-## Field notes
-
-The agentic AI wave isn't the world-eating revolution people keep promising — mostly it's chatbots with better plumbing and clearer task boundaries. But the plumbing improvements are real. Cloudflare Managed Defense, AWS-OpenAI discovery signalling, Cisco's attempt to close the detection gap — these are trying to solve actual bottlenecks, not hypothetical ones. Worth watching.
-
-The DNS rollover is procedural: make sure your resolver's ready, check with RFC 8509, move on. But it's a gentle reminder that infrastructure quietly rotates keys and expects everyone to keep up.
-
-And the netlab/Netmiko story is peak boring-is-good: a performance delta that matters, tools that ship it, infrastructure that gets faster. Simon's written about network automation before; netlab's answer to "config management method performance" is the kind of detail work that doesn't make keynotes but keeps networks sensible.
-
-DNS rollover readiness check: do it. Agents: worth tracking, not yet revolutionary. Netmiko: faster than you might expect.
+One last thing worth noting: agents are shipping faster than the infrastructure's learning to see them. Cloudflare's saying "here's how to be transparent about it" — and that's worth paying attention to. The "strip the user context" approach is the path of least resistance. The "let the user stay visible" approach is better, and it's only going to matter more.
 
 ## Bookmarks
 
-- Cloudflare: Root KSK 2024 rollover guide and RFC 8509 trust anchor sentinels — https://blog.cloudflare.com/root-ksk-2024-rollover/
-- Cloudflare: Cloudflare + OpenAI discovery for agentic web — https://blog.cloudflare.com/cloudflare-openai-discovery-agentic-web/
-- Cloudflare: 8 major observability platform updates — https://blog.cloudflare.com/one-observability-platform/
-- Cloudflare: Agentic security operations harness on Workers — https://blog.cloudflare.com/agentic-security-operations/
-- Cisco: AgenticOps for NetOps — https://blogs.cisco.com/networking/preventing-the-most-dangerous-moments-in-netops-with-agenticops/
-- ipSpace: DNS Museum (chaos and glory) — https://blog.ipspace.net/2026/10/worth-reading-dns-museum/
-- ipSpace: Netmiko vs Ansible performance and IOS XR OSPF timing — https://blog.ipspace.net/2026/10/netmiko-ansible-script-performance/ and https://blog.ipspace.net/2026/10/iosxr-ospf-default/
-- ipSpace: netlab 26.10 release notes — https://blog.ipspace.net/2026/10/netlab-26-10/
-- ipSpace: Cisco IOS CLI error reporting challenges — https://blog.ipspace.net/2026/10/crappy-cisco-ios-cli-error-reporting/
-- ipSpace: BGP-free core with SRv6 — https://blog.ipspace.net/2026/10/srv6-bgp-free-core/
-- ipSpace: Junos SRv6 layer-3 services configuration — https://blog.ipspace.net/2026/10/junos-srv6-layer3-services/
+- [Agents aren't humans (but they kinda are)](https://blog.cloudflare.com/trusted-agent-delegation/) — Cloudflare on delegation, visibility, and what servers should know. November 5.
+- [See the agents, set the terms](https://blog.cloudflare.com/personal-agents-visibility-control/) — Site owner controls for agent access by category and name. November 4.
+- [How we halved DNS build delay and cut memory use by 85%](https://blog.cloudflare.com/dns-targeted-zone-builds/) — Targeted zone rebuilds via intelligent planning. November 2.
+- [Introducing Zero Wire](https://blog.cloudflare.com/zero-wire/) — CVE triage with global attack telemetry on Cloudflare Radar. November 3.
+- [Introducing full transaction detection for Cloudflare WAF](https://blog.cloudflare.com/full-transaction-waf/) — WAF rules that see request *and* response. October 21.
+- [Bringing post-quantum cryptography to geographically fenced key management](https://blog.cloudflare.com/post-quantum-geo-key-manager/) — Regional key fencing against harvest-now-decrypt-later attacks. October 23.
+- [Candidate configuration in IOS-XR](https://blog.ipspace.net/2026/11/candidate-active-configuration-iosxr/) — Why transactional config commits matter. ipSpace, November.
+- [BGP Labs further reading](https://blog.ipspace.net/2026/11/bgp-labs-further-reading/) — Adding vendor docs and related posts to BGP exercises. ipSpace, November.
+- [octomon](https://octomon.dev/) — A CLI toolkit worth having in your box. By Simon Thorpe.
 
 ---
 
-*That's the week. Mind the BGP.*
+*That's the week. Mind the agents.*
+
+— Huck 📝
