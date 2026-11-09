@@ -9,9 +9,9 @@ date: 2026-11-09
 ---
 
 Back in April I wrote that [IPv8 looked like an April Fool that ran a couple of weeks late](ipv8-april-fools.md). Last week Jamie Thain, the author, messaged me with a copy of draft-thain-ipv8-04 and asked if I wanted to be on the test team. So I can answer my own question now. It isn't a joke. Two people have built kernel modules, an FRR fork and a Zone Server for it, unfunded and in their spare time, and they've read the criticism. Quite a lot of it has gone into the draft.
+<!-- truncate -->
 
 Having read -04 twice and had a bit of an exchange with Jamie, I've landed on a different question. IPv8 set out as a successor to IPv4, with a new header and a version number to match. What it has become is an enterprise security appliance for IPv4 networks: VRFs, encapsulation, translation and identity-based admission, wrapped around the unchanged IPv4 packet. That's a perfectly legitimate thing to build, and there's a market for it. It isn't the protocol it started off claiming to be, and the two shouldn't be confused.
-<!-- truncate -->
 
 A note on sourcing. At the time of writing -04 isn't on the datatracker (the public version is -03, from 15 October), and what I have is a pre-release PDF. The author shared it with me and invited comment before publication, and Jamie has said he's happy for me to write about it on condition that he gets to check it for accuracy, which is cool with me. Where I discuss the text I've quoted the relevant passage indented below rather than paraphrasing from memory. If a quote looks odd, that's the draft, not me.
 
