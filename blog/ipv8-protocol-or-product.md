@@ -45,7 +45,7 @@ That's a lot of movement for six months of spare-time work. The draft is unrecog
 
 ## The new wire format solves the silicon problem by hiding from it
 
-My biggest objection in April was that you can't ship a new header and call it backward compatible, because forwarding ASICs parse the first four bits and drop anything that isn't 0100. The -04 answer is to stop changing the header:
+My biggest objection in April was that you can't ship a new header and call it backward compatible. Forwarding ASICs inspect the first four bits: `0100` denotes IPv4, and `0110` denotes IPv6. IPv6 shows that hardware can support more than one version, but that support has to be built into the forwarding hardware; networks with equipment that isn't IPv6-compatible need upgrades before they can route IPv6. That point still stands for a new version 8 header: IPv4- and IPv6-capable hardware doesn't automatically know how to forward it. The -04 answer is to stop changing the header:
 
 > An IPv8 packet is an 8-octet shim followed by a complete, unmodified IPv4 packet. \[...\] Nothing in the IPv4 header changes: Version remains 4, and IHL, Total Length, the Header Checksum, Fragment Offset, TTL, Protocol and Options keep their IPv4 values and semantics.
 
