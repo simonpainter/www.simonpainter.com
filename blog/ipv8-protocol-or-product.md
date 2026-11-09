@@ -183,7 +183,7 @@ I asked Jamie directly what IPv8 solves faster than IPv6, and he gave a serious 
 
 Two things about that.
 
-First, the Microsoft NTIA submission is from around 2010. A lot of auditors have retired since then. IPv6 carries roughly half of Google's traffic today, it's the default on every phone network, every hyperscaler and every current operating system, and the training problem he describes has been quietly solving itself for fifteen years.
+First, [the Microsoft NTIA submission](https://www.ntia.gov/files/ntia/publications/microsoft_10_4.pdf) is from October 2016. A lot of auditors have retired since then. IPv6 carries roughly half of Google's traffic today, it's the default on every phone network, every hyperscaler and every current operating system, and the training problem he describes has been quietly solving itself for ten years.
 
 Second, and more important, the argument only works if you already have enough IPv4. That's true of a company holding a legacy /16 in Chicago. It's not true of anyone building a network in Lagos, Lahore or Jakarta this year. AFRINIC is exhausted. APNIC has been rationing since 2011. The secondary market wants $30 to $50 an address. I wrote about this in [a post on IPv4 as Western digital privilege](ipv4-global-landscape.md) last year, and the IPv8 pitch is the clearest example I've seen since of the blind spot I described. "Exhaustion isn't our problem" is a sentence that can only be spoken from inside a large allocation.
 
