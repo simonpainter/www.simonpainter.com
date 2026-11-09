@@ -19,11 +19,13 @@ This post is about what changed, what didn't, and how a protocol seems to have t
 
 ## Most of what I complained about has gone
 
-I'll start with the credit, because it's due. My April post had eight or nine substantive complaints. Six of them no longer apply. I expect I am not the only one who made the same suggestions, and it's good to see them taken on board.
+I'll start with the credit, because it's due. My April post had eight or nine substantive complaints. Five of them no longer apply. I expect I am not the only one who made the same suggestions, and it's good to see them taken on board.
 
-The IP version number is withdrawn. There's no longer a request for version 8 in the IANA registry, because the IPv4 header is no longer modified at all:
+The request for IP version number 8 is no longer in the -04 draft I reviewed. Its text explicitly says:
 
 > No IP version number is requested. The IPv4 header carried inside an IPv8 packet is unmodified and its Version field is 4; IPv8 is identified on the wire by the EtherType and, for 8-over-4, by the IPv4 protocol number below.
+
+After reading this post, Jamie clarified that requesting IP version number 8 is still part of the plan. Its absence from this draft should not be read as a withdrawal, as I originally did. The draft and the stated plan differ here; the wire-format discussion below describes the text I reviewed.
 
 The 222.0.0.0/8 collision with APNIC's allocation is fixed. In -00, 222 lived in the host field and trampled live prefixes. In -04 it has moved up into the Route Number (the new 32-bit prefix field) as a "scoped route space", where it collides with nothing.
 
@@ -193,7 +195,7 @@ There's also the help-desk comparison, which I've seen made elsewhere and which 
 
 ## What IPv8 is for
 
-So here's where I've landed. -04 is more plausible than -00 in the narrow sense that it no longer asks for a flag day in silicon or a stolen version number, and the worst ideas have been cut. The authors have listened, and they've shipped code. I was wrong to suggest it was a joke, and I'm glad to say so.
+So here's where I've landed. The compatibility mechanisms described in -04 make it more plausible than -00, and the worst ideas have been cut. The request for IP version number 8 remains part of Jamie's plan, despite its absence from this draft. The authors have listened, and they've shipped code. I was wrong to suggest it was a joke, and I'm glad to say so.
 
 But the way it became plausible was to stop being a new Internet protocol. Take -04 apart and the components are IPv4, VRFs, an IP-in-IP encapsulation, DNS64-and-NAT64-style translation, WireGuard and a captive portal, orchestrated by one Linux appliance that has to sit in the path of everything. Every one of those exists today. What IPv8 adds on top is the on-link shim, the Route Number namespaces and the DNS-bound handles, and I can't find a problem those solve that the components underneath them don't already solve.
 
