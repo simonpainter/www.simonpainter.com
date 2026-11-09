@@ -111,7 +111,7 @@ So the client asks DNS for a name, gets back a synthetic IPv4 address from a res
 
 > The Route Number therefore attaches to a connection at DNS time, and XLATE8's 4-to-8 state is created by the DNS8 answer that produced the flow, keyed on the client as the Zone Server sees it together with the address returned in that answer.
 
-That is DNS64 and NAT64. Not similar to, not inspired by. The same mechanism, with 198.18.0.0/15 standing in for 64:ff9b::/96 and a Zone Server standing in for the translator. Everything that makes NAT64 painful comes along for the ride: applications that pass IP literals in-band, anything that resolves a name and then shares the address with a second host, state tables that fill up, and the flat impossibility of reaching anything you didn't look up first.
+This resembles DNS64 and NAT64, but with an important difference: DNS8 creates a client-specific binding at DNS time. Standard DNS64 synthesises an IPv6 destination by embedding the IPv4 address in a translation prefix; it doesn't create a per-client destination binding, and NAT64 can translate traffic to a correctly constructed address without any DNS lookup. The handle scheme shares familiar translation problems such as embedded IP literals and state-table limits, but adds its own: a handle returned to one client cannot safely be shared with another, and a destination must be looked up before it can be reached.
 
 The handle pool is also small:
 
