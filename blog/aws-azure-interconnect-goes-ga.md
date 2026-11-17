@@ -42,7 +42,7 @@ Here's what I said in September, against what GA tells us so far.
 
 | What I said | Status at GA |
 |---|---|
-| Pricing would converge on a flat rate | AWS is flat rate. Azure has published a bandwidth-based price model, but the listed paid rates still need confirming |
+| Pricing would converge on a flat rate | Yes. AWS charges by bandwidth and tier; Azure publishes monthly bandwidth-based rates with no per-GB transfer charge |
 | `MeteredData` in the SKU might be nothing more than an inherited enum | Unknown until I check a GA circuit |
 | Preview won't keep letting 1 Gbps carry 2.39 Gbits/sec | Untested |
 | Bandwidth is a purchase decision, not a dial | Probably wrong, at least on the AWS end |
@@ -71,7 +71,7 @@ The trap is the same one I wrote about when [Direct Connect went flat rate](/dir
 
 The Direct Connect gateway is a global object, and it will happily make your Frankfurt interconnect a long-haul circuit if your Cloud WAN core network has an edge on another continent. Model the tier from the topology you've got, not the one you drew.
 
-Azure's [pricing page](https://azure.microsoft.com/en-us/pricing/details/multicloud-interconnect/) now describes a monthly, bandwidth-based charge with Local and Premium connectivity options, and says inbound and outbound data transfer are included. That's useful: there isn't a separate Azure per-GB charge in the published model. But the paid prices currently appear as `$-`, so the number you need for a business case still isn't there. Get a quote before anyone signs anything. The 500 Mbps Local free tier has no SLA, is limited to 90 days and can't be upgraded in place.
+Azure's [pricing page](https://azure.microsoft.com/en-us/pricing/details/multicloud-interconnect/) confirms the other half is flat rate too: the monthly charge depends on bandwidth, pricing zone and whether you choose Local or Premium connectivity. In the default Zone 1 price table, 1 Gbps is $949 a month for Local or $1,660.75 for Premium; 10 Gbps is $9,490 or $16,607.50. Both include unlimited inbound and outbound transfer, so there is no Azure per-GB charge for traffic on the interconnect. The 500 Mbps Local free tier has no SLA, is limited to 90 days and can't be upgraded in place.
 
 ## What I'd do now
 
