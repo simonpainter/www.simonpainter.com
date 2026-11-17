@@ -9,7 +9,7 @@ tags:
 date: 2026-11-18
 ---
 
-In August I wrote about [the cross-connect I didn't have to build](/the-cross-connect-i-didnt-have-to-build), and in September I [built it anyway](/building-azure-multicloud-interconnect-to-aws). Yesterday AWS announced that [Interconnect - multicloud with Azure is generally available](https://aws.amazon.com/about-aws/whats-new/2026/11/aws-announces-AWS-interconnect-multicloud-azure-ga/), so it's time to do the slightly uncomfortable thing that people who publish predictions on the internet ought to do more often: mark my own homework.
+In August I wrote about [the cross-connect I didn't have to build](the-cross-connect-i-didnt-have-to-build.md), and in September I [built it anyway](/building-azure-multicloud-interconnect-to-aws). Yesterday AWS announced that [Interconnect - multicloud with Azure is generally available](https://aws.amazon.com/about-aws/whats-new/2026/11/aws-announces-AWS-interconnect-multicloud-azure-ga/), so it's time to do the slightly uncomfortable thing that people who publish predictions on the internet ought to do more often: mark my own homework.
 <!-- truncate -->
 
 ## What actually went GA
