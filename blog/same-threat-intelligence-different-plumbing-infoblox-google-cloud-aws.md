@@ -95,7 +95,7 @@ Two things make this a better fit for many designs than DNS Armor. It's inline, 
 
 The DNS Firewall Advanced plan is required, as is a Marketplace subscription. It's separate from Infoblox Universal DDI, which manages DNS. Threat Defense inspects queries for threats. The shared logo doesn't make them the same service.
 
-There's a status wrinkle. AWS's What's New post says preview; the developer guide says generally available. I'd assume preview until AWS sorts out its own pages.
+AWS lists the Route 53 DNS Firewall integration with Infoblox as a public preview.
 
 I can't tell how much behavioural detection comes across. The developer guide mentions tunnelling, DGAs and Zero Day DNS, but a managed firewall rule is fundamentally a list. Whether tunnelling detection runs per query inside the resolver or arrives as a continuously updated domain list matters, and the launch material doesn't say.
 
@@ -103,13 +103,11 @@ I can't tell how much behavioural detection comes across. The developer guide me
 
 | | DNS Armor (Google Cloud) | Route 53 DNS Firewall + Infoblox (AWS) | Infoblox Threat Defense |
 |---|---|---|---|
-| Status | GA | Preview* | GA |
+| Status | GA | Public preview | GA |
 | Where it sits | Beside the resolver | In the resolver | Is the resolver |
 | What it does | Logs | Filters and blocks | Blocks, redirects, logs |
 | Hybrid clients | Not inspected on the listed paths | Via Resolver endpoints | Via DFP or forwarding |
 | Investigation | Cloud Logging, your SIEM | Not stated yet | Dossier, SOC Insights |
-
-*The AWS announcement and developer guide disagree on status.
 
 If you're all-in on one cloud, the native option is a natural starting point. In a hybrid or multi-cloud estate, the same Infoblox intelligence can now turn up in three places, with three consoles, log formats and ideas of what “detected” means.
 
