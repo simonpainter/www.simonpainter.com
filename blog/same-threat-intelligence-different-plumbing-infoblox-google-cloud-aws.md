@@ -40,8 +40,6 @@ The argument that landed better with me was about patching. A vulnerability fix 
 
 Infoblox's published claims say it blocks malicious domains around 68 days before other tools spot them, with a 0.0002% false-positive rate.
 
-At the discussion, someone quoted a false-positive figure of 0.302% instead. Nobody could say exactly how it was measured. There was no false-negative rate available, and people already running DNS security couldn't compare their own results with the vendor figures.
-
 Treat the numbers as marketing until someone publishes the method. A false-positive rate without a denominator is a number, not a fact.
 
 ## DNS Armor detects after the answer
