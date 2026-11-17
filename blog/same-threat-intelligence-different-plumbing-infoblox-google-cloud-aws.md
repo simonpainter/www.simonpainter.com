@@ -9,10 +9,10 @@ tags:
 date: 2026-11-17
 ---
 
-AWS has added Infoblox Threat Defense to Route 53 Resolver DNS Firewall, joining Google Cloud's DNS Armor, which has been available since late 2025. The same threat intelligence now sits inside two hyperscalers, but one watches and the other can block. I spent an evening with the documentation and vendor blogs, then sat in on an industry discussion today. It ran under the Chatham House Rule, so I won't attribute anything I heard there.
+AWS has added Infoblox Threat Defense to Route 53 Resolver DNS Firewall, joining Google Cloud's DNS Armor, which has been available since late 2025. The same threat intelligence now sits inside two hyperscalers, but one watches and the other can block. I spent an evening with the documentation and vendor blogs, then sat in on an industry discussion today. It ran under the [Chatham House Rule](https://www.chathamhouse.org/about-us/chatham-house-rule), so I won't attribute anything I heard there.
 <!-- truncate -->
 
-## Protective DNS is a control point
+## [Protective DNS](protective-dns.md) is a control point
 
 Protective DNS checks a name against threat intelligence before, or after, answering a lookup. If a workload asks for a known malware domain or one that looks algorithmically generated, the resolver can refuse to answer, redirect the request or log it for investigation. The idea is that almost every attack needs a DNS lookup somewhere, making DNS a useful place to catch it early.
 
@@ -42,9 +42,13 @@ Infoblox's published claims say it blocks malicious domains around 68 days befor
 
 Treat the numbers as marketing until someone publishes the method. A false-positive rate without a denominator is a number, not a fact.
 
+Someone in the discussion asked about false negatives. I understand the concern, but in the spirit of “do no harm”, I'm more worried about blocking a legitimate lookup than missing a threat that might have got through anyway. A false negative can still matter; it just isn't the failure mode I worry about first.
+
 ## DNS Armor detects after the answer
 
-Google Cloud's DNS Armor enables a threat detector at project level and sends internet-bound query data to a dedicated Infoblox engine in the same region. Google says analysis happens asynchronously, after Cloud DNS has resolved the query. That avoids adding latency and means a problem with the analysis engine can't break resolution. It also means DNS Armor can't block the answer.
+Google Cloud's DNS Armor enables a threat detector at project level and sends internet-bound query data to a dedicated Infoblox engine in the same region. The analysis runs asynchronously, off the DNS resolution path: Cloud DNS answers the query, then the detector analyses it. Google says this adds no DNS latency and means a problem with the analysis engine can't break resolution. It also means DNS Armor can't block the answer.
+
+That no-latency claim sounds almost like a selling point of detecting rather than blocking. I plan to run latency tests to see whether enabling threat detection makes any measurable difference.
 
 Threat findings appear in Cloud Logging. The detector command is short:
 
@@ -55,7 +59,7 @@ gcloud network-security dns-threat-detectors create my-detector \
   --provider="INFOBLOX"
 ```
 
-Infoblox's general-availability announcement talks about blocking malicious domains, while Google's documentation describes logs. I've followed Google's description because it's Google's resolver, but I'd like either company to confirm the difference.
+Infoblox's general-availability announcement talks about blocking malicious domains, while Google's documentation describes logs. The difference is now clear: this Google Cloud integration analyses a copy off the resolution path, so it detects and logs rather than blocking the answer.
 
 DNS Armor is a detection service. Its categories include tunnelling, command-and-control (C2), domain generation algorithms (DGAs), fast flux, newly registered domains, lookalikes and exploit kits. If you want to stop traffic, you need a separate response path: Cloud DNS response policies, Cloud NGFW fully qualified domain name (FQDN) rules, or an automated SIEM response are options I'd consider. That's my suggestion, not a Google-documented pattern.
 
@@ -115,7 +119,7 @@ Azure is the gap. A native integration is reportedly in progress, but I haven't 
 
 ## We still need a multi-cloud reference design
 
-Each provider documents its own native service. None shows how to combine these services across clouds, which is the design many of us have to build.
+Each provider documents its own native service. None shows how to combine these services across clouds, which is the design many of us have to build. I've been on a bit of a crusade for a solid hybrid multi-cloud reference architecture that I don't have to write myself, as I wrote in [my post on hybrid cloud reference architectures](hybrid-cloud-dns.md). I'm still waiting for someone to publish one.
 
 Internal DNS delegation between clouds is manageable. Internet egress is harder. Firewalls with FQDN and wildcard rules need to see DNS too, so the resolver and firewall have to agree on the path. Get that wrong and you lose the protective DNS layer or blind the firewall.
 
@@ -146,7 +150,7 @@ Overlap is another trap. Many organisations already filter DNS through Cisco Umb
 3. Watch before blocking. On AWS, use alert mode first if the managed rules support it; check what would have been blocked before enforcing a block.
 4. Tell downstream teams. Proxy, firewall and SOC teams will see less traffic once DNS blocks it.
 5. Lock down the DNS path first. Egress filtering and an encrypted DNS strategy come before any of this.
-6. Ask for the method behind the numbers. “68 days earlier” and a tiny false-positive rate are vendor claims. Ask how they're measured, and ask for the false-negative rate.
+6. Ask for the method behind the numbers. “68 days earlier” and a tiny false-positive rate are vendor claims. Ask how they're measured and what a false positive would mean for your users.
 
 ## Sources
 
