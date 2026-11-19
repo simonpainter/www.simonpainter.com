@@ -9,9 +9,9 @@ tags:
 date: 2026-11-19
 ---
 
-Network Security Perimeter can now use Azure service tags as sources in inbound access rules. Instead of copying a service's IP prefixes into a CIDR rule and updating them yourself, you select its tag and Microsoft maintains the address list.
+Network Security Perimeter (NSP) is adding service-tag support for inbound rules when connecting to supported third-party services. Instead of copying a service's IP prefixes into a CIDR rule and updating them yourself, you can select its tag and have Microsoft maintain the address list.
 
-That gives teams a simpler way to allow traffic from supported Azure services to perimeter-associated PaaS resources. A service tag isn't a tenant identity check, though: it can cover multiple service instances, so it may grant broader access than a single workload.
+That gives teams a simpler way to allow traffic from a supported service to perimeter-associated PaaS resources. A service tag isn't a tenant identity check, though: it can cover multiple service instances, so it may grant broader access than a single workload.
 <!-- truncate -->
 
 ## What it is
@@ -22,9 +22,9 @@ A service tag is a named group of IP address prefixes for an Azure service. Micr
 
 ## Who should care
 
-This is useful if you need to allow a supported Azure service to reach a Key Vault, Azure Monitor, Azure AI Search, Event Hubs, or Service Bus resource associated with an NSP. A tag can replace a hand-maintained IP list and makes the rule easier to understand.
+This is useful if a third-party service you rely on can reach a Key Vault, Azure Monitor, Azure AI Search, Event Hubs, or Service Bus resource associated with your NSP. A tag can replace a hand-maintained IP list and makes the rule easier to understand.
 
-It suits teams that already manage PaaS access through NSP profiles and want to allow a known Azure service without tracking its changing address ranges. If you need to trust one specific tenant or workload, a service tag alone doesn't provide that level of identity.
+It suits teams that already manage PaaS access through NSP profiles and want to allow a supported third-party service without tracking its changing address ranges. If you need to trust one specific tenant or workload, a service tag alone doesn't provide that level of identity.
 
 ## How to use it
 
@@ -35,13 +35,13 @@ Create an inbound rule in the Azure portal:
 3. Set **Source type** to **Service Tag**, then choose the tag you need.
 4. Set the rule name, action and profile, then save it.
 
-For example, to allow Azure Monitor to reach a Key Vault associated with the profile, create an **Allow** rule named `Allow-AzureMonitor` with **Service Tag** as the source type and `AzureMonitor` as the tag. Test the connection and review the NSP access logs to confirm the rule allows the expected traffic.
+For example, if a partner service's tag is available, create an **Allow** rule named `Allow-PartnerService`, select **Service Tag** as the source type, choose the tag shown for that service, and apply the rule to the profile containing your Key Vault. The example name is illustrative; the Azure Updates announcement doesn't name specific third-party tags. Test the connection and review the NSP access logs to confirm the rule allows the expected traffic.
 
 ## Gotchas and limits
 
 Service tag inbound rules currently support Key Vault, Azure Monitor, Azure AI Search, Event Hubs and Service Bus resources associated with a perimeter. Azure Storage isn't supported for this use; Microsoft warns that some scenarios might appear to work while others fail or behave inconsistently. Don't use service tag rules to control inbound access to Storage.
 
-Not every Azure service tag is available for NSP inbound rules. The portal only lists supported tags, and the tag you need might not appear. Use the narrowest suitable tag, preferably a regional one where available.
+Not every service tag is available for NSP inbound rules. The Learn walkthrough says the portal lists supported tags, but the Azure Updates announcement doesn't identify which third-party tags are included in this preview. Check that the tag you need is available before planning around it. Use the narrowest suitable tag, preferably a regional one where available.
 
 Tags represent address ranges, not a particular customer or workload. A tag can include traffic from multiple Microsoft-owned service instances and may include multitenant workloads or third-party code. Use one only if that broader service-level trust fits your security requirements.
 
