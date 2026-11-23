@@ -104,13 +104,13 @@ That's five of the six tier 1s from Bensley's list confirmed on a single prefix.
 
 Two things surprised me. The first was Valve, the games company. Its copy of this prefix showed EGP on all four collectors it peers with, whichever upstream it came from. ANTEL in Uruguay (AS6057) did the same on its path via EdgeUno.
 
-Valve's [published peering policy](https://as32590.net/policy/) adds useful context. For egress traffic, each Valve PoP prefers routes learned over PNI first, IXP second, and transit last. That's a deliberate three-tier preference. Local preference is the natural way to apply that policy inside Valve, but the policy doesn't say that EGP is how they implement it.
+>Valve's [published peering policy](https://as32590.net/policy/) adds useful context. For egress traffic, each Valve PoP prefers routes learned over PNI first, IXP second, and transit last. That's a deliberate three-tier preference. Local preference is the natural way to apply that policy inside Valve, but the policy doesn't say how they implement it.
+>
+>The EGP value I saw on Valve's advertised copy doesn't carry those three tiers. It can only affect a downstream network after earlier comparisons tie, where EGP loses to IGP. That makes it consistent with deliberately de-prioritising some paths, but the looking-glass result alone doesn't prove that's why Valve sets it. ANTEL in Uruguay (AS6057) also showed EGP on its path via EdgeUno; I don't have a published policy to explain that case.
+>
+>Local preference ranks routes inside one AS and isn't propagated to other ASes. ORIGIN is transitive, like AS path, so a change can influence path selection further along the chain whenever higher-priority attributes tie. That reach may be the point, but it also means downstream networks inherit a preference they didn't set and may use it for a different reason. Scrubbing ORIGIN would remove this behaviour as well as the advantage gained by providers resetting routes to IGP.
 
-The EGP value I saw on Valve's advertised copy doesn't carry those three tiers. It can only affect a downstream network after earlier comparisons tie, where EGP loses to IGP. That makes it consistent with deliberately de-prioritising some paths, but the looking-glass result alone doesn't prove that's why Valve sets it. ANTEL in Uruguay (AS6057) also showed EGP on its path via EdgeUno; I don't have a published policy to explain that case.
-
-Local preference ranks routes inside one AS and isn't propagated to other ASes. ORIGIN is transitive, like AS path, so a change can influence path selection further along the chain whenever higher-priority attributes tie. That reach may be the point, but it also means downstream networks inherit a preference they didn't set and may use it for a different reason. Scrubbing ORIGIN would remove this behaviour as well as the advantage gained by providers resetting routes to IGP.
-
-The second was the Equinix Ashburn collector. It had two paths of the same length: Alibaba's own session (`45102 45102`, INCOMPLETE) and NTT's (`2914 45102`, IGP). The collector picked NTT's path, and it lists the reason as `best (Origin)`. A third party's rewritten copy of Alibaba's route beat Alibaba's own announcement, on nothing but a flag NTT changed.
+The second interesting thing was the Equinix Ashburn collector. It had two paths of the same length: Alibaba's own session (`45102 45102`, INCOMPLETE) and NTT's (`2914 45102`, IGP). The collector picked NTT's path, and it lists the reason as `best (Origin)`. A third party's rewritten copy of Alibaba's route beat Alibaba's own announcement, on nothing but a flag NTT changed.
 
 > For the curious: route collectors don't forward traffic, so nobody's packets went the wrong way here. But a collector runs the same best path selection as any other BGP speaker. Put an ordinary router in the same position at the same local preference and it makes the same choice.
 
