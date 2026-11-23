@@ -102,7 +102,11 @@ The Hurricane Electric row needs a word of explanation. HE doesn't connect to Al
 
 That's five of the six tier 1s from Bensley's list confirmed on a single prefix. The sixth, Tata (AS6453), only showed up on one long path with two other networks in between, so I can't say which of them did it. All four of the tier 1s I could see that pass ORIGIN through matched his list too.
 
-Two things surprised me. The first was Valve, the games company. Its copy of this prefix showed EGP on all four collectors it peers with, whichever upstream it came from. That demotes Valve's copy below anything marked IGP, which is the defensive use Cloudflare described. ANTEL in Uruguay (AS6057) did the same on its path via EdgeUno.
+Two things surprised me. The first was Valve, the games company. Its copy of this prefix showed EGP on all four collectors it peers with, whichever upstream it came from. ANTEL in Uruguay (AS6057) did the same on its path via EdgeUno.
+
+At first glance, this looks like the sensible way to rewrite ORIGIN. If you have to change it, setting transit-learned routes to EGP pushes them below otherwise equal routes marked IGP. Cloudflare described operators doing this so customer routes win over peer and provider routes. That's a real policy distinction, not a transit trying to make its own copy of every route win.
+
+But ORIGIN is still the wrong tool for expressing it. Local preference is designed to rank routes by relationship, and it takes priority over ORIGIN. Rewriting ORIGIN only has an effect when earlier steps tie, and the change travels with the route to networks that may not share your policy. So Valve's EGP looks like a deliberate defensive workaround, but I can't tell from the looking glass alone why Valve or ANTEL set it. It also shows why the proposed clean-up is awkward: scrubbing ORIGIN removes this workaround as well as the advantage gained by providers resetting routes to IGP.
 
 The second was the Equinix Ashburn collector. It had two paths of the same length: Alibaba's own session (`45102 45102`, INCOMPLETE) and NTT's (`2914 45102`, IGP). The collector picked NTT's path, and it lists the reason as `best (Origin)`. A third party's rewritten copy of Alibaba's route beat Alibaba's own announcement, on nothing but a flag NTT changed.
 
